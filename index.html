@@ -137,10 +137,10 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="text-white" style="background: linear-gradient(135deg, #22C55E 0%, #FACC15 100%); min-height: 100vh;">
 
     <!-- HEADER -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header class="sticky top-0 z-50" style="background-color: rgba(0,0,0,0.1); backdrop-filter: blur(10px);">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <!-- Logo (Ganti src dengan logo Anda) -->
             <div class="flex items-center gap-2">
@@ -149,12 +149,11 @@
             </div>
             
             <!-- Menu Desktop -->
-            <nav class="hidden md:flex items-center gap-6">
-                <a href="#" class="font-medium text-primary">Beranda</a>
-                <a href="#produk" class="font-medium hover:text-primary transition">Produk</a>
-                <a href="#" class="font-medium hover:text-primary transition">Tentang Kami</a>
-            </nav>
-
+           <nav class="hidden md:flex items-center gap-6">
+               <a href="#" class="font-medium text-white">Beranda</a>
+               <a href="#" class="font-medium text-white hover:text-gray-200 transition">Produk</a>
+               <a href="#" class="font-medium text-white hover:text-gray-200 transition">Tentang Kami</a>
+           </nav>
             <!-- Tombol Keranjang Header -->
             <button onclick="openCart()" class="relative p-2 hover:bg-gray-100 rounded-full transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -513,7 +512,7 @@
                         <div class="flex justify-between items-center mt-2">
                             <span class="text-gray-500 text-xs">${product.sold} terjual</span>
                         </div>
-                        <button onclick="addToCart(${product.id})" class="mt-3 w-full bg-primary text-white py-2 rounded-lg text-sm font-semibold hover:bg-primary-dark transition">
+                        <button onclick="addToCart(${product.id})" class="mt-3 w-full bg-primary text-black py-2 rounded-lg text-sm font-semibold hover:bg-primary-dark transition">:bg-primary-dark transition">
                             + Keranjang
                         </button>
                     </div>
@@ -717,6 +716,7 @@
 </body>
 
 </html>
+
 
 
 
