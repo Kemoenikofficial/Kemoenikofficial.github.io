@@ -12,7 +12,7 @@
     <meta property="og:image" content="https://placehold.co/1200x630/FFFFFF/000000?text=Kemoenik" />
     <meta property="og:type" content="website" />
 
-    <!-- Google Fonts: Poppins (Elegan) & Fallback Arial -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,56 +28,24 @@
             --bg-gradient-start: #22C55E;
             --bg-gradient-end: #FACC15;
         }
-
         * { font-family: 'Poppins', 'Arial', sans-serif; }
-
-        body {
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            min-height: 100vh;
-        }
-
-        /* Scrollbar */
+        body { background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%); min-height: 100vh; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
-
-        /* Animasi */
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Slider */
         .slider-track { display: flex; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
         .slide { min-width: 100%; }
-
-        /* Tombol Mengambang */
-        .sticky-btn {
-            position: fixed; right: 20px; z-index: 999;
-            width: 55px; height: 55px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s;
-        }
+        .sticky-btn { position: fixed; right: 20px; z-index: 999; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s; }
         .sticky-btn:hover { transform: scale(1.1); }
         .sticky-cart { bottom: 90px; background: white; color: black; border: 1px solid #eee; }
         .sticky-wa { bottom: 25px; background: #25D366; color: white; }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000;
-            display: none; align-items: center; justify-content: center; padding: 15px;
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 15px; }
         .modal-overlay.active { display: flex; }
-        .modal-content {
-            background: white; border-radius: 20px; width: 100%; max-width: 450px;
-            max-height: 90vh; overflow-y: auto; position: relative;
-            animation: popIn 0.3s ease;
-        }
+        .modal-content { background: white; border-radius: 20px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; position: relative; animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* Input Form Style */
-        .input-form {
-            width: 100%; border: 1px solid #e5e7eb; padding: 12px; border-radius: 12px;
-            font-size: 14px; transition: all 0.3s; outline: none;
-        }
+        .input-form { width: 100%; border: 1px solid #e5e7eb; padding: 12px; border-radius: 12px; font-size: 14px; transition: all 0.3s; outline: none; }
         .input-form:focus { border-color: #22C55E; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2); }
     </style>
 </head>
@@ -88,13 +56,7 @@
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center mb-3">
                 <div class="flex items-center gap-2">
-                    <!-- ========================================================= -->
-                    <!-- UBAH LINK LOGO DI BAWAH INI -->
-                    <!-- ========================================================= -->
                     <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo" class="h-10 w-10 rounded-lg object-cover shadow-sm">
-                    <!-- ========================================================= -->
-                    <!-- UBAH NAMA TOKO DI BAWAH INI -->
-                    <!-- ========================================================= -->
                     <h1 class="text-lg font-bold text-gray-800">KEMOENIK</h1>
                 </div>
                 <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
@@ -103,13 +65,10 @@
                     <a href="#" class="hover:text-black">Tentang Kami</a>
                 </nav>
                 <button onclick="openCart()" class="relative p-2 hover:bg-gray-100 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                     <span id="cart-count-header" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold hidden">0</span>
                 </button>
             </div>
-            <!-- Pencarian Produk -->
             <div class="relative">
                 <input type="text" id="searchInput" placeholder="Cari produk impianmu..." class="w-full bg-gray-100 border-none rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition">
                 <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -117,11 +76,11 @@
         </div>
     </header>
 
-    <!-- INFO FLASH SALE -->
+    <!-- INFO FLASH SALE (Sekarang dari CONFIG) -->
     <section class="bg-white border-b border-gray-100 py-3 shadow-sm">
         <div class="container mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-2 text-center">
-            <span class="bg-red-100 text-red-600 text-xs font-bold px-3 py-1 rounded-full uppercase">Flash Sale</span>
-            <p class="text-sm text-gray-600 font-medium">Dapatkan Voucher Ongkir 15rb untuk setiap pembelian diatas 120 Ribu.</p>
+            <span id="promo-title-badge" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-1 rounded-full uppercase"></span>
+            <p id="promo-desc-text" class="text-sm text-gray-600 font-medium"></p>
         </div>
     </section>
 
@@ -146,33 +105,22 @@
                     <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="h-8 w-8 rounded-lg">
                     <h3 class="font-bold text-lg text-gray-800">KEMOENIK</h3>
                 </div>
-                <!-- ========================================================= -->
-                <!-- UBAH ALAMAT DI BAWAH INI -->
-                <!-- ========================================================= -->
                 <p class="leading-relaxed text-gray-600">Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, Kota Bandung, Kode Pos 40972</p>
             </div>
             <div>
-                <!-- ========================================================= -->
-                <!-- UBAH JAM LAYANAN DI BAWAH INI -->
-                <!-- ========================================================= -->
                 <h4 class="font-bold mb-4 text-gray-800">Layanan Pelanggan</h4>
                 <p class="mb-1 text-gray-600">Buka Setiap hari: 09.00 - 18.00</p>
                 <p class="text-gray-500 text-xs">Fast Response via WhatsApp</p>
             </div>
             <div>
                 <h4 class="font-bold mb-4 text-gray-800">Ikuti Kami</h4>
-                <!-- ========================================================= -->
-                <!-- UBAH LINK INSTAGRAM DI BAWAH INI -->
-                <!-- ========================================================= -->
                 <a href="https://instagram.com/kemoenik26" target="_blank" class="inline-flex items-center gap-2 text-pink-600 hover:underline font-medium">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     kemoenik26
                 </a>
             </div>
         </div>
-        <div class="border-t border-gray-100 py-4 text-center text-xs text-gray-400">
-            &copy; 2024 Kemoenik. All rights reserved.
-        </div>
+        <div class="border-t border-gray-100 py-4 text-center text-xs text-gray-400">&copy; 2024 Kemoenik. All rights reserved.</div>
     </footer>
 
     <!-- TOMBOL MENGAMBANG -->
@@ -213,27 +161,20 @@
         </div>
     </div>
 
-    <!-- MODAL CHECKOUT (Form Input Data) -->
+    <!-- MODAL CHECKOUT -->
     <div id="checkout-modal" class="modal-overlay">
         <div class="modal-content p-6">
             <button onclick="closeCheckout()" class="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-            
             <h3 class="text-xl font-bold mb-4">Checkout</h3>
-
-            <!-- Form Input Data Pembeli -->
             <div class="space-y-3 mb-4">
                 <input type="text" id="input-name" placeholder="Nama Lengkap *" class="input-form" required>
                 <input type="tel" id="input-phone" placeholder="No. WhatsApp *" class="input-form" required>
                 <textarea id="input-address" placeholder="Alamat Lengkap (Kecamatan, Kode Pos) *" class="input-form" rows="3" required></textarea>
             </div>
-
-            <!-- Catatan Upload Bukti -->
             <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg mb-4 text-xs text-yellow-800 flex items-start gap-2">
                 <svg class="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span>Setelah klik "Bayar Sekarang", Anda akan diarahkan ke WhatsApp. Silakan kirim <b>Bukti Transfer</b> Anda di sana.</span>
             </div>
-
-            <!-- Ringkasan Pesanan -->
             <div class="bg-gray-50 p-4 rounded-lg mb-4 text-sm">
                 <h4 class="font-semibold mb-2 text-gray-700">Ringkasan Pesanan:</h4>
                 <div id="checkout-summary" class="space-y-1 text-gray-600"></div>
@@ -242,8 +183,6 @@
                     <span id="checkout-total" class="text-red-500"></span>
                 </div>
             </div>
-
-            <!-- Metode Pembayaran -->
             <div class="mb-6">
                 <h4 class="font-semibold mb-2 text-sm text-gray-700">Silakan transfer ke:</h4>
                 <div id="bank-list" class="space-y-2"></div>
@@ -252,7 +191,6 @@
                     <img id="qris-image" src="" alt="QRIS" class="mx-auto w-32 h-32 object-contain rounded bg-white p-1">
                 </div>
             </div>
-
             <button onclick="confirmPayment()" class="w-full bg-green-500 text-white py-3 rounded-xl font-semibold hover:bg-green-600 transition flex items-center justify-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Bayar Sekarang
@@ -263,32 +201,24 @@
     <!-- JAVASCRIPT -->
     <script>
         /* ===========================================================
-           KONFIGURASI TOKO (UBAH DATA DI BAWAH INI)
+           KONFIGURASI TOKO
            =========================================================== */
         const CONFIG = {
             storeName: "KEMOENIK",
-            // =========================================================
-            // UBAH NOMOR WA DI SINI (Format 62...)
-            // =========================================================
             whatsappNumber: "6281546450547", 
             
             // =========================================================
-            // UBAH REKENING BANK DI SINI
+            // UBAH TEKS FLASH SALE DI SINI
             // =========================================================
+            promoTitle: "Flash Sale",
+            promoText: "Dapatkan Voucher Ongkir 15rb untuk setiap pembelian diatas 120 Ribu.",
+            
             bankAccounts: [
                 { bank: "Bank BRI", number: "000501168248506", name: "DANI RAMDANI" },
                 { bank: "DANA", number: "081546450547", name: "DANI RAMDANI" },
                 { bank: "SEA BANK", number: "901851870313", name: "DANI RAMDANI" }
             ],
-            
-            // =========================================================
-            // UBAH LINK GAMBAR QRIS DI SINI
-            // =========================================================
             qrisImage: "https://placehold.co/200x200/FFFFFF/000000?text=QRIS+ANDA",
-
-            // =========================================================
-            // UBAH LINK BANNER SLIDER DI SINI (5 Gambar)
-            // =========================================================
             sliders: [
                 "https://placehold.co/800x400/22C55E/FFFFFF?text=Banner+Promo+1",
                 "https://placehold.co/800x400/FACC15/000000?text=Banner+Promo+2",
@@ -299,67 +229,65 @@
         };
 
         /* ===========================================================
-           DATA PRODUK (UBAH NAMA, HARGA, GAMBAR, DLL DI BAWAH INI)
+           DATA PRODUK (Gunakan backtick ` untuk deskripsi panjang)
            =========================================================== */
         let productsData = [
             {
                 id: 1,
-                name: "CALCULATOR FAT LOSS", // Nama Produk
-                price: 30000, // Harga Asli
-                discount: 50, // Diskon %
-                image: "https://placehold.co/400x400/eee/333?text=Kaos", // Link Gambar
-                sold: 150, // Terjual
+                name: "CALCULATOR FAT LOSS",
+                price: 30000,
+                discount: 50,
+                image: "https://placehold.co/400x400/eee/333?text=Calculator",
+                sold: 150,
                 rating: 4.9,
-                desc: "CALCULATOR FAT LOSS
-                    membantu kamu untuk mengetahui kebutuhan kalori pemeliharaan,
-                    penurunan berat badan, serta mengetahui berapa lama dapat mencapai bb keinginamu.",
+                desc: `CALCULATOR FAT LOSS membantu kamu untuk mengetahui kebutuhan kalori pemeliharaan, penurunan berat badan, serta mengetahui berapa lama dapat mencapai bb keinginamu.`,
                 reviews: [
-                    {user: "Budi", text: "calculatornya mudah dipahami dan gampang baget ga bikin pusing, untuk pemula cocok!", rate: 5}, 
-                    {user: "Ani", text: "wihh bagus banget saya jadi tau hitunganya ketika mau turun bb", rate: 5}
+                    {user: "Budi", text: "Calculatornya mudah dipahami dan gampang banget ga bikin pusing, untuk pemula cocok!", rate: 5}, 
+                    {user: "Ani", text: "Wihh bagus banget saya jadi tau hitunganya ketika mau turun bb", rate: 5}
                 ] 
             },
             {
                 id: 2,
-                name: "(grend lounching) KEMOENIK SLIM",
-                price: 180000,
-                discount: 100,
-                image: "https://placehold.co/400x400/eee/333?text=Kemeja",
+                name: "(Grand Launching) KEMOENIK SLIM",
+                price: Rp.????,
+                discount: 50,  // Diubah dari 100 agar masuk akal
+                image: "https://placehold.co/400x400/eee/333?text=Slim+1",
                 sold: 89,
                 rating: 4.9,
-                desc: "Flanel premium tidak panas, cocok untuk santai maupun kerja.",
+                desc: `Produk premium untuk menunjang penampilan Anda. Bahan nyaman dan berkualitas tinggi.`,
                 reviews: [{user: "Dedi", text: "Kualitas terbaik.", rate: 5}]
             },
             {
                 id: 3,
-                name: "(grend lounching) KEMOENIK SLIM",
-                price: 180000,
-                discount: 100,
-                image: "https://placehold.co/400x400/eee/333?text=Celana",
+                name: "(Grand Launching) KEMOENIK SLIM 2",
+                price: Rp.????,
+                discount: 50,
+                image: "https://placehold.co/400x400/eee/333?text=Slim+2",
                 sold: 230,
                 rating: 4.9,
-                desc: "belum louncong.",
-                reviews: [{user: "Sari", text: "??!", rate: 4}]
+                desc: `Produk kedua dari seri Kemoenik Slim dengan fitur lebih lengkap.`,
+                reviews: [{user: "Sari", text: "Mantap!", rate: 5}]
             },
             {
                 id: 4,
-                name: "(grend lounching) KEMOENIK SLIM",
-                price: 180000,
-                discount: 100,
-                image: "https://placehold.co/400x400/eee/333?text=Sepatu",
+                name: "(Grand Launching) KEMOENIK SLIM 3",
+                price: Rp.????,
+                discount: 50,
+                image: "https://placehold.co/400x400/eee/333?text=Slim+3",
                 sold: 45,
                 rating: 4.9,
-                desc: "belum louncong.",
-                reviews: [???]
+                desc: `Edisi ketiga dengan desain eksklusif dan terbatas.`,
+                reviews: []  // Diperbaiki: array kosong yang benar
             },
             {
                 id: 5,
-                name: "(grend lounching) KEMOENIK SLIM",
-                price: 18000,
-                discount: 100,
-                image: "https://placehold.co/400x400/eee/333?text=Topi",
+                name: "(Grand Launching) KEMOENIK SLIM 4",
+                price: Rp.????,
+                discount: 50,
+                image: "https://placehold.co/400x400/eee/333?text=Slim+4",
                 sold: 500,
                 rating: 4.9,
-                desc: "belum louncong",
+                desc: `Edisi spesial dengan bonus eksklusif untuk pembelian pertama.`,
                 reviews: [{user: "Riko", text: "Keren abis.", rate: 5}]
             }
         ];
@@ -389,6 +317,9 @@
         function applyConfig() {
             document.getElementById('wa-link').href = `https://wa.me/${CONFIG.whatsappNumber}`;
             document.getElementById('qris-image').src = CONFIG.qrisImage;
+            // Terapkan Promo Text dari CONFIG
+            document.getElementById('promo-title-badge').innerText = CONFIG.promoTitle;
+            document.getElementById('promo-desc-text').innerText = CONFIG.promoText;
         }
 
         // SLIDER
@@ -473,8 +404,6 @@
                             ${p.reviews.map(r => `<div class="bg-gray-50 p-2 rounded text-xs"><div class="flex justify-between mb-1"><span class="font-semibold">${r.user}</span><span class="text-yellow-400">${'★'.repeat(r.rate)}</span></div><p class="text-gray-500">${r.text}</p></div>`).join('')}
                         </div>
                     </div>` : ''}
-                    
-                    <!-- TOMBOL SEJAJAR -->
                     <div class="flex gap-2 mt-4">
                         <button onclick="addToCart(${p.id})" class="flex-1 bg-white border-2 border-black text-black py-3 rounded-xl font-semibold hover:bg-gray-100 transition flex items-center justify-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
@@ -482,7 +411,6 @@
                         </button>
                         <button onclick="buyNow(${p.id})" class="flex-1 bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition">Beli Sekarang</button>
                     </div>
-
                     <div onclick="closeDetail(); window.scrollTo(0,0);" class="mt-6 pt-4 border-t flex items-center justify-center gap-2 cursor-pointer hover:opacity-70 transition">
                         <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="w-6 h-6 rounded">
                         <span class="font-bold text-sm text-gray-700">${CONFIG.storeName}</span>
@@ -505,12 +433,7 @@
             closeDetail();
             openCart();
         }
-        
-        function buyNow(id) {
-            addToCart(id);
-            proceedToCheckout();
-        }
-
+        function buyNow(id) { addToCart(id); proceedToCheckout(); }
         function updateCartUI() {
             const count = cart.reduce((s, i) => s + i.qty, 0);
             document.getElementById('cart-count-sticky').innerText = count;
@@ -558,37 +481,29 @@
             }).join('');
             document.getElementById('checkout-summary').innerHTML = summary;
             document.getElementById('checkout-total').innerText = `Rp ${total.toLocaleString('id-ID')}`;
-            
             document.getElementById('bank-list').innerHTML = CONFIG.bankAccounts.map(b => `
                 <div class="bg-gray-50 p-2 rounded text-xs border flex justify-between items-center">
                     <div><p class="font-bold text-gray-700">${b.bank}</p><p class="font-mono text-gray-500">${b.number}</p></div>
                     <span class="text-[10px] text-gray-400">a.n ${b.name}</span>
                 </div>
             `).join('');
-            
             document.getElementById('checkout-modal').classList.add('active');
         }
         function closeCheckout() { document.getElementById('checkout-modal').classList.remove('active'); }
 
-        // KONFIRMASI PEMBAYARAN
+        // KONFIRMASI
         function confirmPayment() {
             const name = document.getElementById('input-name').value;
             const phone = document.getElementById('input-phone').value;
             const address = document.getElementById('input-address').value;
+            if (!name || !phone || !address) { alert("Harap lengkapi Nama, No HP, dan Alamat sebelum bayar."); return; }
 
-            if (!name || !phone || !address) {
-                alert("Harap lengkapi Nama, No HP, dan Alamat sebelum bayar.");
-                return;
-            }
-
-            // Update Sold Count
             const soldData = JSON.parse(localStorage.getItem('productSold')) || {};
             cart.forEach(item => { soldData[item.id] = (soldData[item.id] || 0) + item.qty; });
             localStorage.setItem('productSold', JSON.stringify(soldData));
             productsData = productsData.map(p => soldData[p.id] ? {...p, sold: soldData[p.id]} : p);
             renderProducts(productsData);
 
-            // Buat Pesan WhatsApp
             let msg = `Halo Admin ${CONFIG.storeName}, saya ingin memesan:\n\n`;
             msg += `*Data Pembeli:*\nNama: ${name}\nNo HP: ${phone}\nAlamat: ${address}\n\n`;
             msg += `*Detail Pesanan:*\n`;
@@ -616,4 +531,3 @@
     </script>
 </body>
 </html>
-
