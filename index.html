@@ -76,7 +76,7 @@
         </div>
     </header>
 
-    <!-- INFO FLASH SALE (Sekarang dari CONFIG) -->
+    <!-- INFO FLASH SALE -->
     <section class="bg-white border-b border-gray-100 py-3 shadow-sm">
         <div class="container mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-2 text-center">
             <span id="promo-title-badge" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-1 rounded-full uppercase"></span>
@@ -207,9 +207,7 @@
             storeName: "KEMOENIK",
             whatsappNumber: "6281546450547", 
             
-            // =========================================================
             // UBAH TEKS FLASH SALE DI SINI
-            // =========================================================
             promoTitle: "Flash Sale",
             promoText: "Dapatkan Voucher Ongkir 15rb untuk setiap pembelian diatas 120 Ribu.",
             
@@ -229,28 +227,30 @@
         };
 
         /* ===========================================================
-           DATA PRODUK (Gunakan backtick ` untuk deskripsi panjang)
+           DATA PRODUK
+           - Jika harga 0, akan tampil "Rp.???"
+           - Jika discount 0, tidak ada potongan
            =========================================================== */
         let productsData = [
             {
                 id: 1,
                 name: "CALCULATOR FAT LOSS",
-                price: 30000,
+                price: 30000, // Ganti 0 jika harga belum pasti
                 discount: 50,
                 image: "https://placehold.co/400x400/eee/333?text=Calculator",
                 sold: 150,
                 rating: 4.9,
                 desc: `CALCULATOR FAT LOSS membantu kamu untuk mengetahui kebutuhan kalori pemeliharaan, penurunan berat badan, serta mengetahui berapa lama dapat mencapai bb keinginamu.`,
                 reviews: [
-                    {user: "Budi", text: "Calculatornya mudah dipahami dan gampang banget ga bikin pusing, untuk pemula cocok!", rate: 5}, 
+                    {user: "Budi", text: "Calculatornya mudah dipahami dan gampang banget ga bikin pusing!", rate: 5}, 
                     {user: "Ani", text: "Wihh bagus banget saya jadi tau hitunganya ketika mau turun bb", rate: 5}
                 ] 
             },
             {
                 id: 2,
                 name: "(Grand Launching) KEMOENIK SLIM",
-                price: 0,
-                discount: 0,  // Diubah dari 100 agar masuk akal
+                price: 0, // Harga belum pasti -> akan tampil Rp.???
+                discount: 0,
                 image: "https://placehold.co/400x400/eee/333?text=Slim+1",
                 sold: 89,
                 rating: 4.9,
@@ -260,8 +260,8 @@
             {
                 id: 3,
                 name: "(Grand Launching) KEMOENIK SLIM 2",
-                price: 0,
-                discount: 20,
+                price: 0, // Harga belum pasti -> akan tampil Rp.???
+                discount: 0,
                 image: "https://placehold.co/400x400/eee/333?text=Slim+2",
                 sold: 230,
                 rating: 4.9,
@@ -271,18 +271,18 @@
             {
                 id: 4,
                 name: "(Grand Launching) KEMOENIK SLIM 3",
-                price: 0,
+                price: 0, // Harga belum pasti -> akan tampil Rp.???
                 discount: 0,
                 image: "https://placehold.co/400x400/eee/333?text=Slim+3",
                 sold: 45,
                 rating: 4.9,
                 desc: `Edisi ketiga dengan desain eksklusif dan terbatas.`,
-                reviews: []  // Diperbaiki: array kosong yang benar
+                reviews: []
             },
             {
                 id: 5,
                 name: "(Grand Launching) KEMOENIK SLIM 4",
-                price: 0,
+                price: 0, // Harga belum pasti -> akan tampil Rp.???
                 discount: 0,
                 image: "https://placehold.co/400x400/eee/333?text=Slim+4",
                 sold: 500,
@@ -317,7 +317,6 @@
         function applyConfig() {
             document.getElementById('wa-link').href = `https://wa.me/${CONFIG.whatsappNumber}`;
             document.getElementById('qris-image').src = CONFIG.qrisImage;
-            // Terapkan Promo Text dari CONFIG
             document.getElementById('promo-title-badge').innerText = CONFIG.promoTitle;
             document.getElementById('promo-desc-text').innerText = CONFIG.promoText;
         }
@@ -342,7 +341,21 @@
         function renderProducts(data) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = data.map(p => {
-                const finalPrice = p.price - (p.price * p.discount / 100);
+                // Logika Harga: Jika 0 tampil "Rp.???", jika ada hitung diskon
+                let priceText = "";
+                let originalPriceText = "";
+                let finalPrice = 0;
+
+                if (p.price === 0) {
+                    priceText = "Rp.???";
+                } else {
+                    finalPrice = p.price - (p.price * p.discount / 100);
+                    priceText = `Rp ${finalPrice.toLocaleString('id-ID')}`;
+                    if (p.discount > 0) {
+                        originalPriceText = `Rp ${p.price.toLocaleString('id-ID')}`;
+                    }
+                }
+
                 return `
                 <div onclick="openDetail(${p.id})" class="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition duration-300 cursor-pointer group fade-in flex flex-col">
                     <div class="relative overflow-hidden">
@@ -353,8 +366,8 @@
                         <div>
                             <h3 class="font-semibold text-gray-800 text-sm leading-tight line-clamp-2">${p.name}</h3>
                             <div class="mt-1">
-                                <span class="text-red-500 font-bold text-sm">Rp ${finalPrice.toLocaleString('id-ID')}</span>
-                                ${p.discount > 0 ? `<span class="text-gray-400 text-[10px] line-through ml-1">Rp ${p.price.toLocaleString('id-ID')}</span>` : ''}
+                                <span class="text-red-500 font-bold text-sm">${priceText}</span>
+                                ${originalPriceText ? `<span class="text-gray-400 text-[10px] line-through ml-1">${originalPriceText}</span>` : ''}
                             </div>
                             <div class="flex items-center gap-1 mt-1.5 text-gray-500 text-xs">
                                 <svg class="w-3.5 h-3.5 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -372,7 +385,22 @@
         function openDetail(id) {
             const p = productsData.find(x => x.id === id);
             if(!p) return;
-            const finalPrice = p.price - (p.price * p.discount / 100);
+            
+            // Logika Harga Detail
+            let priceText = "";
+            let originalPriceText = "";
+            let finalPrice = 0;
+
+            if (p.price === 0) {
+                priceText = "Rp.???";
+            } else {
+                finalPrice = p.price - (p.price * p.discount / 100);
+                priceText = `Rp ${finalPrice.toLocaleString('id-ID')}`;
+                if (p.discount > 0) {
+                    originalPriceText = `Rp ${p.price.toLocaleString('id-ID')}`;
+                }
+            }
+
             const stars = Array(5).fill(0).map((_, i) => i < Math.floor(p.rating) ? 'text-yellow-400' : 'text-gray-300').map(c => `<svg class="w-4 h-4 ${c}" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`).join('');
 
             document.getElementById('detail-content').innerHTML = `
@@ -386,8 +414,8 @@
                         <div class="flex items-center gap-1">${stars}</div>
                     </div>
                     <div class="mb-4">
-                        <span class="text-red-500 text-xl font-bold">Rp ${finalPrice.toLocaleString('id-ID')}</span>
-                        ${p.discount > 0 ? `<span class="text-sm text-gray-400 line-through ml-2">Rp ${p.price.toLocaleString('id-ID')}</span>` : ''}
+                        <span class="text-red-500 text-xl font-bold">${priceText}</span>
+                        ${originalPriceText ? `<span class="text-sm text-gray-400 line-through ml-2">${originalPriceText}</span>` : ''}
                     </div>
                     <div class="flex gap-2 text-xs text-gray-500 mb-4 border-b pb-4">
                         <span class="bg-gray-100 px-2 py-1 rounded">Terjual ${p.sold}</span>
@@ -423,6 +451,10 @@
         // KERANJANG
         function addToCart(id) {
             const p = productsData.find(x => x.id === id);
+            if (p.price === 0) {
+                alert("Produk ini belum memiliki harga pasti. Silakan hubungi admin.");
+                return;
+            }
             const exist = cart.find(i => i.id === id);
             if (exist) exist.qty++;
             else {
@@ -433,7 +465,7 @@
             closeDetail();
             openCart();
         }
-        function buyNow(id) { addToCart(id); proceedToCheckout(); }
+        function buyNow(id) { addToCart(id); if(productsData.find(x=>x.id === id).price > 0) proceedToCheckout(); }
         function updateCartUI() {
             const count = cart.reduce((s, i) => s + i.qty, 0);
             document.getElementById('cart-count-sticky').innerText = count;
@@ -531,4 +563,3 @@
     </script>
 </body>
 </html>
-
