@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <!-- PENGATURAN VIEWPORT KUNCI (ZOOM TERKUNCI, SCROLL NORMAL) -->
+    <!-- PENGATURAN VIEWPORT KUNCI -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -18,129 +18,230 @@
         :root {
             --primary: #48BB78;
             --primary-dark: #2F855A;
-            --bg-main: #F3F4F6;
+            --bg-soft: #F5F7FA; /* Abu-abu sangat muda lembut */
             --text-main: #1F2937;
+            --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.03); /* Shadow lembut */
         }
 
-        /* ========== CSS DASAR ========== */
+        /* ========== CSS DASAR (PREMIUM FEEL) ========== */
         * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* 
-           PENGATURAN SCROLL & ZOOM:
-           1. Hanya menggunakan touch-action: manipulation untuk mencegah zoom double tap.
-           2. Tidak ada overflow:hidden yang menghambat scroll.
-        */
         html { 
             -webkit-text-size-adjust: 100%; 
             -ms-text-size-adjust: 100%;
-            /* Hapus overflow-x:hidden agar tidak konflik dengan scroll alami */
+            /* Lock scroll saat modal aktif via JS, bukan CSS fixed */
         }
+        
         body { 
-            background-color: var(--bg-main); 
+            /* Gradien lembut untuk background utama */
+            background: linear-gradient(180deg, #FFFFFF 0%, #F5F7FA 100%);
+            background-attachment: fixed;
             color: var(--text-main); 
-            overscroll-behavior: none; /* Mencegah pull-to-refresh browser jika diinginkan */
-            /* touch-action: pan-y; -> Dihilangkan agar gesture alami browser utama, 
-               tapi manipulation di bawah cukup untuk anti-zoom */
+            overscroll-behavior: none; 
             position: relative;
-            min-height: 100vh; /* Gunakan min-height agar footer tidak mengganggu */
+            min-height: 100vh;
+            transition: background 0.3s;
         }
 
-        /* ANTI ZOOM DOUBLE TAP VIA CSS (Paling Aman) */
-        *, *::before, *::after {
-            touch-action: manipulation; /* Mencegah double tap zoom, tapi memperbolehkan scroll & tap */
+        /* Class untuk mengunci scroll body saat modal open */
+        body.no-scroll {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
         }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        /* ANTI ZOOM DOUBLE TAP */
+        *, *::before, *::after { touch-action: manipulation; }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(2px); }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background: white; width: 100%; max-width: 500px; max-height: 92vh; overflow-y: auto; position: relative; animation: slideUp 0.35s ease-out; border-radius: 24px 24px 0 0; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 3px; height: 3px;}
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+
+        /* ========== MODAL RESPONSIF (KEYBOARD FRIENDLY) ========== */
+        .modal-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(255, 255, 255, 0.6); /* Overlay putih lembut/transparan */
+            backdrop-filter: blur(8px); /* Blur premium */
+            z-index: 1000; 
+            display: none; 
+            align-items: flex-end; /* Default bottom sheet */
+            justify-content: center; 
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { 
+            display: flex; 
+            opacity: 1;
+            /* Saat keyboard muncul, biarkan browser menangani posisi agar tidak ancur */
+            align-items: flex-end; 
+        }
+        
+        .modal-content { 
+            background: white; 
+            width: 100%; 
+            max-width: 500px; 
+            width: 100%;
+            /* Penting: Gunakan max-height dinamis, hindari height fixed */
+            max-height: 95dvh; /* Dynamic Viewport Height untuk mobile modern */
+            border-radius: 24px 24px 0 0; 
+            overflow-y: auto; /* Scroll internal */
+            overflow-x: hidden;
+            position: relative; 
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1); 
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.08);
+            -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
+        }
+        
+        @keyframes slideUp { from { transform: translateY(20%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
         /* INPUT STYLE */
         .input-style { 
             width: 100%; 
             border: 1px solid #E5E7EB; 
-            padding: 12px; 
-            border-radius: 12px; 
-            font-size: 16px; /* MINIMAL 16PX Anti Zoom Safari */
+            padding: 14px 16px; /* Padding lebih lapang */
+            border-radius: 14px; /* Lebih bulat */
+            font-size: 16px; /* Anti zoom Safari */
             margin-bottom: 12px; 
             outline: none; 
             background: #F9FAFB; 
+            transition: all 0.2s;
         }
-        .input-style:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1); }
-        .btn-primary { background: var(--primary); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 600; width: 100%; border: none; }
-        .btn-primary:hover { background: var(--primary-dark); }
+        .input-style:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1); 
+            background: white;
+        }
+        .btn-primary { background: var(--primary); color: white; padding: 14px 20px; border-radius: 14px; font-weight: 700; width: 100%; border: none; transition: transform 0.1s; }
+        .btn-primary:active { transform: scale(0.98); }
 
         /* Premium Bank Card Style */
         .bank-card {
-            background: linear-gradient(145deg, #ffffff, #f9fafb);
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 8px;
+            background: #ffffff;
+            border: 1px solid #f3f4f6;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-soft);
+        }
+        .bank-name { font-size: 12px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .bank-number { font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: 700; color: #1f2937; letter-spacing: 1px; }
+        .bank-owner { font-size: 12px; color: #6b7280; margin-top: 4px; }
+
+        /* ========== PRODUK KATALOG OPTIMASI MOBILE ========== */
+        #product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 Kolom Fixed */
+            gap: 10px; /* Spacing 10px */
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px; /* Bulat lembut */
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0,0,0,0.02);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            height: 100%; /* Samakan tinggi kolom */
         }
-        .bank-name { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-        .bank-number { font-family: 'Courier New', Courier, monospace; font-size: 18px; font-weight: 700; color: #1f2937; letter-spacing: 1px; }
-        .bank-owner { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+        .product-img-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* Rasio 1:1 */
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+        .product-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+        .product-info {
+            padding: 10px; /* Padding compact */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .product-title {
+            font-size: 12px; /* Font compact */
+            font-weight: 600;
+            color: #333;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            /* Batasi 2 baris */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 2.6em; /* Tinggi fix 2 baris */
+        }
+        .product-price {
+            font-size: 14px; /* Harga tegas */
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-top: auto; /* Dorong ke bawah */
+            margin-bottom: 8px;
+        }
+        .product-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 8px; /* Tombol tidak terlalu tinggi */
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .product-btn:active { background: var(--primary-dark); }
 
-        /* CSS UNTUK PRINT & PDF */
+        /* Quick Links */
+        .quick-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 10px 0;
+            border-radius: 14px;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s;
+        }
+        .quick-link:active { transform: scale(0.95); }
+        
+        /* CSS Print */
         @media print {
             body * { visibility: hidden; }
             #invoice-modal, #invoice-modal * { visibility: visible; }
-            #invoice-modal { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-                height: auto; 
-                display: block !important; 
-                background: white; 
-                z-index: 99999;
-            }
-            #invoice-modal > .modal-content { 
-                max-height: none !important; 
-                overflow: visible !important; 
-                border-radius: 0; 
-                max-width: 100%; 
-                margin: 0; 
-                box-shadow: none;
-            }
-            #invoice-container {
-                width: 100%;
-                max-width: 100%; 
-                margin: 0;
-                padding: 0;
-                background: white;
-                color: black;
-                height: auto !important;
-                overflow: visible !important;
-            }
+            #invoice-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; display: block !important; background: white; z-index: 99999; }
+            #invoice-modal > .modal-content { max-height: none !important; overflow: visible !important; border-radius: 0; box-shadow: none; }
+            #invoice-container { width: 100%; margin: 0; padding: 20px; background: white; color: black; overflow: visible !important; }
             .no-print { display: none !important; }
-            table { page-break-inside: avoid; }
-            .bank-card { page-break-inside: avoid; }
-            div { page-break-inside: auto; }
         }
     </style>
 </head>
 <body>
 
     <!-- FLOATING TRACKING -->
-    <div onclick="openTracking()" class="fixed bottom-20 right-4 bg-white p-3 rounded-full shadow-lg z-50 cursor-pointer hover:bg-gray-50 border hover:scale-110 transition">
+    <div onclick="openTracking()" class="fixed bottom-20 right-4 bg-white p-3 rounded-full shadow-lg z-40 cursor-pointer hover:bg-gray-50 border hover:scale-110 transition">
         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
     </div>
 
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b shadow-sm">
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
                 <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo" class="h-9 w-9 rounded-xl object-cover shadow-sm">
                 <h1 class="text-lg font-bold text-gray-800" id="store-name">KEMOENIK</h1>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
                 <button onclick="toggleSearch()" class="p-2 hover:bg-gray-100 rounded-full"><svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></button>
                 <button onclick="openWishlist()" class="relative p-2 hover:bg-gray-100 rounded-full">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
@@ -163,29 +264,43 @@
             <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10" id="slider-dots"></div>
         </section>
 
-        <section class="mb-6 grid grid-cols-4 gap-2">
-             <a href="https://instagram.com/kemoenik26" target="_blank" class="flex flex-col items-center p-2 bg-white rounded-xl shadow-sm hover:shadow-md transition"><svg class="w-6 h-6 text-pink-500 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg><span class="text-[10px] text-gray-600">Instagram</span></a>
-             <a href="#" onclick="alert('Kp Cibubuay, Des cibodas')" class="flex flex-col items-center p-2 bg-white rounded-xl shadow-sm hover:shadow-md transition"><svg class="w-6 h-6 text-blue-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span class="text-[10px] text-gray-600">Lokasi</span></a>
-             <a href="https://tiktok.com/@kemoenik" target="_blank" class="flex flex-col items-center p-2 bg-white rounded-xl shadow-sm hover:shadow-md transition"><svg class="w-6 h-6 text-gray-800 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg><span class="text-[10px] text-gray-600">TikTok</span></a>
-             <a id="wa-btn-header" href="#" class="flex flex-col items-center p-2 bg-white rounded-xl shadow-sm hover:shadow-md transition"><svg class="w-6 h-6 text-green-500 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span class="text-[10px] text-gray-600">Chat</span></a>
+        <!-- Quick Links -->
+        <section class="mb-5 grid grid-cols-4 gap-2">
+             <a href="https://instagram.com/kemoenik26" target="_blank" class="quick-link">
+                 <svg class="w-6 h-6 text-pink-500 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                 <span class="text-[10px] text-gray-600 font-medium">Instagram</span>
+             </a>
+             <a href="#" onclick="event.preventDefault(); alert('Kp Cibubuay, Des cibodas')" class="quick-link">
+                 <svg class="w-6 h-6 text-blue-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                 <span class="text-[10px] text-gray-600 font-medium">Lokasi</span>
+             </a>
+             <a href="https://tiktok.com/@kemoenik" target="_blank" class="quick-link">
+                 <svg class="w-6 h-6 text-gray-800 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>
+                 <span class="text-[10px] text-gray-600 font-medium">TikTok</span>
+             </a>
+             <!-- PERBAIKAN: Ikon Chat WA benar (lingkaran penuh) -->
+             <a id="wa-btn-header" href="#" class="quick-link">
+                 <svg class="w-6 h-6 text-green-500 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                 <span class="text-[10px] text-gray-600 font-medium">Chat</span>
+             </a>
         </section>
 
         <section class="mb-4"><div class="flex gap-2 overflow-x-auto no-scrollbar py-1" id="category-list"></div></section>
-        <section id="product-section"><div class="grid grid-cols-2 gap-3" id="product-grid"></div></section>
+        <section id="product-section"><div id="product-grid"></div></section>
     </main>
 
-    <footer class="bg-white text-gray-700 mt-8 shadow-inner pb-24 border-t">
+    <footer class="bg-white text-gray-500 mt-8 shadow-inner pb-24 border-t border-gray-100">
         <div class="container mx-auto px-4 py-8 text-center">
-            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="h-14 w-14 rounded-full mx-auto mb-2 shadow">
-            <h3 class="font-bold text-lg mb-1">KEMOENIK</h3>
-            <p class="text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, 40972</p>
+            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="h-12 w-12 rounded-full mx-auto mb-2 shadow">
+            <h3 class="font-bold text-gray-700 mb-1">KEMOENIK</h3>
+            <p class="text-xs max-w-xs mx-auto leading-relaxed opacity-70">Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, 40972</p>
         </div>
     </footer>
 
-    <div id="sticky-bar" class="fixed bottom-0 left-0 right-0 bg-white shadow-2xl p-3 z-50 hidden border-t">
+    <div id="sticky-bar" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md shadow-2xl p-3 z-40 hidden border-t border-gray-100">
         <div class="flex items-center justify-between max-w-lg mx-auto">
-            <div><span class="text-xs text-gray-500"><span id="sticky-items">0</span> item</span><p class="font-bold text-sm" id="sticky-total">Rp 0</p></div>
-            <button onclick="openCart()" class="bg-green-500 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow hover:bg-green-600">Keranjang</button>
+            <div><span class="text-xs text-gray-500"><span id="sticky-items">0</span> item</span><p class="font-bold text-sm text-gray-800" id="sticky-total">Rp 0</p></div>
+            <button onclick="openCart()" class="bg-green-500 text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow hover:bg-green-600 active:scale-95 transition">Keranjang</button>
         </div>
     </div>
 
@@ -197,20 +312,19 @@
     <!-- INVOICE MODAL -->
     <div id="invoice-modal" class="modal-overlay">
         <div class="modal-content">
-            <!-- Kontainer Invoice -->
             <div id="invoice-container" style="background: white; width: 100%; margin: 0 auto; overflow: visible;"></div>
             <div class="sticky bottom-0 p-4 bg-gray-50 border-t no-print flex flex-col gap-2">
                 <div class="flex gap-2">
-                    <button onclick="printInvoice()" class="btn-primary bg-gray-800 flex-1 flex items-center justify-center gap-2 py-2">
+                    <button onclick="printInvoice()" class="btn-primary bg-gray-800 flex-1 flex items-center justify-center gap-2 py-2 text-xs">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                         Cetak
                     </button>
-                    <button onclick="downloadPdf()" class="btn-primary bg-blue-600 flex-1 flex items-center justify-center gap-2 py-2">
+                    <button onclick="downloadPdf()" class="btn-primary bg-blue-600 flex-1 flex items-center justify-center gap-2 py-2 text-xs">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                         PDF
                     </button>
                 </div>
-                <button onclick="sendInvoiceWA()" class="btn-primary bg-green-600 flex items-center justify-center gap-2 py-3">
+                <button onclick="sendInvoiceWA()" class="btn-primary bg-green-600 flex items-center justify-center gap-2 py-3 text-sm">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                     Kirim Konfirmasi ke WhatsApp
                 </button>
@@ -227,34 +341,24 @@
 
     <script>
         /* ===========================================================
-           1. KONFIGURASI DATA
+           KONFIGURASI DATA
            =========================================================== */
         const CONFIG = {
             storeName: "KEMOENIK",
             storeAddress: "Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, 40972",
             whatsappNumber: "6281546450547",
-            
-            // Daftar Rekening
             bankAccounts: [
                 { bank: "Bank BRI", number: "000501168248506", name: "DANI RAMDANI" },
                 { bank: "DANA", number: "081546450547", name: "DANI RAMDANI" },
                 { bank: "SeaBank", number: "901851870313", name: "DANI RAMDANI" }
             ],
-            
-            // Daftar Kupon
             coupons: [ { code: "KEMOENIK26", type: "shipping", value: 15000, minPurchase: 120000 } ],
-            
-            // Kategori
             categories: [ { id: 'all', name: "Semua", icon: 'grid' }, { id: 'calc', name: "Calculator", icon: 'calc' }, { id: 'kapsul', name: "Kapsul", icon: 'pill' }, { id: 'teh', name: "Teh", icon: 'tea' } ],
-            
-            // Slider
             sliders: [
                 "https://placehold.co/800x400/48BB78/FFFFFF?text=Banner+1", 
                 "https://placehold.co/800x400/F3F4F6/333333?text=Banner+2",
                 "https://placehold.co/800x400/FFFFFF/000000?text=Banner+3"
             ],
-
-            // Produk
             products: [
                 { id: 1, category: 'calc', name: "CALCULATOR FAT LOSS", price: 30000, discount: 50, images: ["https://placehold.co/400x400/eee/333?text=Calc"], sold: 150, rating: 4.9, desc: `Membantu kebutuhan kalori harian.` },
                 { id: 2, category: 'kapsul', name: "KEMOENIK SLIM 1", price: 100000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Kapsul"], sold: 89, rating: 4.9, desc: `Produk premium.` },
@@ -275,9 +379,13 @@
             renderSliders();
             document.getElementById('wa-btn-header').href = `https://wa.me/${CONFIG.whatsappNumber}`;
             document.getElementById('store-name').innerText = CONFIG.storeName;
-            
-            /* BLOK SCRIPT PENCEGAH ZOOM DIHAPUS SESUAI PERMINTAAN */
         });
+
+        // LOCK BODY SCROLL FUNCTION
+        function toggleBodyScroll(lock) {
+            if(lock) document.body.classList.add('no-scroll');
+            else document.body.classList.remove('no-scroll');
+        }
 
         function loadData() { try { cart = JSON.parse(localStorage.getItem('cart')) || []; } catch { cart = []; } try { wishlist = JSON.parse(localStorage.getItem('wish')) || []; } catch { wishlist = []; } updateStickyBar(); updateWishlistUI(); }
         function saveData() { localStorage.setItem('cart', JSON.stringify(cart)); localStorage.setItem('wish', JSON.stringify(wishlist)); }
@@ -289,15 +397,100 @@
         function renderCategories() { document.getElementById('category-list').innerHTML = CONFIG.categories.map(c => `<button onclick="filterCategory('${c.id}')" class="flex flex-col items-center flex-shrink-0 px-4 py-2 rounded-xl transition-all duration-300 ${c.id === activeCategory ? 'bg-green-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-50'} "><span class="text-lg mb-0.5">${getIcon(c.icon)}</span><span class="text-[11px] font-semibold">${c.name}</span></button>`).join(''); }
         function getIcon(i) { if (i === 'grid') return '☰'; if (i === 'calc') return '🧮'; if (i === 'pill') return '💊'; if (i === 'tea') return '🍵'; return '📦'; }
         function filterCategory(id) { activeCategory = id; renderCategories(); renderProducts(); document.getElementById('product-section').scrollIntoView({ behavior: 'smooth' }); }
-        function renderProducts() { const el = document.getElementById('product-grid'); const data = activeCategory === 'all' ? CONFIG.products : CONFIG.products.filter(p => p.category === activeCategory); el.innerHTML = data.map(p => { const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`; const origText = p.discount > 0 ? `Rp ${p.price.toLocaleString('id-ID')}` : ''; const imgSrc = p.images?.[0] || 'https://placehold.co/400'; const isWished = wishlist.find(w => w.id === p.id); return `<div class="bg-white rounded-2xl shadow border fade-up cursor-pointer relative group mb-3" onclick="openDetail(${p.id})"><div class="relative overflow-hidden rounded-t-2xl"><img src="${imgSrc}" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-300">${p.discount > 0 ? `<span class="absolute top-2 left-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded font-bold shadow">${p.discount}%</span>` : ''}</div><div class="p-3"><h3 class="font-semibold text-gray-800 text-sm truncate">${p.name}</h3><div class="flex items-baseline gap-1 mt-1"><span class="text-green-600 font-bold text-sm">${priceText}</span>${origText ? `<span class="text-gray-400 text-[10px] line-through">${origText}</span>` : ''}</div><div class="flex gap-2 mt-2"><button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="flex-1 border text-xs py-1.5 rounded-lg hover:bg-gray-50 flex justify-center items-center gap-1">${isWished ? '<svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>' : '<svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>'}</button><button onclick="event.stopPropagation(); addCart(${p.id})" class="flex-1 bg-green-500/10 text-green-600 text-xs font-semibold py-1.5 rounded-lg hover:bg-green-500 hover:text-white transition-colors">+ Keranjang</button></div></div></div>`; }).join(''); }
-        function openDetail(id) { const p = CONFIG.products.find(x => x.id === id); if(!p) return; const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`; const origText = p.discount > 0 ? `Rp ${p.price.toLocaleString('id-ID')}` : ''; const imgSrc = p.images?.[0] || 'https://placehold.co/400'; document.getElementById('detail-content').innerHTML = `<div class="relative bg-gray-100"><img src="${imgSrc}" class="w-full aspect-square object-cover"><button onclick="closeDetail()" class="absolute top-3 right-3 bg-white p-1.5 rounded-full shadow hover:bg-gray-100"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div><div class="p-5 bg-white rounded-t-3xl -mt-6 relative"><h2 class="text-lg font-bold text-gray-800">${p.name}</h2><div class="flex items-center gap-2 mt-1"><span class="text-green-600 text-xl font-bold">${priceText}</span>${origText ? `<span class="text-sm text-gray-400 line-through">${origText}</span>` : ''}</div><div class="border-t border-b my-4 py-4"><h4 class="font-semibold mb-1 text-sm">Deskripsi</h4><p class="text-sm text-gray-600">${p.desc}</p></div><div class="flex gap-2 mt-4"><button onclick="addCart(${p.id}); closeDetail();" class="flex-1 bg-white border-2 border-green-500 text-green-600 py-2.5 rounded-xl font-semibold hover:bg-green-50 transition-colors">Tambah</button><button onclick="addCart(${p.id}); closeDetail(); openCart();" class="flex-1 btn-primary py-2.5">Beli</button></div></div>`; document.getElementById('detail-modal').classList.add('active'); }
-        function closeDetail() { document.getElementById('detail-modal').classList.remove('active'); }
+        
+        // OPTIMASI RENDER PRODUK
+        function renderProducts() { 
+            const el = document.getElementById('product-grid'); 
+            const data = activeCategory === 'all' ? CONFIG.products : CONFIG.products.filter(p => p.category === activeCategory); 
+            el.innerHTML = data.map(p => { 
+                const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`; 
+                const origText = p.discount > 0 ? `Rp ${p.price.toLocaleString('id-ID')}` : ''; 
+                const imgSrc = p.images?.[0] || 'https://placehold.co/400'; 
+                const isWished = wishlist.find(w => w.id === p.id); 
+                return `
+                <div class="product-card" onclick="openDetail(${p.id})">
+                    <div class="product-img-wrapper">
+                        <img src="${imgSrc}" class="product-img">
+                        ${p.discount > 0 ? `<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] px-2 py-0.5 rounded font-bold shadow">${p.discount}%</span>` : ''}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${p.name}</h3>
+                        <div class="flex items-baseline gap-1 mb-1">
+                            <span class="product-price">${priceText}</span>
+                            ${origText ? `<span class="text-gray-400 text-[9px] line-through">${origText}</span>` : ''}
+                        </div>
+                        <button onclick="event.stopPropagation(); addCart(${p.id})" class="product-btn">+ Keranjang</button>
+                    </div>
+                </div>`; 
+            }).join(''); 
+        }
+
+        // MODAL HANDLING DENGAN AUTO SCROLL
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            toggleBodyScroll(true);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            toggleBodyScroll(false);
+        }
+        
+        // Helper for inputs inside modal
+        function setupInputFocus(modalContent) {
+            const inputs = modalContent.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    // Delay sedikit agar keyboard muncul dulu, lalu scroll ke elemen
+                    setTimeout(() => {
+                        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                });
+            });
+        }
+
+        function openDetail(id) { 
+            const p = CONFIG.products.find(x => x.id === id); if(!p) return; 
+            const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`; 
+            const origText = p.discount > 0 ? `Rp ${p.price.toLocaleString('id-ID')}` : ''; 
+            const imgSrc = p.images?.[0] || 'https://placehold.co/400'; 
+            
+            const contentHtml = `
+            <div class="relative bg-gray-100">
+                <img src="${imgSrc}" class="w-full aspect-square object-cover">
+                <button onclick="closeDetail()" class="absolute top-3 right-3 bg-white p-1.5 rounded-full shadow hover:bg-gray-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="p-5 bg-white rounded-t-3xl -mt-6 relative">
+                <h2 class="text-lg font-bold text-gray-800">${p.name}</h2>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-green-600 text-xl font-bold">${priceText}</span>
+                    ${origText ? `<span class="text-sm text-gray-400 line-through">${origText}</span>` : ''}
+                </div>
+                <div class="border-t border-b my-4 py-4">
+                    <h4 class="font-semibold mb-1 text-sm">Deskripsi</h4>
+                    <p class="text-sm text-gray-600">${p.desc}</p>
+                </div>
+                <div class="flex gap-2 mt-4">
+                    <button onclick="addCart(${p.id}); closeDetail();" class="flex-1 bg-white border-2 border-green-500 text-green-600 py-2.5 rounded-xl font-semibold hover:bg-green-50 transition-colors">Tambah</button>
+                    <button onclick="addCart(${p.id}); closeDetail(); openCart();" class="flex-1 btn-primary py-2.5">Beli</button>
+                </div>
+            </div>`;
+            
+            document.getElementById('detail-content').innerHTML = contentHtml;
+            openModal('detail-modal');
+        }
+        
+        function closeDetail() { closeModal('detail-modal'); }
 
         // WISHLIST
         function toggleWishlist(id) { const p = CONFIG.products.find(x=>x.id===id); if(!p) return; const exist = wishlist.find(w=>w.id===id); if(exist) wishlist = wishlist.filter(w=>w.id!==id); else wishlist.push({id:p.id, name:p.name, images:p.images}); saveData(); updateWishlistUI(); renderProducts(); }
-        function updateWishlistUI() { const c = wishlist.length; const el = document.getElementById('wish-count-head'); if(c>0) { el.innerText=c; el.classList.remove('hidden'); } else el.classList.add('hidden'); }
+        function updateWishlistUI() { const c = wishlist.length; const el = document.getElementById('wish-count-head'); if(c>0) { el.innerText=c; el.classList.remove('hidden'); el.classList.add('flex'); } else el.classList.add('hidden'); }
         function openWishlist() { 
-            let h = `<div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">Wishlist</h3><button onclick="closeWishlist()" class="text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>`; 
+            let h = `<div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">Wishlist</h3><button onclick="closeWishlist()" class="text-gray-400 p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>`; 
             if(wishlist.length===0) h += '<p class="text-center text-gray-400 py-8">Wishlist kosong</p>'; 
             else h += `<div class="space-y-3">` + wishlist.map(w=> `
                 <div class="flex gap-3 items-center border-b pb-3 cursor-pointer hover:bg-gray-50 rounded-lg p-2 -m-2" onclick="closeWishlist(); openDetail(${w.id});">
@@ -307,26 +500,39 @@
                 </div>
             `).join('') + `</div>`; 
             document.getElementById('wishlist-content').innerHTML = h; 
-            document.getElementById('wishlist-modal').classList.add('active'); 
+            openModal('wishlist-modal'); 
         }
-        function closeWishlist() { document.getElementById('wishlist-modal').classList.remove('active'); }
+        function closeWishlist() { closeModal('wishlist-modal'); }
 
         // CART
         function addCart(id) { const p = CONFIG.products.find(x => x.id === id); if (!p || p.price === 0) { alert("Produk tidak tersedia/belum ada harga."); return; } const exist = cart.find(i => i.id === id); const finalPrice = p.price - (p.price * p.discount / 100); if (exist) exist.qty++; else cart.push({id: p.id, name: p.name, price: finalPrice, images: p.images, qty: 1}); saveData(); updateStickyBar(); }
         function updateStickyBar() { const count = cart.reduce((s, i) => s + i.qty, 0); const total = cart.reduce((s, i) => s + (i.price * i.qty), 0); document.getElementById('sticky-count').innerText = count; document.getElementById('sticky-items').innerText = count; document.getElementById('sticky-total').innerText = `Rp ${total.toLocaleString('id-ID')}`; document.getElementById('sticky-bar').style.display = count > 0 ? 'block' : 'none'; }
-        function openCart() { renderCartModal(); document.getElementById('cart-modal').classList.add('active'); }
-        function closeCart() { document.getElementById('cart-modal').classList.remove('active'); }
+        function openCart() { renderCartModal(); openModal('cart-modal'); }
+        function closeCart() { closeModal('cart-modal'); }
         
         function renderCartModal() { 
-            document.getElementById('cart-content').innerHTML = `
-                <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">Keranjang</h3><button onclick="closeCart()" class="text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
-                <div id="cart-list" class="max-h-32 overflow-y-auto border-b pb-4 mb-4"></div>
-                <div class="mb-4"><div class="flex gap-2"><input type="text" id="coupon-input" class="input-style mb-0 text-xs" placeholder="Kode Kupon" value="${appliedCoupon ? appliedCoupon.code : ''}"><button onclick="applyCoupon()" class="bg-gray-800 text-white px-3 rounded-lg text-xs">Pakai</button></div><p id="coupon-msg" class="text-[10px] mt-1 hidden"></p></div>
-                <div class="mb-4 bg-gray-50 p-3 rounded-lg text-xs text-gray-600"><p class="font-semibold text-gray-700 mb-1">Ongkir:</p><p>Dikonfirmasi via WhatsApp.</p></div>
+            const content = document.getElementById('cart-content');
+            content.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg">Keranjang</h3>
+                    <button onclick="closeCart()" class="text-gray-400 p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                </div>
+                <div id="cart-list" class="max-h-40 overflow-y-auto border-b pb-4 mb-4"></div>
+                <div class="mb-4">
+                    <div class="flex gap-2">
+                        <input type="text" id="coupon-input" class="input-style mb-0 text-xs flex-1" placeholder="Kode Kupon" value="${appliedCoupon ? appliedCoupon.code : ''}">
+                        <button onclick="applyCoupon()" class="bg-gray-800 text-white px-4 rounded-xl text-xs font-bold">Pakai</button>
+                    </div>
+                    <p id="coupon-msg" class="text-[10px] mt-1 hidden"></p>
+                </div>
+                <div class="mb-4 bg-gray-50 p-3 rounded-xl text-xs text-gray-600">
+                    <p class="font-semibold text-gray-700 mb-1">Ongkir:</p>
+                    <p>Dikonfirmasi via WhatsApp.</p>
+                </div>
                 
                 <div class="mb-4">
-                    <label class="text-xs text-gray-500">Metode Pembayaran</label>
-                    <select id="payment-method" class="input-style mb-0 text-xs" onchange="handlePaymentChange()">
+                    <label class="text-xs text-gray-500 font-medium">Metode Pembayaran</label>
+                    <select id="payment-method" class="input-style mb-0 text-xs mt-1" onchange="handlePaymentChange()">
                         <option value="transfer" ${lastCheckoutData.method === 'transfer' ? 'selected' : ''}>1. Transfer Produk + Ongkir</option>
                         <option value="cod_ongkir" ${lastCheckoutData.method === 'cod_ongkir' ? 'selected' : ''}>2. COD Ongkir Saja</option>
                         <option value="cod_full" ${lastCheckoutData.method === 'cod_full' ? 'selected' : ''}>3. COD Full (Bayar Ditempat)</option>
@@ -334,13 +540,15 @@
                     <p id="payment-note" class="text-[10px] text-gray-400 mt-1 hidden"></p>
                 </div>
 
-                <div class="bg-green-50 p-3 rounded-lg mb-4 text-sm">
+                <div class="bg-green-50 p-4 rounded-xl mb-4 text-sm">
                     <div class="flex justify-between mb-1"><span>Subtotal</span><span id="sum-subtotal">Rp 0</span></div>
                     <div class="flex justify-between mb-1 text-red-500"><span>Diskon Ongkir</span><span id="sum-disc">- Rp 0</span></div>
                     <div class="border-t mt-2 pt-2 flex justify-between font-bold text-base"><span>Total</span><span id="sum-total" class="text-green-600">Rp 0</span></div>
                 </div>
-                <button onclick="proceedToCheckout()" class="btn-primary">Checkout</button>`; 
+                <button onclick="proceedToCheckout()" class="btn-primary">Checkout</button>`;
+            
             renderCartItems(); updateCartSummary(); handlePaymentChange();
+            setupInputFocus(content); // Setup auto scroll for inputs
         }
 
         function handlePaymentChange() {
@@ -357,8 +565,12 @@
         function applyCoupon() { const code = document.getElementById('coupon-input').value.toUpperCase(); const c = CONFIG.coupons.find(x => x.code === code); const msg = document.getElementById('coupon-msg'); const method = document.getElementById('payment-method').value; msg.classList.remove('hidden'); const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0); if (method === 'cod_full') { msg.innerText = "Gagal! COD Full tidak dapat kupon."; msg.className = "text-[10px] mt-1 text-red-500"; appliedCoupon = null; } else if (c) { if (subtotal >= c.minPurchase) { appliedCoupon = c; lastCheckoutData.coupon = c; msg.innerText = "Kupon berhasil!"; msg.className = "text-[10px] mt-1 text-green-600 font-semibold"; } else { appliedCoupon = null; lastCheckoutData.coupon = null; msg.innerText = `Gagal! Min. belanja Rp ${c.minPurchase.toLocaleString('id-ID')}`; msg.className = "text-[10px] mt-1 text-red-500"; } } else { appliedCoupon = null; lastCheckoutData.coupon = null; msg.innerText = "Kode salah"; msg.className = "text-[10px] mt-1 text-red-500"; } updateCartSummary(); }
 
         // CHECKOUT
-        function proceedToCheckout() { if(cart.length===0) return; closeCart(); renderCheckout(lastCheckoutData.customer || {}); document.getElementById('checkout-modal').classList.add('active'); }
-        function renderCheckout(data) { document.getElementById('checkout-content').innerHTML = `<button onclick="backToCart()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button><h3 class="font-bold text-lg mb-4">Isi Data Pengiriman</h3>
+        function proceedToCheckout() { if(cart.length===0) return; closeCart(); renderCheckout(lastCheckoutData.customer || {}); openModal('checkout-modal'); }
+        function renderCheckout(data) { 
+            const content = document.getElementById('checkout-content');
+            content.innerHTML = `
+            <button onclick="backToCart()" class="absolute top-4 right-4 text-gray-400 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            <h3 class="font-bold text-lg mb-4">Isi Data Pengiriman</h3>
             <input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *" value="${data.name || ''}">
             <input type="tel" id="c-phone" class="input-style" placeholder="No. WhatsApp *" value="${data.phone || ''}">
             <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap (Nama Jalan, No Rumah) *" value="${data.address || ''}">
@@ -368,8 +580,11 @@
             <input type="text" id="c-prov" class="input-style" placeholder="Provinsi *" value="${data.prov || ''}">
             <input type="text" id="c-zip" class="input-style" placeholder="Kode Pos *" value="${data.zip || ''}">
             <input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)" value="${data.notes || ''}">
-            <button onclick="generateInvoice()" class="btn-primary mt-2">Buat Pesanan</button>`; }
-        function closeCheckoutForm() { document.getElementById('checkout-modal').classList.remove('active'); }
+            <button onclick="generateInvoice()" class="btn-primary mt-2">Buat Pesanan</button>`;
+            
+            setupInputFocus(content); // Aktifkan auto scroll untuk input
+        }
+        function closeCheckoutForm() { closeModal('checkout-modal'); }
         function backToCart() { closeCheckoutForm(); openCart(); }
 
         // INVOICE GENERATOR
@@ -434,12 +649,12 @@
             ${notes ? `<div class="mt-4 text-xs text-gray-500 border-t pt-2">Catatan: ${notes}</div>` : ''}`;
             
             document.getElementById('invoice-container').innerHTML = invoiceHtml;
-            document.getElementById('invoice-modal').classList.add('active');
+            openModal('invoice-modal');
         }
 
-        function closeInvoice() { document.getElementById('invoice-modal').classList.remove('active'); document.getElementById('checkout-modal').classList.remove('active'); document.getElementById('cart-modal').classList.remove('active'); document.getElementById('invoice-container').scrollTop = 0; window.scrollTo(0, 0); }
+        function closeInvoice() { closeModal('invoice-modal'); window.scrollTo(0, 0); }
 
-        function editInvoice() { cart = [...currentInvoice.items]; saveData(); updateStickyBar(); appliedCoupon = lastCheckoutData.coupon || null; document.getElementById('invoice-modal').classList.remove('active'); openCart(); }
+        function editInvoice() { cart = [...currentInvoice.items]; saveData(); updateStickyBar(); appliedCoupon = lastCheckoutData.coupon || null; closeModal('invoice-modal'); openCart(); }
 
         // ACTIONS
         function printInvoice() { window.print(); }
@@ -447,7 +662,6 @@
         function downloadPdf() {
             const element = document.getElementById('invoice-container');
             const clone = element.cloneNode(true);
-            
             clone.style.position = 'absolute';
             clone.style.left = '-9999px';
             clone.style.top = '0';
@@ -459,35 +673,23 @@
             clone.style.padding = '20px'; 
             clone.style.backgroundColor = '#ffffff';
             clone.style.color = '#000000';
-            clone.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
-
             document.body.appendChild(clone);
-
             const opt = {
                 margin: [20, 10, 20, 10], 
                 filename: `INV-${currentInvoice.id}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
-                    width: 720,
-                    useCORS: true, 
-                    logging: false 
-                },
+                html2canvas: { scale: 2, width: 720, useCORS: true, logging: false },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: 'css' }
             };
-
             setTimeout(() => {
                 html2pdf().set(opt).from(clone).toPdf().get('pdf').then(function (pdf) {
                     const totalPages = pdf.internal.getNumberOfPages();
                     for (let i = 1; i <= totalPages; i++) {
-                        pdf.setFontSize(10);
-                        pdf.setTextColor(150);
+                        pdf.setFontSize(10); pdf.setTextColor(150);
                         pdf.text(`Halaman ${i} dari ${totalPages}`, pdf.internal.pageSize.getWidth() / 2, pdf.internal.pageSize.getHeight() - 10, { align: 'center' });
                     }
-                }).save().then(() => {
-                    document.body.removeChild(clone);
-                });
+                }).save().then(() => { document.body.removeChild(clone); });
             }, 200);
         }
         
@@ -505,8 +707,8 @@
         function toggleSearch() { document.getElementById('search-bar').classList.toggle('hidden'); }
         function searchProducts() { const term = document.getElementById('search-input').value.toLowerCase(); const filtered = CONFIG.products.filter(p => p.name.toLowerCase().includes(term)); activeCategory = 'all'; renderCategories(); document.getElementById('product-grid').innerHTML = filtered.map(p => { const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`; return `<div class="bg-white rounded-2xl shadow border fade-up cursor-pointer relative group mb-3" onclick="openDetail(${p.id})"><img src="${p.images?.[0] || 'https://placehold.co/400'}" class="w-full aspect-square object-cover"><div class="p-3"><h3 class="font-semibold text-sm truncate">${p.name}</h3><span class="text-green-600 font-bold text-sm">${priceText}</span></div></div>`; }).join(''); }
 
-        function openTracking() { document.getElementById('tracking-content').innerHTML = `<button onclick="closeTracking()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button><h3 class="font-bold text-lg mb-4">Lacak Resi J&T</h3><div class="flex gap-2 mb-6"><input type="text" id="tracking-input" class="input-style mb-0 text-xs" placeholder="No Resi"><button onclick="simulateTracking()" class="bg-black text-white px-4 rounded-lg text-xs">Lacak</button></div><div id="tracking-result"></div>`; document.getElementById('tracking-modal').classList.add('active'); }
-        function closeTracking() { document.getElementById('tracking-modal').classList.remove('active'); }
+        function openTracking() { document.getElementById('tracking-content').innerHTML = `<button onclick="closeTracking()" class="absolute top-4 right-4 text-gray-400 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button><h3 class="font-bold text-lg mb-4">Lacak Resi J&T</h3><div class="flex gap-2 mb-6"><input type="text" id="tracking-input" class="input-style mb-0 text-xs flex-1" placeholder="No Resi"><button onclick="simulateTracking()" class="bg-black text-white px-4 rounded-xl text-xs font-bold">Lacak</button></div><div id="tracking-result"></div>`; openModal('tracking-modal'); }
+        function closeTracking() { closeModal('tracking-modal'); }
         function simulateTracking() { const resi = document.getElementById('tracking-input').value; if(!resi) return; const steps = ["Paket Diproses", "Menuju Transit", "Dalam Perjalanan", "Dibawa Kurir", "Terkirim"]; const current = Math.floor(Math.random() * 5); let html = `<h4 class="font-bold mb-4 text-sm">Resi: ${resi}</h4>`; steps.forEach((s, i) => { html += `<div class="relative pl-6 pb-4"><div class="absolute left-0 top-1 w-3 h-3 rounded-full ${i <= current ? 'bg-green-500' : 'bg-gray-300'}"></div><p class="font-medium text-sm">${s}</p></div>`; }); document.getElementById('tracking-result').innerHTML = html; }
 
     </script>
