@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport Pasif: Tidak bisa zoom/scale -->
+    <!-- VIEWPORT PENGUNCI (TIDAK BISA ZOOM) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Toko Resmi Kemoenik</title>
@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Library PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -20,7 +21,16 @@
             --text-main: #1F2937;
         }
         * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-        body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; overscroll-behavior: none; }
+        
+        /* MENCEGAH ZOOM */
+        html { touch-action: manipulation; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        body { 
+            background-color: var(--bg-main); 
+            color: var(--text-main); 
+            overflow-x: hidden; 
+            overscroll-behavior: none; 
+            touch-action: pan-y; 
+        }
         
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
@@ -50,17 +60,48 @@
         .bank-number { font-family: 'Courier New', Courier, monospace; font-size: 18px; font-weight: 700; color: #1f2937; letter-spacing: 1px; }
         .bank-owner { font-size: 11px; color: #9ca3af; margin-top: 2px; }
 
+        /* CSS UNTUK PDF & PRINT */
         @media print {
+            /* Sembunyikan semua kecuali modal invoice */
             body > *:not(#invoice-modal) { display: none !important; }
-            #invoice-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; display: block !important; background: white; }
-            #invoice-modal > .modal-content { max-height: none !important; overflow: visible !important; border-radius: 0; max-width: 100%; margin: 0; }
-            #invoice-container { width: 100%; padding: 20px; background: white; color: black; }
+            
+            #invoice-modal { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                height: auto; 
+                display: block !important; 
+                background: white; 
+                z-index: 9999;
+            }
+            #invoice-modal > .modal-content { 
+                max-height: none !important; 
+                overflow: visible !important; 
+                border-radius: 0; 
+                max-width: 100%; 
+                margin: 0; 
+                box-shadow: none;
+            }
+            
+            /* Style khusus print */
+            #invoice-container {
+                width: 100%;
+                max-width: 800px; /* Lebar konten di print */
+                margin: 0 auto;
+                padding: 20px !important; /* Margin proporsional */
+                background: white;
+                color: black;
+                height: auto !important;
+                overflow: visible !important;
+            }
             .no-print { display: none !important; }
         }
     </style>
 </head>
 <body>
 
+    <!-- FLOATING TRACKING -->
     <div onclick="openTracking()" class="fixed bottom-20 right-4 bg-white p-3 rounded-full shadow-lg z-50 cursor-pointer hover:bg-gray-50 border hover:scale-110 transition">
         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
     </div>
@@ -128,7 +169,8 @@
     <!-- INVOICE MODAL -->
     <div id="invoice-modal" class="modal-overlay">
         <div class="modal-content">
-            <div id="invoice-container" class="p-6 bg-white min-h-screen"></div>
+            <!-- Container ini yang akan jadi PDF -->
+            <div id="invoice-container" style="background: white; width: 100%; max-width: 800px; margin: 0 auto;"></div>
             <div class="sticky bottom-0 p-4 bg-gray-50 border-t no-print flex flex-col gap-2">
                 <div class="flex gap-2">
                     <button onclick="printInvoice()" class="btn-primary bg-gray-800 flex-1 flex items-center justify-center gap-2 py-2">
@@ -156,18 +198,35 @@
     <div id="tracking-modal" class="modal-overlay"><div class="modal-content p-5" id="tracking-content"></div></div>
 
     <script>
+        /* ===========================================================
+           1. KONFIGURASI DATA (EDIT DISINI UNTUK MENGUBAH ISI WEBSITE)
+           =========================================================== */
         const CONFIG = {
-            storeName: "KEMOENIK",
-            storeAddress: "Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, 40972",
-            whatsappNumber: "6281546450547",
+            storeName: "KEMOENIK", // Nama Toko
+            storeAddress: "Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, 40972", // Alamat
+            whatsappNumber: "6281546450547", // Nomor WA (Tanpa +, pakai kode negara)
+            
+            // Daftar Rekening
             bankAccounts: [
                 { bank: "Bank BRI", number: "000501168248506", name: "DANI RAMDANI" },
                 { bank: "DANA", number: "081546450547", name: "DANI RAMDANI" },
                 { bank: "SeaBank", number: "901851870313", name: "DANI RAMDANI" }
             ],
+            
+            // Daftar Kupon
             coupons: [ { code: "KEMOENIK26", type: "shipping", value: 15000, minPurchase: 120000 } ],
+            
+            // Kategori Produk
             categories: [ { id: 'all', name: "Semua", icon: 'grid' }, { id: 'calc', name: "Calculator", icon: 'calc' }, { id: 'kapsul', name: "Kapsul", icon: 'pill' }, { id: 'teh', name: "Teh", icon: 'tea' } ],
-            sliders: ["https://placehold.co/800x400/48BB78/FFFFFF?text=Banner+1", "https://placehold.co/800x400/F3F4F6/333?text=Banner+2", "https://placehold.co/800x400/FFFFFF/000?text=Banner+3", "https://placehold.co/800x400/2F855A/FFF?text=Banner+4", "https://placehold.co/800x400/FF6B6B/FFF?text=Banner+5"],
+            
+            // Gambar Slider Banner
+            sliders: [
+                "https://placehold.co/800x400/48BB78/FFFFFF?text=Banner+1", 
+                "https://placehold.co/800x400/F3F4F6/333333?text=Banner+2",
+                "https://placehold.co/800x400/FFFFFF/000000?text=Banner+3"
+            ],
+
+            // Daftar Produk (Edit Nama, Harga, Gambar disini)
             products: [
                 { id: 1, category: 'calc', name: "CALCULATOR FAT LOSS", price: 30000, discount: 50, images: ["https://placehold.co/400x400/eee/333?text=Calc"], sold: 150, rating: 4.9, desc: `Membantu kebutuhan kalori harian.` },
                 { id: 2, category: 'kapsul', name: "KEMOENIK SLIM 1", price: 100000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Kapsul"], sold: 89, rating: 4.9, desc: `Produk premium.` },
@@ -176,6 +235,9 @@
                 { id: 5, category: 'teh', name: "TEH SLIM 2", price: 40000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Teh2"], sold: 500, rating: 4.9, desc: `Teh alami seri 2.` }
             ]
         };
+        /* ===========================================================
+           AKHIR DARI AREA EDIT KONFIGURASI
+           =========================================================== */
 
         let cart = [], wishlist = [], appliedCoupon = null, currentSlide = 0, activeCategory = 'all';
         let lastCheckoutData = { customer: {}, method: 'transfer', coupon: null };
@@ -213,13 +275,8 @@
             else h += `<div class="space-y-3">` + wishlist.map(w=> `
                 <div class="flex gap-3 items-center border-b pb-3 cursor-pointer hover:bg-gray-50 rounded-lg p-2 -m-2" onclick="closeWishlist(); openDetail(${w.id});">
                     <img src="${w.images?.[0] || 'https://placehold.co/100'}" class="w-14 h-14 rounded-lg object-cover">
-                    <div class="flex-1">
-                        <h4 class="font-semibold text-sm text-gray-800">${w.name}</h4>
-                        <p class="text-[10px] text-blue-500 mt-1">Klik untuk lihat detail</p>
-                    </div>
-                    <button onclick="event.stopPropagation(); toggleWishlist(${w.id}); openWishlist();" class="text-red-400 hover:text-red-600 p-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    </button>
+                    <div class="flex-1"><h4 class="font-semibold text-sm text-gray-800">${w.name}</h4><p class="text-[10px] text-blue-500 mt-1">Klik untuk lihat detail</p></div>
+                    <button onclick="event.stopPropagation(); toggleWishlist(${w.id}); openWishlist();" class="text-red-400 hover:text-red-600 p-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
             `).join('') + `</div>`; 
             document.getElementById('wishlist-content').innerHTML = h; 
@@ -263,8 +320,7 @@
             const method = document.getElementById('payment-method').value;
             const note = document.getElementById('payment-note');
             if (method === 'cod_full') {
-                note.innerText = "COD Full tidak mendapat potongan ongkir.";
-                note.classList.remove('hidden');
+                note.innerText = "COD Full tidak mendapat potongan ongkir."; note.classList.remove('hidden');
                 if(appliedCoupon) { appliedCoupon = null; document.getElementById('coupon-input').value = ''; const msg = document.getElementById('coupon-msg'); msg.innerText = "Kupon dihapus (COD Full)."; msg.className = "text-[10px] mt-1 text-red-500"; msg.classList.remove('hidden'); updateCartSummary(); }
             } else { note.classList.add('hidden'); }
             lastCheckoutData.method = method;
@@ -280,7 +336,7 @@
         function renderCheckout(data) { document.getElementById('checkout-content').innerHTML = `<button onclick="backToCart()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button><h3 class="font-bold text-lg mb-4">Isi Data Pengiriman</h3>
             <input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *" value="${data.name || ''}">
             <input type="tel" id="c-phone" class="input-style" placeholder="No. WhatsApp *" value="${data.phone || ''}">
-            <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap (Jalan, No Rumah, RT/RW) *" value="${data.address || ''}">
+            <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap (Nama Jalan, No Rumah) *" value="${data.address || ''}">
             <input type="text" id="c-village" class="input-style" placeholder="Desa/Kelurahan *" value="${data.village || ''}">
             <input type="text" id="c-district" class="input-style" placeholder="Kecamatan *" value="${data.district || ''}">
             <input type="text" id="c-city" class="input-style" placeholder="Kota/Kabupaten *" value="${data.city || ''}">
@@ -313,7 +369,7 @@
             cart = []; saveData(); updateStickyBar();
             closeCheckoutForm();
 
-            // RENDER INVOICE
+            // RENDER INVOICE HTML
             let paymentInfoHtml = '';
             
             if (payMethod === 'cod_full') {
@@ -336,42 +392,23 @@
                  paymentInfoHtml = `
                     <div class="mt-4 pt-4 border-t border-dashed">
                         <h4 class="font-bold text-sm mb-2">INFORMASI PEMBAYARAN</h4>
-                        <div class="text-xs bg-blue-50 p-3 rounded-lg text-blue-800 mb-3 border border-blue-100">
-                            <p class="font-semibold">COD Ongkir Saja</p>
-                            <p class="mt-1">Produk dibayar via transfer.</p>
-                            <p>Ongkir dibayar saat barang diterima.</p>
-                        </div>
+                        <div class="text-xs bg-blue-50 p-3 rounded-lg text-blue-800 mb-3 border border-blue-100"><p class="font-semibold">COD Ongkir Saja</p><p class="mt-1">Produk dibayar via transfer. Ongkir dibayar saat barang diterima.</p></div>
                         <p class="text-xs text-gray-500 mb-2">Transfer Produk ke:</p>
-                        ${CONFIG.bankAccounts.map(b => `
-                            <div class="bank-card">
-                                <div class="bank-name">${b.bank}</div>
-                                <div class="bank-number">${b.number}</div>
-                                <div class="bank-owner">a.n ${b.name}</div>
-                            </div>
-                        `).join('')}
+                        ${CONFIG.bankAccounts.map(b => `<div class="bank-card"><div class="bank-name">${b.bank}</div><div class="bank-number">${b.number}</div><div class="bank-owner">a.n ${b.name}</div></div>`).join('')}
                     </div>`;
             }
 
-            // Format Alamat Lengkap (Shopee Style)
             const fullAddress = `${address}, Desa ${village}, Kec. ${district}, ${city}, ${prov}, ${zip}`;
 
             const invoiceHtml = `<div class="text-center border-b pb-4 mb-4"><img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="w-16 h-16 mx-auto rounded-full mb-2 shadow"><h2 class="text-xl font-bold">${CONFIG.storeName}</h2><p class="text-xs text-gray-500 mt-1">${CONFIG.storeAddress}</p></div>
-            <div class="mb-4 text-sm">
-                <div class="flex justify-between border-b py-1"><span class="font-semibold">Order ID</span><span>#${orderId}</span></div>
-                <div class="flex justify-between border-b py-1"><span>Tanggal</span><span>${dateStr}</span></div>
-                <div class="flex justify-between border-b py-1"><span>Status</span><span class="text-yellow-600 font-bold">Menunggu Konfirmasi</span></div>
-            </div>
-            <div class="mb-4 text-sm">
-                <h4 class="font-bold mb-1">DATA PEMBELI</h4>
-                <p class="text-gray-700"><strong>${name}</strong></p>
-                <p class="text-gray-600 text-xs">${phone}</p>
-                <p class="text-gray-500 text-xs mt-1">${fullAddress}</p>
-            </div>
+            <div class="mb-4 text-sm"><div class="flex justify-between border-b py-1"><span class="font-semibold">Order ID</span><span>#${orderId}</span></div><div class="flex justify-between border-b py-1"><span>Tanggal</span><span>${dateStr}</span></div><div class="flex justify-between border-b py-1"><span>Status</span><span class="text-yellow-600 font-bold">Menunggu Konfirmasi</span></div></div>
+            <div class="mb-4 text-sm"><h4 class="font-bold mb-1">DATA PEMBELI</h4><p class="text-gray-700"><strong>${name}</strong></p><p class="text-gray-600 text-xs">${phone}</p><p class="text-gray-500 text-xs mt-1">${fullAddress}</p></div>
             <div class="mb-4"><h4 class="font-bold mb-2 text-sm">DETAIL PESANAN</h4><table class="w-full text-xs border-collapse"><thead><tr class="border-b bg-gray-50"><th class="text-left p-2">Item</th><th class="center p-2">Qty</th><th class="text-right p-2">Subtotal</th></tr></thead><tbody>${currentInvoice.items.map(i => `<tr class="border-b"><td class="p-2">${i.name}</td><td class="p-2 text-center">${i.qty}</td><td class="p-2 text-right">Rp ${(i.price * i.qty).toLocaleString('id-ID')}</td></tr>`).join('')}</tbody></table></div>
             <div class="bg-gray-50 p-3 rounded-lg text-sm mb-4"><div class="flex justify-between mb-1"><span>Subtotal</span><span>Rp ${subtotal.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1 text-red-500"><span>Diskon</span><span>- Rp ${disc.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1"><span>Ongkir</span><span class="text-gray-400 text-xs">(Konfirmasi WA)</span></div><div class="border-t mt-2 pt-2 flex justify-between font-bold text-base"><span>Total</span><span class="text-green-600">Rp ${total.toLocaleString('id-ID')}</span></div></div>
             <div class="text-xs text-gray-700 mb-2 font-semibold">Metode: ${payMethod === 'cod_full' ? 'COD Full' : payMethod === 'cod_ongkir' ? 'COD Ongkir' : 'Transfer'}</div>
             ${paymentInfoHtml}
             ${notes ? `<div class="mt-4 text-xs text-gray-500 border-t pt-2">Catatan: ${notes}</div>` : ''}`;
+            
             document.getElementById('invoice-container').innerHTML = invoiceHtml;
             document.getElementById('invoice-modal').classList.add('active');
         }
@@ -383,22 +420,42 @@
         // ACTIONS
         function printInvoice() { window.print(); }
         
-        // FIX PDF: Use windowHeight to capture full height
-        function downloadPdf() { 
-            const element = document.getElementById('invoice-container'); 
+        // FIX PDF: A4, Margin 20mm, Center, Page Break, Footer
+        function downloadPdf() {
+            const element = document.getElementById('invoice-container');
+            
+            // Options for html2pdf
             const opt = {
-                margin: 0.5,
+                // Margin: 20mm top/bottom, 10mm left/right (agar center)
+                margin: [20, 10, 20, 10], 
                 filename: `INV-${currentInvoice.id}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
-                    scale: 2, 
-                    useCORS: true, 
-                    logging: false, 
+                    scale: 2, // Kualitas tinggi
+                    useCORS: true,
+                    logging: false,
+                    // Penting: ambil tinggi penuh
                     windowHeight: element.scrollHeight + 200 
                 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                },
+                pagebreak: { mode: 'avoid-all' }
             };
-            html2pdf().set(opt).from(element).save();
+
+            // Generate PDF
+            html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+                // Menambahkan nomor halaman "Halaman X dari Y"
+                const totalPages = pdf.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(150);
+                    // Posisi footer
+                    pdf.text(`Halaman ${i} dari ${totalPages}`, pdf.internal.pageSize.getWidth() / 2, pdf.internal.pageSize.getHeight() - 10, { align: 'center' });
+                }
+            }).save();
         }
         
         function sendInvoiceWA() {
@@ -418,6 +475,15 @@
         function openTracking() { document.getElementById('tracking-content').innerHTML = `<button onclick="closeTracking()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button><h3 class="font-bold text-lg mb-4">Lacak Resi J&T</h3><div class="flex gap-2 mb-6"><input type="text" id="tracking-input" class="input-style mb-0 text-xs" placeholder="No Resi"><button onclick="simulateTracking()" class="bg-black text-white px-4 rounded-lg text-xs">Lacak</button></div><div id="tracking-result"></div>`; document.getElementById('tracking-modal').classList.add('active'); }
         function closeTracking() { document.getElementById('tracking-modal').classList.remove('active'); }
         function simulateTracking() { const resi = document.getElementById('tracking-input').value; if(!resi) return; const steps = ["Paket Diproses", "Menuju Transit", "Dalam Perjalanan", "Dibawa Kurir", "Terkirim"]; const current = Math.floor(Math.random() * 5); let html = `<h4 class="font-bold mb-4 text-sm">Resi: ${resi}</h4>`; steps.forEach((s, i) => { html += `<div class="relative pl-6 pb-4"><div class="absolute left-0 top-1 w-3 h-3 rounded-full ${i <= current ? 'bg-green-500' : 'bg-gray-300'}"></div><p class="font-medium text-sm">${s}</p></div>`; }); document.getElementById('tracking-result').innerHTML = html; }
+
+        // MENCEGAH ZOOM (Double Tap)
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) { event.preventDefault(); }
+            lastTouchEnd = now;
+        }, false);
+        var lastTouchEnd = 0;
+
     </script>
 </body>
 </html>
