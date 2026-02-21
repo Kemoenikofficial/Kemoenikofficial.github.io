@@ -19,8 +19,6 @@
             --bg-main: #F3F4F6;
             --card-bg: #FFFFFF;
             --text-main: #1F2937;
-            --text-muted: #6B7280;
-            --danger: #EF4444;
         }
         * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; scroll-behavior: smooth; }
         body { background-color: var(--bg-main); color: var(--text-main); }
@@ -74,7 +72,7 @@
         .btn-primary { background: var(--primary); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 600; transition: all 0.2s; width: 100%; border: none; box-shadow: 0 4px 6px rgba(72, 187, 120, 0.2); }
         .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 6px 12px rgba(72, 187, 120, 0.25); }
         
-        /* Timeline Tracking */
+        /* Timeline */
         .timeline-item { position: relative; padding-left: 30px; margin-bottom: 20px; }
         .timeline-item::before { content: ''; position: absolute; left: 0; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: #E5E7EB; transition: all 0.3s; }
         .timeline-item.active::before { background: var(--primary); box-shadow: 0 0 0 4px rgba(72, 187, 120, 0.2); }
@@ -108,7 +106,7 @@
                 <h1 class="text-lg font-bold text-gray-800" id="store-name">KEMOENIK</h1>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="openSearch()" class="p-2 hover:bg-gray-100 rounded-full transition-colors"><svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></button>
+                <button onclick="toggleSearch()" class="p-2 hover:bg-gray-100 rounded-full transition-colors"><svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></button>
                 <button onclick="openWishlist()" class="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                     <span id="wish-count-head" class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
@@ -197,7 +195,7 @@
 
     <script>
         /* ===========================================================
-           KONFIGURASI DATA (EDIT DISINI)
+           KONFIGURASI DATA
            =========================================================== */
         const CONFIG = {
             storeName: "KEMOENIK",
@@ -232,16 +230,11 @@
             fakeCities: ["Jakarta", "Bandung", "Surabaya", "Semarang", "Yogyakarta", "Medan", "Bekasi"],
 
             products: [
-                // Kategori Calculator
-                { id: 1, category: 'calc', name: "CALCULATOR FAT LOSS", price: 30000, discount: 50, images: ["https://placehold.co/400x400/eee/333?text=Calc+1", "https://placehold.co/400x400/eee/333?text=Calc+2"], sold: 150, rating: 4.9, desc: `Membantu kebutuhan kalori harian.`, reviews: [{user: "Budi", text: "Mantap!", rate: 5}] },
-                
-                // Kategori Kapsul
-                { id: 2, category: 'kapsul', name: "KEMOENIK SLIM 1", price: 100000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Kapsul+1", "https://placehold.co/400x400/eee/333?text=Detail+1"], sold: 89, rating: 4.9, desc: `Produk premium kapsul pelangsing seri 1.`, reviews: [] },
-                { id: 3, category: 'kapsul', name: "KEMOENIK SLIM 2", price: 0, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Kapsul+2"], sold: 45, rating: 4.8, desc: `Produk premium kapsul pelangsing seri 2.`, reviews: [] },
-
-                // Kategori Teh
-                { id: 4, category: 'teh', name: "TEH SLIM 1", price: 0, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Teh+1"], sold: 230, rating: 4.7, desc: `Teh pelangsing alami seri 1.`, reviews: [] },
-                { id: 5, category: 'teh', name: "TEH SLIM 2", price: 0, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Teh+2"], sold: 500, rating: 4.9, desc: `Teh pelangsing alami seri 2.`, reviews: [] }
+                { id: 1, category: 'calc', name: "CALCULATOR FAT LOSS", price: 30000, discount: 50, images: ["https://placehold.co/400x400/eee/333?text=Calc+1"], sold: 150, rating: 4.9, desc: `Membantu kebutuhan kalori harian.`, reviews: [{user: "Budi", text: "Mantap!", rate: 5}] },
+                { id: 2, category: 'kapsul', name: "KEMOENIK SLIM 1", price: 100000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Kapsul+1"], sold: 89, rating: 4.9, desc: `Produk premium kapsul pelangsing seri 1.`, reviews: [] },
+                { id: 3, category: 'kapsul', name: "KEMOENIK SLIM 2", price: 50000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Kapsul+2"], sold: 45, rating: 4.8, desc: `Produk premium kapsul pelangsing seri 2.`, reviews: [] },
+                { id: 4, category: 'teh', name: "TEH SLIM 1", price: 40000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Teh+1"], sold: 230, rating: 4.7, desc: `Teh pelangsing alami seri 1.`, reviews: [] },
+                { id: 5, category: 'teh', name: "TEH SLIM 2", price: 40000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Teh+2"], sold: 500, rating: 4.9, desc: `Teh pelangsing alami seri 2.`, reviews: [] }
             ]
         };
 
@@ -250,50 +243,70 @@
            =========================================================== */
         let cart = [], wishlist = [], appliedCoupon = null, currentSlide = 0, activeCategory = 'all';
 
+        // 1. Init Awal
         document.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            renderCategories();
-            renderProducts(); // Render initial
-            renderSliders();
-            startNotificationLoop();
-            document.getElementById('wa-btn-header').href = `https://wa.me/${CONFIG.whatsappNumber}`;
-            document.getElementById('store-name').innerText = CONFIG.storeName;
+            try {
+                loadData();
+                renderCategories();
+                renderProducts();
+                renderSliders();
+                startNotificationLoop();
+                document.getElementById('wa-btn-header').href = `https://wa.me/${CONFIG.whatsappNumber}`;
+                document.getElementById('store-name').innerText = CONFIG.storeName;
+                console.log("Website Siap!");
+            } catch (e) {
+                console.error("Error Init:", e);
+            }
         });
 
-        function loadData() { cart = JSON.parse(localStorage.getItem('cart')) || []; wishlist = JSON.parse(localStorage.getItem('wish')) || []; updateStickyBar(); updateWishlistUI(); }
+        function loadData() { 
+            try { cart = JSON.parse(localStorage.getItem('cart')) || []; } catch { cart = []; }
+            try { wishlist = JSON.parse(localStorage.getItem('wish')) || []; } catch { wishlist = []; }
+            updateStickyBar(); 
+            updateWishlistUI(); 
+        }
         function saveData() { localStorage.setItem('cart', JSON.stringify(cart)); localStorage.setItem('wish', JSON.stringify(wishlist)); }
 
         // --- RENDER UI ---
         
         // Slider
         function renderSliders() {
-            const track = document.getElementById('hero-slider'); const dots = document.getElementById('slider-dots');
+            const track = document.getElementById('hero-slider'); 
+            const dots = document.getElementById('slider-dots');
+            if(!track || !dots) return;
             track.innerHTML = CONFIG.sliders.map(img => `<div class="slide"><img src="${img}" class="w-full h-44 object-cover"></div>`).join('');
             dots.innerHTML = CONFIG.sliders.map((_, i) => `<button onclick="goToSlide(${i})" class="w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white w-4' : 'bg-white/50'}"></button>`).join('');
             setInterval(() => { currentSlide = (currentSlide + 1) % CONFIG.sliders.length; updateSlider(); }, 4000);
         }
-        function updateSlider() { document.getElementById('hero-slider').style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('#slider-dots button').forEach((d, i) => d.className = `w-1.5 h-1.5 rounded-full transition ${i === currentSlide ? 'bg-white w-4' : 'bg-white/50'}`); }
+        function updateSlider() { 
+            const track = document.getElementById('hero-slider'); 
+            if(!track) return;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`; 
+            document.querySelectorAll('#slider-dots button').forEach((d, i) => d.className = `w-1.5 h-1.5 rounded-full transition ${i === currentSlide ? 'bg-white w-4' : 'bg-white/50'}`); 
+        }
         function goToSlide(i) { currentSlide = i; updateSlider(); }
 
         // Categories
         function renderCategories() {
             const el = document.getElementById('category-list');
+            if(!el) return;
             el.innerHTML = CONFIG.categories.map(c => `
-                <button onclick="filterCategory('${c.id}')" id="cat-${c.id}" class="flex flex-col items-center flex-shrink-0 px-4 py-2 rounded-xl transition-all duration-300 ${c.id === activeCategory ? 'bg-green-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-50'} ">
+                <button onclick="filterCategory('${c.id}')" class="flex flex-col items-center flex-shrink-0 px-4 py-2 rounded-xl transition-all duration-300 ${c.id === activeCategory ? 'bg-green-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-50'} ">
                     <span class="text-lg mb-0.5">${getIcon(c.icon)}</span>
                     <span class="text-[11px] font-semibold">${c.name}</span>
                 </button>
             `).join('');
         }
-        function getIcon(icon) { if (icon === 'grid') return '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>'; if (icon === 'calc') return '🧮'; if (icon === 'pill') return '💊'; if (icon === 'tea') return '🍵'; return '📦'; }
+        function getIcon(icon) { if (icon === 'grid') return '☰'; if (icon === 'calc') return '🧮'; if (icon === 'pill') return '💊'; if (icon === 'tea') return '🍵'; return '📦'; }
 
         function filterCategory(id) { activeCategory = id; renderCategories(); renderProducts(); document.getElementById('product-section').scrollIntoView({ behavior: 'smooth' }); }
 
         // Products
         function renderProducts() {
             const el = document.getElementById('product-grid');
+            if(!el) return;
             const data = activeCategory === 'all' ? CONFIG.products : CONFIG.products.filter(p => p.category === activeCategory);
-            if(!el) return; // Safety check
+            
             el.innerHTML = data.map(p => {
                 const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`;
                 const origText = p.discount > 0 ? `Rp ${p.price.toLocaleString('id-ID')}` : '';
@@ -327,6 +340,7 @@
             const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`;
             const origText = p.discount > 0 ? `Rp ${p.price.toLocaleString('id-ID')}` : '';
             const imgSrc = p.images && p.images[0] ? p.images[0] : 'https://placehold.co/400?text=No+Img';
+            
             document.getElementById('detail-content').innerHTML = `
                 <div class="relative bg-gray-100"><img src="${imgSrc}" class="w-full aspect-square object-cover">
                     <button onclick="closeDetail()" class="absolute top-3 right-3 bg-white p-1.5 rounded-full shadow hover:bg-gray-100"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
@@ -340,33 +354,52 @@
                         <button onclick="addCart(${p.id}); closeDetail();" class="flex-1 bg-white border-2 border-green-500 text-green-600 py-2.5 rounded-xl font-semibold hover:bg-green-50 transition-colors">Tambah</button>
                         <button onclick="addCart(${p.id}); closeDetail(); openCart();" class="flex-1 btn-primary py-2.5">Beli</button>
                     </div>
-                    <div onclick="closeDetail(); window.scrollTo(0,0);" class="mt-6 pt-4 border-t flex items-center justify-center gap-2 cursor-pointer hover:opacity-70"><img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="w-5 h-5 rounded"><span class="font-bold text-xs text-gray-600">${CONFIG.storeName}</span></div>
                 </div>`;
             document.getElementById('detail-modal').classList.add('active');
         }
         function closeDetail() { document.getElementById('detail-modal').classList.remove('active'); }
 
         // Wishlist
-        function toggleWishlist(id) { const p = CONFIG.products.find(x=>x.id===id); const exist = wishlist.find(w=>w.id===id); if(exist) wishlist = wishlist.filter(w=>w.id!==id); else wishlist.push({id:p.id, name:p.name, images:p.images}); saveData(); updateWishlistUI(); }
+        function toggleWishlist(id) { const p = CONFIG.products.find(x=>x.id===id); if(!p) return; const exist = wishlist.find(w=>w.id===id); if(exist) wishlist = wishlist.filter(w=>w.id!==id); else wishlist.push({id:p.id, name:p.name, images:p.images}); saveData(); updateWishlistUI(); }
         function updateWishlistUI() { const c = wishlist.length; const el = document.getElementById('wish-count-head'); if(c>0) { el.innerText=c; el.classList.remove('hidden'); } else el.classList.add('hidden'); }
         function openWishlist() {
             const el = document.getElementById('wishlist-content');
             if(wishlist.length===0) el.innerHTML='<p class="text-center text-gray-400 py-8">Wishlist kosong</p>';
-            else el.innerHTML = wishlist.map(w=> `<div class="flex gap-3 items-center border-b pb-3"><img src="${w.images[0]}" class="w-14 h-14 rounded-lg object-cover"><div class="flex-1"><h4 class="font-semibold text-sm">${w.name}</h4><button onclick="toggleWishlist(${w.id}); openWishlist();" class="text-red-500 text-xs mt-1">Hapus</button></div></div>`).join('');
+            else el.innerHTML = wishlist.map(w=> `<div class="flex gap-3 items-center border-b pb-3"><img src="${w.images?.[0] || 'https://placehold.co/100'}" class="w-14 h-14 rounded-lg object-cover"><div class="flex-1"><h4 class="font-semibold text-sm">${w.name}</h4><button onclick="toggleWishlist(${w.id}); openWishlist();" class="text-red-500 text-xs mt-1">Hapus</button></div></div>`).join('');
             document.getElementById('wishlist-modal').classList.add('active');
         }
         
         // Cart Logic
         function addCart(id) {
             const p = CONFIG.products.find(x => x.id === id);
-            if (p.price === 0) { alert("Produk belum ada harga."); return; }
+            if (!p) return;
+            if (p.price === 0) { alert("Produk belum ada harga, tidak bisa masuk keranjang."); return; }
+            
             const exist = cart.find(i => i.id === id);
             const finalPrice = p.price - (p.price * p.discount / 100);
-            if (exist) exist.qty++; else cart.push({id: p.id, name: p.name, price: finalPrice, images: p.images, qty: 1});
-            saveData(); updateStickyBar();
+            
+            if (exist) exist.qty++;
+            else cart.push({id: p.id, name: p.name, price: finalPrice, images: p.images, qty: 1});
+            
+            saveData(); 
+            updateStickyBar();
+            console.log("Produk ditambahkan:", p.name);
         }
-        function updateStickyBar() { const count = cart.reduce((s, i) => s + i.qty, 0); const total = cart.reduce((s, i) => s + (i.price * i.qty), 0); document.getElementById('sticky-count').innerText = count; document.getElementById('sticky-items').innerText = count; document.getElementById('sticky-total').innerText = `Rp ${total.toLocaleString('id-ID')}`; document.getElementById('sticky-bar').style.display = count > 0 ? 'block' : 'none'; }
-        function openCart() { renderCartModal(); document.getElementById('cart-modal').classList.add('active'); }
+        
+        function updateStickyBar() { 
+            const count = cart.reduce((s, i) => s + i.qty, 0); 
+            const total = cart.reduce((s, i) => s + (i.price * i.qty), 0); 
+            document.getElementById('sticky-count').innerText = count; 
+            document.getElementById('sticky-items').innerText = count; 
+            document.getElementById('sticky-total').innerText = `Rp ${total.toLocaleString('id-ID')}`; 
+            document.getElementById('sticky-bar').style.display = count > 0 ? 'block' : 'none'; 
+        }
+        
+        function openCart() { 
+            renderCartModal(); 
+            document.getElementById('cart-modal').classList.add('active'); 
+        }
+        
         function closeCart() { document.getElementById('cart-modal').classList.remove('active'); }
         
         function renderCartModal() {
@@ -382,12 +415,28 @@
                     <div class="border-t mt-2 pt-2 flex justify-between font-bold text-base"><span>Total</span><span id="sum-total" class="text-green-600">Rp 0</span></div>
                 </div>
                 <button onclick="proceedToCheckout()" class="btn-primary">Checkout</button>`;
-            renderCartItems(); updateCartSummary();
+            renderCartItems(); 
+            updateCartSummary();
         }
+        
         function renderCartItems() {
-            const el = document.getElementById('cart-list'); if (cart.length === 0) { el.innerHTML = '<p class="text-center text-gray-400 py-4 text-xs">Kosong</p>'; return; }
-            el.innerHTML = cart.map(i => `<div class="flex gap-2 items-center mb-2 pb-2 border-b"><img src="${i.images[0]}" class="w-10 h-10 rounded-lg"><div class="flex-1"><h4 class="font-semibold text-xs">${i.name}</h4><div class="flex items-center gap-1 mt-0.5"><button onclick="updateCartQty(${i.id}, -1)" class="w-5 h-5 bg-gray-100 rounded text-xs">-</button><span class="text-xs font-bold">${i.qty}</span><button onclick="updateCartQty(${i.id}, 1)" class="w-5 h-5 bg-gray-100 rounded text-xs">+</button></div></div><span class="text-xs font-bold text-green-600">Rp ${(i.price*i.qty).toLocaleString('id-ID')}</span></div>`).join('');
+            const el = document.getElementById('cart-list'); 
+            if (cart.length === 0) { el.innerHTML = '<p class="text-center text-gray-400 py-4 text-xs">Kosong</p>'; return; }
+            el.innerHTML = cart.map(i => {
+                const img = i.images && i.images[0] ? i.images[0] : 'https://placehold.co/100';
+                return `<div class="flex gap-2 items-center mb-2 pb-2 border-b">
+                    <img src="${img}" class="w-10 h-10 rounded-lg">
+                    <div class="flex-1"><h4 class="font-semibold text-xs">${i.name}</h4>
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <button onclick="updateCartQty(${i.id}, -1)" class="w-5 h-5 bg-gray-100 rounded text-xs">-</button>
+                        <span class="text-xs font-bold">${i.qty}</span>
+                        <button onclick="updateCartQty(${i.id}, 1)" class="w-5 h-5 bg-gray-100 rounded text-xs">+</button>
+                    </div></div>
+                    <span class="text-xs font-bold text-green-600">Rp ${(i.price*i.qty).toLocaleString('id-ID')}</span>
+                </div>`;
+            }).join('');
         }
+        
         function updateCartQty(id, n) { const i = cart.find(x => x.id === id); if(i) { i.qty += n; if(i.qty<1) cart=cart.filter(x=>x.id!==id); saveData(); renderCartModal(); updateStickyBar(); } }
         function updateCartSummary() {
             const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0); let disc = 0;
@@ -478,7 +527,7 @@
         function startNotificationLoop() { function show() { const n = CONFIG.fakeNames[Math.floor(Math.random() * CONFIG.fakeNames.length)]; const c = CONFIG.fakeCities[Math.floor(Math.random() * CONFIG.fakeCities.length)]; const p = CONFIG.products[Math.floor(Math.random() * CONFIG.products.length)]; document.getElementById('notif-text').innerHTML = `<b>${n}</b> dari <b>${c}</b> membeli <b>${p.name}</b>`; const popup = document.getElementById('notif-popup'); popup.classList.add('show', 'slide-in-left'); setTimeout(() => { popup.classList.remove('show'); popup.classList.add('slide-out-left'); setTimeout(() => popup.classList.remove('slide-out-left'), 500); }, 4000); } setInterval(show, 45000); }
         
         // Utils
-        function openSearch() { document.getElementById('search-bar').classList.toggle('hidden'); document.getElementById('search-input').focus(); }
+        function toggleSearch() { document.getElementById('search-bar').classList.toggle('hidden'); document.getElementById('search-input').focus(); }
         function searchProducts() { const term = document.getElementById('search-input').value.toLowerCase(); const filtered = CONFIG.products.filter(p => p.name.toLowerCase().includes(term)); activeCategory = 'all'; renderCategories(); const el = document.getElementById('product-grid'); el.innerHTML = filtered.map(p => { const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`; const imgSrc = p.images && p.images[0] ? p.images[0] : 'https://placehold.co/400?text=Img'; return `<div class="card-modern fade-up cursor-pointer" onclick="openDetail(${p.id})"><img src="${imgSrc}" class="w-full aspect-square object-cover"><div class="p-3"><h3 class="font-semibold text-sm truncate">${p.name}</h3><span class="text-green-600 font-bold text-sm">${priceText}</span></div></div>`; }).join(''); }
     </script>
 </body>
