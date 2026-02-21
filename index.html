@@ -209,7 +209,7 @@
             ],
             
             coupons: [
-                { code: "KEMOENIK26", type: "shipping", value: 15000, minPurchase: 120000, desc: "Potongan Ongkir Rp 15.000" }
+                { code: "KEMOENIK26", type: "shipping", value: 15000, minPurchase: 120000, desc: "Kupon Diskon Ongkir Rp 15.000" }
             ],
 
             categories: [
@@ -243,6 +243,7 @@
            LOGIC ENGINE
            =========================================================== */
         let cart = [], wishlist = [], appliedCoupon = null, currentSlide = 0, activeCategory = 'all';
+        let lastCheckoutData = {}; // Untuk menyimpan data form saat navigasi back
 
         document.addEventListener('DOMContentLoaded', () => {
             try {
@@ -446,7 +447,7 @@
                 <div class="mb-4"><label class="text-xs text-gray-500">Metode Bayar</label><select id="payment-method" class="input-style mb-0 text-xs"><option value="transfer">Transfer Produk + Ongkir</option><option value="cod">COD (Transfer Produk, Ongkir di Tempat)</option></select></div>
                 <div class="bg-green-50 p-3 rounded-lg mb-4 text-sm">
                     <div class="flex justify-between mb-1"><span>Subtotal</span><span id="sum-subtotal">Rp 0</span></div>
-                    <div class="flex justify-between mb-1 text-red-500"><span>Diskon Kupon</span><span id="sum-disc">- Rp 0</span></div>
+                    <div class="flex justify-between mb-1 text-red-500"><span>Kupon Diskon Ongkir</span><span id="sum-disc">- Rp 0</span></div>
                     <div class="border-t mt-2 pt-2 flex justify-between font-bold text-base"><span>Total</span><span id="sum-total" class="text-green-600">Rp 0</span></div>
                 </div>
                 <button onclick="proceedToCheckout()" class="btn-primary">Checkout</button>`;
@@ -491,12 +492,11 @@
             if (c) {
                 if (subtotal >= c.minPurchase) { 
                     appliedCoupon = c; 
-                    msg.innerText = "Kupon berhasil! Potongan Rp 15.000"; 
+                    msg.innerText = "Kupon Diskon Ongkir berhasil diterapkan!"; 
                     msg.className = "text-[10px] mt-1 text-green-600 font-semibold"; 
                 } else {
                     appliedCoupon = null;
-                    // Pesan error jika belum min 120k
-                    msg.innerText = `Gagal! Minimal belanja Rp ${c.minPurchase.toLocaleString('id-ID')}.`; 
+                    msg.innerText = `Gagal! Minimal belanja Rp ${c.minPurchase.toLocaleString('id-ID')} untuk pakai kupon ini.`; 
                     msg.className = "text-[10px] mt-1 text-red-500";
                 }
             } else {
@@ -507,35 +507,59 @@
             updateCartSummary();
         }
 
-        // Checkout & WA
-        function proceedToCheckout() { if(cart.length===0) return; closeCart(); renderCheckout(); document.getElementById('checkout-modal').classList.add('active'); }
-        function renderCheckout() {
+        // Checkout & Navigation Flow
+        // Step 1: Cart -> Checkout
+        function proceedToCheckout() { 
+            if(cart.length===0) return; 
+            closeCart(); 
+            // Reset data saat mulai checkout baru
+            lastCheckoutData = {}; 
+            renderCheckout({}); 
+            document.getElementById('checkout-modal').classList.add('active'); 
+        }
+
+        // Step 2: Checkout Form Rendering
+        function renderCheckout(data) {
             document.getElementById('checkout-content').innerHTML = `
-                <button onclick="closeCheckoutForm()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-                <h3 class="font-bold text-lg mb-4">Isi Data</h3>
-                <input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *">
-                <input type="tel" id="c-phone" class="input-style" placeholder="No. WhatsApp *">
-                <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap *">
-                <input type="text" id="c-district" class="input-style" placeholder="Kecamatan *">
-                <input type="text" id="c-city" class="input-style" placeholder="Kota/Kabupaten *">
-                <input type="text" id="c-prov" class="input-style" placeholder="Provinsi *">
-                <input type="text" id="c-zip" class="input-style" placeholder="Kode Pos *">
-                <input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)">
+                <button onclick="backToCart()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                <h3 class="font-bold text-lg mb-4">Isi Data Pengiriman</h3>
+                <input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *" value="${data.name || ''}">
+                <input type="tel" id="c-phone" class="input-style" placeholder="No. WhatsApp *" value="${data.phone || ''}">
+                <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap *" value="${data.address || ''}">
+                <input type="text" id="c-district" class="input-style" placeholder="Kecamatan *" value="${data.district || ''}">
+                <input type="text" id="c-city" class="input-style" placeholder="Kota/Kabupaten *" value="${data.city || ''}">
+                <input type="text" id="c-prov" class="input-style" placeholder="Provinsi *" value="${data.prov || ''}">
+                <input type="text" id="c-zip" class="input-style" placeholder="Kode Pos *" value="${data.zip || ''}">
+                <input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)" value="${data.notes || ''}">
                 <button onclick="processCheckout()" class="btn-primary mt-2">Konfirmasi</button>`;
         }
-        function closeCheckoutForm() { document.getElementById('checkout-modal').classList.remove('active'); }
         
+        function closeCheckoutForm() { document.getElementById('checkout-modal').classList.remove('active'); }
+
+        // Step 3: Checkout -> Payment
         function processCheckout() {
-            const name = document.getElementById('c-name').value; const phone = document.getElementById('c-phone').value; const address = document.getElementById('c-address').value;
+            const name = document.getElementById('c-name').value; 
+            const phone = document.getElementById('c-phone').value; 
+            const address = document.getElementById('c-address').value;
+            const district = document.getElementById('c-district').value; 
+            const city = document.getElementById('c-city').value; 
+            const prov = document.getElementById('c-prov').value; 
+            const zip = document.getElementById('c-zip').value; 
+            const notes = document.getElementById('c-notes').value;
+
             if(!name || !phone || !address) { alert("Lengkapi data wajib!"); return; }
-            closeCheckoutForm();
-            
-            const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0); let disc = appliedCoupon ? appliedCoupon.value : 0;
+
+            // Simpan data sementara jika user kembali
+            lastCheckoutData = { name, phone, address, district, city, prov, zip, notes };
+
+            // Siapkan data pembayaran
+            const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0); 
+            let disc = appliedCoupon ? appliedCoupon.value : 0;
             const total = Math.max(0, subtotal - disc);
             const payMethod = document.getElementById('payment-method').value;
 
             document.getElementById('payment-content').innerHTML = `
-                <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                <button onclick="backToCheckout()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
                 <h3 class="font-bold text-lg mb-3">Pembayaran</h3>
                 <div class="bg-yellow-50 p-3 rounded-lg mb-4 text-xs text-yellow-700">Sistem COD: Transfer produk dulu, ongkir di tempat.</div>
                 <div class="mb-4">
@@ -546,27 +570,45 @@
                     </div>
                 </div>
                 <button onclick="sendToWA()" class="btn-primary bg-green-600">Kirim Bukti via WA</button>`;
+            
+            // Tutup checkout, buka payment
+            closeCheckoutForm();
             document.getElementById('payment-modal').classList.add('active');
         }
+
         function closePaymentModal() { document.getElementById('payment-modal').classList.remove('active'); }
 
+        // NAVIGATION BACK FUNCTIONS
+        function backToCheckout() {
+            closePaymentModal();
+            renderCheckout(lastCheckoutData);
+            document.getElementById('checkout-modal').classList.add('active');
+        }
+
+        function backToCart() {
+            closeCheckoutForm();
+            openCart();
+        }
+
+        // WA SENDER
         function sendToWA() {
-            const name = document.getElementById('c-name').value; const phone = document.getElementById('c-phone').value; const address = document.getElementById('c-address').value;
-            const district = document.getElementById('c-district').value; const city = document.getElementById('c-city').value; const prov = document.getElementById('c-prov').value; const zip = document.getElementById('c-zip').value; const notes = document.getElementById('c-notes').value;
+            const data = lastCheckoutData;
             const payMethod = document.getElementById('payment-method').value;
-            const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0); let disc = appliedCoupon ? appliedCoupon.value : 0; const total = Math.max(0, subtotal - disc);
+            const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0); 
+            let disc = appliedCoupon ? appliedCoupon.value : 0; 
+            const total = Math.max(0, subtotal - disc);
 
             let msg = `*PESANAN BARU - ${CONFIG.storeName}*\n\n`;
-            msg += `*Data:*\nNome: ${name}\nHP: ${phone}\nAlamat: ${address}, ${district}, ${city}, ${prov}, ${zip}\n\n`;
+            msg += `*Data:*\nNome: ${data.name}\nHP: ${data.phone}\nAlamat: ${data.address}, ${data.district}, ${data.city}, ${data.prov}, ${data.zip}\n\n`;
             msg += `*Pesanan:*\n`; cart.forEach(i => { msg += `- ${i.name} (${i.qty}x) : Rp ${(i.price*i.qty).toLocaleString('id-ID')}\n`; });
             msg += `\nSubtotal: Rp ${subtotal.toLocaleString('id-ID')}\n`;
-            if(disc > 0) msg += `Diskon Kupon: - Rp ${disc.toLocaleString('id-ID')}\n`;
+            if(disc > 0) msg += `Diskon Ongkir: - Rp ${disc.toLocaleString('id-ID')}\n`;
             msg += `Total Produk: *Rp ${total.toLocaleString('id-ID')}*\n\n`;
             msg += `*Ongkir:* Chat Admin (Belum termasuk)\n\n`;
             
             if(payMethod === 'cod') msg += `*METODE: COD ONGKIR*\nProduk transfer via rekening di atas. Ongkir dibayar ke kurir.\n\n`;
             else msg += `*METODE: TRANSFER*\n\n`;
-            if(notes) msg += `Catatan: ${notes}`;
+            if(data.notes) msg += `Catatan: ${data.notes}`;
             
             window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
             localStorage.removeItem('cart'); cart = []; saveData(); updateStickyBar(); closePaymentModal(); alert("Terima kasih!");
