@@ -190,6 +190,7 @@
     <div id="cart-modal" class="modal-overlay"><div class="modal-content p-5" id="cart-content"></div></div>
     <div id="checkout-modal" class="modal-overlay"><div class="modal-content p-5" id="checkout-content"></div></div>
     <div id="payment-modal" class="modal-overlay"><div class="modal-content p-5" id="payment-content"></div></div>
+    <!-- Wishlist Modal -->
     <div id="wishlist-modal" class="modal-overlay"><div class="modal-content p-5" id="wishlist-content"></div></div>
     <div id="tracking-modal" class="modal-overlay"><div class="modal-content p-5" id="tracking-content"></div></div>
 
@@ -243,7 +244,6 @@
            =========================================================== */
         let cart = [], wishlist = [], appliedCoupon = null, currentSlide = 0, activeCategory = 'all';
 
-        // 1. Init Awal
         document.addEventListener('DOMContentLoaded', () => {
             try {
                 loadData();
@@ -253,10 +253,7 @@
                 startNotificationLoop();
                 document.getElementById('wa-btn-header').href = `https://wa.me/${CONFIG.whatsappNumber}`;
                 document.getElementById('store-name').innerText = CONFIG.storeName;
-                console.log("Website Siap!");
-            } catch (e) {
-                console.error("Error Init:", e);
-            }
+            } catch (e) { console.error("Error Init:", e); }
         });
 
         function loadData() { 
@@ -271,19 +268,13 @@
         
         // Slider
         function renderSliders() {
-            const track = document.getElementById('hero-slider'); 
-            const dots = document.getElementById('slider-dots');
+            const track = document.getElementById('hero-slider'); const dots = document.getElementById('slider-dots');
             if(!track || !dots) return;
             track.innerHTML = CONFIG.sliders.map(img => `<div class="slide"><img src="${img}" class="w-full h-44 object-cover"></div>`).join('');
             dots.innerHTML = CONFIG.sliders.map((_, i) => `<button onclick="goToSlide(${i})" class="w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white w-4' : 'bg-white/50'}"></button>`).join('');
             setInterval(() => { currentSlide = (currentSlide + 1) % CONFIG.sliders.length; updateSlider(); }, 4000);
         }
-        function updateSlider() { 
-            const track = document.getElementById('hero-slider'); 
-            if(!track) return;
-            track.style.transform = `translateX(-${currentSlide * 100}%)`; 
-            document.querySelectorAll('#slider-dots button').forEach((d, i) => d.className = `w-1.5 h-1.5 rounded-full transition ${i === currentSlide ? 'bg-white w-4' : 'bg-white/50'}`); 
-        }
+        function updateSlider() { const track = document.getElementById('hero-slider'); if(!track) return; track.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('#slider-dots button').forEach((d, i) => d.className = `w-1.5 h-1.5 rounded-full transition ${i === currentSlide ? 'bg-white w-4' : 'bg-white/50'}`); }
         function goToSlide(i) { currentSlide = i; updateSlider(); }
 
         // Categories
@@ -311,6 +302,7 @@
                 const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`;
                 const origText = p.discount > 0 ? `Rp ${p.price.toLocaleString('id-ID')}` : '';
                 const imgSrc = p.images && p.images[0] ? p.images[0] : 'https://placehold.co/400?text=No+Img';
+                const isWished = wishlist.find(w => w.id === p.id);
                 return `
                 <div class="card-modern fade-up cursor-pointer relative group" onclick="openDetail(${p.id})">
                     <div class="relative overflow-hidden rounded-t-2xl">
@@ -327,7 +319,15 @@
                             <div class="flex items-center gap-1"><svg class="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>${p.rating}</div>
                             <span>${p.sold} terjual</span>
                         </div>
-                        <button onclick="event.stopPropagation(); addCart(${p.id})" class="w-full mt-2 bg-green-500/10 text-green-600 text-xs font-semibold py-1.5 rounded-lg hover:bg-green-500 hover:text-white transition-colors">+ Keranjang</button>
+                        <div class="flex gap-2 mt-2">
+                            <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="flex-1 border text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex justify-center items-center gap-1">
+                                ${isWished ? 
+                                    '<svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>' : 
+                                    '<svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>'
+                                }
+                            </button>
+                            <button onclick="event.stopPropagation(); addCart(${p.id})" class="flex-1 bg-green-500/10 text-green-600 text-xs font-semibold py-1.5 rounded-lg hover:bg-green-500 hover:text-white transition-colors">+ Keranjang</button>
+                        </div>
                     </div>
                 </div>
             `}).join('');
@@ -360,14 +360,51 @@
         function closeDetail() { document.getElementById('detail-modal').classList.remove('active'); }
 
         // Wishlist
-        function toggleWishlist(id) { const p = CONFIG.products.find(x=>x.id===id); if(!p) return; const exist = wishlist.find(w=>w.id===id); if(exist) wishlist = wishlist.filter(w=>w.id!==id); else wishlist.push({id:p.id, name:p.name, images:p.images}); saveData(); updateWishlistUI(); }
-        function updateWishlistUI() { const c = wishlist.length; const el = document.getElementById('wish-count-head'); if(c>0) { el.innerText=c; el.classList.remove('hidden'); } else el.classList.add('hidden'); }
+        function toggleWishlist(id) { 
+            const p = CONFIG.products.find(x=>x.id===id); 
+            if(!p) return; 
+            const exist = wishlist.find(w=>w.id===id); 
+            if(exist) wishlist = wishlist.filter(w=>w.id!==id); 
+            else wishlist.push({id:p.id, name:p.name, images:p.images}); 
+            saveData(); 
+            updateWishlistUI(); 
+            renderProducts(); // Update icon di grid
+        }
+        
+        function updateWishlistUI() { 
+            const c = wishlist.length; 
+            const el = document.getElementById('wish-count-head'); 
+            if(c>0) { el.innerText=c; el.classList.remove('hidden'); } 
+            else el.classList.add('hidden'); 
+        }
+        
         function openWishlist() {
             const el = document.getElementById('wishlist-content');
-            if(wishlist.length===0) el.innerHTML='<p class="text-center text-gray-400 py-8">Wishlist kosong</p>';
-            else el.innerHTML = wishlist.map(w=> `<div class="flex gap-3 items-center border-b pb-3"><img src="${w.images?.[0] || 'https://placehold.co/100'}" class="w-14 h-14 rounded-lg object-cover"><div class="flex-1"><h4 class="font-semibold text-sm">${w.name}</h4><button onclick="toggleWishlist(${w.id}); openWishlist();" class="text-red-500 text-xs mt-1">Hapus</button></div></div>`).join('');
+            let html = `
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg">Wishlist</h3>
+                    <button onclick="closeWishlist()" class="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            `;
+            if(wishlist.length===0) html += '<p class="text-center text-gray-400 py-8">Wishlist kosong</p>';
+            else html += `<div class="space-y-3">` + wishlist.map(w=> {
+                const img = w.images?.[0] || 'https://placehold.co/100';
+                return `
+                <div class="flex gap-3 items-center border-b pb-3">
+                    <img src="${img}" class="w-14 h-14 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-sm">${w.name}</h4>
+                        <button onclick="toggleWishlist(${w.id}); openWishlist();" class="text-red-500 text-xs mt-1">Hapus</button>
+                    </div>
+                </div>`;
+            }).join('') + `</div>`;
+            
+            el.innerHTML = html;
             document.getElementById('wishlist-modal').classList.add('active');
         }
+        function closeWishlist() { document.getElementById('wishlist-modal').classList.remove('active'); }
         
         // Cart Logic
         function addCart(id) {
@@ -383,7 +420,6 @@
             
             saveData(); 
             updateStickyBar();
-            console.log("Produk ditambahkan:", p.name);
         }
         
         function updateStickyBar() { 
@@ -399,7 +435,6 @@
             renderCartModal(); 
             document.getElementById('cart-modal').classList.add('active'); 
         }
-        
         function closeCart() { document.getElementById('cart-modal').classList.remove('active'); }
         
         function renderCartModal() {
@@ -445,11 +480,30 @@
             document.getElementById('sum-disc').innerText = `- Rp ${disc.toLocaleString('id-ID')}`;
             document.getElementById('sum-total').innerText = `Rp ${Math.max(0, subtotal - disc).toLocaleString('id-ID')}`;
         }
+        
         function applyCoupon() {
-            const code = document.getElementById('coupon-input').value.toUpperCase(); const c = CONFIG.coupons.find(x => x.code === code); const msg = document.getElementById('coupon-msg'); msg.classList.remove('hidden');
+            const code = document.getElementById('coupon-input').value.toUpperCase(); 
+            const c = CONFIG.coupons.find(x => x.code === code); 
+            const msg = document.getElementById('coupon-msg'); 
+            msg.classList.remove('hidden');
             const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-            if(c && subtotal >= c.minPurchase) { appliedCoupon = c; msg.innerText = "Kupon berhasil!"; msg.className = "text-[10px] mt-1 text-green-600"; }
-            else { appliedCoupon = null; msg.innerText = c ? `Min. belanja Rp ${c.minPurchase.toLocaleString('id-ID')}` : "Kode salah"; msg.className = "text-[10px] mt-1 text-red-500"; }
+            
+            if (c) {
+                if (subtotal >= c.minPurchase) { 
+                    appliedCoupon = c; 
+                    msg.innerText = "Kupon berhasil! Potongan Rp 15.000"; 
+                    msg.className = "text-[10px] mt-1 text-green-600 font-semibold"; 
+                } else {
+                    appliedCoupon = null;
+                    // Pesan error jika belum min 120k
+                    msg.innerText = `Gagal! Minimal belanja Rp ${c.minPurchase.toLocaleString('id-ID')}.`; 
+                    msg.className = "text-[10px] mt-1 text-red-500";
+                }
+            } else {
+                appliedCoupon = null;
+                msg.innerText = "Kode kupon tidak ditemukan"; 
+                msg.className = "text-[10px] mt-1 text-red-500";
+            }
             updateCartSummary();
         }
 
@@ -503,7 +557,7 @@
             const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0); let disc = appliedCoupon ? appliedCoupon.value : 0; const total = Math.max(0, subtotal - disc);
 
             let msg = `*PESANAN BARU - ${CONFIG.storeName}*\n\n`;
-            msg += `*Data:*\nNama: ${name}\nHP: ${phone}\nAlamat: ${address}, ${district}, ${city}, ${prov}, ${zip}\n\n`;
+            msg += `*Data:*\nNome: ${name}\nHP: ${phone}\nAlamat: ${address}, ${district}, ${city}, ${prov}, ${zip}\n\n`;
             msg += `*Pesanan:*\n`; cart.forEach(i => { msg += `- ${i.name} (${i.qty}x) : Rp ${(i.price*i.qty).toLocaleString('id-ID')}\n`; });
             msg += `\nSubtotal: Rp ${subtotal.toLocaleString('id-ID')}\n`;
             if(disc > 0) msg += `Diskon Kupon: - Rp ${disc.toLocaleString('id-ID')}\n`;
