@@ -22,8 +22,8 @@
         :root {
             --primary: #48BB78;        /* Hijau Soft */
             --primary-dark: #2F855A;   /* Hijau Gelap */
-            --bg-start: #22C55E;       /* Gradasi Awal */
-            --bg-end: #FACC15;         /* Gradasi Akhir */
+            --bg-start: #22C55E;
+            --bg-end: #FACC15;
             --text-main: #1A202C;
             --text-muted: #718096;
             --danger: #E53E3E;
@@ -50,7 +50,7 @@
         .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); padding: 10px 20px; z-index: 900; display: none; }
 
         /* Notification Popup */
-        .notif-popup { position: fixed; bottom: 80px; left: 20px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); z-index: 999; max-width: 300px; display: none; border-left: 5px solid var(--primary); }
+        .notif-popup { position: fixed; bottom: 100px; left: 20px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); z-index: 999; max-width: 300px; display: none; border-left: 5px solid var(--primary); }
         .notif-popup.show { display: flex; gap: 10px; align-items: center; }
 
         /* Modals */
@@ -64,7 +64,12 @@
         .btn-primary { background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: all 0.2s; width: 100%; border: none; }
         .btn-primary:hover { background: var(--primary-dark); }
 
-        /* Timeline Tracking */
+        /* Sticky Buttons */
+        .sticky-btn { position: fixed; right: 20px; z-index: 999; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s; }
+        .sticky-btn:hover { transform: scale(1.1); }
+        .sticky-cart { bottom: 170px; background: white; color: black; border: 1px solid #eee; }
+        .sticky-wa { bottom: 100px; background: #25D366; color: white; }
+        
         .timeline-item { position: relative; padding-left: 30px; margin-bottom: 20px; }
         .timeline-item::before { content: ''; position: absolute; left: 0; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: #CBD5E0; }
         .timeline-item.active::before { background: var(--primary); box-shadow: 0 0 0 4px rgba(72, 187, 120, 0.2); }
@@ -85,6 +90,19 @@
         </div>
     </div>
 
+    <!-- FLOATING BUTTONS (WA & CART) -->
+    <div onclick="openCart()" class="sticky-btn sticky-cart">
+        <span id="sticky-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">0</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+    </div>
+    <a id="wa-link" href="#" target="_blank" class="sticky-btn sticky-wa">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+    <!-- TRACKING BUTTON -->
+    <div onclick="openTracking()" class="fixed bottom-28 right-5 bg-white p-3 rounded-full shadow-lg z-50 cursor-pointer hover:bg-gray-50 border">
+        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+    </div>
+
     <!-- HEADER -->
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -100,13 +118,8 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                     <span id="wish-count-head" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
                 </button>
-                <button onclick="openCart()" class="relative text-gray-600 hover:text-gray-900">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                    <span id="sticky-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
-                </button>
             </div>
         </div>
-        <!-- Search Bar (Hidden by default) -->
         <div id="search-bar" class="px-4 pb-3 hidden">
             <input type="text" id="search-input" class="input-style mb-0" placeholder="Ketik nama produk..." onkeyup="searchProducts()">
         </div>
@@ -114,7 +127,6 @@
 
     <!-- MAIN CONTENT -->
     <main class="container mx-auto px-4 pb-24 pt-4">
-        
         <!-- BANNER SLIDER -->
         <section class="mb-4 relative rounded-xl overflow-hidden shadow-md">
             <div id="hero-slider" class="slider-track"></div>
@@ -162,7 +174,7 @@
         </section>
     </main>
 
-    <!-- FOOTER BARU -->
+    <!-- FOOTER -->
     <footer class="bg-white text-gray-700 mt-12 shadow-inner pb-20">
         <div class="container mx-auto px-4 py-10 text-center">
             <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="h-16 w-16 rounded-full mx-auto mb-3 shadow">
@@ -178,7 +190,7 @@
         <div class="border-t border-gray-100 py-4 text-center text-xs text-gray-400">&copy; 2024 Kemoenik. All rights reserved.</div>
     </footer>
 
-    <!-- STICKY BOTTOM BAR (Keranjang) -->
+    <!-- STICKY BOTTOM BAR -->
     <div id="sticky-bar" class="sticky-bar">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-2" onclick="openCart()">
@@ -195,151 +207,35 @@
         </div>
     </div>
 
-    <!-- FLOATING TRACKING BUTTON -->
-    <div onclick="openTracking()" class="fixed bottom-24 right-5 bg-white p-3 rounded-full shadow-lg z-50 cursor-pointer hover:bg-gray-50 border">
-        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-    </div>
-
-    <!-- MODAL DETAIL PRODUK -->
-    <div id="detail-modal" class="modal-overlay">
-        <div class="modal-content" id="detail-content"></div>
-    </div>
-
-    <!-- MODAL KERANJANG & CHECKOUT -->
-    <div id="cart-modal" class="modal-overlay">
-        <div class="modal-content p-5">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg">Keranjang</h3>
-                <button onclick="closeCart()" class="text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-            </div>
-
-            <!-- List Produk -->
-            <div id="cart-list" class="max-h-40 overflow-y-auto border-b pb-4 mb-4"></div>
-
-            <!-- Ongkir Section -->
-            <div class="mb-4 space-y-3">
-                <h4 class="font-semibold text-sm">Pengiriman (Asal Bandung)</h4>
-                <select id="ship-province" class="input-style mb-1" onchange="updateCartSummary()">
-                    <option value="">Pilih Provinsi Tujuan</option>
-                    <option value="jabar">Jawa Barat & Sekitarnya</option>
-                    <option value="jateng">Jawa Tengah/Timur</option>
-                    <option value="sumatera">Sumatera</option>
-                    <option value="kalimantan">Kalimantan</option>
-                    <option value="sulawesi">Sulawesi</option>
-                    <option value="bali">Bali & Nusa Tenggara</option>
-                    <option value="papua">Maluku & Papua</option>
-                </select>
-                <select id="ship-city" class="input-style mb-1" onchange="updateCartSummary()">
-                    <option value="">Pilih Kota/Zona</option>
-                </select>
-                <p id="ship-note" class="text-[10px] text-gray-400 hidden">*Ongkir estimasi, cek WA untuk pastinya.</p>
-            </div>
-
-            <!-- Kupon -->
-            <div class="mb-4">
-                <div class="flex gap-2">
-                    <input type="text" id="coupon-input" class="input-style mb-0" placeholder="Kode Kupon">
-                    <button onclick="applyCoupon()" class="bg-gray-800 text-white px-4 rounded-lg text-sm">Pakai</button>
-                </div>
-                <p id="coupon-msg" class="text-xs mt-1 hidden"></p>
-            </div>
-
-            <!-- Pembayaran -->
-            <div class="mb-4">
-                <label class="text-xs text-gray-500 mb-1 block">Metode Pembayaran</label>
-                <select id="payment-method" class="input-style mb-0">
-                    <option value="transfer">Transfer Penuh (Produk + Ongkir)</option>
-                    <option value="cod">COD Ongkir Saja (Produk Transfer)</option>
-                </select>
-            </div>
-
-            <!-- Ringkasan -->
-            <div class="bg-gray-50 p-3 rounded-lg mb-4 text-sm">
-                <div class="flex justify-between mb-1"><span>Subtotal</span><span id="sum-subtotal">Rp 0</span></div>
-                <div class="flex justify-between mb-1 text-green-600"><span>Potongan Ongkir</span><span id="sum-disc-ship">- Rp 0</span></div>
-                <div class="flex justify-between mb-1"><span>Sisa Ongkir</span><span id="sum-ship">Rp 0</span></div>
-                <div class="border-t mt-2 pt-2 flex justify-between font-bold"><span>Total</span><span id="sum-total">Rp 0</span></div>
-            </div>
-
-            <button onclick="proceedToCheckout()" class="btn-primary">Lanjut Checkout</button>
-        </div>
-    </div>
-
-    <!-- MODAL FORM DATA DIRI -->
-    <div id="checkout-modal" class="modal-overlay">
-        <div class="modal-content p-5">
-            <button onclick="closeCheckoutForm()" class="absolute top-4 right-4 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-            <h3 class="font-bold text-lg mb-4">Data Pengiriman</h3>
-            <input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *">
-            <input type="tel" id="c-phone" class="input-style" placeholder="No. WhatsApp *">
-            <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap *">
-            <input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)">
-            <button onclick="processCheckout()" class="btn-primary mt-2">Konfirmasi Pembayaran</button>
-        </div>
-    </div>
-
-    <!-- MODAL KONFIRMASI PEMBAYARAN -->
-    <div id="payment-modal" class="modal-overlay">
-        <div class="modal-content p-5">
-            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-            <h3 class="font-bold text-lg mb-4">Konfirmasi Pembayaran</h3>
-            
-            <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg mb-4 text-xs text-yellow-800">
-                Silakan transfer sesuai metode yang dipilih. Lalu kirim bukti via tombol di bawah.
-            </div>
-
-            <div class="mb-4 text-sm">
-                <h4 class="font-semibold mb-2">Transfer ke:</h4>
-                <div id="pay-list" class="space-y-2"></div>
-                <div class="mt-3 border p-2 rounded-lg bg-blue-50 text-center">
-                    <p class="text-[10px] text-gray-500 mb-1">Scan QRIS:</p>
-                    <img id="pay-qris" src="" class="mx-auto w-32 h-32 object-contain rounded bg-white p-1">
-                </div>
-            </div>
-
-            <button onclick="sendToWA()" class="btn-primary bg-green-600 hover:bg-green-700">Kirim Bukti via WA</button>
-        </div>
-    </div>
-
-    <!-- MODAL WISHLIST -->
-    <div id="wishlist-modal" class="modal-overlay">
-        <div class="modal-content p-5">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg">Wishlist</h3>
-                <button onclick="closeWishlist()" class="text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-            </div>
-            <div id="wishlist-content" class="space-y-3"></div>
-        </div>
-    </div>
-
-    <!-- MODAL TRACKING -->
-    <div id="tracking-modal" class="modal-overlay">
-        <div class="modal-content p-5">
-            <button onclick="closeTracking()" class="absolute top-4 right-4 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-            <h3 class="font-bold text-lg mb-4">Lacak Pengiriman J&T</h3>
-            <div class="flex gap-2 mb-6">
-                <input type="text" id="tracking-input" class="input-style mb-0" placeholder="Masukkan No. Resi">
-                <button onclick="simulateTracking()" class="bg-black text-white px-4 rounded-lg text-sm">Lacak</button>
-            </div>
-            <div id="tracking-result"></div>
-        </div>
-    </div>
+    <!-- MODALS (Detail, Cart, Checkout, Payment, Wishlist, Tracking) -->
+    <div id="detail-modal" class="modal-overlay"><div class="modal-content" id="detail-content"></div></div>
+    <div id="cart-modal" class="modal-overlay"><div class="modal-content p-5" id="cart-content"></div></div>
+    <div id="checkout-modal" class="modal-overlay"><div class="modal-content p-5" id="checkout-content"></div></div>
+    <div id="payment-modal" class="modal-overlay"><div class="modal-content p-5" id="payment-content"></div></div>
+    <div id="wishlist-modal" class="modal-overlay"><div class="modal-content p-5" id="wishlist-content"></div></div>
+    <div id="tracking-modal" class="modal-overlay"><div class="modal-content p-5" id="tracking-content"></div></div>
 
     <script>
         /* ===========================================================
-           KONFIGURASI UTAMA
+           KONFIGURASI DATA (DATA SUDAH DITERAPKAN DARI KODE ANDA)
            =========================================================== */
         const CONFIG = {
             storeName: "KEMOENIK",
-            whatsappNumber: "6281546450547", 
+            whatsappNumber: "6281546450547", // NO WHATSAPP DARI KODE ANDA
             
+            // DATA REKENING DARI KODE ANDA
+            bankAccounts: [
+                { bank: "Bank BRI", number: "000501168248506", name: "DANI RAMDANI" },
+                { bank: "DANA", number: "081546450547", name: "DANI RAMDANI" },
+                { bank: "SEA BANK", number: "901851870313", name: "DANI RAMDANI" }
+            ],
+            qrisImage: "https://placehold.co/200x200/FFFFFF/000000?text=QRIS+ANDA",
+
             coupons: [
                 { code: "HEMAT20", type: "percent", value: 20, minPurchase: 0 },
-                { code: "BONUS10K", type: "nominal", value: 10000, minPurchase: 50000 },
                 { code: "GRATIS20K", type: "shipping", value: 20000, minPurchase: 120000 }
             ],
 
-            // Data Ongkir J&T Asal Bandung
             shippingData: {
                 'jabar': { 
                     name: 'Jawa Barat & Sekitarnya', 
@@ -389,8 +285,8 @@
                     ]
                 }
             },
-            freeOngkirMin: 120000, // Belanja di atas 120k
-            freeOngkirAmount: 20000, // Potongan 20k
+            freeOngkirMin: 120000,
+            freeOngkirAmount: 20000,
 
             categories: [
                 { name: "Calculator Diet", icon: "calc" },
@@ -403,13 +299,6 @@
                 "https://placehold.co/800x400/FACC15/000000?text=Diskon+50%25",
                 "https://placehold.co/800x400/FFFFFF/000000?text=Gratis+Ongkir"
             ],
-
-            bankAccounts: [
-                { bank: "Bank BRI", number: "000501168248506", name: "DANI RAMDANI" },
-                { bank: "DANA", number: "081546450547", name: "DANI RAMDANI" },
-                { bank: "SEA BANK", number: "901851870313", name: "DANI RAMDANI" }
-            ],
-            qrisImage: "https://placehold.co/200x200/FFFFFF/000000?text=QRIS+ANDA",
 
             fakeNames: ["Andi", "Budi", "Siti", "Dewi", "Riko", "Putri"],
             fakeCities: ["Jakarta", "Bandung", "Surabaya", "Semarang", "Yogyakarta", "Medan"],
@@ -481,14 +370,17 @@
         let appliedCoupon = null;
         let currentSlide = 0;
 
+        // Init
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
             renderProducts(CONFIG.products);
             renderCategories();
             renderSliders();
             startNotificationLoop();
+            
+            // TERAPKAN DATA WHATSAPP KE TOMBOL
+            document.getElementById('wa-link').href = `https://wa.me/${CONFIG.whatsappNumber}`;
             document.getElementById('wa-btn-header').href = `https://wa.me/${CONFIG.whatsappNumber}`;
-            document.getElementById('pay-qris').src = CONFIG.qrisImage;
             document.getElementById('store-name').innerText = CONFIG.storeName;
         });
 
@@ -498,13 +390,12 @@
             updateStickyBar();
             updateWishlistUI();
         }
-
         function saveData() {
             localStorage.setItem('cartKemoenik', JSON.stringify(cart));
             localStorage.setItem('wishKemoenik', JSON.stringify(wishlist));
         }
 
-        // --- RENDER FUNCTIONS ---
+        // --- RENDER UI ---
         function renderSliders() {
             const track = document.getElementById('hero-slider');
             const dots = document.getElementById('slider-dots');
@@ -529,13 +420,7 @@
                 </div>
             `).join('');
         }
-
-        function getEmoji(icon) {
-            if (icon === 'calc') return '🧮';
-            if (icon === 'pill') return '💊';
-            if (icon === 'tea') return '🍵';
-            return '📦';
-        }
+        function getEmoji(icon) { if (icon === 'calc') return '🧮'; if (icon === 'pill') return '💊'; if (icon === 'tea') return '🍵'; return '📦'; }
 
         function renderProducts(data) {
             const el = document.getElementById('product-grid');
@@ -601,14 +486,12 @@
         }
         function closeDetail() { document.getElementById('detail-modal').classList.remove('active'); }
 
-        // --- SEARCH ---
+        // --- SEARCH & WISHLIST ---
         function openSearch() { document.getElementById('search-bar').classList.toggle('hidden'); }
         function searchProducts() {
             const term = document.getElementById('search-input').value.toLowerCase();
             renderProducts(CONFIG.products.filter(p => p.name.toLowerCase().includes(term)));
         }
-
-        // --- WISHLIST ---
         function toggleWishlist(id) {
             const p = CONFIG.products.find(x=>x.id===id);
             const exist = wishlist.find(w=>w.id===id);
@@ -633,7 +516,6 @@
             `).join('');
             document.getElementById('wishlist-modal').classList.add('active');
         }
-        function closeWishlist() { document.getElementById('wishlist-modal').classList.remove('active'); }
 
         // --- CART LOGIC ---
         function addCart(id) {
@@ -644,7 +526,6 @@
             else cart.push({id: p.id, name: p.name, price: p.price - (p.price * p.discount / 100), rawPrice: p.price, discount: p.discount, image: p.image, qty: 1});
             saveData(); updateStickyBar(); 
         }
-        
         function updateStickyBar() {
             const count = cart.reduce((s, i) => s + i.qty, 0);
             const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
@@ -654,13 +535,67 @@
             document.getElementById('sticky-total').innerText = `Rp ${total.toLocaleString('id-ID')}`;
             document.getElementById('sticky-bar').style.display = count > 0 ? 'block' : 'none';
         }
+        function openCart() { renderCartModal(); document.getElementById('cart-modal').classList.add('active'); }
+        function closeCart() { document.getElementById('cart-modal').classList.remove('active'); }
 
-        function openCart() {
+        function renderCartModal() {
+            // HTML untuk Konten Modal Keranjang
+            document.getElementById('cart-content').innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg">Keranjang</h3>
+                    <button onclick="closeCart()" class="text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                </div>
+                <div id="cart-list" class="max-h-40 overflow-y-auto border-b pb-4 mb-4"></div>
+                
+                <!-- Ongkir -->
+                <div class="mb-4 space-y-3">
+                    <h4 class="font-semibold text-sm">Pengiriman (Asal Bandung)</h4>
+                    <select id="ship-province" class="input-style mb-1" onchange="updateCityList(); updateCartSummary();">
+                        <option value="">Pilih Provinsi</option>
+                        <option value="jabar">Jawa Barat & Sekitarnya</option>
+                        <option value="jateng">Jawa Tengah/Timur</option>
+                        <option value="sumatera">Sumatera</option>
+                        <option value="kalimantan">Kalimantan</option>
+                        <option value="sulawesi">Sulawesi</option>
+                        <option value="bali">Bali & Nusa Tenggara</option>
+                        <option value="papua">Maluku & Papua</option>
+                    </select>
+                    <select id="ship-city" class="input-style mb-1" onchange="updateCartSummary()">
+                        <option value="">Pilih Kota</option>
+                    </select>
+                    <p id="ship-note" class="text-[10px] text-gray-400 hidden">*Estimasi, cek WA untuk pastinya. >120k potong 20k.</p>
+                </div>
+
+                <!-- Kupon -->
+                <div class="mb-4">
+                    <div class="flex gap-2">
+                        <input type="text" id="coupon-input" class="input-style mb-0" placeholder="Kode Kupon">
+                        <button onclick="applyCoupon()" class="bg-gray-800 text-white px-4 rounded-lg text-sm">Pakai</button>
+                    </div>
+                    <p id="coupon-msg" class="text-xs mt-1 hidden"></p>
+                </div>
+
+                <!-- Metode Bayar -->
+                <div class="mb-4">
+                    <label class="text-xs text-gray-500">Metode Pembayaran</label>
+                    <select id="payment-method" class="input-style mb-0">
+                        <option value="transfer">Transfer Penuh (Produk + Ongkir)</option>
+                        <option value="cod">COD Ongkir Saja (Produk Transfer)</option>
+                    </select>
+                </div>
+
+                <!-- Ringkasan -->
+                <div class="bg-gray-50 p-3 rounded-lg mb-4 text-sm">
+                    <div class="flex justify-between mb-1"><span>Subtotal</span><span id="sum-subtotal">Rp 0</span></div>
+                    <div class="flex justify-between mb-1 text-green-600"><span>Potongan Ongkir</span><span id="sum-disc-ship">- Rp 0</span></div>
+                    <div class="flex justify-between mb-1"><span>Sisa Ongkir</span><span id="sum-ship">Rp 0</span></div>
+                    <div class="border-t mt-2 pt-2 flex justify-between font-bold"><span>Total</span><span id="sum-total">Rp 0</span></div>
+                </div>
+                <button onclick="proceedToCheckout()" class="btn-primary">Lanjut Checkout</button>
+            `;
             renderCartItems();
             updateCartSummary();
-            document.getElementById('cart-modal').classList.add('active');
         }
-        function closeCart() { document.getElementById('cart-modal').classList.remove('active'); }
 
         function renderCartItems() {
             const el = document.getElementById('cart-list');
@@ -677,17 +612,16 @@
                             <button onclick="updateCartQty(${i.id}, 1)" class="w-5 h-5 bg-gray-100 rounded text-xs">+</button>
                         </div>
                     </div>
-                    <button onclick="removeCartItem(${i.id})" class="text-red-400 text-xs">Hapus</button>
+                    <button onclick="removeCartItem(${i.id}); renderCartModal();" class="text-red-400 text-xs">Hapus</button>
                 </div>
             `).join('');
         }
+        
+        function updateCartQty(id, n) { const i = cart.find(x => x.id === id); if(i) { i.qty += n; if(i.qty<1) cart=cart.filter(x=>x.id!==id); saveData(); renderCartModal(); updateStickyBar(); } }
+        function removeCartItem(id) { cart = cart.filter(x => x.id !== id); saveData(); updateStickyBar(); }
 
-        function updateCartQty(id, n) { const i = cart.find(x => x.id === id); if(i) { i.qty += n; if(i.qty<1) cart=cart.filter(x=>x.id!==id); saveData(); renderCartItems(); updateStickyBar(); updateCartSummary(); } }
-        function removeCartItem(id) { cart = cart.filter(x => x.id !== id); saveData(); renderCartItems(); updateStickyBar(); updateCartSummary(); }
-
-        // --- ONGKIR & SUMMARY LOGIC ---
-        document.getElementById('ship-province').addEventListener('change', function() {
-            const prov = this.value;
+        function updateCityList() {
+            const prov = document.getElementById('ship-province').value;
             const citySel = document.getElementById('ship-city');
             citySel.innerHTML = '<option value="">Pilih Kota</option>';
             if(prov && CONFIG.shippingData[prov]) {
@@ -696,8 +630,7 @@
                 });
                 document.getElementById('ship-note').classList.remove('hidden');
             }
-            updateCartSummary();
-        });
+        }
 
         function updateCartSummary() {
             const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
@@ -708,18 +641,13 @@
             const cityVal = document.getElementById('ship-city').value;
             if(cityVal) shipCost = parseInt(cityVal);
 
-            // Promo Logics
             let couponDisc = 0;
             if(appliedCoupon) {
                 if(appliedCoupon.type === 'percent') couponDisc = subtotal * (appliedCoupon.value/100);
                 if(appliedCoupon.type === 'nominal') couponDisc = appliedCoupon.value;
-                if(appliedCoupon.type === 'shipping') couponDisc = 0; // handled by discShip
             }
 
-            // Promo Ongkir 20k
-            if (rawTotal >= CONFIG.freeOngkirMin && shipCost > 0) {
-                discShip = CONFIG.freeOngkirAmount;
-            }
+            if (rawTotal >= CONFIG.freeOngkirMin && shipCost > 0) discShip = CONFIG.freeOngkirAmount;
             
             const finalShip = Math.max(0, shipCost - discShip);
             const total = subtotal - couponDisc + finalShip;
@@ -735,23 +663,25 @@
             const c = CONFIG.coupons.find(x => x.code === code);
             const msg = document.getElementById('coupon-msg');
             msg.classList.remove('hidden');
-            if(c) {
-                appliedCoupon = c;
-                msg.innerText = "Kupon berhasil!";
-                msg.className = "text-xs mt-1 text-green-600";
-            } else {
-                appliedCoupon = null;
-                msg.innerText = "Kode salah";
-                msg.className = "text-xs mt-1 text-red-500";
-            }
+            if(c) { appliedCoupon = c; msg.innerText = "Kupon berhasil!"; msg.className = "text-xs mt-1 text-green-600"; }
+            else { appliedCoupon = null; msg.innerText = "Kode salah"; msg.className = "text-xs mt-1 text-red-500"; }
             updateCartSummary();
         }
 
         // --- CHECKOUT FLOW ---
         function proceedToCheckout() {
             if(cart.length===0) return;
-            if(!document.getElementById('ship-city').value) { alert("Pilih kota tujuan di keranjang dulu!"); return; }
+            if(!document.getElementById('ship-city').value) { alert("Pilih kota tujuan!"); return; }
             closeCart();
+            document.getElementById('checkout-content').innerHTML = `
+                <button onclick="closeCheckoutForm()" class="absolute top-4 right-4 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                <h3 class="font-bold text-lg mb-4">Data Pengiriman</h3>
+                <input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *">
+                <input type="tel" id="c-phone" class="input-style" placeholder="No. WhatsApp *">
+                <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap *">
+                <input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)">
+                <button onclick="processCheckout()" class="btn-primary mt-2">Konfirmasi Pembayaran</button>
+            `;
             document.getElementById('checkout-modal').classList.add('active');
         }
         function closeCheckoutForm() { document.getElementById('checkout-modal').classList.remove('active'); }
@@ -762,22 +692,33 @@
             const address = document.getElementById('c-address').value;
             if(!name || !phone || !address) { alert("Lengkapi data!"); return; }
             
-            // Logic send later
             closeCheckoutForm();
             
-            // Populate Payment Modal
-            const payList = document.getElementById('pay-list');
-            payList.innerHTML = CONFIG.bankAccounts.map(b => `
-                <div class="bg-gray-50 p-2 rounded border text-xs">
-                    <p class="font-bold text-gray-700">${b.bank}</p>
-                    <p class="font-mono text-gray-500">${b.number}</p>
-                    <p class="text-gray-400">a.n ${b.name}</p>
+            // ISI DATA BANK DARI CONFIG
+            document.getElementById('payment-content').innerHTML = `
+                <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                <h3 class="font-bold text-lg mb-4">Konfirmasi Pembayaran</h3>
+                <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg mb-4 text-xs text-yellow-800">Silakan transfer sesuai metode, lalu kirim bukti via WA.</div>
+                <div class="mb-4 text-sm">
+                    <h4 class="font-semibold mb-2">Transfer ke:</h4>
+                    <div class="space-y-2">
+                        ${CONFIG.bankAccounts.map(b => `
+                            <div class="bg-gray-50 p-2 rounded border text-xs">
+                                <p class="font-bold text-gray-700">${b.bank}</p>
+                                <p class="font-mono text-gray-500">${b.number}</p>
+                                <p class="text-gray-400">a.n ${b.name}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="mt-3 border p-2 rounded-lg bg-blue-50 text-center">
+                        <p class="text-[10px] text-gray-500 mb-1">Scan QRIS:</p>
+                        <img src="${CONFIG.qrisImage}" class="mx-auto w-32 h-32 object-contain rounded bg-white p-1">
+                    </div>
                 </div>
-            `).join('');
-
+                <button onclick="sendToWA()" class="btn-primary bg-green-600 hover:bg-green-700">Kirim Bukti via WA</button>
+            `;
             document.getElementById('payment-modal').classList.add('active');
         }
-
         function closePaymentModal() { document.getElementById('payment-modal').classList.remove('active'); }
 
         function sendToWA() {
@@ -822,7 +763,18 @@
         }
 
         // --- TRACKING ---
-        function openTracking() { document.getElementById('tracking-modal').classList.add('active'); }
+        function openTracking() { 
+            document.getElementById('tracking-content').innerHTML = `
+                <button onclick="closeTracking()" class="absolute top-4 right-4 text-gray-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                <h3 class="font-bold text-lg mb-4">Lacak Pengiriman J&T</h3>
+                <div class="flex gap-2 mb-6">
+                    <input type="text" id="tracking-input" class="input-style mb-0" placeholder="Masukkan No. Resi">
+                    <button onclick="simulateTracking()" class="bg-black text-white px-4 rounded-lg text-sm">Lacak</button>
+                </div>
+                <div id="tracking-result"></div>
+            `;
+            document.getElementById('tracking-modal').classList.add('active'); 
+        }
         function closeTracking() { document.getElementById('tracking-modal').classList.remove('active'); }
         function simulateTracking() {
             const resi = document.getElementById('tracking-input').value;
@@ -836,7 +788,7 @@
             document.getElementById('tracking-result').innerHTML = html;
         }
 
-        // --- NOTIF SYSTEM ---
+        // --- NOTIF ---
         function startNotificationLoop() {
             function show() {
                 const n = CONFIG.fakeNames[Math.floor(Math.random() * CONFIG.fakeNames.length)];
