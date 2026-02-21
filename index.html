@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <!-- PENGATURAN VIEWPORT KUNCI -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -11,29 +10,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Library PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
             --primary: #48BB78;
             --primary-dark: #2F855A;
-            --bg-soft: #F5F7FA; /* Abu-abu sangat muda lembut */
+            --bg-soft: #F5F7FA;
             --text-main: #1F2937;
-            --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.03); /* Shadow lembut */
+            --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
 
-        /* ========== CSS DASAR (PREMIUM FEEL) ========== */
         * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        html { 
-            -webkit-text-size-adjust: 100%; 
-            -ms-text-size-adjust: 100%;
-            /* Lock scroll saat modal aktif via JS, bukan CSS fixed */
-        }
+        html { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
         
         body { 
-            /* Gradien lembut untuk background utama */
             background: linear-gradient(180deg, #FFFFFF 0%, #F5F7FA 100%);
             background-attachment: fixed;
             color: var(--text-main); 
@@ -43,64 +35,115 @@
             transition: background 0.3s;
         }
 
-        /* Class untuk mengunci scroll body saat modal open */
-        body.no-scroll {
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-        }
+        body.no-scroll { overflow: hidden; position: fixed; width: 100%; }
 
-        /* ANTI ZOOM DOUBLE TAP */
         *, *::before, *::after { touch-action: manipulation; }
 
         ::-webkit-scrollbar { width: 3px; height: 3px;}
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
 
-        /* ========== MODAL RESPONSIF (KEYBOARD FRIENDLY) ========== */
+        /* ========== MODAL RESPONSIF ========== */
         .modal-overlay { 
             position: fixed; 
             inset: 0; 
-            background: rgba(255, 255, 255, 0.6); /* Overlay putih lembut/transparan */
-            backdrop-filter: blur(8px); /* Blur premium */
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
             z-index: 1000; 
             display: none; 
-            align-items: flex-end; /* Default bottom sheet */
+            align-items: flex-end;
             justify-content: center; 
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        .modal-overlay.active { 
-            display: flex; 
-            opacity: 1;
-            /* Saat keyboard muncul, biarkan browser menangani posisi agar tidak ancur */
-            align-items: flex-end; 
-        }
+        .modal-overlay.active { display: flex; opacity: 1; align-items: flex-end; }
         
         .modal-content { 
             background: white; 
             width: 100%; 
             max-width: 500px; 
-            width: 100%;
-            /* Penting: Gunakan max-height dinamis, hindari height fixed */
-            max-height: 95dvh; /* Dynamic Viewport Height untuk mobile modern */
+            max-height: 95dvh;
             border-radius: 24px 24px 0 0; 
-            overflow-y: auto; /* Scroll internal */
+            overflow-y: auto;
             overflow-x: hidden;
             position: relative; 
             animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1); 
             box-shadow: 0 -10px 40px rgba(0,0,0,0.08);
-            -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
+            -webkit-overflow-scrolling: touch;
         }
         
         @keyframes slideUp { from { transform: translateY(20%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        /* INPUT STYLE */
+        /* ========== ANIMASI PRINTER ========== */
+        .printer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+            padding-top: 0;
+        }
+
+        .printer-illustration {
+            width: 120px;
+            height: 60px;
+            position: relative;
+            z-index: 10;
+            margin-bottom: -8px;
+        }
+
+        .printer-body {
+            fill: #374151;
+        }
+
+        .printer-slot {
+            fill: #1f2937;
+        }
+
+        .printer-paper-output {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            animation: paperSlideOut 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transform-origin: top center;
+        }
+
+        @keyframes paperSlideOut {
+            0% {
+                max-height: 0;
+                opacity: 0;
+                transform: translateX(-50%) scaleY(0);
+            }
+            30% {
+                opacity: 1;
+            }
+            100% {
+                max-height: 2000px;
+                transform: translateX(-50%) scaleY(1);
+            }
+        }
+
+        @media print {
+            .printer-container { display: none !important; }
+            .printer-illustration { display: none !important; }
+            .printer-paper-output { 
+                animation: none !important; 
+                position: static !important;
+                transform: none !important;
+                max-height: none !important;
+            }
+        }
+
+        /* ========== INPUT STYLE ========== */
         .input-style { 
             width: 100%; 
             border: 1px solid #E5E7EB; 
-            padding: 14px 16px; /* Padding lebih lapang */
-            border-radius: 14px; /* Lebih bulat */
-            font-size: 16px; /* Anti zoom Safari */
+            padding: 14px 16px;
+            border-radius: 14px;
+            font-size: 16px;
             margin-bottom: 12px; 
             outline: none; 
             background: #F9FAFB; 
@@ -114,43 +157,130 @@
         .btn-primary { background: var(--primary); color: white; padding: 14px 20px; border-radius: 14px; font-weight: 700; width: 100%; border: none; transition: transform 0.1s; }
         .btn-primary:active { transform: scale(0.98); }
 
-        /* Premium Bank Card Style */
-        .bank-card {
-            background: #ffffff;
-            border: 1px solid #f3f4f6;
+        /* ========== PREMIUM BANK CARD ========== */
+        .bank-card-modern {
+            background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+            border: 1px solid #e5e7eb;
             border-radius: 16px;
             padding: 16px;
-            margin-bottom: 10px;
-            box-shadow: var(--shadow-soft);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
         }
-        .bank-name { font-size: 12px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .bank-number { font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: 700; color: #1f2937; letter-spacing: 1px; }
-        .bank-owner { font-size: 12px; color: #6b7280; margin-top: 4px; }
 
-        /* ========== PRODUK KATALOG OPTIMASI MOBILE ========== */
+        .bank-card-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .bank-card-bri::before { background: linear-gradient(90deg, #00529C, #0080c7); }
+        .bank-card-dana::before { background: linear-gradient(90deg, #108ee9, #00bfff); }
+        .bank-card-seabank::before { background: linear-gradient(90deg, #00b14f, #40c752); }
+
+        .bank-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .bank-logo-box {
+            width: 48px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 10px;
+            color: white;
+        }
+
+        .logo-bri { background: linear-gradient(135deg, #00529C, #0070c7); }
+        .logo-dana { background: linear-gradient(135deg, #108ee9, #00bfff); }
+        .logo-seabank { background: linear-gradient(135deg, #00b14f, #40c752); }
+
+        .bank-name-modern { font-size: 13px; font-weight: 700; color: #374151; letter-spacing: 0.5px; }
+        
+        .bank-number-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: #f9fafb;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .bank-number-modern { 
+            font-family: 'Courier New', Courier, monospace; 
+            font-size: 17px; 
+            font-weight: 700; 
+            color: #1f2937; 
+            letter-spacing: 1px; 
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .copy-btn:active { transform: scale(0.95); background: var(--primary-dark); }
+
+        .bank-owner-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #166534;
+        }
+
+        /* ========== PRODUK KATALOG ========== */
         #product-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 Kolom Fixed */
-            gap: 10px; /* Spacing 10px */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
         }
 
         .product-card {
             background: white;
-            border-radius: 16px; /* Bulat lembut */
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--shadow-soft);
             border: 1px solid rgba(0,0,0,0.02);
             display: flex;
             flex-direction: column;
-            height: 100%; /* Samakan tinggi kolom */
+            height: 100%;
+            position: relative;
         }
+
         .product-img-wrapper {
             position: relative;
             width: 100%;
-            padding-top: 100%; /* Rasio 1:1 */
+            padding-top: 100%;
             background: #f8f9fa;
             overflow: hidden;
         }
+
         .product-img {
             position: absolute;
             top: 0;
@@ -160,47 +290,82 @@
             object-fit: cover;
             transition: transform 0.5s ease;
         }
-        .product-card:hover .product-img {
-            transform: scale(1.05);
+
+        .product-card:hover .product-img { transform: scale(1.05); }
+
+        /* ========== WISHLIST ICON DI CARD ========== */
+        .wishlist-btn-card {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            border: none;
         }
+
+        .wishlist-btn-card:active { transform: scale(0.9); }
+
+        .wishlist-btn-card svg {
+            width: 16px;
+            height: 16px;
+            transition: all 0.2s;
+        }
+
+        .wishlist-btn-card.active svg {
+            fill: #ef4444;
+            stroke: #ef4444;
+        }
+
         .product-info {
-            padding: 10px; /* Padding compact */
+            padding: 10px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
+
         .product-title {
-            font-size: 12px; /* Font compact */
+            font-size: 12px;
             font-weight: 600;
             color: #333;
             line-height: 1.3;
             margin-bottom: 4px;
-            /* Batasi 2 baris */
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            height: 2.6em; /* Tinggi fix 2 baris */
+            height: 2.6em;
         }
+
         .product-price {
-            font-size: 14px; /* Harga tegas */
+            font-size: 14px;
             font-weight: 800;
             color: var(--primary-dark);
-            margin-top: auto; /* Dorong ke bawah */
+            margin-top: auto;
             margin-bottom: 8px;
         }
+
         .product-btn {
             background: var(--primary);
             color: white;
             border: none;
             width: 100%;
-            padding: 8px; /* Tombol tidak terlalu tinggi */
+            padding: 8px;
             border-radius: 10px;
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
         }
+
         .product-btn:active { background: var(--primary-dark); }
 
         /* Quick Links */
@@ -215,9 +380,32 @@
             box-shadow: var(--shadow-soft);
             transition: transform 0.2s;
         }
+
         .quick-link:active { transform: scale(0.95); }
-        
-        /* CSS Print */
+
+        /* ========== INVOICE TITLE ========== */
+        .invoice-title-section {
+            text-align: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 16px;
+        }
+
+        .invoice-title-main {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1f2937;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .invoice-title-sub {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* ========== CSS PRINT ========== */
         @media print {
             body * { visibility: hidden; }
             #invoice-modal, #invoice-modal * { visibility: visible; }
@@ -225,6 +413,18 @@
             #invoice-modal > .modal-content { max-height: none !important; overflow: visible !important; border-radius: 0; box-shadow: none; }
             #invoice-container { width: 100%; margin: 0; padding: 20px; background: white; color: black; overflow: visible !important; }
             .no-print { display: none !important; }
+            .printer-container { display: none !important; }
+            .printer-illustration { display: none !important; }
+            .hide-on-print { display: none !important; }
+        }
+
+        /* Section pembayaran dengan gradasi */
+        .payment-section {
+            background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+            border: 1px solid #dcfce7;
         }
     </style>
 </head>
@@ -278,9 +478,14 @@
                  <svg class="w-6 h-6 text-gray-800 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>
                  <span class="text-[10px] text-gray-600 font-medium">TikTok</span>
              </a>
-             <!-- PERBAIKAN: Ikon Chat WA benar (lingkaran penuh) -->
+             <!-- WHATSAPP LOGO RESMI -->
              <a id="wa-btn-header" href="#" class="quick-link">
-                 <svg class="w-6 h-6 text-green-500 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                 <svg class="w-6 h-6 mb-1" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <circle cx="16" cy="16" r="14" fill="#25D366"/>
+                     <path d="M21.5 18.5c-.3-.2-1.7-.9-2-.9-.3-.1-.5-.1-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2.1-.4 0-.5-.1-.2-.6-1.5-.9-2-.2-.5-.5-.4-.7-.4-.2 0-.4 0-.6 0-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.7 1.8-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z" fill="white"/>
+                     <path d="M16 5c-6.1 0-11 4.9-11 11 0 2 .5 3.8 1.4 5.4L5 27l5.8-1.5c1.5.8 3.3 1.3 5.2 1.3 6.1 0 11-4.9 11-11S22.1 5 16 5z" stroke="white" stroke-width="0" fill="none"/>
+                     <path d="M16 6.5c5.2 0 9.5 4.3 9.5 9.5S21.2 25.5 16 25.5c-1.7 0-3.3-.4-4.7-1.2l-.3-.2-3.1.8.8-3-.2-.3c-.9-1.5-1.5-3.2-1.5-5.1 0-5.2 4.3-9.5 9.5-9.5m0-1.5C9.6 5 5 9.6 5 15.5c0 2.2.6 4.3 1.7 6.1L5 27l5.6-1.8c1.7.9 3.6 1.4 5.7 1.4 6.1 0 11-4.9 11-11S22.1 5 16 5z" fill="white"/>
+                 </svg>
                  <span class="text-[10px] text-gray-600 font-medium">Chat</span>
              </a>
         </section>
@@ -314,20 +519,19 @@
         <div class="modal-content">
             <div id="invoice-container" style="background: white; width: 100%; margin: 0 auto; overflow: visible;"></div>
             <div class="sticky bottom-0 p-4 bg-gray-50 border-t no-print flex flex-col gap-2">
+                <!-- TOMBOL CETAK & WA SEJAJAR - PDF DISIMPAN -->
                 <div class="flex gap-2">
-                    <button onclick="printInvoice()" class="btn-primary bg-gray-800 flex-1 flex items-center justify-center gap-2 py-2 text-xs">
+                    <button onclick="printInvoice()" class="btn-primary bg-gray-800 flex-1 flex items-center justify-center gap-2 py-3 text-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                         Cetak
                     </button>
-                    <button onclick="downloadPdf()" class="btn-primary bg-blue-600 flex-1 flex items-center justify-center gap-2 py-2 text-xs">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                        PDF
+                    <button onclick="sendInvoiceWA()" class="btn-primary bg-green-600 flex-1 flex items-center justify-center gap-2 py-3 text-sm">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        Kirim ke WhatsApp
                     </button>
                 </div>
-                <button onclick="sendInvoiceWA()" class="btn-primary bg-green-600 flex items-center justify-center gap-2 py-3 text-sm">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    Kirim Konfirmasi ke WhatsApp
-                </button>
+                <!-- TOMBOL PDF DISIMPAN (DISPLAY NONE) -->
+                <button onclick="downloadPdf()" class="btn-primary bg-blue-600 hidden" id="pdf-btn-hidden">PDF</button>
                 <div class="flex gap-2 mt-1">
                     <button onclick="editInvoice()" class="flex-1 text-center text-xs text-blue-600 hover:underline py-2 border-r border-gray-200">Edit Pesanan</button>
                     <button onclick="closeInvoice()" class="flex-1 text-center text-xs text-gray-400 hover:text-gray-600 py-2">Tutup</button>
@@ -348,9 +552,9 @@
             storeAddress: "Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, 40972",
             whatsappNumber: "6281546450547",
             bankAccounts: [
-                { bank: "Bank BRI", number: "000501168248506", name: "DANI RAMDANI" },
-                { bank: "DANA", number: "081546450547", name: "DANI RAMDANI" },
-                { bank: "SeaBank", number: "901851870313", name: "DANI RAMDANI" }
+                { bank: "BRI", number: "000501168248506", name: "DANI RAMDANI", logoClass: "logo-bri", cardClass: "bank-card-bri" },
+                { bank: "DANA", number: "081546450547", name: "DANI RAMDANI", logoClass: "logo-dana", cardClass: "bank-card-dana" },
+                { bank: "SeaBank", number: "901851870313", name: "DANI RAMDANI", logoClass: "logo-seabank", cardClass: "bank-card-seabank" }
             ],
             coupons: [ { code: "KEMOENIK26", type: "shipping", value: 15000, minPurchase: 120000 } ],
             categories: [ { id: 'all', name: "Semua", icon: 'grid' }, { id: 'calc', name: "Calculator", icon: 'calc' }, { id: 'kapsul', name: "Kapsul", icon: 'pill' }, { id: 'teh', name: "Teh", icon: 'tea' } ],
@@ -381,7 +585,6 @@
             document.getElementById('store-name').innerText = CONFIG.storeName;
         });
 
-        // LOCK BODY SCROLL FUNCTION
         function toggleBodyScroll(lock) {
             if(lock) document.body.classList.add('no-scroll');
             else document.body.classList.remove('no-scroll');
@@ -398,7 +601,7 @@
         function getIcon(i) { if (i === 'grid') return '☰'; if (i === 'calc') return '🧮'; if (i === 'pill') return '💊'; if (i === 'tea') return '🍵'; return '📦'; }
         function filterCategory(id) { activeCategory = id; renderCategories(); renderProducts(); document.getElementById('product-section').scrollIntoView({ behavior: 'smooth' }); }
         
-        // OPTIMASI RENDER PRODUK
+        // RENDER PRODUK DENGAN WISHLIST
         function renderProducts() { 
             const el = document.getElementById('product-grid'); 
             const data = activeCategory === 'all' ? CONFIG.products : CONFIG.products.filter(p => p.category === activeCategory); 
@@ -412,6 +615,12 @@
                     <div class="product-img-wrapper">
                         <img src="${imgSrc}" class="product-img">
                         ${p.discount > 0 ? `<span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] px-2 py-0.5 rounded font-bold shadow">${p.discount}%</span>` : ''}
+                        <!-- WISHLIST ICON DI CARD -->
+                        <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="wishlist-btn-card ${isWished ? 'active' : ''}">
+                            <svg fill="${isWished ? '#ef4444' : 'none'}" stroke="${isWished ? '#ef4444' : '#9ca3af'}" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </button>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">${p.name}</h3>
@@ -425,7 +634,7 @@
             }).join(''); 
         }
 
-        // MODAL HANDLING DENGAN AUTO SCROLL
+        // MODAL HANDLING
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.add('active');
@@ -438,12 +647,10 @@
             toggleBodyScroll(false);
         }
         
-        // Helper for inputs inside modal
         function setupInputFocus(modalContent) {
             const inputs = modalContent.querySelectorAll('input, select, textarea');
             inputs.forEach(input => {
                 input.addEventListener('focus', () => {
-                    // Delay sedikit agar keyboard muncul dulu, lalu scroll ke elemen
                     setTimeout(() => {
                         input.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }, 300);
@@ -548,7 +755,7 @@
                 <button onclick="proceedToCheckout()" class="btn-primary">Checkout</button>`;
             
             renderCartItems(); updateCartSummary(); handlePaymentChange();
-            setupInputFocus(content); // Setup auto scroll for inputs
+            setupInputFocus(content);
         }
 
         function handlePaymentChange() {
@@ -582,13 +789,26 @@
             <input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)" value="${data.notes || ''}">
             <button onclick="generateInvoice()" class="btn-primary mt-2">Buat Pesanan</button>`;
             
-            setupInputFocus(content); // Aktifkan auto scroll untuk input
+            setupInputFocus(content);
         }
         function closeCheckoutForm() { closeModal('checkout-modal'); }
         function backToCart() { closeCheckoutForm(); openCart(); }
 
         // INVOICE GENERATOR
         function generateOrderId() { const date = new Date(); const y = date.getFullYear().toString().slice(-2); const m = String(date.getMonth() + 1).padStart(2, '0'); const d = String(date.getDate()).padStart(2, '0'); const rand = Math.floor(Math.random() * 1000).toString().padStart(3, '0'); return `KM${y}${m}${d}-${rand}`; }
+
+        // COPY TO CLIPBOARD
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = 'Tersalin!';
+                btn.style.background = '#059669';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = '';
+                }, 1500);
+            });
+        }
 
         function generateInvoice() {
             const name = document.getElementById('c-name').value; const phone = document.getElementById('c-phone').value; const address = document.getElementById('c-address').value; const village = document.getElementById('c-village').value; const district = document.getElementById('c-district').value; const city = document.getElementById('c-city').value; const prov = document.getElementById('c-prov').value; const zip = document.getElementById('c-zip').value; const notes = document.getElementById('c-notes').value; const payMethod = document.getElementById('payment-method').value;
@@ -609,44 +829,95 @@
             cart = []; saveData(); updateStickyBar();
             closeCheckoutForm();
 
+            // PAYMENT INFO - MODERN DENGAN LOGO DAN COPY (HIDE ON PRINT)
             let paymentInfoHtml = '';
             
             if (payMethod === 'cod_full') {
-                paymentInfoHtml = `<div class="mt-4 pt-4 border-t border-dashed"><h4 class="font-bold text-sm mb-2 text-red-600">BAYAR DI TEMPAT (COD)</h4><div class="text-xs bg-red-50 p-3 rounded-lg text-red-800 border border-red-200"><p class="font-bold text-center">Total: Rp ${total.toLocaleString('id-ID')}</p><p class="text-center mt-1">Bayar saat barang diterima.</p></div></div>`;
+                paymentInfoHtml = `<div class="payment-section hide-on-print"><h4 class="font-bold text-sm mb-3 text-red-600">BAYAR DI TEMPAT (COD)</h4><div class="text-xs bg-red-50 p-4 rounded-xl text-red-800 border border-red-200"><p class="font-bold text-center text-lg">Total: Rp ${total.toLocaleString('id-ID')}</p><p class="text-center mt-2">Bayar saat barang diterima.</p></div></div>`;
             } else if (payMethod === 'transfer') {
                 paymentInfoHtml = `
-                    <div class="mt-4 pt-4 border-t border-dashed">
-                        <h4 class="font-bold text-sm mb-2">INFORMASI PEMBAYARAN</h4>
-                        <p class="text-xs text-gray-500 mb-3">Transfer ke salah satu rekening berikut:</p>
+                    <div class="payment-section hide-on-print">
+                        <h4 class="font-bold text-sm mb-3 text-gray-700">Transfer ke salah satu rekening:</h4>
                         ${CONFIG.bankAccounts.map(b => `
-                            <div class="bank-card">
-                                <div class="bank-name">${b.bank}</div>
-                                <div class="bank-number">${b.number}</div>
-                                <div class="bank-owner">a.n ${b.name}</div>
+                            <div class="bank-card-modern ${b.cardClass}">
+                                <div class="bank-logo-container">
+                                    <div class="bank-logo-box ${b.logoClass}">${b.bank}</div>
+                                    <span class="bank-name-modern">${b.bank}</span>
+                                </div>
+                                <div class="bank-number-container">
+                                    <span class="bank-number-modern">${b.number}</span>
+                                    <button class="copy-btn" onclick="copyToClipboard('${b.number}', this)">Salin</button>
+                                </div>
+                                <div class="bank-owner-badge">
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+                                    Atas Nama: ${b.name}
+                                </div>
                             </div>
                         `).join('')}
-                        <p class="text-[10px] text-gray-400 mt-3 italic text-center">*Harap transfer sesuai total pembayaran.</p>
                     </div>`;
             } else {
                  paymentInfoHtml = `
-                    <div class="mt-4 pt-4 border-t border-dashed">
-                        <h4 class="font-bold text-sm mb-2">INFORMASI PEMBAYARAN</h4>
-                        <div class="text-xs bg-blue-50 p-3 rounded-lg text-blue-800 mb-3 border border-blue-100"><p class="font-semibold">COD Ongkir Saja</p><p class="mt-1">Produk dibayar via transfer. Ongkir dibayar saat barang diterima.</p></div>
-                        <p class="text-xs text-gray-500 mb-2">Transfer Produk ke:</p>
-                        ${CONFIG.bankAccounts.map(b => `<div class="bank-card"><div class="bank-name">${b.bank}</div><div class="bank-number">${b.number}</div><div class="bank-owner">a.n ${b.name}</div></div>`).join('')}
+                    <div class="payment-section hide-on-print">
+                        <h4 class="font-bold text-sm mb-3 text-gray-700">COD Ongkir Saja</h4>
+                        <div class="text-xs bg-blue-50 p-4 rounded-xl text-blue-800 mb-4 border border-blue-100"><p class="font-semibold">Produk dibayar via transfer.</p><p class="mt-1">Ongkir dibayar saat barang diterima.</p></div>
+                        <p class="text-xs text-gray-500 mb-3 font-medium">Transfer Produk ke:</p>
+                        ${CONFIG.bankAccounts.map(b => `
+                            <div class="bank-card-modern ${b.cardClass}">
+                                <div class="bank-logo-container">
+                                    <div class="bank-logo-box ${b.logoClass}">${b.bank}</div>
+                                    <span class="bank-name-modern">${b.bank}</span>
+                                </div>
+                                <div class="bank-number-container">
+                                    <span class="bank-number-modern">${b.number}</span>
+                                    <button class="copy-btn" onclick="copyToClipboard('${b.number}', this)">Salin</button>
+                                </div>
+                                <div class="bank-owner-badge">
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+                                    Atas Nama: ${b.name}
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>`;
             }
 
             const fullAddress = `${address}, Desa ${village}, Kec. ${district}, ${city}, ${prov}, ${zip}`;
 
-            const invoiceHtml = `<div class="text-center border-b pb-4 mb-4"><img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="w-16 h-16 mx-auto rounded-full mb-2 shadow"><h2 class="text-xl font-bold">${CONFIG.storeName}</h2><p class="text-xs text-gray-500 mt-1">${CONFIG.storeAddress}</p></div>
-            <div class="mb-4 text-sm"><div class="flex justify-between border-b py-1"><span class="font-semibold">Order ID</span><span>#${orderId}</span></div><div class="flex justify-between border-b py-1"><span>Tanggal</span><span>${dateStr}</span></div><div class="flex justify-between border-b py-1"><span>Status</span><span class="text-yellow-600 font-bold">Menunggu Konfirmasi</span></div></div>
-            <div class="mb-4 text-sm"><h4 class="font-bold mb-1">DATA PEMBELI</h4><p class="text-gray-700"><strong>${name}</strong></p><p class="text-gray-600 text-xs">${phone}</p><p class="text-gray-500 text-xs mt-1">${fullAddress}</p></div>
-            <div class="mb-4"><h4 class="font-bold mb-2 text-sm">DETAIL PESANAN</h4><table class="w-full text-xs border-collapse"><thead><tr class="border-b bg-gray-50"><th class="text-left p-2">Item</th><th class="center p-2">Qty</th><th class="text-right p-2">Subtotal</th></tr></thead><tbody>${currentInvoice.items.map(i => `<tr class="border-b"><td class="p-2">${i.name}</td><td class="p-2 text-center">${i.qty}</td><td class="p-2 text-right">Rp ${(i.price * i.qty).toLocaleString('id-ID')}</td></tr>`).join('')}</tbody></table></div>
-            <div class="bg-gray-50 p-3 rounded-lg text-sm mb-4"><div class="flex justify-between mb-1"><span>Subtotal</span><span>Rp ${subtotal.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1 text-red-500"><span>Diskon</span><span>- Rp ${disc.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1"><span>Ongkir</span><span class="text-gray-400 text-xs">(Konfirmasi WA)</span></div><div class="border-t mt-2 pt-2 flex justify-between font-bold text-base"><span>Total</span><span class="text-green-600">Rp ${total.toLocaleString('id-ID')}</span></div></div>
-            <div class="text-xs text-gray-700 mb-2 font-semibold">Metode: ${payMethod === 'cod_full' ? 'COD Full' : payMethod === 'cod_ongkir' ? 'COD Ongkir' : 'Transfer'}</div>
-            ${paymentInfoHtml}
-            ${notes ? `<div class="mt-4 text-xs text-gray-500 border-t pt-2">Catatan: ${notes}</div>` : ''}`;
+            // INVOICE CONTENT DENGAN ANIMASI PRINTER
+            const invoiceHtml = `
+            <div class="printer-container no-print">
+                <!-- ILUSTRASI PRINTER -->
+                <svg class="printer-illustration" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect class="printer-body" x="10" y="10" width="100" height="40" rx="8" fill="#374151"/>
+                    <rect x="20" y="5" width="80" height="15" rx="4" fill="#4b5563"/>
+                    <rect x="30" y="0" width="60" height="10" rx="3" fill="#6b7280"/>
+                    <rect class="printer-slot" x="25" y="45" width="70" height="8" rx="2" fill="#1f2937"/>
+                    <circle cx="95" cy="25" r="4" fill="#48BB78"/>
+                    <rect x="20" y="18" width="60" height="4" rx="1" fill="#9ca3af"/>
+                </svg>
+                <!-- KERTAS KELUAR DARI PRINTER -->
+                <div class="printer-paper-output">
+                    <div style="background: white; padding: 20px; min-height: 100vh;">
+                        <!-- JUDUL INVOICE -->
+                        <div class="invoice-title-section">
+                            <div class="invoice-title-main">INVOICE PESANAN PRODUK</div>
+                            <div class="invoice-title-sub">KEMOENIK</div>
+                        </div>
+                        
+                        <div class="text-center border-b pb-4 mb-4">
+                            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="w-16 h-16 mx-auto rounded-full mb-2 shadow">
+                            <p class="text-xs text-gray-500 mt-1">${CONFIG.storeAddress}</p>
+                        </div>
+                        
+                        <div class="mb-4 text-sm"><div class="flex justify-between border-b py-1"><span class="font-semibold">Order ID</span><span>#${orderId}</span></div><div class="flex justify-between border-b py-1"><span>Tanggal</span><span>${dateStr}</span></div><div class="flex justify-between border-b py-1"><span>Status</span><span class="text-yellow-600 font-bold">Menunggu Konfirmasi</span></div></div>
+                        <div class="mb-4 text-sm"><h4 class="font-bold mb-1">DATA PEMBELI</h4><p class="text-gray-700"><strong>${name}</strong></p><p class="text-gray-600 text-xs">${phone}</p><p class="text-gray-500 text-xs mt-1">${fullAddress}</p></div>
+                        <div class="mb-4"><h4 class="font-bold mb-2 text-sm">DETAIL PESANAN</h4><table class="w-full text-xs border-collapse"><thead><tr class="border-b bg-gray-50"><th class="text-left p-2">Item</th><th class="center p-2">Qty</th><th class="text-right p-2">Subtotal</th></tr></thead><tbody>${currentInvoice.items.map(i => `<tr class="border-b"><td class="p-2">${i.name}</td><td class="p-2 text-center">${i.qty}</td><td class="p-2 text-right">Rp ${(i.price * i.qty).toLocaleString('id-ID')}</td></tr>`).join('')}</tbody></table></div>
+                        <div class="bg-gray-50 p-3 rounded-lg text-sm mb-4"><div class="flex justify-between mb-1"><span>Subtotal</span><span>Rp ${subtotal.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1 text-red-500"><span>Diskon</span><span>- Rp ${disc.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1"><span>Ongkir</span><span class="text-gray-400 text-xs">(Konfirmasi WA)</span></div><div class="border-t mt-2 pt-2 flex justify-between font-bold text-base"><span>Total</span><span class="text-green-600">Rp ${total.toLocaleString('id-ID')}</span></div></div>
+                        <div class="text-xs text-gray-700 mb-2 font-semibold">Metode: ${payMethod === 'cod_full' ? 'COD Full' : payMethod === 'cod_ongkir' ? 'COD Ongkir' : 'Transfer'}</div>
+                        ${paymentInfoHtml}
+                        ${notes ? `<div class="mt-4 text-xs text-gray-500 border-t pt-2">Catatan: ${notes}</div>` : ''}
+                    </div>
+                </div>
+            </div>`;
             
             document.getElementById('invoice-container').innerHTML = invoiceHtml;
             openModal('invoice-modal');
