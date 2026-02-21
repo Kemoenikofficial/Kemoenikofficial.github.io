@@ -2,7 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Viewport Pasif: Tidak bisa zoom/scale -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Toko Resmi Kemoenik</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,8 +19,8 @@
             --bg-main: #F3F4F6;
             --text-main: #1F2937;
         }
-        * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; }
+        * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; overscroll-behavior: none; }
         
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
@@ -202,7 +204,7 @@
         function openDetail(id) { const p = CONFIG.products.find(x => x.id === id); if(!p) return; const priceText = p.price === 0 ? "Rp.???" : `Rp ${(p.price - (p.price * p.discount / 100)).toLocaleString('id-ID')}`; const origText = p.discount > 0 ? `Rp ${p.price.toLocaleString('id-ID')}` : ''; const imgSrc = p.images?.[0] || 'https://placehold.co/400'; document.getElementById('detail-content').innerHTML = `<div class="relative bg-gray-100"><img src="${imgSrc}" class="w-full aspect-square object-cover"><button onclick="closeDetail()" class="absolute top-3 right-3 bg-white p-1.5 rounded-full shadow hover:bg-gray-100"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div><div class="p-5 bg-white rounded-t-3xl -mt-6 relative"><h2 class="text-lg font-bold text-gray-800">${p.name}</h2><div class="flex items-center gap-2 mt-1"><span class="text-green-600 text-xl font-bold">${priceText}</span>${origText ? `<span class="text-sm text-gray-400 line-through">${origText}</span>` : ''}</div><div class="border-t border-b my-4 py-4"><h4 class="font-semibold mb-1 text-sm">Deskripsi</h4><p class="text-sm text-gray-600">${p.desc}</p></div><div class="flex gap-2 mt-4"><button onclick="addCart(${p.id}); closeDetail();" class="flex-1 bg-white border-2 border-green-500 text-green-600 py-2.5 rounded-xl font-semibold hover:bg-green-50 transition-colors">Tambah</button><button onclick="addCart(${p.id}); closeDetail(); openCart();" class="flex-1 btn-primary py-2.5">Beli</button></div></div>`; document.getElementById('detail-modal').classList.add('active'); }
         function closeDetail() { document.getElementById('detail-modal').classList.remove('active'); }
 
-        // WISHLIST (FIXED: Item Clickable to Detail)
+        // WISHLIST
         function toggleWishlist(id) { const p = CONFIG.products.find(x=>x.id===id); if(!p) return; const exist = wishlist.find(w=>w.id===id); if(exist) wishlist = wishlist.filter(w=>w.id!==id); else wishlist.push({id:p.id, name:p.name, images:p.images}); saveData(); updateWishlistUI(); renderProducts(); }
         function updateWishlistUI() { const c = wishlist.length; const el = document.getElementById('wish-count-head'); if(c>0) { el.innerText=c; el.classList.remove('hidden'); } else el.classList.add('hidden'); }
         function openWishlist() { 
@@ -263,14 +265,7 @@
             if (method === 'cod_full') {
                 note.innerText = "COD Full tidak mendapat potongan ongkir.";
                 note.classList.remove('hidden');
-                if(appliedCoupon) {
-                    appliedCoupon = null;
-                    document.getElementById('coupon-input').value = '';
-                    const msg = document.getElementById('coupon-msg');
-                    msg.innerText = "Kupon dihapus (COD Full).";
-                    msg.className = "text-[10px] mt-1 text-red-500"; msg.classList.remove('hidden');
-                    updateCartSummary();
-                }
+                if(appliedCoupon) { appliedCoupon = null; document.getElementById('coupon-input').value = ''; const msg = document.getElementById('coupon-msg'); msg.innerText = "Kupon dihapus (COD Full)."; msg.className = "text-[10px] mt-1 text-red-500"; msg.classList.remove('hidden'); updateCartSummary(); }
             } else { note.classList.add('hidden'); }
             lastCheckoutData.method = method;
         }
@@ -282,7 +277,17 @@
 
         // CHECKOUT
         function proceedToCheckout() { if(cart.length===0) return; closeCart(); renderCheckout(lastCheckoutData.customer || {}); document.getElementById('checkout-modal').classList.add('active'); }
-        function renderCheckout(data) { document.getElementById('checkout-content').innerHTML = `<button onclick="backToCart()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button><h3 class="font-bold text-lg mb-4">Isi Data</h3><input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *" value="${data.name || ''}"><input type="tel" id="c-phone" class="input-style" placeholder="No. WhatsApp *" value="${data.phone || ''}"><input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap *" value="${data.address || ''}"><input type="text" id="c-district" class="input-style" placeholder="Kecamatan *" value="${data.district || ''}"><input type="text" id="c-city" class="input-style" placeholder="Kota/Kabupaten *" value="${data.city || ''}"><input type="text" id="c-prov" class="input-style" placeholder="Provinsi *" value="${data.prov || ''}"><input type="text" id="c-zip" class="input-style" placeholder="Kode Pos" value="${data.zip || ''}"><input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)" value="${data.notes || ''}"><button onclick="generateInvoice()" class="btn-primary mt-2">Buat Pesanan</button>`; }
+        function renderCheckout(data) { document.getElementById('checkout-content').innerHTML = `<button onclick="backToCart()" class="absolute top-4 right-4 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button><h3 class="font-bold text-lg mb-4">Isi Data Pengiriman</h3>
+            <input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *" value="${data.name || ''}">
+            <input type="tel" id="c-phone" class="input-style" placeholder="No. WhatsApp *" value="${data.phone || ''}">
+            <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap (Jalan, No Rumah, RT/RW) *" value="${data.address || ''}">
+            <input type="text" id="c-village" class="input-style" placeholder="Desa/Kelurahan *" value="${data.village || ''}">
+            <input type="text" id="c-district" class="input-style" placeholder="Kecamatan *" value="${data.district || ''}">
+            <input type="text" id="c-city" class="input-style" placeholder="Kota/Kabupaten *" value="${data.city || ''}">
+            <input type="text" id="c-prov" class="input-style" placeholder="Provinsi *" value="${data.prov || ''}">
+            <input type="text" id="c-zip" class="input-style" placeholder="Kode Pos *" value="${data.zip || ''}">
+            <input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)" value="${data.notes || ''}">
+            <button onclick="generateInvoice()" class="btn-primary mt-2">Buat Pesanan</button>`; }
         function closeCheckoutForm() { document.getElementById('checkout-modal').classList.remove('active'); }
         function backToCart() { closeCheckoutForm(); openCart(); }
 
@@ -290,9 +295,9 @@
         function generateOrderId() { const date = new Date(); const y = date.getFullYear().toString().slice(-2); const m = String(date.getMonth() + 1).padStart(2, '0'); const d = String(date.getDate()).padStart(2, '0'); const rand = Math.floor(Math.random() * 1000).toString().padStart(3, '0'); return `KM${y}${m}${d}-${rand}`; }
 
         function generateInvoice() {
-            const name = document.getElementById('c-name').value; const phone = document.getElementById('c-phone').value; const address = document.getElementById('c-address').value; const district = document.getElementById('c-district').value; const city = document.getElementById('c-city').value; const prov = document.getElementById('c-prov').value; const zip = document.getElementById('c-zip').value; const notes = document.getElementById('c-notes').value; const payMethod = document.getElementById('payment-method').value;
+            const name = document.getElementById('c-name').value; const phone = document.getElementById('c-phone').value; const address = document.getElementById('c-address').value; const village = document.getElementById('c-village').value; const district = document.getElementById('c-district').value; const city = document.getElementById('c-city').value; const prov = document.getElementById('c-prov').value; const zip = document.getElementById('c-zip').value; const notes = document.getElementById('c-notes').value; const payMethod = document.getElementById('payment-method').value;
             if(!name || !phone || !address || !district || !city || !prov) { alert("Lengkapi data wajib!"); return; }
-            lastCheckoutData.customer = { name, phone, address, district, city, prov, zip, notes };
+            lastCheckoutData.customer = { name, phone, address, village, district, city, prov, zip, notes };
             lastCheckoutData.method = payMethod;
             lastCheckoutData.coupon = appliedCoupon;
 
@@ -347,28 +352,60 @@
                     </div>`;
             }
 
-            const invoiceHtml = `<div class="text-center border-b pb-4 mb-4"><img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="w-16 h-16 mx-auto rounded-full mb-2 shadow"><h2 class="text-xl font-bold">${CONFIG.storeName}</h2><p class="text-xs text-gray-500 mt-1">${CONFIG.storeAddress}</p></div><div class="mb-4 text-sm"><div class="flex justify-between border-b py-1"><span class="font-semibold">Order ID</span><span>#${orderId}</span></div><div class="flex justify-between border-b py-1"><span>Tanggal</span><span>${dateStr}</span></div><div class="flex justify-between border-b py-1"><span>Status</span><span class="text-yellow-600 font-bold">Menunggu Konfirmasi</span></div></div><div class="mb-4 text-sm"><h4 class="font-bold mb-1">DATA PEMBELI</h4><p class="text-gray-700">${name}</p><p class="text-gray-600 text-xs">${phone}</p><p class="text-gray-500 text-xs">${currentInvoice.customer.address}</p></div><div class="mb-4"><h4 class="font-bold mb-2 text-sm">DETAIL PESANAN</h4><table class="w-full text-xs border-collapse"><thead><tr class="border-b bg-gray-50"><th class="text-left p-2">Item</th><th class="center p-2">Qty</th><th class="text-right p-2">Subtotal</th></tr></thead><tbody>${currentInvoice.items.map(i => `<tr class="border-b"><td class="p-2">${i.name}</td><td class="p-2 text-center">${i.qty}</td><td class="p-2 text-right">Rp ${(i.price * i.qty).toLocaleString('id-ID')}</td></tr>`).join('')}</tbody></table></div><div class="bg-gray-50 p-3 rounded-lg text-sm mb-4"><div class="flex justify-between mb-1"><span>Subtotal</span><span>Rp ${subtotal.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1 text-red-500"><span>Diskon</span><span>- Rp ${disc.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1"><span>Ongkir</span><span class="text-gray-400 text-xs">(Konfirmasi WA)</span></div><div class="border-t mt-2 pt-2 flex justify-between font-bold text-base"><span>Total</span><span class="text-green-600">Rp ${total.toLocaleString('id-ID')}</span></div></div><div class="text-xs text-gray-700 mb-2 font-semibold">Metode: ${payMethod === 'cod_full' ? 'COD Full' : payMethod === 'cod_ongkir' ? 'COD Ongkir' : 'Transfer'}</div>${paymentInfoHtml}${notes ? `<div class="mt-4 text-xs text-gray-500 border-t pt-2">Catatan: ${notes}</div>` : ''}`;
+            // Format Alamat Lengkap (Shopee Style)
+            const fullAddress = `${address}, Desa ${village}, Kec. ${district}, ${city}, ${prov}, ${zip}`;
+
+            const invoiceHtml = `<div class="text-center border-b pb-4 mb-4"><img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="w-16 h-16 mx-auto rounded-full mb-2 shadow"><h2 class="text-xl font-bold">${CONFIG.storeName}</h2><p class="text-xs text-gray-500 mt-1">${CONFIG.storeAddress}</p></div>
+            <div class="mb-4 text-sm">
+                <div class="flex justify-between border-b py-1"><span class="font-semibold">Order ID</span><span>#${orderId}</span></div>
+                <div class="flex justify-between border-b py-1"><span>Tanggal</span><span>${dateStr}</span></div>
+                <div class="flex justify-between border-b py-1"><span>Status</span><span class="text-yellow-600 font-bold">Menunggu Konfirmasi</span></div>
+            </div>
+            <div class="mb-4 text-sm">
+                <h4 class="font-bold mb-1">DATA PEMBELI</h4>
+                <p class="text-gray-700"><strong>${name}</strong></p>
+                <p class="text-gray-600 text-xs">${phone}</p>
+                <p class="text-gray-500 text-xs mt-1">${fullAddress}</p>
+            </div>
+            <div class="mb-4"><h4 class="font-bold mb-2 text-sm">DETAIL PESANAN</h4><table class="w-full text-xs border-collapse"><thead><tr class="border-b bg-gray-50"><th class="text-left p-2">Item</th><th class="center p-2">Qty</th><th class="text-right p-2">Subtotal</th></tr></thead><tbody>${currentInvoice.items.map(i => `<tr class="border-b"><td class="p-2">${i.name}</td><td class="p-2 text-center">${i.qty}</td><td class="p-2 text-right">Rp ${(i.price * i.qty).toLocaleString('id-ID')}</td></tr>`).join('')}</tbody></table></div>
+            <div class="bg-gray-50 p-3 rounded-lg text-sm mb-4"><div class="flex justify-between mb-1"><span>Subtotal</span><span>Rp ${subtotal.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1 text-red-500"><span>Diskon</span><span>- Rp ${disc.toLocaleString('id-ID')}</span></div><div class="flex justify-between mb-1"><span>Ongkir</span><span class="text-gray-400 text-xs">(Konfirmasi WA)</span></div><div class="border-t mt-2 pt-2 flex justify-between font-bold text-base"><span>Total</span><span class="text-green-600">Rp ${total.toLocaleString('id-ID')}</span></div></div>
+            <div class="text-xs text-gray-700 mb-2 font-semibold">Metode: ${payMethod === 'cod_full' ? 'COD Full' : payMethod === 'cod_ongkir' ? 'COD Ongkir' : 'Transfer'}</div>
+            ${paymentInfoHtml}
+            ${notes ? `<div class="mt-4 text-xs text-gray-500 border-t pt-2">Catatan: ${notes}</div>` : ''}`;
             document.getElementById('invoice-container').innerHTML = invoiceHtml;
             document.getElementById('invoice-modal').classList.add('active');
         }
 
         function closeInvoice() { document.getElementById('invoice-modal').classList.remove('active'); document.getElementById('checkout-modal').classList.remove('active'); document.getElementById('cart-modal').classList.remove('active'); document.getElementById('invoice-container').scrollTop = 0; window.scrollTo(0, 0); }
 
-        function editInvoice() {
-            cart = [...currentInvoice.items];
-            saveData(); updateStickyBar();
-            appliedCoupon = lastCheckoutData.coupon || null;
-            document.getElementById('invoice-modal').classList.remove('active');
-            openCart(); 
-        }
+        function editInvoice() { cart = [...currentInvoice.items]; saveData(); updateStickyBar(); appliedCoupon = lastCheckoutData.coupon || null; document.getElementById('invoice-modal').classList.remove('active'); openCart(); }
 
         // ACTIONS
         function printInvoice() { window.print(); }
-        function downloadPdf() { const element = document.getElementById('invoice-container'); const opt = { margin: 0.5, filename: `INV-${currentInvoice.id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a5', orientation: 'portrait' } }; html2pdf().set(opt).from(element).save(); }
+        
+        // FIX PDF: Use windowHeight to capture full height
+        function downloadPdf() { 
+            const element = document.getElementById('invoice-container'); 
+            const opt = {
+                margin: 0.5,
+                filename: `INV-${currentInvoice.id}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    logging: false, 
+                    windowHeight: element.scrollHeight + 200 
+                },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
         
         function sendInvoiceWA() {
             const d = currentInvoice;
-            let msg = `PESANAN BARU - ${CONFIG.storeName}\n\nOrder ID: #${d.id}\nTanggal: ${d.date}\n\nDATA PEMBELI\nNome: ${d.customer.name}\nNo HP: ${d.customer.phone}\nAlamat: ${d.customer.address}\n\nDETAIL PESANAN\n`;
+            const addr = d.customer;
+            const fullAddr = `${addr.address}, Desa ${addr.village}, Kec. ${addr.district}, ${addr.city}, ${addr.prov}, ${addr.zip}`;
+            let msg = `PESANAN BARU - ${CONFIG.storeName}\n\nOrder ID: #${d.id}\nTanggal: ${d.date}\n\nDATA PEMBELI\nNama: ${addr.name}\nNo HP: ${addr.phone}\nAlamat: ${fullAddr}\n\nDETAIL PESANAN\n`;
             d.items.forEach(i => { msg += `${i.name} (${i.qty}) : Rp ${(i.price * i.qty).toLocaleString('id-ID')}\n`; });
             msg += `\nSubtotal: Rp ${d.subtotal.toLocaleString('id-ID')}\nDiskon: Rp ${d.disc.toLocaleString('id-ID')}\nOngkir: (Konfirmasi Admin)\nTotal: Rp ${d.total.toLocaleString('id-ID')}\n\nMetode: ${d.payment === 'cod_full' ? 'COD FULL' : d.payment === 'cod_ongkir' ? 'COD ONGKIR' : 'TRANSFER'}\n`;
             if(d.notes) msg += `\nCatatan: ${d.notes}`;
