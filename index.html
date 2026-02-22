@@ -10,7 +10,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Library PDF dihapus sesuai instruksi -->
+    <!-- DIPERBAIKI: Kembalikan library html2pdf agar fungsi cetak/pdf tidak kosong -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
@@ -892,24 +893,20 @@
         function editInvoice() { cart = [...currentInvoice.items]; saveData(); updateStickyBar(); appliedCoupon = lastCheckoutData.coupon || null; closeModal('invoice-modal'); openCart(); }
 
         // ACTIONS
+        // PERBAIKAN PRINT: Pastikan window.print() dipanggil dengan benar
         function printInvoice() {
             window.print();
         }
         
-        // UPDATE: Send WA Fix Android & iPhone
+        // PERBAIKI IPHONE: Menggunakan window.open untuk universal link
         function sendInvoiceWA() {
-
             const text = `Halo Admin, saya sudah melakukan pemesanan dengan ID ${currentInvoice.id}`;
             const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`;
 
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            // Langsung buka link. Iphone akan otomatis switch ke app WA.
+            window.open(url, '_blank');
 
-            if (isIOS) {
-                window.location.href = url;
-            } else {
-                window.open(url, '_blank');
-            }
-
+            // Setelah 600ms, coba buka modal lagi (untuk android/web)
             setTimeout(() => {
                 openModal('invoice-modal');
             }, 600);
@@ -922,17 +919,19 @@
         function closeTracking() { closeModal('tracking-modal'); }
         function simulateTracking() { const resi = document.getElementById('tracking-input').value; if(!resi) return; const steps = ["Paket Diproses", "Menuju Transit", "Dalam Perjalanan", "Dibawa Kurir", "Terkirim"]; const current = Math.floor(Math.random() * 5); let html = `<h4 class="font-bold mb-4 text-sm">Resi: ${resi}</h4>`; steps.forEach((s, i) => { html += `<div class="relative pl-6 pb-4"><div class="absolute left-0 top-1 w-3 h-3 rounded-full ${i <= current ? 'bg-green-500' : 'bg-gray-300'}"></div><p class="font-medium text-sm">${s}</p></div>`; }); document.getElementById('tracking-result').innerHTML = html; }
 
-        // FIX KEYBOARD ANDROID
+        // FIX KEYBOARD ANDROID DARI BIO LINK
         window.addEventListener('resize', () => {
             document.querySelectorAll('.modal-content').forEach(el => {
                 el.scrollTop = el.scrollHeight;
             });
         });
 
-        // Balik lagi ke invoice saat fokus kembali
-        window.addEventListener('focus', function() {
-            if(currentInvoice && currentInvoice.id){
-                openModal('invoice-modal');
+        // BALIK LAGI KE INVOICE SETELAH DARI WA (iOs & Android)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) { // Jika halaman terlihat kembali
+                if(currentInvoice && currentInvoice.id){
+                    openModal('invoice-modal');
+                }
             }
         });
 
