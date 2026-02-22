@@ -6,50 +6,61 @@
 <title>Kemoenik Official Store</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body{
   margin:0;
   font-family:'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(135deg, #e6f4ea, #f5fdf8);
+  background: radial-gradient(circle at top, #e6f4ea, #f5fdf8 60%);
   display:flex;
   justify-content:center;
   align-items:center;
   height:100vh;
   padding:20px;
+  overflow:hidden;
 }
 
 .card{
   background:white;
-  padding:35px 28px;
-  border-radius:20px;
+  padding:45px 30px;
+  border-radius:22px;
   max-width:420px;
   width:100%;
   text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,0.12);
-  animation:fadeIn 0.4s ease;
+  box-shadow:0 25px 60px rgba(0,0,0,0.15);
+  transform:translateY(40px);
+  opacity:0;
+  animation:cardIn 0.8s ease forwards;
+}
+
+.logo{
+  width:85px;
+  margin-bottom:18px;
+  transform:translateY(-20px);
+  opacity:0;
+  animation:logoDrop 0.7s ease forwards;
+  animation-delay:0.3s;
 }
 
 h1{
   margin:0;
-  font-size:20px;
+  font-size:21px;
   font-weight:800;
   color:#065f46;
+  letter-spacing:0.5px;
 }
 
 .brand{
   font-size:12px;
-  letter-spacing:1px;
+  letter-spacing:1.5px;
   color:#6b7280;
-  margin-bottom:18px;
+  margin-bottom:20px;
 }
 
 p{
   font-size:14px;
   color:#4b5563;
-  margin-bottom:25px;
+  margin-bottom:28px;
   line-height:1.6;
 }
 
@@ -57,10 +68,10 @@ button{
   width:100%;
   padding:14px;
   border:none;
-  border-radius:12px;
+  border-radius:14px;
   font-size:15px;
   cursor:pointer;
-  margin-bottom:12px;
+  margin-bottom:14px;
   transition:0.2s ease;
 }
 
@@ -68,10 +79,16 @@ button{
   background:#16a34a;
   color:white;
   font-weight:700;
+  box-shadow:0 10px 20px rgba(22,163,74,0.3);
 }
 
 .primary:hover{
-  background:#15803d;
+  transform:translateY(-2px);
+  box-shadow:0 14px 28px rgba(22,163,74,0.4);
+}
+
+.primary:active{
+  transform:scale(0.97);
 }
 
 .secondary{
@@ -86,12 +103,21 @@ button{
 .footer{
   font-size:11px;
   color:#9ca3af;
-  margin-top:15px;
+  margin-top:18px;
 }
 
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:translateY(0);}
+@keyframes cardIn{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes logoDrop{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 </style>
 </head>
@@ -100,11 +126,14 @@ button{
 
 <div class="card">
 
+  <!-- GANTI LINK LOGO DI BAWAH -->
+  <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="logo">
+
   <h1>Kemoenik Official Store</h1>
   <div class="brand">Toko Online Resmi</div>
 
   <p>
-    Untuk pengalaman checkout, cetak invoice, dan pembayaran yang lebih lancar,
+    Untuk pengalaman checkout dan pembayaran yang lebih lancar,
     silakan buka website ini di browser utama Anda (Chrome atau Safari).
   </p>
 
