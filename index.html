@@ -300,63 +300,6 @@
     <div id="wishlist-modal" class="modal-overlay"><div class="modal-content p-5" id="wishlist-content"></div></div>
     <div id="tracking-modal" class="modal-overlay"><div class="modal-content p-5" id="tracking-content"></div></div>
 
-    <!-- POPUP BROWSER WARNING -->
-    <div id="browser-warning" style="
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.6);
-    z-index:99999;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    ">
-      <div style="
-      background:white;
-      max-width:400px;
-      width:100%;
-      padding:25px;
-      border-radius:16px;
-      text-align:center;
-      box-shadow:0 10px 30px rgba(0,0,0,0.2);
-      ">
-        <h3 style="font-weight:bold;font-size:18px;margin-bottom:10px;">
-          Buka di Browser
-        </h3>
-        <p style="font-size:14px;color:#555;margin-bottom:20px;">
-          Untuk checkout & cetak invoice lebih lancar,
-          silakan buka halaman ini di Chrome atau Safari.
-        </p>
-
-        <button onclick="openExternalBrowser()" style="
-        background:#16a34a;
-        color:white;
-        padding:12px 18px;
-        border:none;
-        border-radius:10px;
-        width:100%;
-        font-weight:bold;
-        margin-bottom:10px;
-        cursor:pointer;
-        ">
-          Buka di Browser
-        </button>
-
-        <button onclick="closeBrowserWarning()" style="
-        background:none;
-        border:none;
-        color:#999;
-        font-size:13px;
-        cursor:pointer;
-        display:block;
-        width:100%;
-        padding:5px;
-        ">
-          Lanjutkan saja
-        </button>
-      </div>
-    </div>
-
     <script>
         /* ===========================================================
            EDITABLE: KONFIGURASI DATA PRODUK & TOKO
@@ -829,47 +772,22 @@
             },300);
           }
         });
+        
+    <script>
+    (function() {
+      var ua = navigator.userAgent || navigator.vendor || window.opera;
+      var isTikTok = ua.includes("TikTok");
+      var isInstagram = ua.includes("Instagram");
+      var isFacebook = ua.includes("FBAN") || ua.includes("FBAV");
 
-        // ==========================================
-        // DETEKSI IN-APP BROWSER & POPUP HANDLING
-        // ==========================================
-        function isInAppBrowser(){
-          const ua = navigator.userAgent || navigator.vendor || window.opera;
-
-          return (
-            ua.includes("Instagram") ||
-            ua.includes("FBAN") ||
-            ua.includes("FBAV") ||
-            ua.includes("TikTok")
-          );
+      if (isTikTok || isInstagram || isFacebook) {
+        if (!window.location.pathname.includes("open.html")) {
+          window.location.href = "open.html";
         }
-
-        function openExternalBrowser(){
-          const url = window.location.href;
-
-          // Android Chrome intent
-          if(/android/i.test(navigator.userAgent)){
-            window.location.href = "intent://" + 
-              window.location.host + 
-              window.location.pathname + 
-              window.location.search +
-              "#Intent;scheme=https;package=com.android.chrome;end";
-          } else {
-            // iOS Safari fallback
-            window.location.href = url;
-          }
-        }
-
-        function closeBrowserWarning(){
-          document.getElementById("browser-warning").style.display = "none";
-        }
-
-        window.addEventListener("load", function(){
-          if(isInAppBrowser()){
-            document.getElementById("browser-warning").style.display = "flex";
-          }
-        });
-
-    </script>
+      }
+    })();
+     </script>
 </body>
 </html>
+
+
