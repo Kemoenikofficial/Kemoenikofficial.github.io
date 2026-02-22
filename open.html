@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kemoenik Official Store</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #e6f4ea, #f5fdf8);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  padding:20px;
+}
+
+.card{
+  background:white;
+  padding:35px 28px;
+  border-radius:20px;
+  max-width:420px;
+  width:100%;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,0.12);
+  animation:fadeIn 0.4s ease;
+}
+
+h1{
+  margin:0;
+  font-size:20px;
+  font-weight:800;
+  color:#065f46;
+}
+
+.brand{
+  font-size:12px;
+  letter-spacing:1px;
+  color:#6b7280;
+  margin-bottom:18px;
+}
+
+p{
+  font-size:14px;
+  color:#4b5563;
+  margin-bottom:25px;
+  line-height:1.6;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-size:15px;
+  cursor:pointer;
+  margin-bottom:12px;
+  transition:0.2s ease;
+}
+
+.primary{
+  background:#16a34a;
+  color:white;
+  font-weight:700;
+}
+
+.primary:hover{
+  background:#15803d;
+}
+
+.secondary{
+  background:#e5e7eb;
+  color:#374151;
+}
+
+.secondary:hover{
+  background:#d1d5db;
+}
+
+.footer{
+  font-size:11px;
+  color:#9ca3af;
+  margin-top:15px;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>Kemoenik Official Store</h1>
+  <div class="brand">Toko Online Resmi</div>
+
+  <p>
+    Untuk pengalaman checkout, cetak invoice, dan pembayaran yang lebih lancar,
+    silakan buka website ini di browser utama Anda (Chrome atau Safari).
+  </p>
+
+  <button class="primary" onclick="openExternal()">
+    Buka di Browser Utama
+  </button>
+
+  <button class="secondary" onclick="continueHere()">
+    Tetap Lanjut di TikTok / Instagram
+  </button>
+
+  <div class="footer">
+    © 2026 Kemoenik Official Store
+  </div>
+
+</div>
+
+<script>
+function openExternal(){
+  var currentUrl = window.location.origin + "/";
+  var isAndroid = /android/i.test(navigator.userAgent);
+
+  if (isAndroid) {
+    window.location.href =
+      "intent://" +
+      window.location.host +
+      "/#Intent;scheme=https;package=com.android.chrome;end";
+  } else {
+    window.location.href = currentUrl;
+  }
+}
+
+function continueHere(){
+  window.location.href = "/";
+}
+</script>
+
+</body>
+</html>
