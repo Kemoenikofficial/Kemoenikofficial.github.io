@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
+    <!-- PERBAIKAN KEYBOARD: Viewport bersih tanpa scale restriction -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Toko Resmi Kemoenik</title>
@@ -10,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- DIHAPUS: Library html2pdf sering error di in-app browser -->
 
     <style>
         :root {
@@ -33,7 +34,9 @@
             min-height: 100vh;
         }
 
+        /* PERBAIKAN KEYBOARD: Hanya overflow hidden, TANPA position fixed */
         body.no-scroll { overflow: hidden; }
+
         .modal-content { padding-bottom: 120px; }
         *, *::before, *::after { touch-action: manipulation; }
         ::-webkit-scrollbar { width: 3px; height: 3px;}
@@ -70,7 +73,7 @@
         @keyframes slideUp { from { transform: translateY(20%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
         /* INVOICE */
-        #invoice-modal .modal-content {
+        #invoiceModal .modal-content {
             background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
             border-radius: 24px 24px 0 0;
             padding: 20px 10px;
@@ -94,7 +97,7 @@
             border: 1px solid #E5E7EB; 
             padding: 14px 16px;
             border-radius: 14px;
-            font-size: 16px;
+            font-size: 16px; /* Anti zoom Safari */
             margin-bottom: 12px; 
             outline: none; 
             background: #F9FAFB; 
@@ -119,14 +122,7 @@
             position: relative;
             overflow: hidden;
         }
-        .bank-card-modern::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-        }
+        .bank-card-modern::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
         .bank-card-bri::before { background: linear-gradient(90deg, #00529C, #0080c7); }
         .bank-card-dana::before { background: linear-gradient(90deg, #108ee9, #00bfff); }
         .bank-card-seabank::before { background: linear-gradient(90deg, #00b14f, #40c752); }
@@ -162,21 +158,7 @@
         .product-card:hover .product-img { transform: scale(1.05); }
 
         .wishlist-btn-card {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 32px;
-            height: 32px;
-            background: rgba(255,255,255,0.95);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 5;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.2s;
-            border: none;
+            position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s; border: none;
         }
         .wishlist-btn-card:active { transform: scale(0.9); }
         .wishlist-btn-card svg { width: 16px; height: 16px; transition: all 0.2s; }
@@ -191,17 +173,16 @@
         .quick-link { display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; padding: 10px 0; border-radius: 14px; box-shadow: var(--shadow-soft); transition: transform 0.2s; }
         .quick-link:active { transform: scale(0.95); }
 
-        /* PRINT */
+        /* PERBAIKAN PRINT NATIVE */
         @media print {
             body * { visibility: hidden; }
-            #invoice-modal, #invoice-modal * { visibility: visible; }
-            #invoice-modal { position: absolute; left: 0; top: 0; width: 100%; height: auto; display: block !important; background: white; z-index: 99999; }
-            #invoice-modal > .modal-content { max-height: none !important; overflow: visible !important; border-radius: 0; box-shadow: none; max-width: 100%; margin: 0; padding: 0; background: white; }
+            #invoiceModal, #invoiceModal * { visibility: visible; }
+            #invoiceModal { position: absolute; inset: 0; width: 100%; background: white; display: block !important; }
+            #invoiceModal > .modal-content { max-height: none !important; overflow: visible !important; border-radius: 0; box-shadow: none; max-width: 100%; margin: 0; padding: 0; background: white; }
             .invoice-card { box-shadow: none !important; border: none !important; max-width: 100% !important; margin: 0 !important; border-radius: 0 !important; padding: 20px !important; }
             .no-print { display: none !important; }
             #invoice-container { width: 100%; margin: 0; padding: 0; background: white; color: black; height: auto !important; overflow: visible !important; }
         }
-        @page { size: A4; margin: 15mm; }
     </style>
 </head>
 <body>
@@ -214,7 +195,9 @@
     <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
+                <!-- EDITABLE: Ganti src dengan URL Logo Toko Anda -->
                 <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo" class="h-9 w-9 rounded-xl object-cover shadow-sm">
+                <!-- EDITABLE: Nama Toko -->
                 <h1 class="text-lg font-bold text-gray-800" id="store-name">KEMOENIK</h1>
             </div>
             <div class="flex items-center gap-2">
@@ -270,8 +253,11 @@
 
     <footer class="bg-white text-gray-500 mt-8 shadow-inner pb-24 border-t border-gray-100">
         <div class="container mx-auto px-4 py-8 text-center">
+            <!-- EDITABLE: Logo Footer -->
             <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="h-12 w-12 rounded-full mx-auto mb-2 shadow">
+            <!-- EDITABLE: Nama Toko Footer -->
             <h3 class="font-bold text-gray-700 mb-1">KEMOENIK</h3>
+            <!-- EDITABLE: Alamat Toko -->
             <p class="text-xs max-w-xs mx-auto leading-relaxed opacity-70">Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, 40972</p>
         </div>
     </footer>
@@ -288,8 +274,8 @@
     <div id="cart-modal" class="modal-overlay"><div class="modal-content p-5" id="cart-content"></div></div>
     <div id="checkout-modal" class="modal-overlay"><div class="modal-content p-5" id="checkout-content"></div></div>
     
-    <!-- INVOICE MODAL -->
-    <div id="invoice-modal" class="modal-overlay">
+    <!-- INVOICE MODAL (ID disesuaikan untuk Print CSS) -->
+    <div id="invoiceModal" class="modal-overlay">
         <div class="modal-content">
             <div id="invoice-container"></div>
             <div class="sticky bottom-0 p-4 bg-gray-50 border-t no-print flex flex-col gap-2">
@@ -316,25 +302,41 @@
 
     <script>
         /* ===========================================================
-           KONFIGURASI DATA
+           EDITABLE: KONFIGURASI DATA PRODUK & TOKO
+           Ubah data di bawah ini sesuai kebutuhan toko Anda.
            =========================================================== */
         const CONFIG = {
-            storeName: "KEMOENIK",
-            storeAddress: "Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, 40972",
-            whatsappNumber: "6281546450547",
+            storeName: "KEMOENIK", // EDITABLE: Nama toko
+            storeAddress: "Kp Cibubuay, Des cibodas, Kec Pasirjambu, Kab Bandung, 40972", // EDITABLE: Alamat
+            whatsappNumber: "6281546450547", // EDITABLE: Nomor WA (format: 628xxx)
             bankAccounts: [
+                // EDITABLE: Daftar Rekening
                 { bank: "BRI", number: "000501168248506", name: "DANI RAMDANI", logoClass: "logo-bri", cardClass: "bank-card-bri" },
                 { bank: "DANA", number: "081546450547", name: "DANI RAMDANI", logoClass: "logo-dana", cardClass: "bank-card-dana" },
                 { bank: "SeaBank", number: "901851870313", name: "DANI RAMDANI", logoClass: "logo-seabank", cardClass: "bank-card-seabank" }
             ],
+            // EDITABLE: Kupon Diskon
             coupons: [ { code: "KEMOENIK26", type: "shipping", value: 15000, minPurchase: 120000 } ],
             categories: [ { id: 'all', name: "Semua", icon: 'grid' }, { id: 'calc', name: "Calculator", icon: 'calc' }, { id: 'kapsul', name: "Kapsul", icon: 'pill' }, { id: 'teh', name: "Teh", icon: 'tea' } ],
+            // EDITABLE: Gambar Slider Banner
             sliders: [
                 "https://placehold.co/800x400/48BB78/FFFFFF?text=Banner+1", 
                 "https://placehold.co/800x400/F3F4F6/333333?text=Banner+2",
                 "https://placehold.co/800x400/FFFFFF/000000?text=Banner+3"
             ],
+            // EDITABLE: PRODUK
             products: [
+                /* 
+                   STRUKTUR PRODUK:
+                   id: Unik ID
+                   name: Nama Produk
+                   price: Harga (angka tanpa titik/koma)
+                   discount: Persentase diskon (0 jika tidak ada)
+                   images: Array URL gambar
+                   sold: Jumlah terjual
+                   rating: Rating bintang
+                   desc: Deskripsi
+                */
                 { id: 1, category: 'calc', name: "CALCULATOR FAT LOSS", price: 30000, discount: 50, images: ["https://placehold.co/400x400/eee/333?text=Calc"], sold: 150, rating: 4.9, desc: `Membantu kebutuhan kalori harian.` },
                 { id: 2, category: 'kapsul', name: "KEMOENIK SLIM 1", price: 100000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Kapsul"], sold: 89, rating: 4.9, desc: `Produk premium.` },
                 { id: 3, category: 'kapsul', name: "KEMOENIK SLIM 2", price: 50000, discount: 0, images: ["https://placehold.co/400x400/eee/333?text=Kapsul2"], sold: 45, rating: 4.8, desc: `Seri 2.` },
@@ -345,7 +347,7 @@
 
         let cart = [], wishlist = [], appliedCoupon = null, currentSlide = 0, activeCategory = 'all';
         let lastCheckoutData = { customer: {}, method: 'transfer', coupon: null };
-        let currentInvoice = {};
+        let currentInvoice = {}; // Variabel global untuk menyimpan invoice saat ini
 
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
@@ -538,14 +540,7 @@
             const method = document.getElementById('payment-method').value;
             const transferBox = document.getElementById('transfer-method-container');
             const note = document.getElementById('payment-note');
-            if (method === 'cod_full') {
-                transferBox.classList.add('hidden');
-                note.innerText = "COD Full tidak mendapat potongan ongkir.";
-                note.classList.remove('hidden');
-            } else {
-                transferBox.classList.remove('hidden');
-                note.classList.add('hidden');
-            }
+            if (method === 'cod_full') { transferBox.classList.add('hidden'); note.innerText = "COD Full tidak mendapat potongan ongkir."; note.classList.remove('hidden'); } else { transferBox.classList.remove('hidden'); note.classList.add('hidden'); }
             lastCheckoutData.method = method;
         }
 
@@ -556,19 +551,19 @@
 
         // CHECKOUT
         function proceedToCheckout() { if(cart.length===0) return; closeCart(); renderCheckout(lastCheckoutData.customer || {}); openModal('checkout-modal'); }
+        
+        // REVISI: Form Data Pengiriman
         function renderCheckout(data) { 
             const content = document.getElementById('checkout-content');
             content.innerHTML = `
             <button onclick="backToCart()" class="absolute top-4 right-4 text-gray-400 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
             <h3 class="font-bold text-lg mb-4">Isi Data Pengiriman</h3>
             <input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *" value="${data.name || ''}">
-            <input type="tel" id="c-phone" class="input-style" placeholder="No. WhatsApp *" value="${data.phone || ''}">
-            <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap (Nama Jalan, No Rumah) *" value="${data.address || ''}">
-            <input type="text" id="c-village" class="input-style" placeholder="Desa/Kelurahan *" value="${data.village || ''}">
+            <input type="tel" id="c-phone" class="input-style" placeholder="Nomor WhatsApp *" value="${data.phone || ''}">
+            <input type="text" id="c-address" class="input-style" placeholder="Alamat Jalan Lengkap (RT/RW + Desa) *" value="${data.address || ''}">
             <input type="text" id="c-district" class="input-style" placeholder="Kecamatan *" value="${data.district || ''}">
-            <input type="text" id="c-city" class="input-style" placeholder="Kota/Kabupaten *" value="${data.city || ''}">
+            <input type="text" id="c-city" class="input-style" placeholder="Kabupaten/Kota *" value="${data.city || ''}">
             <input type="text" id="c-prov" class="input-style" placeholder="Provinsi *" value="${data.prov || ''}">
-            <input type="text" id="c-zip" class="input-style" placeholder="Kode Pos *" value="${data.zip || ''}">
             <input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)" value="${data.notes || ''}">
             <button onclick="generateInvoice()" class="btn-primary mt-2">Buat Pesanan</button>`;
             
@@ -582,17 +577,26 @@
 
         function copyToClipboard(text, btn) {
             navigator.clipboard.writeText(text).then(() => {
-                const originalText = btn.innerText;
-                btn.innerText = 'Tersalin!';
-                btn.style.background = '#059669';
+                const originalText = btn.innerText; btn.innerText = 'Tersalin!'; btn.style.background = '#059669';
                 setTimeout(() => { btn.innerText = originalText; btn.style.background = ''; }, 1500);
             });
         }
 
         function generateInvoice() {
-            const name = document.getElementById('c-name').value; const phone = document.getElementById('c-phone').value; const address = document.getElementById('c-address').value; const village = document.getElementById('c-village').value; const district = document.getElementById('c-district').value; const city = document.getElementById('c-city').value; const prov = document.getElementById('c-prov').value; const zip = document.getElementById('c-zip').value; const notes = document.getElementById('c-notes').value; const payMethod = lastCheckoutData.method;
+            // REVISI: Validasi Field
+            const name = document.getElementById('c-name').value; 
+            const phone = document.getElementById('c-phone').value; 
+            const address = document.getElementById('c-address').value; 
+            const district = document.getElementById('c-district').value; 
+            const city = document.getElementById('c-city').value; 
+            const prov = document.getElementById('c-prov').value; 
+            const notes = document.getElementById('c-notes').value; // Opsional
+            const payMethod = lastCheckoutData.method;
+            
+            // Cek wajib
             if(!name || !phone || !address || !district || !city || !prov) { alert("Lengkapi data wajib!"); return; }
-            lastCheckoutData.customer = { name, phone, address, village, district, city, prov, zip, notes };
+            
+            lastCheckoutData.customer = { name, phone, address, district, city, prov, notes };
             lastCheckoutData.coupon = appliedCoupon;
 
             const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
@@ -602,11 +606,13 @@
             const orderId = generateOrderId();
             const dateStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
+            // SIMPAN STATE INVOICE KE GLOBAL
             currentInvoice = { id: orderId, date: dateStr, customer: lastCheckoutData.customer, items: [...cart], subtotal, disc, total, payment: payMethod, notes, selectedBank: document.getElementById('transfer-bank')?.value || 'BRI' };
 
             cart = []; saveData(); updateStickyBar();
             closeCheckoutForm();
 
+            // Render Invoice
             let paymentInfoHtml = '';
             const selectedBank = currentInvoice.selectedBank;
             const filteredBank = CONFIG.bankAccounts.find(b => b.bank === selectedBank);
@@ -631,8 +637,6 @@
                 </div>`;
             }
 
-            const fullAddress = `${address}, Desa ${village}, Kec. ${district}, ${city}, ${prov}, ${zip}`;
-
             const invoiceHtml = `
             <div class="invoice-card">
                 <div style="text-align:center; margin-bottom:20px;">
@@ -653,7 +657,7 @@
                     <h4 style="font-weight: bold; margin-bottom: 8px;">DATA PEMBELI</h4>
                     <p style="color: #374151;"><strong>${name}</strong></p>
                     <p style="color: #6b7280; font-size: 12px;">${phone}</p>
-                    <p style="color: #9ca3af; font-size: 12px; margin-top: 4px;">${fullAddress}</p>
+                    <p style="color: #9ca3af; font-size: 12px; margin-top: 4px;">${address}</p>
                 </div>
                 
                 <div style="margin-bottom: 20px;">
@@ -703,53 +707,43 @@
             </div>`;
             
             document.getElementById('invoice-container').innerHTML = invoiceHtml;
-            openModal('invoice-modal');
+            openModal('invoiceModal'); // ID diubah camelCase
         }
 
-        function closeInvoice() { closeModal('invoice-modal'); window.scrollTo(0, 0); }
-        function editInvoice() { cart = [...currentInvoice.items]; saveData(); updateStickyBar(); appliedCoupon = lastCheckoutData.coupon || null; closeModal('invoice-modal'); openCart(); }
+        function closeInvoice() { closeModal('invoiceModal'); window.scrollTo(0, 0); }
+        function editInvoice() { cart = [...currentInvoice.items]; saveData(); updateStickyBar(); appliedCoupon = lastCheckoutData.coupon || null; closeModal('invoiceModal'); openCart(); }
 
-        // PERBAIKAN PRINT: Force visible
+        // PERBAIKAN PRINT: Native print only
         function printInvoice() {
-            // Pastikan konten terlihat
-            document.getElementById('invoice-container').style.display = 'block';
-            document.getElementById('invoice-container').style.visibility = 'visible';
             window.print();
         }
         
-        // PERBAIKAN WHATSAPP: Format pesan sama dengan invoice
+        // PERBAIKAN WHATSAPP: Window.open agar invoice tidak hilang
         function generateWAText() {
             const d = currentInvoice;
             const addr = d.customer;
-            const fullAddr = `${addr.address}, Desa ${addr.village}, Kec. ${addr.district}, ${addr.city}, ${addr.prov}`;
             
             let text = `*INVOICE PESANAN*\n`;
             text += `====================\n`;
             text += `Order ID: #${d.id}\n`;
             text += `Tanggal: ${d.date}\n\n`;
-            
             text += `*DATA PEMBELI*\n`;
             text += `Nama: ${addr.name}\n`;
             text += `No HP: ${addr.phone}\n`;
-            text += `Alamat: ${fullAddr}\n\n`;
-            
+            text += `Alamat: ${addr.address}, Kec. ${addr.district}, ${addr.city}, ${addr.prov}\n\n`;
             text += `*DETAIL PESANAN*\n`;
             text += `-------------------\n`;
             d.items.forEach(i => { 
                 text += `${i.name}\n`;
                 text += `${i.qty} x Rp ${i.price.toLocaleString('id-ID')} = Rp ${(i.price * i.qty).toLocaleString('id-ID')}\n`; 
             });
-            
             text += `-------------------\n`;
             text += `Subtotal: Rp ${d.subtotal.toLocaleString('id-ID')}\n`;
             text += `Diskon: Rp ${d.disc.toLocaleString('id-ID')}\n`;
             text += `Ongkir: (Konfirmasi Admin)\n`;
             text += `*TOTAL: Rp ${d.total.toLocaleString('id-ID')}*\n\n`;
-            
             text += `Metode: ${d.payment === 'cod_full' ? 'COD Full' : d.payment === 'cod_ongkir' ? 'COD Ongkir' : 'Transfer'}\n`;
-            
             if(d.notes) text += `\nCatatan: ${d.notes}`;
-            
             return text;
         }
 
@@ -757,20 +751,10 @@
             const text = generateWAText();
             const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`;
 
-            // Deteksi in-app browser
-            const isWebview = navigator.userAgent.includes('Instagram') || navigator.userAgent.includes('FBAV') || navigator.userAgent.includes('TikTok');
+            // Gunakan window.open agar halaman invoice tetap ada di history back
+            window.open(url, "_blank");
             
-            if (isWebview) {
-                // In-app browser: gunakan location.href (lebih reliable)
-                window.location.href = url;
-            } else {
-                // Browser biasa: gunakan window.open
-                const win = window.open(url, '_blank');
-                // Fallback jika popup blocked
-                if (!win || win.closed || typeof win.closed === 'undefined') {
-                    window.location.href = url;
-                }
-            }
+            // Jangan reset currentInvoice atau redirect halaman
         }
 
         function toggleSearch() { document.getElementById('search-bar').classList.toggle('hidden'); }
@@ -780,21 +764,15 @@
         function closeTracking() { closeModal('tracking-modal'); }
         function simulateTracking() { const resi = document.getElementById('tracking-input').value; if(!resi) return; const steps = ["Paket Diproses", "Menuju Transit", "Dalam Perjalanan", "Dibawa Kurir", "Terkirim"]; const current = Math.floor(Math.random() * 5); let html = `<h4 class="font-bold mb-4 text-sm">Resi: ${resi}</h4>`; steps.forEach((s, i) => { html += `<div class="relative pl-6 pb-4"><div class="absolute left-0 top-1 w-3 h-3 rounded-full ${i <= current ? 'bg-green-500' : 'bg-gray-300'}"></div><p class="font-medium text-sm">${s}</p></div>`; }); document.getElementById('tracking-result').innerHTML = html; }
 
-        // FIX KEYBOARD
-        window.addEventListener('resize', () => {
-            document.querySelectorAll('.modal-content').forEach(el => { el.scrollTop = el.scrollHeight; });
-        });
-
-        // BALIK KE INVOICE
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
-                if(currentInvoice && currentInvoice.id){
-                    openModal('invoice-modal');
-                }
-            }
+        // PERBAIKAN KEYBOARD: Auto scroll saat input focus
+        document.addEventListener("focusin", function(e){
+          if(e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT"){
+            setTimeout(()=>{
+              e.target.scrollIntoView({behavior:"smooth", block:"center"});
+            },300);
+          }
         });
 
     </script>
 </body>
 </html>
-
