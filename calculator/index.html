@@ -643,7 +643,7 @@
         }
 
         /* ============================================
-           PRINT REPORT STYLES - 2 PAGES
+           PRINT REPORT STYLES - FIXED 2 PAGES
            ============================================ */
         
         .print-report {
@@ -651,6 +651,7 @@
         }
 
         @media print {
+            /* Hide app UI */
             .app-header,
             .app-main,
             .app-footer,
@@ -658,49 +659,44 @@
                 display: none !important;
             }
 
+            /* Show report */
             .print-report {
                 display: block !important;
             }
 
             body {
                 background: white;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
                 margin: 0;
                 padding: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
             @page {
                 size: A4 portrait;
-                margin: 0;
-            }
-
-            @page :first {
-                margin: 0;
-            }
-
-            .page-break {
-                page-break-before: always;
+                margin: 15mm;
             }
 
             .report-page {
-                width: 210mm;
-                min-height: 297mm;
-                padding: 20mm;
-                box-sizing: border-box;
-                background: white;
+                width: 100%;
+                page-break-after: always;
+                page-break-inside: avoid;
+            }
+
+            .report-page:last-child {
+                page-break-after: auto;
             }
         }
 
-        /* Report Layout */
+        /* Report Layout - Screen View */
         .report-page {
             width: 210mm;
-            min-height: 297mm;
             padding: 20mm;
-            margin: 0 auto;
+            margin: 0 auto 20px;
             background: white;
             font-family: 'Poppins', sans-serif;
             color: #1F1F1F;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         /* PAGE 1 - RINGKASAN HASIL */
@@ -898,7 +894,7 @@
             text-align: right;
         }
 
-        /* Estimasi Target - NEW FORMAT */
+        /* Estimasi Target */
         .report-target-box {
             background: linear-gradient(135deg, #F0F4F1 0%, #E8EDE9 100%);
             border-radius: 12px;
@@ -1074,8 +1070,8 @@
         }
 
         .report-footer {
-            margin-top: auto;
-            padding-top: 20px;
+            margin-top: 24px;
+            padding-top: 16px;
             border-top: 1px solid #E5E5E5;
             text-align: center;
         }
@@ -1429,7 +1425,7 @@
     </main>
 
     <!-- ============================================
-         PRINT REPORT - 2 PAGES
+         PRINT REPORT - 2 PAGES (NO BLANK PAGES)
          ============================================ -->
     <div class="print-report" id="printReport">
         
@@ -1533,7 +1529,7 @@
                 </div>
             </div>
 
-            <!-- Estimasi Target - NEW FORMAT -->
+            <!-- Estimasi Target -->
             <div class="report-section">
                 <div class="report-target-box">
                     <div class="report-target-title">Estimasi Pencapaian Target</div>
@@ -1561,11 +1557,8 @@
             </div>
         </div>
 
-        <!-- PAGE BREAK -->
-        <div class="page-break"></div>
-
         <!-- PAGE 2 - ANALISIS DETAIL -->
-        <div class="report-page" style="display: flex; flex-direction: column;">
+        <div class="report-page">
             <!-- Header Page 2 -->
             <div class="report-header" style="margin-bottom: 20px;">
                 <div class="report-logo">CALFATLOSS</div>
@@ -2164,7 +2157,7 @@
             document.getElementById('reportLemakCal').textContent = formatNum(currentData.lemak * 9, 0) + ' Kcal';
             document.getElementById('reportKarboCal').textContent = formatNum(currentData.karbo * 4, 0) + ' Kcal';
 
-            // Estimasi Target - NEW FORMAT
+            // Estimasi Target
             document.getElementById('reportWeeksTarget').textContent = weeksStr;
             document.getElementById('reportTargetDate').textContent = targetDateStr;
 
