@@ -11,16 +11,68 @@
 body{
   margin:0;
   font-family:'Segoe UI', Arial, sans-serif;
-  background: radial-gradient(circle at top, #e6f4ea, #f5fdf8 60%);
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
   padding:20px;
   overflow:hidden;
+  background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
+  position:relative;
 }
 
+/* Glow Background */
+body::before,
+body::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:0.35;
+  z-index:0;
+}
+
+body::before{
+  width:320px;
+  height:320px;
+  background:#16a34a;
+  top:-100px;
+  left:-100px;
+}
+
+body::after{
+  width:380px;
+  height:380px;
+  background:#4ade80;
+  bottom:-140px;
+  right:-140px;
+}
+
+/* Floating Background Text */
+.bg-text{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:60px;
+  font-weight:900;
+  color:#16a34a;
+  opacity:0.05;
+  white-space:nowrap;
+  letter-spacing:6px;
+  z-index:0;
+  animation:floatText 12s ease-in-out infinite alternate;
+}
+
+@keyframes floatText{
+  0%{ transform:translate(-50%,-52%); }
+  100%{ transform:translate(-50%,-48%); }
+}
+
+/* Card */
 .card{
+  position:relative;
+  z-index:2;
   background:white;
   padding:45px 30px;
   border-radius:22px;
@@ -124,17 +176,19 @@ button{
 
 <body>
 
+<div class="bg-text">WELCOME TO KEMOENIK</div>
+
 <div class="card">
 
-  <!-- GANTI LINK LOGO DI BAWAH -->
-  <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="logo">
+  <img src="PASTE_LINK_LOGO_KAMU_DI_SINI" class="logo">
 
   <h1>Kemoenik Official Store</h1>
   <div class="brand">Toko Online Resmi</div>
 
   <p>
+    Selamat datang di Kemoenik Official Store.  
     Untuk pengalaman checkout dan pembayaran yang lebih lancar,
-    silakan buka website ini di browser utama Anda (Chrome atau Safari).
+    silakan buka website ini di browser utama Anda.
   </p>
 
   <button class="primary" onclick="openExternal()">
