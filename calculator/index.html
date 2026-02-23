@@ -643,7 +643,7 @@
         }
 
         /* ============================================
-           PRINT REPORT STYLES
+           PRINT REPORT STYLES - 2 PAGES
            ============================================ */
         
         .print-report {
@@ -651,7 +651,6 @@
         }
 
         @media print {
-            /* Hide app UI */
             .app-header,
             .app-main,
             .app-footer,
@@ -659,7 +658,6 @@
                 display: none !important;
             }
 
-            /* Show report */
             .print-report {
                 display: block !important;
             }
@@ -668,11 +666,29 @@
                 background: white;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                margin: 0;
+                padding: 0;
             }
 
             @page {
                 size: A4 portrait;
-                margin: 15mm;
+                margin: 0;
+            }
+
+            @page :first {
+                margin: 0;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            .report-page {
+                width: 210mm;
+                min-height: 297mm;
+                padding: 20mm;
+                box-sizing: border-box;
+                background: white;
             }
         }
 
@@ -687,6 +703,7 @@
             color: #1F1F1F;
         }
 
+        /* PAGE 1 - RINGKASAN HASIL */
         .report-header {
             text-align: center;
             padding-bottom: 20px;
@@ -703,7 +720,7 @@
         }
 
         .report-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: #1F1F1F;
             margin-bottom: 12px;
@@ -727,24 +744,24 @@
         }
 
         .report-section {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .report-section-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: #3F5F4A;
             text-transform: uppercase;
             letter-spacing: 1px;
             padding-bottom: 8px;
             border-bottom: 1px solid #E5E5E5;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .report-data-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            gap: 12px;
         }
 
         .report-data-item {
@@ -755,65 +772,67 @@
         }
 
         .report-data-label {
-            font-size: 10px;
+            font-size: 9px;
             color: #6B6B6B;
             margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .report-data-value {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #3F5F4A;
         }
 
         .report-data-unit {
-            font-size: 11px;
+            font-size: 10px;
             color: #6B6B6B;
         }
 
         .report-main-results {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 14px;
         }
 
         .report-main-item {
-            padding: 20px;
+            padding: 18px;
             background: linear-gradient(135deg, #3F5F4A 0%, #344E3D 100%);
-            border-radius: 12px;
+            border-radius: 10px;
             color: white;
             text-align: center;
         }
 
         .report-main-label {
-            font-size: 10px;
+            font-size: 9px;
             opacity: 0.9;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .report-main-value {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
         }
 
         .report-main-unit {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.85;
             margin-top: 2px;
         }
 
         .report-chart-section {
             display: flex;
-            gap: 30px;
+            gap: 24px;
             align-items: center;
         }
 
         .report-chart-wrap {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 150px;
+            height: 150px;
             flex-shrink: 0;
         }
 
@@ -826,13 +845,13 @@
         }
 
         .report-chart-total {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: #1F1F1F;
         }
 
         .report-chart-label {
-            font-size: 10px;
+            font-size: 9px;
             color: #6B6B6B;
         }
 
@@ -843,8 +862,8 @@
         .report-macro-row {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 0;
+            gap: 10px;
+            padding: 8px 0;
             border-bottom: 1px solid #E5E5E5;
         }
 
@@ -860,61 +879,216 @@
 
         .report-macro-name {
             flex: 1;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
         }
 
         .report-macro-gram {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #3F5F4A;
-            min-width: 50px;
+            min-width: 45px;
             text-align: right;
         }
 
         .report-macro-cal {
-            font-size: 11px;
+            font-size: 10px;
             color: #6B6B6B;
-            min-width: 60px;
+            min-width: 55px;
             text-align: right;
         }
 
+        /* Estimasi Target - NEW FORMAT */
         .report-target-box {
-            padding: 20px;
-            background: #F0F4F1;
+            background: linear-gradient(135deg, #F0F4F1 0%, #E8EDE9 100%);
             border-radius: 12px;
-            text-align: center;
+            padding: 20px;
             border: 1px solid #D4E5D6;
         }
 
-        .report-target-label {
-            font-size: 11px;
-            color: #6B6B6B;
-            margin-bottom: 6px;
+        .report-target-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #3F5F4A;
+            margin-bottom: 14px;
+            text-align: center;
         }
 
-        .report-target-date {
+        .report-target-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .report-target-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .report-target-icon {
             font-size: 20px;
+        }
+
+        .report-target-info {
+            flex: 1;
+        }
+
+        .report-target-label {
+            font-size: 9px;
+            color: #6B6B6B;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .report-target-value {
+            font-size: 18px;
             font-weight: 700;
             color: #3F5F4A;
         }
 
-        .report-footer {
-            margin-top: 30px;
+        .report-page1-footer {
+            margin-top: 20px;
             padding-top: 16px;
+            border-top: 1px solid #E5E5E5;
+            text-align: center;
+            font-size: 9px;
+            color: #6B6B6B;
+        }
+
+        /* PAGE 2 - ANALISIS DETAIL */
+        .report-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .report-detail-box {
+            background: #F8F7F5;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .report-detail-title {
+            font-size: 10px;
+            font-weight: 600;
+            color: #3F5F4A;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        .report-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .report-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .report-detail-label {
+            font-size: 11px;
+            color: #6B6B6B;
+        }
+
+        .report-detail-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1F1F1F;
+        }
+
+        /* Status Badge */
+        .report-status-box {
+            padding: 16px 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .report-status-box.status-good {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .report-status-box.status-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .report-status-box.status-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .report-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .report-status-box.status-good .report-status-badge {
+            color: #16a34a;
+        }
+
+        .report-status-box.status-warning .report-status-badge {
+            color: #d97706;
+        }
+
+        .report-status-box.status-danger .report-status-badge {
+            color: #dc2626;
+        }
+
+        .report-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .report-status-box.status-good .report-status-dot {
+            background: #16a34a;
+        }
+
+        .report-status-box.status-warning .report-status-dot {
+            background: #f59e0b;
+        }
+
+        .report-status-box.status-danger .report-status-dot {
+            background: #ef4444;
+        }
+
+        .report-status-msg {
+            font-size: 10px;
+            color: #6B6B6B;
+            margin-top: 6px;
+        }
+
+        .report-footer {
+            margin-top: auto;
+            padding-top: 20px;
             border-top: 1px solid #E5E5E5;
             text-align: center;
         }
 
-        .report-note {
-            font-size: 10px;
+        .report-footer-note {
+            font-size: 9px;
             color: #6B6B6B;
             line-height: 1.6;
+            margin-bottom: 8px;
         }
 
-        .report-watermark {
-            margin-top: 16px;
-            font-size: 9px;
+        .report-footer-watermark {
+            font-size: 8px;
             color: #999;
         }
 
@@ -1254,8 +1428,12 @@
         </footer>
     </main>
 
-    <!-- PRINT REPORT TEMPLATE -->
+    <!-- ============================================
+         PRINT REPORT - 2 PAGES
+         ============================================ -->
     <div class="print-report" id="printReport">
+        
+        <!-- PAGE 1 - RINGKASAN HASIL -->
         <div class="report-page">
             <!-- Header -->
             <div class="report-header">
@@ -1267,7 +1445,7 @@
                         <span id="reportNumber">KM-00000000-0000</span>
                     </div>
                     <div class="report-meta-item">
-                        <span class="report-meta-label">Tanggal:</span>
+                        <span class="report-meta-label">Tanggal Pengisian:</span>
                         <span id="reportDate">01 Januari 2025</span>
                     </div>
                 </div>
@@ -1279,11 +1457,11 @@
                 <div class="report-data-grid">
                     <div class="report-data-item">
                         <div class="report-data-label">Nama</div>
-                        <div class="report-data-value" id="reportNama" style="font-size: 14px;">-</div>
+                        <div class="report-data-value" id="reportNama" style="font-size: 13px;">-</div>
                     </div>
                     <div class="report-data-item">
                         <div class="report-data-label">Gender</div>
-                        <div class="report-data-value" id="reportGender" style="font-size: 14px;">-</div>
+                        <div class="report-data-value" id="reportGender" style="font-size: 13px;">-</div>
                     </div>
                     <div class="report-data-item">
                         <div class="report-data-label">Usia</div>
@@ -1321,12 +1499,12 @@
                 </div>
             </div>
 
-            <!-- Makronutrien -->
+            <!-- Makronutrien dengan Donut Chart -->
             <div class="report-section">
                 <div class="report-section-title">Pembagian Makronutrien</div>
                 <div class="report-chart-section">
                     <div class="report-chart-wrap">
-                        <canvas id="reportChart" width="180" height="180"></canvas>
+                        <canvas id="reportChart" width="150" height="150"></canvas>
                         <div class="report-chart-center">
                             <div class="report-chart-total" id="reportTotalCal">0</div>
                             <div class="report-chart-label">Kcal</div>
@@ -1355,21 +1533,159 @@
                 </div>
             </div>
 
-            <!-- Estimasi Target -->
+            <!-- Estimasi Target - NEW FORMAT -->
             <div class="report-section">
-                <div class="report-section-title">Estimasi Pencapaian Target</div>
                 <div class="report-target-box">
-                    <div class="report-target-label">Estimasi Target Tercapai</div>
-                    <div class="report-target-date" id="reportTargetDate">-</div>
+                    <div class="report-target-title">Estimasi Pencapaian Target</div>
+                    <div class="report-target-grid">
+                        <div class="report-target-item">
+                            <div class="report-target-icon">&#x23F3;</div>
+                            <div class="report-target-info">
+                                <div class="report-target-label">Durasi Program</div>
+                                <div class="report-target-value" id="reportWeeksTarget">- Minggu</div>
+                            </div>
+                        </div>
+                        <div class="report-target-item">
+                            <div class="report-target-icon">&#x1F4C5;</div>
+                            <div class="report-target-info">
+                                <div class="report-target-label">Target Tercapai</div>
+                                <div class="report-target-value" id="reportTargetDate">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-page1-footer">
+                Lanjut ke halaman berikutnya untuk analisis detail
+            </div>
+        </div>
+
+        <!-- PAGE BREAK -->
+        <div class="page-break"></div>
+
+        <!-- PAGE 2 - ANALISIS DETAIL -->
+        <div class="report-page" style="display: flex; flex-direction: column;">
+            <!-- Header Page 2 -->
+            <div class="report-header" style="margin-bottom: 20px;">
+                <div class="report-logo">CALFATLOSS</div>
+                <div class="report-title">ANALISIS DETAIL</div>
+                <div class="report-meta">
+                    <div class="report-meta-item">
+                        <span class="report-meta-label">Nomor Laporan:</span>
+                        <span id="reportNumber2">KM-00000000-0000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Badge -->
+            <div class="report-status-box status-good" id="reportStatusBox">
+                <div class="report-status-badge">
+                    <div class="report-status-dot"></div>
+                    <span id="reportStatusText">ON TRACK</span>
+                </div>
+                <div class="report-status-msg" id="reportStatusMsg">Program diet Anda dalam jalur yang baik</div>
+            </div>
+
+            <!-- Detail Perhitungan -->
+            <div class="report-section">
+                <div class="report-section-title">Detail Perhitungan</div>
+                <div class="report-detail-grid">
+                    <div class="report-detail-box">
+                        <div class="report-detail-title">Metabolisme Basal</div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">BMR</span>
+                            <span class="report-detail-value" id="reportBMRDetail">0 Kcal</span>
+                        </div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Faktor Aktivitas</span>
+                            <span class="report-detail-value" id="reportActivityFactor">1.2x</span>
+                        </div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">TDEE</span>
+                            <span class="report-detail-value" id="reportTDEEDetail">0 Kcal</span>
+                        </div>
+                    </div>
+                    <div class="report-detail-box">
+                        <div class="report-detail-title">Defisit Kalori</div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Metode Diet</span>
+                            <span class="report-detail-value" id="reportMetodeDiet">Standar</span>
+                        </div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Besar Defisit</span>
+                            <span class="report-detail-value" id="reportDefisit">500 Kcal</span>
+                        </div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Kalori Diet</span>
+                            <span class="report-detail-value" id="reportDietDetail">0 Kcal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rekomendasi Makronutrien -->
+            <div class="report-section">
+                <div class="report-section-title">Rekomendasi Makronutrien</div>
+                <div class="report-detail-box">
+                    <div class="report-detail-row">
+                        <span class="report-detail-label">Protein</span>
+                        <span class="report-detail-value"><span id="reportProteinDetail">0</span>g (<span id="reportProteinCalDetail">0</span> Kcal)</span>
+                    </div>
+                    <div class="report-detail-row">
+                        <span class="report-detail-label">Lemak</span>
+                        <span class="report-detail-value"><span id="reportLemakDetail">0</span>g (<span id="reportLemakCalDetail">0</span> Kcal)</span>
+                    </div>
+                    <div class="report-detail-row">
+                        <span class="report-detail-label">Karbohidrat</span>
+                        <span class="report-detail-value"><span id="reportKarboDetail">0</span>g (<span id="reportKarboCalDetail">0</span> Kcal)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Target Progress -->
+            <div class="report-section">
+                <div class="report-section-title">Target Progress</div>
+                <div class="report-detail-grid">
+                    <div class="report-detail-box">
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Berat Saat Ini</span>
+                            <span class="report-detail-value" id="reportBeratSaatIni">0 kg</span>
+                        </div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Target Berat</span>
+                            <span class="report-detail-value" id="reportTargetBerat">0 kg</span>
+                        </div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Total Penurunan</span>
+                            <span class="report-detail-value" id="reportTotalTurun">0 kg</span>
+                        </div>
+                    </div>
+                    <div class="report-detail-box">
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Turun per Minggu</span>
+                            <span class="report-detail-value" id="reportTurunPerMinggu">0 kg</span>
+                        </div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Total Minggu</span>
+                            <span class="report-detail-value" id="reportTotalMinggu">0 minggu</span>
+                        </div>
+                        <div class="report-detail-row">
+                            <span class="report-detail-label">Estimasi Selesai</span>
+                            <span class="report-detail-value" id="reportEstimasiSelesai">-</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Footer -->
             <div class="report-footer">
-                <div class="report-note">
-                    Laporan ini dihasilkan secara otomatis oleh sistem CALFATLOSS. Semua perhitungan bersifat estimasi dan tidak menggantikan konsultasi dengan tenaga medis atau ahli gizi profesional. Hasil dapat bervariasi tergantung kondisi individu.
+                <div class="report-footer-note">
+                    Laporan ini dihasilkan secara otomatis oleh CALFATLOSS Smart Nutrition System. 
+                    Semua perhitungan bersifat estimasi dan tidak menggantikan konsultasi dengan tenaga medis atau ahli gizi profesional.
+                    Hasil dapat bervariasi tergantung kondisi individu, pola makan, dan aktivitas fisik.
                 </div>
-                <div class="report-watermark">
+                <div class="report-footer-watermark">
                     Dicetak pada: <span id="reportPrintDate">-</span> | CALFATLOSS - Smart Nutrition Calculator
                 </div>
             </div>
@@ -1391,11 +1707,14 @@
             berat: 0,
             tinggi: 0,
             aktivitas: '',
+            aktivitasLabel: '',
             targetBerat: 0,
             metodeDiet: '',
+            metodeDietLabel: '',
             BMR: 0,
             TDEE: 0,
             dietCal: 0,
+            deficit: 0,
             weeklyLoss: 0,
             weeksToTarget: 0,
             protein: 0,
@@ -1442,20 +1761,20 @@
         const activityContent = document.getElementById('activityContent');
         const printBtn = document.getElementById('printBtn');
 
-        // Activity factors
+        // Activity factors and labels
         const activityFactors = {
-            '1.2': 1.2,
-            '1.375': 1.375,
-            '1.55': 1.55,
-            '1.725': 1.725,
-            '1.9': 1.9
+            '1.2': { factor: 1.2, label: 'Tidak Aktif' },
+            '1.375': { factor: 1.375, label: 'Ringan (1-2x Olahraga)' },
+            '1.55': { factor: 1.55, label: 'Sedang (3-5x Olahraga)' },
+            '1.725': { factor: 1.725, label: 'Berat (6-7x Olahraga)' },
+            '1.9': { factor: 1.9, label: 'Atlet' }
         };
 
-        // Deficit map
+        // Deficit map and labels
         const deficitMap = {
-            'ringan': 300,
-            'standar': 500,
-            'agresif': 700
+            'ringan': { value: 300, label: 'Ringan' },
+            'standar': { value: 500, label: 'Standar' },
+            'agresif': { value: 700, label: 'Agresif' }
         };
 
         // Chart colors (app)
@@ -1500,6 +1819,33 @@
             const day = String(now.getDate()).padStart(2, '0');
             const random = String(Math.floor(Math.random() * 9000) + 1000);
             return 'KM-' + year + month + day + '-' + random;
+        }
+
+        function getDietStatus(deficit, TDEE) {
+            const ratio = deficit / TDEE;
+            
+            if (ratio <= 0.15) {
+                return {
+                    status: 'good',
+                    badge: 'ON TRACK',
+                    message: 'Program diet Anda dalam jalur yang baik dan sehat',
+                    class: 'status-good'
+                };
+            } else if (ratio <= 0.25) {
+                return {
+                    status: 'warning',
+                    badge: 'AGRESIF',
+                    message: 'Perlu konsistensi dan monitoring ketat',
+                    class: 'status-warning'
+                };
+            } else {
+                return {
+                    status: 'danger',
+                    badge: 'TERLALU RENDAH',
+                    message: 'Evaluasi defisit kalori Anda untuk keamanan',
+                    class: 'status-danger'
+                };
+            }
         }
 
         // ============================================
@@ -1622,9 +1968,15 @@
             }
 
             const BMR = calculateBMR(gender, berat, tinggi, usia);
-            const activityFactor = activityFactors[aktivitasVal] || 1.2;
+            const activityData = activityFactors[aktivitasVal] || { factor: 1.2, label: 'Tidak Aktif' };
+            const activityFactor = activityData.factor;
+            const aktivitasLabel = activityData.label;
+            
             const TDEE = BMR * activityFactor;
-            const deficit = deficitMap[metodeDiet] || 500;
+            
+            const deficitData = deficitMap[metodeDiet] || { value: 500, label: 'Standar' };
+            const deficit = deficitData.value;
+            const metodeDietLabel = deficitData.label;
 
             let dietCal = TDEE - deficit;
             const isLowCal = dietCal < 1200;
@@ -1657,11 +2009,15 @@
             currentData.BMR = BMR;
             currentData.TDEE = TDEE;
             currentData.dietCal = dietCal;
+            currentData.deficit = deficit;
             currentData.weeklyLoss = weeklyLoss;
             currentData.weeksToTarget = weeksToTarget;
             currentData.protein = protein;
             currentData.lemak = lemak;
             currentData.karbo = karbo;
+            currentData.aktivitasLabel = aktivitasLabel;
+            currentData.metodeDietLabel = metodeDietLabel;
+            currentData.activityFactor = activityFactor;
 
             // Update display
             results.TDEE.textContent = formatNum(TDEE, 0);
@@ -1770,12 +2126,20 @@
 
             // Calculate target date
             let targetDateStr = '-';
+            let weeksStr = '-';
             if (currentData.weeksToTarget > 0 && currentData.targetBerat < currentData.berat) {
                 const targetDate = new Date(now.getTime() + (currentData.weeksToTarget * 7 * 24 * 60 * 60 * 1000));
                 targetDateStr = formatDateIndonesia(targetDate);
+                weeksStr = formatNum(currentData.weeksToTarget, 0) + ' Minggu';
             }
 
-            // Populate report
+            // Get diet status
+            const dietStatus = getDietStatus(currentData.deficit, currentData.TDEE);
+
+            // Calculate total weight loss
+            const totalTurun = currentData.berat - currentData.targetBerat;
+
+            // PAGE 1 - Populate
             document.getElementById('reportNumber').textContent = reportNumber;
             document.getElementById('reportDate').textContent = formatDateIndonesia(now);
             
@@ -1800,8 +2164,47 @@
             document.getElementById('reportLemakCal').textContent = formatNum(currentData.lemak * 9, 0) + ' Kcal';
             document.getElementById('reportKarboCal').textContent = formatNum(currentData.karbo * 4, 0) + ' Kcal';
 
+            // Estimasi Target - NEW FORMAT
+            document.getElementById('reportWeeksTarget').textContent = weeksStr;
             document.getElementById('reportTargetDate').textContent = targetDateStr;
-            document.getElementById('reportPrintDate').textContent = formatDateIndonesia(now) + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+
+            // PAGE 2 - Populate
+            document.getElementById('reportNumber2').textContent = reportNumber;
+
+            // Status Badge
+            const statusBox = document.getElementById('reportStatusBox');
+            statusBox.className = 'report-status-box ' + dietStatus.class;
+            document.getElementById('reportStatusText').textContent = dietStatus.badge;
+            document.getElementById('reportStatusMsg').textContent = dietStatus.message;
+
+            // Detail Perhitungan
+            document.getElementById('reportBMRDetail').textContent = formatNum(currentData.BMR, 0) + ' Kcal';
+            document.getElementById('reportActivityFactor').textContent = formatNum(currentData.activityFactor, 3) + 'x';
+            document.getElementById('reportTDEEDetail').textContent = formatNum(currentData.TDEE, 0) + ' Kcal';
+
+            document.getElementById('reportMetodeDiet').textContent = currentData.metodeDietLabel || 'Standar';
+            document.getElementById('reportDefisit').textContent = formatNum(currentData.deficit, 0) + ' Kcal';
+            document.getElementById('reportDietDetail').textContent = formatNum(currentData.dietCal, 0) + ' Kcal';
+
+            // Rekomendasi Makronutrien
+            document.getElementById('reportProteinDetail').textContent = formatNum(currentData.protein, 0);
+            document.getElementById('reportProteinCalDetail').textContent = formatNum(currentData.protein * 4, 0);
+            document.getElementById('reportLemakDetail').textContent = formatNum(currentData.lemak, 0);
+            document.getElementById('reportLemakCalDetail').textContent = formatNum(currentData.lemak * 9, 0);
+            document.getElementById('reportKarboDetail').textContent = formatNum(currentData.karbo, 0);
+            document.getElementById('reportKarboCalDetail').textContent = formatNum(currentData.karbo * 4, 0);
+
+            // Target Progress
+            document.getElementById('reportBeratSaatIni').textContent = formatNum(currentData.berat, 1) + ' kg';
+            document.getElementById('reportTargetBerat').textContent = currentData.targetBerat ? formatNum(currentData.targetBerat, 1) + ' kg' : '-';
+            document.getElementById('reportTotalTurun').textContent = totalTurun > 0 ? formatNum(totalTurun, 1) + ' kg' : '-';
+            document.getElementById('reportTurunPerMinggu').textContent = formatNum(currentData.weeklyLoss, 2) + ' kg';
+            document.getElementById('reportTotalMinggu').textContent = formatNum(currentData.weeksToTarget, 0) + ' minggu';
+            document.getElementById('reportEstimasiSelesai').textContent = targetDateStr;
+
+            // Print Date
+            const printDateStr = formatDateIndonesia(now) + ' pukul ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('reportPrintDate').textContent = printDateStr;
 
             // Update report chart
             if (reportChart) {
