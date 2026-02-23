@@ -16,12 +16,11 @@ body{
   justify-content:center;
   align-items:center;
   padding:20px;
-  overflow:hidden;
   background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
   position:relative;
 }
 
-/* Background Glow */
+/* Glow Background */
 body::before,
 body::after{
   content:"";
@@ -48,25 +47,27 @@ body::after{
   right:-140px;
 }
 
-/* BIG BACKGROUND TEXT */
-.bg-text{
+/* WELCOME TEXT DI ATAS */
+.welcome{
   position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  font-size:60px;
-  font-weight:900;
+  top:40px;
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:2px;
   color:#16a34a;
-  opacity:0.05;
-  white-space:nowrap;
-  letter-spacing:5px;
-  z-index:0;
-  animation:fadeBg 1.5s ease forwards;
+  animation:fadeDown 0.8s ease forwards;
+  opacity:0;
 }
 
-@keyframes fadeBg{
-  from{opacity:0;}
-  to{opacity:0.05;}
+@keyframes fadeDown{
+  from{
+    opacity:0;
+    transform:translateY(-10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 /* Card */
@@ -83,6 +84,7 @@ body::after{
   transform:translateY(40px);
   opacity:0;
   animation:cardIn 0.8s ease forwards;
+  animation-delay:0.2s;
 }
 
 .logo{
@@ -91,7 +93,7 @@ body::after{
   transform:translateY(-20px);
   opacity:0;
   animation:logoDrop 0.7s ease forwards;
-  animation-delay:0.3s;
+  animation-delay:0.4s;
 }
 
 h1{
@@ -176,17 +178,16 @@ button{
 
 <body>
 
-<div class="bg-text">WELCOME TO KEMOENIK</div>
+<div class="welcome">WELCOME TO KEMOENIK</div>
 
 <div class="card">
 
-  <img src="PASTE_LINK_LOGO_KAMU_DI_SINI" class="logo">
+  <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="logo">
 
   <h1>Kemoenik Official Store</h1>
   <div class="brand">Toko Online Resmi</div>
 
   <p>
-    Selamat datang di Kemoenik Official Store.  
     Untuk pengalaman checkout dan pembayaran yang lebih lancar,
     silakan buka website ini di browser utama Anda.
   </p>
