@@ -2,34 +2,34 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fat Loss Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CALFATLOSS - Smart Nutrition Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #F4F2ED;
-            --bg-secondary: #ECE9E2;
-            --green-primary: #4E6B4E;
-            --green-light: #7E9B7E;
-            --green-soft: rgba(78, 107, 78, 0.1);
-            --text-primary: #1E1E1E;
-            --text-secondary: #6B6B6B;
-            --card-bg: #FFFFFF;
-            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
-            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.06);
-            --yellow-soft: #D4B896;
-            --green-chart-dark: #4E6B4E;
-            --green-chart-light: #A8C4A8;
+            --primary: #3F5F4A;
+            --primary-dark: #344E3D;
+            --primary-light: rgba(63, 95, 74, 0.1);
+            --bg: #F4F2ED;
+            --card: #FFFFFF;
+            --text: #1F1F1F;
+            --text-muted: #6B6B6B;
+            --gold: #C9B27C;
+            --green-light: #7EA88A;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+            --radius: 16px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         html {
@@ -37,297 +37,106 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
+            min-height: 100vh;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Typography */
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
-            letter-spacing: -0.02em;
-        }
-
-        /* Background Pattern */
-        .bg-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100vh;
-            background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-            z-index: -1;
-        }
-
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-        }
-
-        .bg-circle-1 {
-            width: 400px;
-            height: 400px;
-            background: var(--green-light);
-            top: -100px;
-            right: -100px;
-        }
-
-        .bg-circle-2 {
-            width: 300px;
-            height: 300px;
-            background: var(--yellow-soft);
-            bottom: 20%;
-            left: -50px;
-        }
-
-        /* Hero Section */
-        .hero-section {
-            padding: 80px 24px 60px;
-            position: relative;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 20px;
-            background: var(--card-bg);
-            border-radius: 50px;
-            box-shadow: var(--shadow-soft);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-        }
-
-        .hero-badge-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--green-primary);
-            border-radius: 50%;
-        }
-
-        .hero-title {
-            font-size: clamp(36px, 6vw, 56px);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 20px;
-        }
-
-        .hero-title-line2 {
-            color: var(--green-primary);
-        }
-
-        .hero-subtitle {
-            font-size: 18px;
-            font-weight: 400;
-            color: var(--text-secondary);
-            max-width: 480px;
-            margin: 0 auto 40px;
-        }
-
-        /* Feature Badges */
-        .feature-badges {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 50px;
-        }
-
-        .feature-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 24px;
-            background: var(--card-bg);
-            border-radius: 50px;
-            box-shadow: var(--shadow-soft);
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        .feature-badge:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-card);
-        }
-
-        .feature-badge-icon {
-            width: 24px;
-            height: 24px;
-            background: var(--green-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .feature-badge-icon svg {
-            width: 14px;
-            height: 14px;
-            stroke: white;
-            stroke-width: 3;
-        }
-
-        /* Laptop Mockup */
-        .laptop-mockup {
-            max-width: 900px;
-            margin: 0 auto;
-            perspective: 1000px;
-        }
-
-        .laptop-frame {
-            background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
-            border-radius: 20px;
-            padding: 12px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.15);
-            transform: rotateX(5deg);
-            transition: transform 0.5s ease;
-        }
-
-        .laptop-frame:hover {
-            transform: rotateX(0deg);
-        }
-
-        .laptop-screen {
-            background: var(--bg-primary);
-            border-radius: 12px;
-            overflow: hidden;
-            aspect-ratio: 16/10;
-        }
-
-        .laptop-screen-content {
-            padding: 20px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .laptop-header {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .laptop-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .laptop-dot-red { background: #ff5f56; }
-        .laptop-dot-yellow { background: #ffbd2e; }
-        .laptop-dot-green { background: #27ca40; }
-
-        .laptop-content {
-            flex: 1;
-            display: flex;
-            gap: 16px;
-        }
-
-        .laptop-form-preview {
-            flex: 1;
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 16px;
-        }
-
-        .laptop-result-preview {
-            flex: 1;
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .preview-input {
-            height: 8px;
-            background: var(--bg-secondary);
-            border-radius: 4px;
-            margin-bottom: 8px;
-        }
-
-        .preview-input-short { width: 60%; }
-        .preview-input-medium { width: 80%; }
-        .preview-input-full { width: 100%; }
-
-        .preview-chart {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 8px solid var(--green-primary);
-            border-top-color: var(--yellow-soft);
-            border-right-color: var(--green-chart-light);
-        }
-
-        .laptop-base {
-            height: 14px;
-            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
-            border-radius: 0 0 4px 4px;
-            margin: 0 auto;
-            width: 40%;
-        }
-
-        /* Calculator Section */
-        .calculator-section {
-            padding: 60px 24px 100px;
-            background: var(--bg-secondary);
-        }
-
-        .calculator-container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-header {
+        /* App Header */
+        .app-header {
+            background: var(--primary);
+            padding: 48px 24px 40px;
             text-align: center;
-            margin-bottom: 48px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .section-title {
-            font-size: 32px;
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .app-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .app-brand {
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-logo {
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 12px;
+            color: white;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
         }
 
-        .section-subtitle {
-            font-size: 16px;
-            color: var(--text-secondary);
+        .app-tagline {
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Container */
+        .app-main {
+            padding: 0 16px 100px;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
         }
 
         /* Cards */
         .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: var(--shadow-card);
-            padding: 30px;
-            transition: all 0.3s ease;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 16px;
+            overflow: hidden;
         }
 
-        .card:hover {
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        .card-body {
+            padding: 24px 20px;
         }
 
         .card-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 24px;
+            gap: 10px;
         }
 
         .card-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--green-soft);
+            width: 32px;
+            height: 32px;
+            background: var(--primary-light);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -335,186 +144,226 @@
         }
 
         .card-icon svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--green-primary);
+            width: 16px;
+            height: 16px;
+            stroke: var(--primary);
+            stroke-width: 2;
         }
 
-        .card-title {
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-item {
+            background: var(--bg);
+            border-radius: 14px;
+            padding: 20px 16px;
+            text-align: center;
+        }
+
+        .stat-item-full {
+            grid-column: span 2;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-unit {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 100px;
+            margin-top: 8px;
+        }
+
+        .stat-badge-num {
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 700;
+        }
+
+        .stat-badge-text {
+            font-size: 12px;
+            opacity: 0.9;
         }
 
         /* Form Elements */
-        .form-group {
+        .form-section {
             margin-bottom: 20px;
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
         }
 
         .form-label {
             display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin-bottom: 10px;
         }
 
         .form-input {
             width: 100%;
-            padding: 14px 18px;
-            font-size: 15px;
+            padding: 16px 18px;
+            font-size: 16px;
             font-family: 'Poppins', sans-serif;
-            background: var(--bg-primary);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 10px;
-            color: var(--text-primary);
+            font-weight: 400;
+            background: var(--bg);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            color: var(--text);
             transition: all 0.3s ease;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--green-light);
-            box-shadow: 0 0 0 3px var(--green-soft);
+            background: white;
+            border-color: var(--primary);
         }
 
         .form-input::placeholder {
-            color: var(--text-secondary);
-            opacity: 0.6;
+            color: var(--text-muted);
+            opacity: 0.5;
         }
 
         select.form-input {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 14px center;
+            background-position: right 16px center;
             cursor: pointer;
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 12px;
         }
 
-        /* Activity Table */
-        .activity-info {
-            margin-top: 20px;
-            padding: 20px;
-            background: var(--bg-primary);
+        /* Activity Info Accordion */
+        .activity-info-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: var(--bg);
             border-radius: 12px;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
 
-        .activity-table {
-            width: 100%;
+        .activity-info-toggle:active {
+            background: rgba(63, 95, 74, 0.1);
+        }
+
+        .activity-info-label {
             font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .activity-info-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .activity-info-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .activity-info-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .activity-info-content.expanded {
+            max-height: 300px;
+            padding-top: 12px;
+        }
+
+        .activity-list {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 16px;
         }
 
         .activity-row {
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
-            gap: 16px;
-            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
         }
 
         .activity-row:last-child {
             border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .activity-row:first-child {
+            padding-top: 0;
         }
 
         .activity-badge {
-            padding: 4px 12px;
-            background: var(--green-soft);
-            color: var(--green-primary);
-            border-radius: 20px;
-            font-size: 11px;
+            padding: 4px 10px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 6px;
+            font-size: 10px;
             font-weight: 600;
             white-space: nowrap;
         }
 
-        .activity-desc {
-            color: var(--text-secondary);
+        .activity-text {
+            font-size: 12px;
+            color: var(--text-muted);
             line-height: 1.5;
         }
 
-        /* Results */
-        .result-card {
-            background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-light) 100%);
-            color: white;
+        /* Macro Section */
+        .macro-card {
+            background: var(--card);
         }
 
-        .result-card .card-title {
-            color: white;
-        }
-
-        .result-card .card-icon {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .result-card .card-icon svg {
-            stroke: white;
-        }
-
-        .result-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .result-item {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .result-item-full {
-            grid-column: span 2;
-        }
-
-        .result-label {
-            font-size: 12px;
-            opacity: 0.9;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .result-value {
-            font-size: 28px;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .result-unit {
-            font-size: 13px;
-            opacity: 0.8;
-            font-weight: 500;
-        }
-
-        .result-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50px;
-            margin-top: 8px;
-        }
-
-        .result-badge-value {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        /* Macro Card */
         .macro-grid {
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 30px;
+            grid-template-columns: 130px 1fr;
+            gap: 24px;
             align-items: center;
         }
 
-        .chart-container {
+        .chart-wrap {
             position: relative;
             display: flex;
             justify-content: center;
@@ -528,53 +377,58 @@
             text-align: center;
         }
 
-        .chart-total {
-            font-size: 24px;
+        .chart-value {
+            font-size: 22px;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--text);
+            line-height: 1;
         }
 
         .chart-label {
-            font-size: 12px;
-            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .macro-list {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-        }
-
-        .macro-item {
-            display: flex;
-            align-items: center;
             gap: 16px;
         }
 
-        .macro-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 4px;
+        .macro-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .macro-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 3px;
             flex-shrink: 0;
         }
 
-        .macro-color-protein { background: var(--green-chart-dark); }
-        .macro-color-lemak { background: var(--yellow-soft); }
-        .macro-color-karbo { background: var(--green-chart-light); }
+        .macro-dot-protein { background: var(--primary); }
+        .macro-dot-lemak { background: var(--gold); }
+        .macro-dot-karbo { background: var(--green-light); }
 
         .macro-info {
             flex: 1;
         }
 
         .macro-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
+            color: var(--text);
             margin-bottom: 6px;
         }
 
-        .macro-bar {
-            height: 6px;
-            background: var(--bg-secondary);
+        .macro-track {
+            height: 5px;
+            background: var(--bg);
             border-radius: 3px;
             overflow: hidden;
         }
@@ -585,54 +439,56 @@
             transition: width 0.5s ease;
         }
 
-        .macro-fill-protein { background: var(--green-chart-dark); }
-        .macro-fill-lemak { background: var(--yellow-soft); }
-        .macro-fill-karbo { background: var(--green-chart-light); }
+        .macro-fill-protein { background: var(--primary); }
+        .macro-fill-lemak { background: var(--gold); }
+        .macro-fill-karbo { background: var(--green-light); }
 
         .macro-value {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-            color: var(--text-primary);
-            min-width: 70px;
+            color: var(--text);
+            min-width: 55px;
             text-align: right;
         }
 
         .macro-calories {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
         }
 
         .macro-cal-item {
             text-align: center;
-            padding: 16px 12px;
-            background: var(--bg-primary);
+            padding: 14px 8px;
+            background: var(--bg);
             border-radius: 12px;
         }
 
         .macro-cal-value {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .macro-cal-label {
-            font-size: 11px;
-            color: var(--text-secondary);
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
-        /* BMR Card */
-        .bmr-card {
-            background: var(--card-bg);
-        }
-
-        .bmr-content {
+        /* BMR Section */
+        .bmr-section {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 14px;
         }
 
         .bmr-info {
@@ -640,27 +496,31 @@
         }
 
         .bmr-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
 
         .bmr-value {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
-            color: var(--green-primary);
+            color: var(--primary);
         }
 
         .bmr-unit {
-            font-size: 14px;
-            color: var(--text-secondary);
+            font-size: 13px;
             font-weight: 500;
+            color: var(--text-muted);
+            margin-left: 2px;
         }
 
         .bmr-icon {
-            width: 56px;
-            height: 56px;
-            background: var(--green-soft);
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
             border-radius: 14px;
             display: flex;
             align-items: center;
@@ -668,34 +528,39 @@
         }
 
         .bmr-icon svg {
-            width: 28px;
-            height: 28px;
-            stroke: var(--green-primary);
+            width: 22px;
+            height: 22px;
+            stroke: var(--primary);
+            stroke-width: 1.5;
         }
 
-        /* Status Message */
-        .status-message {
-            margin-top: 20px;
-            padding: 16px 20px;
-            background: var(--green-soft);
-            border-radius: 12px;
+        /* Status Alert */
+        .status-alert {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--primary-light);
+            border-radius: 14px;
             display: none;
         }
 
-        .status-message.show {
+        .status-alert.show {
             display: block;
         }
 
-        .status-content {
+        .status-alert.warning {
+            background: rgba(201, 178, 124, 0.15);
+        }
+
+        .status-row {
             display: flex;
-            align-items: flex-start;
             gap: 12px;
+            align-items: flex-start;
         }
 
         .status-icon {
-            width: 24px;
-            height: 24px;
-            background: var(--green-primary);
+            width: 22px;
+            height: 22px;
+            background: var(--primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -703,47 +568,45 @@
             flex-shrink: 0;
         }
 
+        .status-alert.warning .status-icon {
+            background: var(--gold);
+        }
+
         .status-icon svg {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             stroke: white;
-            stroke-width: 3;
+            stroke-width: 2.5;
         }
 
-        .status-text {
-            font-size: 14px;
-            color: var(--text-primary);
+        .status-msg {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
         }
 
-        .status-text strong {
-            color: var(--green-primary);
+        .status-msg strong {
+            font-weight: 600;
+            color: var(--primary);
         }
 
-        .status-warning .status-icon {
-            background: var(--yellow-soft);
-        }
-
-        .status-warning .status-text strong {
-            color: #b8860b;
+        .status-alert.warning .status-msg strong {
+            color: #8B7355;
         }
 
         /* Footer */
-        .footer {
-            padding: 40px 24px;
+        .app-footer {
             text-align: center;
-            background: var(--bg-primary);
-        }
-
-        .footer-text {
-            font-size: 14px;
-            color: var(--text-secondary);
+            padding: 24px 20px;
+            color: var(--text-muted);
+            font-size: 12px;
         }
 
         /* Animations */
-        @keyframes fadeInUp {
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -752,468 +615,325 @@
         }
 
         .animate-in {
-            animation: fadeInUp 0.6s ease forwards;
+            animation: slideUp 0.5s ease forwards;
         }
 
         .delay-1 { animation-delay: 0.1s; opacity: 0; }
         .delay-2 { animation-delay: 0.2s; opacity: 0; }
         .delay-3 { animation-delay: 0.3s; opacity: 0; }
-        .delay-4 { animation-delay: 0.4s; opacity: 0; }
-        .delay-5 { animation-delay: 0.5s; opacity: 0; }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .calculator-grid {
-                grid-template-columns: 1fr !important;
+        /* Responsive Tablet+ */
+        @media (min-width: 768px) {
+            .app-header {
+                padding: 60px 32px 50px;
             }
 
-            .macro-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .laptop-frame {
-                transform: none;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .hero-section {
-                padding: 60px 20px 40px;
-            }
-
-            .hero-title {
+            .app-logo {
                 font-size: 32px;
             }
 
-            .hero-subtitle {
-                font-size: 16px;
+            .app-main {
+                max-width: 480px;
+                margin: -24px auto 0;
+                padding: 0 24px 100px;
             }
 
-            .feature-badges {
-                flex-direction: column;
-                align-items: center;
+            .card-body {
+                padding: 28px 24px;
             }
 
-            .form-row {
-                grid-template-columns: 1fr;
+            .stat-value {
+                font-size: 36px;
             }
 
-            .result-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .result-item-full {
-                grid-column: span 1;
-            }
-
-            .card {
-                padding: 24px;
-            }
-
-            .laptop-content {
-                flex-direction: column;
-            }
-
-            .bmr-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 16px;
+            .macro-grid {
+                grid-template-columns: 140px 1fr;
             }
         }
 
-        /* Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
                 transition-duration: 0.01ms !important;
             }
         }
-
-        /* Focus States */
-        .form-input:focus-visible {
-            outline: 2px solid var(--green-primary);
-            outline-offset: 2px;
-        }
     </style>
 </head>
 <body>
-    <div class="bg-pattern">
-        <div class="bg-circle bg-circle-1"></div>
-        <div class="bg-circle bg-circle-2"></div>
-    </div>
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="app-brand">
+            <div class="app-logo">CALFATLOSS</div>
+            <div class="app-tagline">Smart Nutrition Calculator</div>
+        </div>
+    </header>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <div style="max-width: 900px; margin: 0 auto; text-align: center;">
-                <div class="hero-badge animate-in">
-                    <span class="hero-badge-dot"></span>
-                    Fat Loss Calculator
-                </div>
-
-                <h1 class="hero-title animate-in delay-1">
-                    Turun Berat Badan<br>
-                    <span class="hero-title-line2">Tanpa Ribet</span>
-                </h1>
-
-                <p class="hero-subtitle animate-in delay-2">
-                    Hitung kalori dan makronutrien otomatis dalam hitungan detik. Gratis, tanpa login, tanpa ribet.
-                </p>
-
-                <div class="feature-badges animate-in delay-3">
-                    <div class="feature-badge">
-                        <span class="feature-badge-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </span>
-                        Perhitungan Otomatis
+    <!-- Main Content -->
+    <main class="app-main">
+        
+        <!-- Dashboard Card -->
+        <div class="card animate-in delay-1">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
                     </div>
-                    <div class="feature-badge">
-                        <span class="feature-badge-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </span>
-                        Real-time Results
-                    </div>
-                    <div class="feature-badge">
-                        <span class="feature-badge-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </span>
-                        Gratis Selamanya
-                    </div>
-                </div>
-
-                <!-- Laptop Mockup -->
-                <div class="laptop-mockup animate-in delay-4">
-                    <div class="laptop-frame">
-                        <div class="laptop-screen">
-                            <div class="laptop-screen-content">
-                                <div class="laptop-header">
-                                    <span class="laptop-dot laptop-dot-red"></span>
-                                    <span class="laptop-dot laptop-dot-yellow"></span>
-                                    <span class="laptop-dot laptop-dot-green"></span>
-                                </div>
-                                <div class="laptop-content">
-                                    <div class="laptop-form-preview">
-                                        <div class="preview-input preview-input-short"></div>
-                                        <div class="preview-input preview-input-medium"></div>
-                                        <div class="preview-input preview-input-full"></div>
-                                        <div class="preview-input preview-input-full"></div>
-                                        <div class="preview-input preview-input-medium"></div>
-                                    </div>
-                                    <div class="laptop-result-preview">
-                                        <div class="preview-chart"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="laptop-base"></div>
+                    Dashboard Hasil
                 </div>
             </div>
-        </section>
-
-        <!-- Calculator Section -->
-        <section class="calculator-section">
-            <div class="calculator-container">
-                <div class="section-header">
-                    <h2 class="section-title">Mulai Hitung Sekarang</h2>
-                    <p class="section-subtitle">Isi data di bawah ini untuk mendapatkan rekomendasi kalori dan makronutrien</p>
-                </div>
-
-                <div class="calculator-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                    
-                    <!-- Left Column - Input Forms -->
-                    <div style="display: flex; flex-direction: column; gap: 24px;">
-                        
-                        <!-- Personal Info Card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="12" cy="7" r="4"></circle>
-                                    </svg>
-                                </div>
-                                <h3 class="card-title">Data Diri</h3>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label" for="nama">Nama Lengkap</label>
-                                <input type="text" id="nama" class="form-input" placeholder="Masukkan nama Anda">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="gender">Gender</label>
-                                    <select id="gender" class="form-input">
-                                        <option value="">Pilih gender</option>
-                                        <option value="pria">Laki-Laki</option>
-                                        <option value="wanita">Perempuan</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="usia">Usia</label>
-                                    <input type="number" id="usia" class="form-input" placeholder="Tahun" min="15" max="80">
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="berat">Berat Badan (kg)</label>
-                                    <input type="number" id="berat" class="form-input" placeholder="Contoh: 75" min="30" max="300" step="0.1">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="tinggi">Tinggi Badan (cm)</label>
-                                    <input type="number" id="tinggi" class="form-input" placeholder="Contoh: 170" min="100" max="250">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Activity Card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                                    </svg>
-                                </div>
-                                <h3 class="card-title">Tingkat Aktivitas</h3>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label" for="aktivitas">Pilih Aktivitas Harian</label>
-                                <select id="aktivitas" class="form-input">
-                                    <option value="">Pilih tingkat aktivitas</option>
-                                    <option value="1.2">Tidak Aktif</option>
-                                    <option value="1.375">Ringan (1-2x Olahraga)</option>
-                                    <option value="1.55">Sedang (3-5x Olahraga)</option>
-                                    <option value="1.725">Berat (6-7x Olahraga)</option>
-                                    <option value="1.9">Atlet</option>
-                                </select>
-                            </div>
-
-                            <div class="activity-info">
-                                <table class="activity-table">
-                                    <div class="activity-row">
-                                        <span class="activity-badge">Tidak Aktif</span>
-                                        <span class="activity-desc">Kerja duduk, hampir tidak olahraga, aktivitas minim</span>
-                                    </div>
-                                    <div class="activity-row">
-                                        <span class="activity-badge">Ringan</span>
-                                        <span class="activity-desc">Jalan 30 menit, yoga ringan, gym santai</span>
-                                    </div>
-                                    <div class="activity-row">
-                                        <span class="activity-badge">Sedang</span>
-                                        <span class="activity-desc">Angkat beban rutin, lari 30-45 menit</span>
-                                    </div>
-                                    <div class="activity-row">
-                                        <span class="activity-badge">Berat</span>
-                                        <span class="activity-desc">Latihan intens tiap hari, pekerja fisik berat</span>
-                                    </div>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Target Card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <circle cx="12" cy="12" r="6"></circle>
-                                        <circle cx="12" cy="12" r="2"></circle>
-                                    </svg>
-                                </div>
-                                <h3 class="card-title">Target & Metode</h3>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="targetBerat">Target Berat (kg)</label>
-                                    <input type="number" id="targetBerat" class="form-input" placeholder="Contoh: 65" min="30" max="300" step="0.1">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="targetBulan">Target Waktu (bulan)</label>
-                                    <input type="number" id="targetBulan" class="form-input" placeholder="Contoh: 3" min="1" max="24">
-                                </div>
-                            </div>
-
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label class="form-label" for="metodeDiet">Metode Diet</label>
-                                <select id="metodeDiet" class="form-input">
-                                    <option value="">Pilih metode diet</option>
-                                    <option value="ringan">Defisit Ringan (300 kcal)</option>
-                                    <option value="standar">Defisit Standar (500 kcal)</option>
-                                    <option value="agresif">Defisit Agresif (700 kcal)</option>
-                                </select>
-                            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-item stat-item-full">
+                        <div class="stat-label">Kalori Pemeliharaan (TDEE)</div>
+                        <div class="stat-value" id="resultTDEE">0</div>
+                        <div class="stat-unit">Kcal per hari</div>
+                    </div>
+                    <div class="stat-item stat-item-full">
+                        <div class="stat-label">Kalori Diet Disarankan</div>
+                        <div class="stat-value" id="resultDiet">0</div>
+                        <div class="stat-unit">Kcal per hari</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Turun / Minggu</div>
+                        <div class="stat-badge">
+                            <span class="stat-badge-num" id="resultTurun">0</span>
+                            <span class="stat-badge-text">kg</span>
                         </div>
                     </div>
-
-                    <!-- Right Column - Results -->
-                    <div style="display: flex; flex-direction: column; gap: 24px;">
-                        
-                        <!-- Main Result Card -->
-                        <div class="card result-card">
-                            <div class="card-header">
-                                <div class="card-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-                                    </svg>
-                                </div>
-                                <h3 class="card-title">Hasil Program Anda</h3>
-                            </div>
-
-                            <div class="result-grid">
-                                <div class="result-item result-item-full">
-                                    <div class="result-label">Kalori Pemeliharaan (TDEE)</div>
-                                    <div class="result-value" id="resultTDEE">0</div>
-                                    <div class="result-unit">Kcal per hari</div>
-                                </div>
-                                <div class="result-item result-item-full">
-                                    <div class="result-label">Kalori Diet Disarankan</div>
-                                    <div class="result-value" id="resultDiet">0</div>
-                                    <div class="result-unit">Kcal per hari</div>
-                                </div>
-                                <div class="result-item">
-                                    <div class="result-label">Turun per Minggu</div>
-                                    <div class="result-badge">
-                                        <span class="result-badge-value" id="resultTurun">0</span>
-                                        <span style="font-size: 13px;">kg</span>
-                                    </div>
-                                </div>
-                                <div class="result-item">
-                                    <div class="result-label">Capai Target</div>
-                                    <div class="result-badge">
-                                        <span class="result-badge-value" id="resultMinggu">0</span>
-                                        <span style="font-size: 13px;">minggu</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Status Message -->
-                            <div class="status-message" id="statusMessage">
-                                <div class="status-content">
-                                    <div class="status-icon" id="statusIcon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                    </div>
-                                    <div class="status-text" id="statusText"></div>
-                                </div>
-                            </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Capai Target</div>
+                        <div class="stat-badge">
+                            <span class="stat-badge-num" id="resultMinggu">0</span>
+                            <span class="stat-badge-text">minggu</span>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Macronutrients Card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <path d="M12 2a10 10 0 0 1 0 20"></path>
-                                    </svg>
-                                </div>
-                                <h3 class="card-title">Makronutrien Harian</h3>
-                            </div>
-
-                            <div class="macro-grid">
-                                <div class="chart-container">
-                                    <canvas id="macroChart" width="140" height="140"></canvas>
-                                    <div class="chart-center">
-                                        <div class="chart-total" id="totalCalories">0</div>
-                                        <div class="chart-label">Kcal</div>
-                                    </div>
-                                </div>
-
-                                <div class="macro-list">
-                                    <div class="macro-item">
-                                        <div class="macro-color macro-color-protein"></div>
-                                        <div class="macro-info">
-                                            <div class="macro-name">Protein</div>
-                                            <div class="macro-bar">
-                                                <div class="macro-fill macro-fill-protein" id="proteinBar" style="width: 0%;"></div>
-                                            </div>
-                                        </div>
-                                        <div class="macro-value" id="proteinValue">0g</div>
-                                    </div>
-                                    <div class="macro-item">
-                                        <div class="macro-color macro-color-lemak"></div>
-                                        <div class="macro-info">
-                                            <div class="macro-name">Lemak</div>
-                                            <div class="macro-bar">
-                                                <div class="macro-fill macro-fill-lemak" id="lemakBar" style="width: 0%;"></div>
-                                            </div>
-                                        </div>
-                                        <div class="macro-value" id="lemakValue">0g</div>
-                                    </div>
-                                    <div class="macro-item">
-                                        <div class="macro-color macro-color-karbo"></div>
-                                        <div class="macro-info">
-                                            <div class="macro-name">Karbohidrat</div>
-                                            <div class="macro-bar">
-                                                <div class="macro-fill macro-fill-karbo" id="karboBar" style="width: 0%;"></div>
-                                            </div>
-                                        </div>
-                                        <div class="macro-value" id="karboValue">0g</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="macro-calories">
-                                <div class="macro-cal-item">
-                                    <div class="macro-cal-value" id="proteinCal" style="color: var(--green-chart-dark);">0</div>
-                                    <div class="macro-cal-label">Kcal Protein</div>
-                                </div>
-                                <div class="macro-cal-item">
-                                    <div class="macro-cal-value" id="lemakCal" style="color: var(--yellow-soft);">0</div>
-                                    <div class="macro-cal-label">Kcal Lemak</div>
-                                </div>
-                                <div class="macro-cal-item">
-                                    <div class="macro-cal-value" id="karboCal" style="color: var(--green-chart-light);">0</div>
-                                    <div class="macro-cal-label">Kcal Karbo</div>
-                                </div>
-                            </div>
+                <!-- Status Alert -->
+                <div class="status-alert" id="statusAlert">
+                    <div class="status-row">
+                        <div class="status-icon" id="statusIcon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
                         </div>
-
-                        <!-- BMR Card -->
-                        <div class="card bmr-card">
-                            <div class="bmr-content">
-                                <div class="bmr-info">
-                                    <div class="bmr-label">Basal Metabolic Rate (BMR)</div>
-                                    <div>
-                                        <span class="bmr-value" id="resultBMR">0</span>
-                                        <span class="bmr-unit">Kcal/hari</span>
-                                    </div>
-                                </div>
-                                <div class="bmr-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="status-msg" id="statusMsg"></div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <!-- Input Form Card -->
+        <div class="card animate-in delay-2">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    Data Diri
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-section">
+                    <label class="form-label">Nama</label>
+                    <input type="text" id="nama" class="form-input" placeholder="Masukkan nama">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-section">
+                        <label class="form-label">Gender</label>
+                        <select id="gender" class="form-input">
+                            <option value="">Pilih</option>
+                            <option value="pria">Laki-Laki</option>
+                            <option value="wanita">Perempuan</option>
+                        </select>
+                    </div>
+                    <div class="form-section">
+                        <label class="form-label">Usia</label>
+                        <input type="number" id="usia" class="form-input" placeholder="Tahun" min="15" max="80">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-section">
+                        <label class="form-label">Berat (kg)</label>
+                        <input type="number" id="berat" class="form-input" placeholder="Contoh: 75" min="30" max="300" step="0.1">
+                    </div>
+                    <div class="form-section">
+                        <label class="form-label">Tinggi (cm)</label>
+                        <input type="number" id="tinggi" class="form-input" placeholder="Contoh: 170" min="100" max="250">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">Tingkat Aktivitas</label>
+                    <select id="aktivitas" class="form-input">
+                        <option value="">Pilih aktivitas</option>
+                        <option value="1.2">Tidak Aktif</option>
+                        <option value="1.375">Ringan (1-2x Olahraga)</option>
+                        <option value="1.55">Sedang (3-5x Olahraga)</option>
+                        <option value="1.725">Berat (6-7x Olahraga)</option>
+                        <option value="1.9">Atlet</option>
+                    </select>
+
+                    <!-- Activity Info Toggle -->
+                    <div class="activity-info-toggle" id="activityToggle" role="button" tabindex="0" aria-expanded="false">
+                        <span class="activity-info-label">Lihat keterangan aktivitas</span>
+                        <svg class="activity-info-icon" id="activityIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </div>
+                    <div class="activity-info-content" id="activityContent">
+                        <div class="activity-list">
+                            <div class="activity-row">
+                                <span class="activity-badge">Tidak Aktif</span>
+                                <span class="activity-text">Kerja duduk, jarang olahraga, aktivitas minim</span>
+                            </div>
+                            <div class="activity-row">
+                                <span class="activity-badge">Ringan</span>
+                                <span class="activity-text">Jalan 30 menit, yoga ringan, gym santai</span>
+                            </div>
+                            <div class="activity-row">
+                                <span class="activity-badge">Sedang</span>
+                                <span class="activity-text">Angkat beban rutin, lari 30-45 menit</span>
+                            </div>
+                            <div class="activity-row">
+                                <span class="activity-badge">Berat</span>
+                                <span class="activity-text">Latihan intens tiap hari, pekerja fisik berat</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-section">
+                        <label class="form-label">Target Berat (kg)</label>
+                        <input type="number" id="targetBerat" class="form-input" placeholder="Contoh: 65" min="30" max="300" step="0.1">
+                    </div>
+                    <div class="form-section">
+                        <label class="form-label">Metode Diet</label>
+                        <select id="metodeDiet" class="form-input">
+                            <option value="">Pilih</option>
+                            <option value="ringan">Ringan (300 kcal)</option>
+                            <option value="standar">Standar (500 kcal)</option>
+                            <option value="agresif">Agresif (700 kcal)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Macro Card -->
+        <div class="card macro-card animate-in delay-3">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2a10 10 0 0 1 0 20"/>
+                        </svg>
+                    </div>
+                    Makronutrien Harian
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="macro-grid">
+                    <div class="chart-wrap">
+                        <canvas id="macroChart" width="130" height="130"></canvas>
+                        <div class="chart-center">
+                            <div class="chart-value" id="totalCalories">0</div>
+                            <div class="chart-label">Kcal</div>
+                        </div>
+                    </div>
+
+                    <div class="macro-list">
+                        <div class="macro-row">
+                            <div class="macro-dot macro-dot-protein"></div>
+                            <div class="macro-info">
+                                <div class="macro-name">Protein</div>
+                                <div class="macro-track">
+                                    <div class="macro-fill macro-fill-protein" id="proteinBar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <div class="macro-value" id="proteinValue">0g</div>
+                        </div>
+                        <div class="macro-row">
+                            <div class="macro-dot macro-dot-lemak"></div>
+                            <div class="macro-info">
+                                <div class="macro-name">Lemak</div>
+                                <div class="macro-track">
+                                    <div class="macro-fill macro-fill-lemak" id="lemakBar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <div class="macro-value" id="lemakValue">0g</div>
+                        </div>
+                        <div class="macro-row">
+                            <div class="macro-dot macro-dot-karbo"></div>
+                            <div class="macro-info">
+                                <div class="macro-name">Karbohidrat</div>
+                                <div class="macro-track">
+                                    <div class="macro-fill macro-fill-karbo" id="karboBar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <div class="macro-value" id="karboValue">0g</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="macro-calories">
+                    <div class="macro-cal-item">
+                        <div class="macro-cal-value" id="proteinCal" style="color: var(--primary);">0</div>
+                        <div class="macro-cal-label">Kcal Protein</div>
+                    </div>
+                    <div class="macro-cal-item">
+                        <div class="macro-cal-value" id="lemakCal" style="color: var(--gold);">0</div>
+                        <div class="macro-cal-label">Kcal Lemak</div>
+                    </div>
+                    <div class="macro-cal-item">
+                        <div class="macro-cal-value" id="karboCal" style="color: var(--green-light);">0</div>
+                        <div class="macro-cal-label">Kcal Karbo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BMR Card -->
+        <div class="card animate-in delay-3">
+            <div class="card-body">
+                <div class="bmr-section">
+                    <div class="bmr-info">
+                        <div class="bmr-label">Basal Metabolic Rate</div>
+                        <div>
+                            <span class="bmr-value" id="resultBMR">0</span>
+                            <span class="bmr-unit">Kcal/hari</span>
+                        </div>
+                    </div>
+                    <div class="bmr-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Footer -->
-        <footer class="footer">
-            <p class="footer-text">Fat Loss Calculator - Semua perhitungan bersifat estimasi. Konsultasikan dengan ahli gizi untuk program yang lebih personal.</p>
+        <footer class="app-footer">
+            CALFATLOSS v1.0 - Semua perhitungan bersifat estimasi
         </footer>
     </main>
 
     <script>
         // Initialize all variables first
         let macroChart = null;
-        
-        // DOM Elements - Inputs
+        let activityExpanded = false;
+
+        // DOM Elements
         const inputs = {
             nama: document.getElementById('nama'),
             gender: document.getElementById('gender'),
@@ -1222,20 +942,18 @@
             tinggi: document.getElementById('tinggi'),
             aktivitas: document.getElementById('aktivitas'),
             targetBerat: document.getElementById('targetBerat'),
-            targetBulan: document.getElementById('targetBulan'),
             metodeDiet: document.getElementById('metodeDiet')
         };
 
-        // DOM Elements - Results
         const results = {
             TDEE: document.getElementById('resultTDEE'),
             diet: document.getElementById('resultDiet'),
             turun: document.getElementById('resultTurun'),
             minggu: document.getElementById('resultMinggu'),
             BMR: document.getElementById('resultBMR'),
-            statusMessage: document.getElementById('statusMessage'),
+            statusAlert: document.getElementById('statusAlert'),
             statusIcon: document.getElementById('statusIcon'),
-            statusText: document.getElementById('statusText'),
+            statusMsg: document.getElementById('statusMsg'),
             totalCalories: document.getElementById('totalCalories'),
             proteinValue: document.getElementById('proteinValue'),
             lemakValue: document.getElementById('lemakValue'),
@@ -1248,7 +966,11 @@
             karboCal: document.getElementById('karboCal')
         };
 
-        // Activity factor mapping
+        const activityToggle = document.getElementById('activityToggle');
+        const activityIcon = document.getElementById('activityIcon');
+        const activityContent = document.getElementById('activityContent');
+
+        // Activity factors
         const activityFactors = {
             '1.2': 1.2,
             '1.375': 1.375,
@@ -1257,18 +979,18 @@
             '1.9': 1.9
         };
 
-        // Deficit mapping
+        // Deficit map
         const deficitMap = {
             'ringan': 300,
             'standar': 500,
             'agresif': 700
         };
 
-        // Chart colors (natural tones)
+        // Chart colors
         const chartColors = {
-            protein: '#4E6B4E',
-            lemak: '#D4B896',
-            karbo: '#A8C4A8'
+            protein: '#3F5F4A',
+            lemak: '#C9B27C',
+            karbo: '#7EA88A'
         };
 
         // Initialize Chart
@@ -1282,7 +1004,7 @@
                         data: [1, 1, 1],
                         backgroundColor: [chartColors.protein, chartColors.lemak, chartColors.karbo],
                         borderWidth: 0,
-                        cutout: '70%'
+                        cutout: '74%'
                     }]
                 },
                 options: {
@@ -1292,12 +1014,12 @@
                         legend: { display: false },
                         tooltip: {
                             backgroundColor: '#FFFFFF',
-                            titleColor: '#1E1E1E',
+                            titleColor: '#1F1F1F',
                             bodyColor: '#6B6B6B',
-                            borderColor: 'rgba(0,0,0,0.05)',
+                            borderColor: 'rgba(0,0,0,0.06)',
                             borderWidth: 1,
                             padding: 12,
-                            cornerRadius: 8,
+                            cornerRadius: 10,
                             displayColors: true,
                             callbacks: {
                                 label: function(context) {
@@ -1314,7 +1036,15 @@
             });
         }
 
-        // Calculate BMR using Mifflin-St Jeor
+        // Toggle activity info
+        function toggleActivityInfo() {
+            activityExpanded = !activityExpanded;
+            activityIcon.classList.toggle('expanded', activityExpanded);
+            activityContent.classList.toggle('expanded', activityExpanded);
+            activityToggle.setAttribute('aria-expanded', activityExpanded);
+        }
+
+        // Calculate BMR
         function calculateBMR(gender, berat, tinggi, usia) {
             if (gender === 'pria') {
                 return (10 * berat) + (6.25 * tinggi) - (5 * usia) + 5;
@@ -1324,99 +1054,79 @@
         }
 
         // Format number
-        function formatNumber(num, decimals) {
-            decimals = decimals || 0;
-            if (isNaN(num) || !isFinite(num)) return '0';
-            return Number(num).toFixed(decimals);
+        function formatNum(n, d) {
+            d = d || 0;
+            if (isNaN(n) || !isFinite(n)) return '0';
+            return Number(n).toFixed(d);
         }
 
         // Update calculations
-        function updateCalculations() {
+        function updateCalc() {
             const gender = inputs.gender.value;
             const usia = parseFloat(inputs.usia.value);
             const berat = parseFloat(inputs.berat.value);
             const tinggi = parseFloat(inputs.tinggi.value);
-            const aktivitasValue = inputs.aktivitas.value;
+            const aktivitasVal = inputs.aktivitas.value;
             const targetBerat = parseFloat(inputs.targetBerat.value);
             const metodeDiet = inputs.metodeDiet.value;
 
-            // Validate essential inputs
-            if (!gender || !usia || !berat || !tinggi || !aktivitasValue || !metodeDiet) {
+            if (!gender || !usia || !berat || !tinggi || !aktivitasVal || !metodeDiet) {
                 resetResults();
                 return;
             }
 
-            // Calculate BMR
             const BMR = calculateBMR(gender, berat, tinggi, usia);
-
-            // Get activity factor
-            const activityFactor = activityFactors[aktivitasValue] || 1.2;
-
-            // Calculate TDEE
+            const activityFactor = activityFactors[aktivitasVal] || 1.2;
             const TDEE = BMR * activityFactor;
-
-            // Get deficit value
             const deficit = deficitMap[metodeDiet] || 500;
 
-            // Calculate diet calories (minimum 1200 for safety)
-            let dietCalories = TDEE - deficit;
-            const isLowCalorie = dietCalories < 1200;
-            if (isLowCalorie) {
-                dietCalories = 1200;
-            }
+            let dietCal = TDEE - deficit;
+            const isLowCal = dietCal < 1200;
+            if (isLowCal) dietCal = 1200;
 
-            // Calculate weekly weight loss
             const weeklyLoss = (deficit * 7) / 7700;
-
-            // Calculate time to target
             let weeksToTarget = 0;
-            
+
             if (targetBerat && targetBerat < berat) {
-                const weightDiff = berat - targetBerat;
-                weeksToTarget = weightDiff / weeklyLoss;
+                weeksToTarget = (berat - targetBerat) / weeklyLoss;
             }
 
-            // Calculate macros
-            let proteinMultiplier = 2;
-            let lemakMultiplier = 0.8;
+            // Macro multipliers
+            let proteinMult = 2;
+            let lemakMult = 0.8;
 
             if (metodeDiet === 'ringan') {
-                proteinMultiplier = 1.8;
-                lemakMultiplier = 0.9;
+                proteinMult = 1.8;
+                lemakMult = 0.9;
             } else if (metodeDiet === 'agresif') {
-                proteinMultiplier = 2.2;
-                lemakMultiplier = 0.7;
+                proteinMult = 2.2;
+                lemakMult = 0.7;
             }
 
-            const protein = berat * proteinMultiplier;
-            const lemak = berat * lemakMultiplier;
-            const karboCalc = (dietCalories - (protein * 4 + lemak * 9)) / 4;
-            const karbo = Math.max(0, karboCalc);
+            const protein = berat * proteinMult;
+            const lemak = berat * lemakMult;
+            const karbo = Math.max(0, (dietCal - (protein * 4 + lemak * 9)) / 4);
 
-            // Update display values
-            results.TDEE.textContent = formatNumber(TDEE, 0);
-            results.diet.textContent = formatNumber(dietCalories, 0);
-            results.turun.textContent = formatNumber(weeklyLoss, 2);
-            results.minggu.textContent = formatNumber(weeksToTarget, 1);
-            results.BMR.textContent = formatNumber(BMR, 0);
+            // Update display
+            results.TDEE.textContent = formatNum(TDEE, 0);
+            results.diet.textContent = formatNum(dietCal, 0);
+            results.turun.textContent = formatNum(weeklyLoss, 2);
+            results.minggu.textContent = formatNum(weeksToTarget, 1);
+            results.BMR.textContent = formatNum(BMR, 0);
 
-            // Update status message
-            updateStatusMessage(targetBerat, berat, weeksToTarget, isLowCalorie);
+            updateStatus(targetBerat, berat, weeksToTarget, isLowCal);
 
-            // Update macros display
-            const totalCalFromMacro = (protein * 4) + (lemak * 9) + (karbo * 4);
-            results.totalCalories.textContent = formatNumber(totalCalFromMacro, 0);
-            
-            results.proteinValue.textContent = formatNumber(protein, 0) + 'g';
-            results.lemakValue.textContent = formatNumber(lemak, 0) + 'g';
-            results.karboValue.textContent = formatNumber(karbo, 0) + 'g';
+            const totalCal = (protein * 4) + (lemak * 9) + (karbo * 4);
+            results.totalCalories.textContent = formatNum(totalCal, 0);
 
-            // Update calorie breakdown
-            results.proteinCal.textContent = formatNumber(protein * 4, 0);
-            results.lemakCal.textContent = formatNumber(lemak * 9, 0);
-            results.karboCal.textContent = formatNumber(karbo * 4, 0);
+            results.proteinValue.textContent = formatNum(protein, 0) + 'g';
+            results.lemakValue.textContent = formatNum(lemak, 0) + 'g';
+            results.karboValue.textContent = formatNum(karbo, 0) + 'g';
 
-            // Update progress bars
+            results.proteinCal.textContent = formatNum(protein * 4, 0);
+            results.lemakCal.textContent = formatNum(lemak * 9, 0);
+            results.karboCal.textContent = formatNum(karbo * 4, 0);
+
             const totalMacro = protein + lemak + karbo;
             if (totalMacro > 0) {
                 results.proteinBar.style.width = ((protein / totalMacro) * 100) + '%';
@@ -1424,43 +1134,42 @@
                 results.karboBar.style.width = ((karbo / totalMacro) * 100) + '%';
             }
 
-            // Update chart
             if (macroChart) {
                 macroChart.data.datasets[0].data = [protein, lemak, karbo];
                 macroChart.update('active');
             }
         }
 
-        // Update status message
-        function updateStatusMessage(targetBerat, berat, weeksToTarget, isLowCalorie) {
-            const statusMessage = results.statusMessage;
-            const statusIcon = results.statusIcon;
-            const statusText = results.statusText;
+        // Update status
+        function updateStatus(targetBerat, berat, weeksToTarget, isLowCal) {
+            const alert = results.statusAlert;
+            const icon = results.statusIcon;
+            const msg = results.statusMsg;
 
-            if (isLowCalorie) {
-                statusMessage.className = 'status-message show status-warning';
-                statusIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
-                statusText.innerHTML = '<strong>Perhatian:</strong> Kalori diet Anda terlalu rendah. Kami menyarankan minimum 1200 kcal untuk kesehatan. Pertimbangkan defisit yang lebih kecil.';
+            if (isLowCal) {
+                alert.className = 'status-alert show warning';
+                icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+                msg.innerHTML = '<strong>Perhatian:</strong> Kalori diet terlalu rendah. Minimum 1200 kcal untuk kesehatan. Pertimbangkan defisit lebih kecil.';
                 return;
             }
 
             if (targetBerat && targetBerat >= berat) {
-                statusMessage.className = 'status-message show status-warning';
-                statusIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
-                statusText.innerHTML = '<strong>Perhatian:</strong> Target berat harus lebih rendah dari berat badan saat ini.';
+                alert.className = 'status-alert show warning';
+                icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+                msg.innerHTML = '<strong>Perhatian:</strong> Target berat harus lebih rendah dari berat saat ini.';
                 return;
             }
 
             if (targetBerat && targetBerat < berat) {
-                const weightDiff = berat - targetBerat;
-                const monthsToTarget = weeksToTarget / 4.33;
-                statusMessage.className = 'status-message show';
-                statusIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-                statusText.innerHTML = 'Target Anda akan tercapai dalam <strong>' + formatNumber(monthsToTarget, 1) + ' bulan</strong>. Anda akan turun ' + formatNumber(weightDiff, 1) + ' kg dengan metode ini.';
+                const diff = berat - targetBerat;
+                const months = weeksToTarget / 4.33;
+                alert.className = 'status-alert show';
+                icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>';
+                msg.innerHTML = 'Target tercapai dalam <strong>' + formatNum(months, 1) + ' bulan</strong>. Total penurunan ' + formatNum(diff, 1) + ' kg.';
                 return;
             }
 
-            statusMessage.className = 'status-message';
+            alert.className = 'status-alert';
         }
 
         // Reset results
@@ -1480,7 +1189,7 @@
             results.proteinBar.style.width = '0%';
             results.lemakBar.style.width = '0%';
             results.karboBar.style.width = '0%';
-            results.statusMessage.className = 'status-message';
+            results.statusAlert.className = 'status-alert';
 
             if (macroChart) {
                 macroChart.data.datasets[0].data = [1, 1, 1];
@@ -1488,16 +1197,24 @@
             }
         }
 
-        // Add event listeners to all inputs
-        Object.keys(inputs).forEach(function(key) {
-            const input = inputs[key];
-            if (input) {
-                input.addEventListener('input', updateCalculations);
-                input.addEventListener('change', updateCalculations);
+        // Event listeners
+        activityToggle.addEventListener('click', toggleActivityInfo);
+        activityToggle.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleActivityInfo();
             }
         });
 
-        // Initialize chart when DOM is ready
+        Object.keys(inputs).forEach(function(key) {
+            const el = inputs[key];
+            if (el) {
+                el.addEventListener('input', updateCalc);
+                el.addEventListener('change', updateCalc);
+            }
+        });
+
+        // Initialize on load
         document.addEventListener('DOMContentLoaded', initChart);
     </script>
 </body>
