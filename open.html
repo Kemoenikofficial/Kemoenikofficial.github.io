@@ -21,7 +21,7 @@ body{
   position:relative;
 }
 
-/* Glow Background */
+/* Background Glow */
 body::before,
 body::after{
   content:"";
@@ -48,7 +48,7 @@ body::after{
   right:-140px;
 }
 
-/* Floating Background Text */
+/* BIG BACKGROUND TEXT */
 .bg-text{
   position:absolute;
   top:50%;
@@ -59,14 +59,14 @@ body::after{
   color:#16a34a;
   opacity:0.05;
   white-space:nowrap;
-  letter-spacing:6px;
+  letter-spacing:5px;
   z-index:0;
-  animation:floatText 12s ease-in-out infinite alternate;
+  animation:fadeBg 1.5s ease forwards;
 }
 
-@keyframes floatText{
-  0%{ transform:translate(-50%,-52%); }
-  100%{ transform:translate(-50%,-48%); }
+@keyframes fadeBg{
+  from{opacity:0;}
+  to{opacity:0.05;}
 }
 
 /* Card */
