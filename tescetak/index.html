@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CALFATLOSS - Smart Nutrition Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3F5F4A;
+            --primary-dark: #344E3D;
+            --primary-light: rgba(63, 95, 74, 0.1);
+            --bg: #F4F2ED;
+            --card: #FFFFFF;
+            --text: #1F1F1F;
+            --text-muted: #6B6B6B;
+            --gold: #C9B27C;
+            --green-light: #7EA88A;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header & Main UI */
+        .app-header { background: var(--primary); padding: 48px 24px 40px; text-align: center; position: relative; overflow: hidden; }
+        .app-logo { font-size: 28px; font-weight: 700; color: white; letter-spacing: 2px; }
+        .app-tagline { font-size: 13px; color: rgba(255, 255, 255, 0.75); }
+        .app-main { padding: 0 16px 100px; margin-top: -20px; position: relative; z-index: 10; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+        /* Card Styles */
+        .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-md); margin-bottom: 16px; overflow: hidden; }
+        .card-header { padding: 20px; border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
+        .card-body { padding: 24px 20px; }
+        .card-title { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .card-icon { width: 32px; height: 32px; background: var(--primary-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .card-icon svg { width: 16px; height: 16px; stroke: var(--primary); stroke-width: 2; }
+
+        /* Stats & Forms */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .stat-item { background: var(--bg); border-radius: 14px; padding: 20px 16px; text-align: center; }
+        .stat-item-full { grid-column: span 2; }
+        .stat-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+        .stat-value { font-size: 32px; font-weight: 700; color: var(--primary); line-height: 1; }
+        .stat-badge { display: inline-flex; align-items: center; gap: 4px; padding: 8px 16px; background: var(--primary); color: white; border-radius: 100px; margin-top: 8px; }
+        
+        .form-input { width: 100%; padding: 16px 18px; background: var(--bg); border: 2px solid transparent; border-radius: 14px; transition: 0.3s; margin-bottom: 15px; }
+        .form-input:focus { outline: none; border-color: var(--primary); background: white; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
+
+        /* Macros */
+        .macro-grid { display: grid; grid-template-columns: 130px 1fr; gap: 20px; align-items: center; }
+        .chart-wrap { position: relative; }
+        .chart-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .macro-track { height: 6px; background: var(--bg); border-radius: 10px; margin-top: 4px; overflow: hidden; }
+        .macro-fill { height: 100%; transition: width 0.5s ease; }
+
+        /* Status Alert */
+        .status-alert { margin-top: 16px; padding: 16px; background: var(--primary-light); border-radius: 14px; display: none; }
+        .status-alert.show { display: block; }
+
+        /* Activity Accordion */
+        .activity-info-content { max-height: 0; overflow: hidden; transition: 0.3s ease; }
+        .activity-info-content.expanded { max-height: 500px; padding-top: 12px; }
+        .activity-row { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 12px; }
+
+        /* Button */
+        #downloadPDF { cursor: pointer; transition: 0.3s; }
+        #downloadPDF:hover { opacity: 0.9; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="app-brand">
+            <div class="app-logo">CALFATLOSS</div>
+            <div class="app-tagline">Smart Nutrition Calculator</div>
+        </div>
+    </header>
+
+    <main class="app-main" id="captureArea">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                    Dashboard Hasil
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-item stat-item-full">
+                        <div class="stat-label">Kalori Pemeliharaan (TDEE)</div>
+                        <div class="stat-value" id="resultTDEE">0</div>
+                        <div class="stat-unit text-xs text-gray-500">Kcal per hari</div>
+                    </div>
+                    <div class="stat-item stat-item-full" style="background: #eef2ef;">
+                        <div class="stat-label" style="color: var(--primary);">Target Kalori Diet</div>
+                        <div class="stat-value" id="resultDiet">0</div>
+                        <div class="stat-unit text-xs text-gray-500">Kcal per hari</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Turun / Minggu</div>
+                        <div class="stat-badge"><span id="resultTurun">0</span><span class="ml-1 text-[10px]">kg</span></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Capai Target</div>
+                        <div class="stat-badge"><span id="resultMinggu">0</span><span class="ml-1 text-[10px]">mgu</span></div>
+                    </div>
+                </div>
+                <div class="status-alert" id="statusAlert">
+                    <p class="text-xs italic text-gray-600" id="statusMsg"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><div class="card-title">Data Diri & Target</div></div>
+            <div class="card-body">
+                <label class="form-label">Nama Lengkap</label>
+                <input type="text" id="nama" class="form-input" placeholder="Nama Anda">
+                
+                <div class="form-row">
+                    <div>
+                        <label class="form-label">Gender</label>
+                        <select id="gender" class="form-input">
+                            <option value="pria">Laki-Laki</option>
+                            <option value="wanita">Perempuan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Usia</label>
+                        <input type="number" id="usia" class="form-input" placeholder="Thn">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label class="form-label">Berat (kg)</label>
+                        <input type="number" id="berat" class="form-input" placeholder="kg">
+                    </div>
+                    <div>
+                        <label class="form-label">Tinggi (cm)</label>
+                        <input type="number" id="tinggi" class="form-input" placeholder="cm">
+                    </div>
+                </div>
+
+                <label class="form-label">Aktivitas Harian</label>
+                <select id="aktivitas" class="form-input">
+                    <option value="1.2">Tidak Aktif (Jarang Gerak)</option>
+                    <option value="1.375">Ringan (Olahraga 1-2x/mgu)</option>
+                    <option value="1.55" selected>Sedang (Olahraga 3-5x/mgu)</option>
+                    <option value="1.725">Berat (Olahraga 6-7x/mgu)</option>
+                    <option value="1.9">Sangat Berat (Atlet/Fisik)</option>
+                </select>
+
+                <div class="form-row">
+                    <div>
+                        <label class="form-label">Target Berat (kg)</label>
+                        <input type="number" id="targetBerat" class="form-input" placeholder="kg">
+                    </div>
+                    <div>
+                        <label class="form-label">Metode Diet</label>
+                        <select id="metodeDiet" class="form-input">
+                            <option value="300">Ringan (Sangat Aman)</option>
+                            <option value="500" selected>Standar (Direkomendasikan)</option>
+                            <option value="700">Agresif (Cepat)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><div class="card-title">Target Makronutrien</div></div>
+            <div class="card-body">
+                <div class="macro-grid">
+                    <div class="chart-wrap">
+                        <canvas id="macroChart" width="130" height="130"></canvas>
+                        <div class="chart-center">
+                            <div class="text-[18px] font-bold" id="totalCalCenter">0</div>
+                            <div class="text-[8px] uppercase text-gray-400">Kcal</div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs font-bold"><span>Protein</span><span id="pGram">0g</span></div>
+                            <div class="macro-track"><div id="pBar" class="macro-fill" style="background:var(--primary); width:0%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-bold"><span>Lemak</span><span id="lGram">0g</span></div>
+                            <div class="macro-track"><div id="lBar" class="macro-fill" style="background:var(--gold); width:0%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-bold"><span>Karbohidrat</span><span id="kGram">0g</span></div>
+                            <div class="macro-track"><div id="kBar" class="macro-fill" style="background:var(--green-light); width:0%"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="downloadPDF" class="w-full bg-[#3F5F4A] text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-3 shadow-lg active:scale-95">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            SIMPAN LAPORAN PDF
+        </button>
+
+        <footer class="text-center mt-8 text-[10px] text-gray-400 uppercase tracking-widest">
+            CALFATLOSS v1.0 • Smart Nutrition System
+        </footer>
+    </main>
+
+    <script>
+        let macroChart;
+        const ctx = document.getElementById('macroChart').getContext('2d');
+
+        // Elements
+        const inputs = ['nama', 'gender', 'usia', 'berat', 'tinggi', 'aktivitas', 'targetBerat', 'metodeDiet'];
+        const el = (id) => document.getElementById(id);
+
+        // Init Chart
+        function initChart() {
+            macroChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [30, 25, 45],
+                        backgroundColor: ['#3F5F4A', '#C9B27C', '#7EA88A'],
+                        borderWidth: 0,
+                        cutout: '80%'
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, responsive: true }
+            });
+        }
+
+        function calculate() {
+            const val = {};
+            inputs.forEach(id => val[id] = el(id).value);
+
+            if(!val.usia || !val.berat || !val.tinggi) return;
+
+            // BMR (Mifflin-St Jeor)
+            let bmr = (10 * val.berat) + (6.25 * val.tinggi) - (5 * val.usia);
+            bmr = val.gender === 'pria' ? bmr + 5 : bmr - 161;
+
+            const tdee = bmr * parseFloat(val.aktivitas);
+            const deficit = parseFloat(val.metodeDiet);
+            const dietCal = tdee - deficit;
+
+            // Macros (P: 30%, L: 25%, K: 45%)
+            const p = (dietCal * 0.3) / 4;
+            const l = (dietCal * 0.25) / 9;
+            const k = (dietCal * 0.45) / 4;
+
+            // Estimation
+            const turunPerMinggu = (deficit * 7) / 7700;
+            let minggu = 0;
+            if (val.targetBerat && val.berat > val.targetBerat) {
+                minggu = (val.berat - val.targetBerat) / turunPerMinggu;
+            }
+
+            // Update UI
+            el('resultTDEE').innerText = Math.round(tdee);
+            el('resultDiet').innerText = Math.round(dietCal);
+            el('totalCalCenter').innerText = Math.round(dietCal);
+            el('resultTurun').innerText = turunPerMinggu.toFixed(2);
+            el('resultMinggu').innerText = minggu > 0 ? Math.ceil(minggu) : 0;
+            
+            el('pGram').innerText = Math.round(p) + 'g';
+            el('lGram').innerText = Math.round(l) + 'g';
+            el('kGram').innerText = Math.round(k) + 'g';
+            el('pBar').style.width = '30%';
+            el('lBar').style.width = '25%';
+            el('kBar').style.width = '45%';
+
+            el('statusAlert').classList.add('show');
+            el('statusMsg').innerText = `Halo ${val.nama || 'User'}, untuk membakar lemak dengan aman, konsumsi ${Math.round(dietCal)} kalori setiap hari.`;
+
+            macroChart.update();
+        }
+
+        // PDF Function
+        el('downloadPDF').onclick = function() {
+            const { jsPDF } = window.jspdf;
+            const btn = this;
+            btn.style.display = 'none'; // Sembunyikan tombol saat cetak
+
+            html2canvas(document.getElementById('captureArea'), {
+                scale: 2,
+                backgroundColor: '#F4F2ED'
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save(`Laporan-Diet-${el('nama').value || 'User'}.pdf`);
+                btn.style.display = 'flex';
+            });
+        };
+
+        // Listeners
+        inputs.forEach(id => el(id).addEventListener('input', calculate));
+        window.onload = () => { initChart(); calculate(); };
+    </script>
+</body>
+</html>
