@@ -1,51 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Verifikasi Kode Kemonik</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Verifikasi Kode Konsultasi - Kemonik</title>
+
 <style>
 body {
-  font-family: Arial;
-  background: #f4f7f8;
-  text-align: center;
-  padding: 50px;
+  font-family: Arial, sans-serif;
+  background: #f4f6f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
-.box {
+.container {
   background: white;
-  padding: 30px;
+  padding: 25px;
   border-radius: 12px;
-  width: 350px;
-  margin: auto;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+h2 {
+  margin-bottom: 20px;
 }
 
 input {
   width: 100%;
   padding: 12px;
-  margin-top: 15px;
+  margin: 8px 0;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
+  font-size: 14px;
 }
 
 button {
-  margin-top: 15px;
-  padding: 12px;
   width: 100%;
+  padding: 12px;
+  background: #1f6b3c;
+  color: white;
   border: none;
   border-radius: 8px;
-  background: #1e8e3e;
-  color: white;
+  font-size: 15px;
   font-weight: bold;
-  cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
-  background: #166b2e;
+  background: #15512c;
 }
 
 #result {
-  margin-top: 20px;
+  margin-top: 15px;
   font-weight: bold;
 }
 </style>
@@ -53,29 +64,62 @@ button:hover {
 
 <body>
 
-<div class="box">
+<div class="container">
   <h2>Verifikasi Kode Konsultasi</h2>
-  <input type="text" id="kode" placeholder="Masukkan Kode">
+
+  <input type="text" id="nama" placeholder="Nama Lengkap">
+  <input type="text" id="wa" placeholder="Nomor WhatsApp">
+  <input type="text" id="kode" placeholder="Kode Konsultasi">
+
   <button onclick="cekKode()">Cek Kode</button>
+
   <div id="result"></div>
 </div>
 
 <script>
+
+function formatWA(wa) {
+  wa = wa.replace(/\D/g, '');
+  if (wa.startsWith("08")) {
+    return "62" + wa.substring(1);
+  }
+  return wa;
+}
+
 function cekKode() {
-  var kode = document.getElementById("kode").value;
+
+  var nama = document.getElementById("nama").value.trim();
+  var wa = document.getElementById("wa").value.trim();
+  var kode = document.getElementById("kode").value.trim();
   var resultDiv = document.getElementById("result");
+
+  if (nama === "" || wa === "" || kode === "") {
+    resultDiv.innerHTML = "Semua field wajib diisi.";
+    return;
+  }
+
+  wa = formatWA(wa);
 
   resultDiv.innerHTML = "Memproses...";
 
-  fetch("https://script.google.com/macros/s/AKfycbx_hGL_jgw12KY4tZshbK5iDzbm9V1wi_StrsIqSeUZ0TF61XuqrcEZkMJtIbmrH-7i/exec?kode=" + kode)
+  fetch("https://script.google.com/macros/s/AKfycbx_hGL_jgw12KY4tZshbK5iDzbm9V1wi_StrsIqSeUZ0TF61XuqrcEZkMJtIbmrH-7i/exec?kode=" + kode + "&nama=" + nama + "&wa=" + wa)
   .then(response => response.text())
   .then(data => {
 
     if (data === "SUCCESS") {
-      resultDiv.innerHTML = "Kode berhasil diaktifkan! Redirect ke WhatsApp...";
-      
+
+      var pesan = 
+      "Halo Admin Kemonik,%0A%0A" +
+      "Nama: " + nama + "%0A" +
+      "Kode: " + kode + "%0A" +
+      "Nomor: " + wa + "%0A%0A" +
+      "Saya siap memulai konsultasi.";
+
+      resultDiv.innerHTML = "Kode aktif! Menghubungkan ke WhatsApp...";
+
       setTimeout(function() {
-        window.location.href = "https://wa.me/6281546450547?text=Halo%20Admin%20Kemonik,%20kode%20saya%20sudah%20aktif.";
+        window.location.href = 
+        "https://wa.me/6281546450547?text=" + pesan;
       }, 2000);
 
     } else if (data === "USED") {
@@ -93,6 +137,7 @@ function cekKode() {
     resultDiv.innerHTML = "Terjadi kesalahan.";
   });
 }
+
 </script>
 
 </body>
