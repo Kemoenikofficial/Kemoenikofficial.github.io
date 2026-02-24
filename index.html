@@ -307,7 +307,7 @@
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
-        #hero-slider {
+        #hero-slider, #testimonial-slider {
             display: flex;
             transition: transform 0.5s ease;
         }
@@ -346,16 +346,23 @@
             border-radius: 4px;
         }
 
-        /* Category Pills */
+        /* Category Grid (Vertikal) */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 kolom ke bawah */
+            gap: 10px;
+        }
+
         .category-pill {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px 16px;
+            justify-content: center;
+            padding: 12px 10px;
             border-radius: 14px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
-            white-space: nowrap;
+            text-align: center;
             transition: all 0.3s;
             border: 2px solid transparent;
         }
@@ -369,13 +376,47 @@
             color: #4B5563;
             border-color: #E5E7EB;
         }
-        .category-pill:not(.active):hover {
+        .category-pill:not(.active):active {
             border-color: var(--primary);
             color: var(--primary);
         }
         .category-icon {
-            font-size: 18px;
-            margin-bottom: 4px;
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        /* Testimonial Card Style */
+        .testimonial-card {
+            min-width: 100%;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E5E7EB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #6B7280;
+        }
+        .product-mini-info {
+            background: #F0FDF4;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #D1FAE5;
         }
 
         /* Print Styles */
@@ -401,7 +442,7 @@
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100" style="box-shadow: 0 2px 20px rgba(0,0,0,0.04);">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo" class="h-10 w-10 rounded-xl object-cover shadow-sm border border-gray-100">
+                <img id="header-logo" src="" alt="Logo" class="h-10 w-10 rounded-xl object-cover shadow-sm border border-gray-100">
                 <div>
                     <h1 class="text-base font-bold text-gray-800 leading-tight" id="store-name">Kemoenik Official Store</h1>
                     <p class="text-[10px] text-gray-400 font-medium">Official Partner</p>
@@ -458,9 +499,18 @@
             </a>
         </section>
 
-        <!-- Categories -->
+        <!-- Categories (Dengan Judul) -->
         <section class="mb-4">
-            <div class="flex gap-2 overflow-x-auto pb-2" id="category-list" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;"></div>
+            <h3 class="text-sm font-bold text-gray-700 mb-2 px-1">Kategori Produk</h3>
+            <div class="category-grid" id="category-list"></div>
+        </section>
+
+        <!-- Testimonial & Promo Slider -->
+        <section class="mb-5 slider-container" style="background: transparent; box-shadow: none;">
+            <h3 class="text-sm font-bold text-gray-700 mb-2 px-1">Testimoni & Promo</h3>
+            <div class="relative rounded-xl overflow-hidden">
+                <div id="testimonial-slider"></div>
+            </div>
         </section>
 
         <!-- Products -->
@@ -472,9 +522,9 @@
     <!-- Footer -->
     <footer class="bg-white text-gray-500 mt-8 shadow-inner pb-24 border-t border-gray-100">
         <div class="container mx-auto px-4 py-8 text-center">
-            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="h-14 w-14 rounded-full mx-auto mb-3 shadow-md border-2 border-gray-100">
-            <h3 class="font-bold text-gray-700 mb-1">Kemoenik Official Store</h3>
-            <p class="text-xs max-w-xs mx-auto leading-relaxed opacity-70">Kp Cibubuay, Desa Cibodas, Kec. Pasirjambu, Kab. Bandung, 40972</p>
+            <img id="footer-logo" src="" class="h-14 w-14 rounded-full mx-auto mb-3 shadow-md border-2 border-gray-100">
+            <h3 class="font-bold text-gray-700 mb-1" id="footer-store-name">Kemoenik Official Store</h3>
+            <p class="text-xs max-w-xs mx-auto leading-relaxed opacity-70" id="footer-address">Kp Cibubuay, Desa Cibodas, Kec. Pasirjambu, Kab. Bandung, 40972</p>
             <p class="text-[10px] text-gray-400 mt-3">Produk Berkualitas & Terpercaya</p>
         </div>
     </footer>
@@ -521,39 +571,75 @@
     <div id="tracking-modal" class="modal-overlay"><div class="modal-content p-5" id="tracking-content"></div></div>
 
     <script>
-        // ========== KONFIGURASI DATA ==========
+        // ========== KONFIGURASI DATA (UBAH FOTO & DATA DISINI) ==========
         const CONFIG = {
             storeName: "Kemoenik Official Store",
             storeAddress: "Kp Cibubuay, Desa Cibodas, Kec. Pasirjambu, Kab. Bandung, 40972",
             whatsappNumber: "6281546450547",
+            // 1. GANTI LOGO DISINI
+            storeLogo: "https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg", 
+            
             bankAccounts: [
                 { bank: "BRI", number: "000501168248506", name: "DANI RAMDANI", logoClass: "logo-bri", cardClass: "bank-card-bri" },
                 { bank: "DANA", number: "081546450547", name: "DANI RAMDANI", logoClass: "logo-dana", cardClass: "bank-card-dana" },
                 { bank: "SeaBank", number: "901851870313", name: "DANI RAMDANI", logoClass: "logo-seabank", cardClass: "bank-card-seabank" }
             ],
             coupons: [ { code: "KEMOENIK26", type: "shipping", value: 15000, minPurchase: 120000 } ],
+            
+            // 2. KATEGORI PRODUK (SUDAH DIPERBARUI)
             categories: [ 
                 { id: 'all', name: "Semua", icon: '🍽' }, 
-                { id: 'calc', name: "Calculator", icon: '🧮' }, 
+                { id: 'calc', name: "Calculator Fat Loss", icon: '🧮' }, 
                 { id: 'kapsul', name: "Kapsul", icon: '💊' }, 
                 { id: 'teh', name: "Teh", icon: '🍵' },
-                { id: 'lainnya', name: "Lainnya", icon: '📦' }
+                { id: 'lainnya', name: "Lainnya", icon: '📦' } 
             ],
+            
+            // 3. GANTI GAMBAR SLIDE PROMO UTAMA (HERO) DISINI
             sliders: [
                 "https://placehold.co/800x400/10B981/FFFFFF?text=Flash+Sale+50%25&font=plus-jakarta-sans",
                 "https://placehold.co/800x400/059669/FFFFFF?text=Gratis+Ongkir&font=plus-jakarta-sans",
                 "https://placehold.co/800x400/FCD34D/1F2937?text=Promo+Spesial&font=plus-jakarta-sans"
             ],
-            // PRODUK DENGAN DATA LENGKAP
+            
+            // 4. DATA TESTIMONI & PROMO SLIDER BAWAH KATEGORI
+            testimonials: [
+                {
+                    userName: "Mega L.",
+                    userMsg: "Produknya original, pengiriman cepat. Badan jadi lebih ringan dalam 2 minggu!",
+                    productName: "KEMOENIK SLIM 1",
+                    productDesc: "Kapsul pelangsing herbal terbaik.",
+                    discount: "50%",
+                    productId: 2 
+                },
+                {
+                    userName: "Rizki A.",
+                    userMsg: "Rasa tehnya enak, nggak pahit. Cocok buat yang mau diet sehat.",
+                    productName: "TEH SLIM 2",
+                    productDesc: "Teh premium detox.",
+                    discount: "27%",
+                    productId: 5
+                },
+                 {
+                    userName: "Dewi P.",
+                    userMsg: "Kalkulator dietnya membantu banget ngitung kalori. Recommended!",
+                    productName: "CALCULATOR FAT LOSS",
+                    productDesc: "Panduan hitung kalori harian.",
+                    discount: "50%",
+                    productId: 1
+                }
+            ],
+
+            // 5. GANTI FOTO KATALOG PRODUK DISINI
             products: [
                 { 
                     id: 1, 
                     category: 'calc', 
                     name: "CALCULATOR FAT LOSS - Hitung Kalori Harian", 
                     price: 60000, 
-                    originalPrice: 120000, // Harga coret
+                    originalPrice: 120000, 
                     discount: 50, 
-                    flashSale: true, // Badge Flash Sale
+                    flashSale: true, 
                     images: ["https://placehold.co/400x400/F3F4F6/374151?text=Calculator"], 
                     sold: 2547, 
                     rating: 4.9, 
@@ -658,81 +744,61 @@
         let wishlist = [];
         let appliedCoupon = null;
         let currentSlide = 0;
+        let currentTestiSlide = 0; 
         let activeCategory = 'all';
         let lastCheckoutData = { customer: {}, method: 'transfer', coupon: null };
         let currentInvoice = {};
         let slideInterval = null;
+        let testiInterval = null; 
 
         // ========== INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
+            
+            // Set Logo & Name dynamically
+            document.getElementById('header-logo').src = CONFIG.storeLogo;
+            document.getElementById('footer-logo').src = CONFIG.storeLogo;
+            document.getElementById('store-name').innerText = CONFIG.storeName;
+            document.getElementById('footer-store-name').innerText = CONFIG.storeName;
+            document.getElementById('footer-address').innerText = CONFIG.storeAddress;
+            
             renderCategories();
             renderProducts();
             renderSliders();
+            renderTestimonials(); 
+            
             document.getElementById('wa-btn-header').href = `https://wa.me/${CONFIG.whatsappNumber}`;
-            document.getElementById('store-name').innerText = CONFIG.storeName;
         });
 
         // ========== UTILITY FUNCTIONS ==========
-        function toggleBodyScroll(lock) {
-            document.body.style.overflow = lock ? 'hidden' : '';
-        }
-
+        function toggleBodyScroll(lock) { document.body.style.overflow = lock ? 'hidden' : ''; }
         function loadData() {
             try { cart = JSON.parse(localStorage.getItem('cart')) || []; } catch (e) { cart = []; }
             try { wishlist = JSON.parse(localStorage.getItem('wish')) || []; } catch (e) { wishlist = []; }
             updateStickyBar();
             updateWishlistUI();
         }
-
-        function saveData() {
-            localStorage.setItem('cart', JSON.stringify(cart));
-            localStorage.setItem('wish', JSON.stringify(wishlist));
-        }
-
-        function formatPrice(price) {
-            return `Rp ${price.toLocaleString('id-ID')}`;
-        }
-
+        function saveData() { localStorage.setItem('cart', JSON.stringify(cart)); localStorage.setItem('wish', JSON.stringify(wishlist)); }
+        function formatPrice(price) { return `Rp ${price.toLocaleString('id-ID')}`; }
+        
         function generateStars(rating) {
             let stars = '';
             const fullStars = Math.floor(rating);
             const hasHalf = rating % 1 >= 0.5;
-            
-            for (let i = 0; i < fullStars; i++) {
-                stars += '<svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
-            }
-            if (hasHalf) {
-                stars += '<svg class="w-3 h-3 fill-current opacity-50" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
-            }
+            for (let i = 0; i < fullStars; i++) stars += '<svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+            if (hasHalf) stars += '<svg class="w-3 h-3 fill-current opacity-50" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
             return stars;
         }
+        function formatSold(sold) { return sold >= 1000 ? (sold / 1000).toFixed(1).replace('.0', '') + 'rb+' : sold + '+'; }
 
-        function formatSold(sold) {
-            if (sold >= 1000) {
-                return (sold / 1000).toFixed(1).replace('.0', '') + 'rb+';
-            }
-            return sold + '+';
-        }
-
-        // ========== SLIDER FUNCTIONS ==========
+        // ========== SLIDER FUNCTIONS (HERO) ==========
         function renderSliders() {
             const sliderContainer = document.getElementById('hero-slider');
             const dotsContainer = document.getElementById('slider-dots');
-            
-            sliderContainer.innerHTML = CONFIG.sliders.map((img, i) => `
-                <div class="slide-item">
-                    <img src="${img}" alt="Banner ${i + 1}" loading="lazy">
-                </div>
-            `).join('');
-            
-            dotsContainer.innerHTML = CONFIG.sliders.map((_, i) => `
-                <button onclick="goToSlide(${i})" class="dot ${i === 0 ? 'active' : ''}"></button>
-            `).join('');
-            
+            sliderContainer.innerHTML = CONFIG.sliders.map((img, i) => `<div class="slide-item"><img src="${img}" alt="Banner ${i + 1}" loading="lazy"></div>`).join('');
+            dotsContainer.innerHTML = CONFIG.sliders.map((_, i) => `<button onclick="goToSlide(${i})" class="dot ${i === 0 ? 'active' : ''}"></button>`).join('');
             startSlider();
         }
-
         function startSlider() {
             if (slideInterval) clearInterval(slideInterval);
             slideInterval = setInterval(() => {
@@ -740,20 +806,55 @@
                 updateSlider();
             }, 4000);
         }
-
         function updateSlider() {
             const slider = document.getElementById('hero-slider');
             slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.querySelectorAll('#slider-dots .dot').forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+        }
+        function goToSlide(index) { currentSlide = index; updateSlider(); startSlider(); }
+
+        // ========== TESTIMONIAL SLIDER ==========
+        function renderTestimonials() {
+            const container = document.getElementById('testimonial-slider');
+            if(CONFIG.testimonials.length === 0) return;
             
-            document.querySelectorAll('.dot').forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentSlide);
-            });
+            container.innerHTML = CONFIG.testimonials.map(t => `
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">${t.userName.charAt(0)}</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-gray-800">${t.userName}</h4>
+                            <p class="text-xs text-gray-400">Pelanggan Terverifikasi</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 italic">"${t.userMsg}"</p>
+                    
+                    <div class="product-mini-info">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h5 class="font-bold text-xs text-gray-700">${t.productName}</h5>
+                                <p class="text-[10px] text-gray-500">${t.productDesc}</p>
+                            </div>
+                            <span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">${t.discount} OFF</span>
+                        </div>
+                        <button onclick="openDetail(${t.productId})" class="w-full mt-2 bg-emerald-500 text-white text-xs font-bold py-2 rounded-lg">Beli Sekarang</button>
+                    </div>
+                </div>
+            `).join('');
+            startTestiSlider();
         }
 
-        function goToSlide(index) {
-            currentSlide = index;
-            updateSlider();
-            startSlider();
+        function startTestiSlider() {
+            if (testiInterval) clearInterval(testiInterval);
+            if(CONFIG.testimonials.length < 2) return;
+            testiInterval = setInterval(() => {
+                currentTestiSlide = (currentTestiSlide + 1) % CONFIG.testimonials.length;
+                updateTestiSlider();
+            }, 5000);
+        }
+        function updateTestiSlider() {
+            const slider = document.getElementById('testimonial-slider');
+            slider.style.transform = `translateX(-${currentTestiSlide * 100}%)`;
         }
 
         // ========== CATEGORY FUNCTIONS ==========
@@ -766,7 +867,6 @@
                 </button>
             `).join('');
         }
-
         function filterCategory(id) {
             activeCategory = id;
             renderCategories();
@@ -788,10 +888,8 @@
                 <div class="product-card" onclick="openDetail(${p.id})">
                     <div class="product-img-wrapper">
                         <img src="${imgSrc}" class="product-img" alt="${p.name}" loading="lazy">
-                        
                         ${p.flashSale ? '<span class="flash-sale-badge">Flash Sale</span>' : ''}
                         ${p.discount > 0 ? `<span class="discount-badge">${p.discount}% OFF</span>` : ''}
-                        
                         <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="wishlist-btn-card ${isWished ? 'active' : ''}" aria-label="Toggle Wishlist">
                             <svg fill="${isWished ? '#ef4444' : 'none'}" stroke="${isWished ? '#ef4444' : '#9ca3af'}" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
@@ -800,18 +898,12 @@
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">${p.name}</h3>
-                        
                         <div class="product-meta">
-                            <span class="rating-stars">
-                                ${generateStars(p.rating)}
-                                <span class="ml-1 text-gray-600">${p.rating}</span>
-                            </span>
+                            <span class="rating-stars">${generateStars(p.rating)}<span class="ml-1 text-gray-600">${p.rating}</span></span>
                             <span class="sold-count">| ${formatSold(p.sold)} terjual</span>
                         </div>
-                        
                         <div class="product-price">${formatPrice(finalPrice)}</div>
                         ${p.originalPrice ? `<div class="product-price-original">${formatPrice(p.originalPrice)}</div>` : '<div style="height: 16px;"></div>'}
-                        
                         <button onclick="event.stopPropagation(); addCart(${p.id})" class="product-btn">+ Keranjang</button>
                     </div>
                 </div>`;
@@ -819,27 +911,17 @@
         }
 
         // ========== MODAL FUNCTIONS ==========
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.add('active');
-            toggleBodyScroll(true);
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('active');
-            toggleBodyScroll(false);
-        }
+        function openModal(modalId) { document.getElementById(modalId).classList.add('active'); toggleBodyScroll(true); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); toggleBodyScroll(false); }
 
         // ========== DETAIL MODAL ==========
         function openDetail(id) {
             const p = CONFIG.products.find(x => x.id === id);
             if (!p) return;
-            
             const finalPrice = p.price - Math.floor(p.price * (p.discount || 0) / 100);
             const imgSrc = p.images?.[0] || 'https://placehold.co/400';
             
-            const content = `
+            document.getElementById('detail-content').innerHTML = `
             <div class="relative bg-gray-100">
                 <img src="${imgSrc}" class="w-full aspect-square object-cover" alt="${p.name}">
                 <button onclick="closeDetail()" class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition">
@@ -849,163 +931,87 @@
             </div>
             <div class="p-5 bg-white rounded-t-3xl -mt-6 relative">
                 <h2 class="text-lg font-bold text-gray-800 mb-2">${p.name}</h2>
-                
                 <div class="flex items-center gap-3 mb-3">
-                    <span class="rating-stars text-sm">
-                        ${generateStars(p.rating)}
-                        <span class="ml-1 text-gray-700 font-semibold">${p.rating}</span>
-                    </span>
+                    <span class="rating-stars text-sm">${generateStars(p.rating)}<span class="ml-1 text-gray-700 font-semibold">${p.rating}</span></span>
                     <span class="text-gray-400">|</span>
                     <span class="text-sm text-gray-500">${formatSold(p.sold)} terjual</span>
                 </div>
-                
                 <div class="flex items-baseline gap-2 mb-4">
                     <span class="text-2xl font-bold" style="color: var(--primary-dark);">${formatPrice(finalPrice)}</span>
                     ${p.originalPrice ? `<span class="text-sm text-gray-400 line-through">${formatPrice(p.originalPrice)}</span>` : ''}
                     ${p.discount > 0 ? `<span class="text-xs font-bold px-2 py-1 rounded-full" style="background: #FEF3C7; color: #B45309;">${p.discount}% OFF</span>` : ''}
                 </div>
-                
                 <div class="border-t border-b border-gray-100 my-4 py-4">
                     <h4 class="font-semibold mb-2 text-sm text-gray-700">Deskripsi Produk</h4>
                     <p class="text-sm text-gray-600 leading-relaxed">${p.desc}</p>
                 </div>
-                
                 <div class="flex gap-3 mt-4">
                     <button onclick="addCart(${p.id}); closeDetail();" class="flex-1 bg-white border-2 font-semibold py-3 rounded-xl transition-colors" style="border-color: var(--primary); color: var(--primary-dark);">Tambah</button>
                     <button onclick="addCart(${p.id}); closeDetail(); openCart();" class="flex-1 btn-primary py-3">Beli Sekarang</button>
                 </div>
             </div>`;
-            
-            document.getElementById('detail-content').innerHTML = content;
             openModal('detail-modal');
         }
-
-        function closeDetail() {
-            closeModal('detail-modal');
-        }
+        function closeDetail() { closeModal('detail-modal'); }
 
         // ========== WISHLIST FUNCTIONS ==========
         function toggleWishlist(id) {
             const p = CONFIG.products.find(x => x.id === id);
             if (!p) return;
-            
             const exist = wishlist.find(w => w.id === id);
-            if (exist) {
-                wishlist = wishlist.filter(w => w.id !== id);
-            } else {
-                wishlist.push({ id: p.id, name: p.name, images: p.images });
-            }
-            
-            saveData();
-            updateWishlistUI();
-            renderProducts();
+            if (exist) { wishlist = wishlist.filter(w => w.id !== id); } 
+            else { wishlist.push({ id: p.id, name: p.name, images: p.images }); }
+            saveData(); updateWishlistUI(); renderProducts();
         }
-
         function updateWishlistUI() {
             const el = document.getElementById('wish-count-head');
             const count = wishlist.length;
-            
-            if (count > 0) {
-                el.innerText = count;
-                el.classList.remove('hidden');
-                el.classList.add('flex');
-            } else {
-                el.classList.add('hidden');
-            }
+            if (count > 0) { el.innerText = count; el.classList.remove('hidden'); el.classList.add('flex'); } 
+            else { el.classList.add('hidden'); }
         }
-
         function openWishlist() {
-            let content = `
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold text-lg">Wishlist Saya</h3>
-                    <button onclick="closeWishlist()" class="text-gray-400 p-2 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                </div>`;
-            
-            if (wishlist.length === 0) {
-                content += '<p class="text-center text-gray-400 py-12">Wishlist masih kosong</p>';
-            } else {
+            let content = `<div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">Wishlist Saya</h3><button onclick="closeWishlist()" class="text-gray-400 p-2 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>`;
+            if (wishlist.length === 0) { content += '<p class="text-center text-gray-400 py-12">Wishlist masih kosong</p>'; } 
+            else {
                 content += `<div class="space-y-3">` + wishlist.map(w => `
                     <div class="flex gap-3 items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer" onclick="closeWishlist(); openDetail(${w.id});">
                         <img src="${w.images?.[0] || 'https://placehold.co/100'}" class="w-16 h-16 rounded-xl object-cover">
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-sm text-gray-800">${w.name}</h4>
-                            <p class="text-[10px] text-emerald-500 mt-1 font-medium">Klik untuk lihat detail</p>
-                        </div>
-                        <button onclick="event.stopPropagation(); toggleWishlist(${w.id}); openWishlist();" class="text-gray-400 hover:text-red-500 p-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        </button>
+                        <div class="flex-1"><h4 class="font-semibold text-sm text-gray-800">${w.name}</h4><p class="text-[10px] text-emerald-500 mt-1 font-medium">Klik untuk lihat detail</p></div>
+                        <button onclick="event.stopPropagation(); toggleWishlist(${w.id}); openWishlist();" class="text-gray-400 hover:text-red-500 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                     </div>
                 `).join('') + `</div>`;
             }
-            
             document.getElementById('wishlist-content').innerHTML = content;
             openModal('wishlist-modal');
         }
-
-        function closeWishlist() {
-            closeModal('wishlist-modal');
-        }
+        function closeWishlist() { closeModal('wishlist-modal'); }
 
         // ========== CART FUNCTIONS ==========
         function addCart(id) {
             const p = CONFIG.products.find(x => x.id === id);
-            if (!p || p.price === 0) {
-                alert("Produk tidak tersedia");
-                return;
-            }
-            
+            if (!p || p.price === 0) { alert("Produk tidak tersedia"); return; }
             const exist = cart.find(i => i.id === id);
             const finalPrice = p.price - Math.floor(p.price * (p.discount || 0) / 100);
-            
-            if (exist) {
-                exist.qty++;
-            } else {
-                cart.push({
-                    id: p.id,
-                    name: p.name,
-                    price: finalPrice,
-                    images: p.images,
-                    qty: 1
-                });
-            }
-            
-            saveData();
-            updateStickyBar();
+            if (exist) { exist.qty++; } else { cart.push({ id: p.id, name: p.name, price: finalPrice, images: p.images, qty: 1 }); }
+            saveData(); updateStickyBar();
         }
-
         function updateStickyBar() {
             const count = cart.reduce((s, i) => s + i.qty, 0);
             const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-            
             document.getElementById('sticky-count').innerText = count;
             document.getElementById('sticky-items').innerText = count;
             document.getElementById('sticky-total').innerText = formatPrice(total);
             document.getElementById('sticky-bar').style.display = count > 0 ? 'block' : 'none';
         }
-
-        function openCart() {
-            renderCartModal();
-            openModal('cart-modal');
-        }
-
-        function closeCart() {
-            closeModal('cart-modal');
-        }
-
+        function openCart() { renderCartModal(); openModal('cart-modal'); }
+        function closeCart() { closeModal('cart-modal'); }
         function renderCartModal() {
-            const content = document.getElementById('cart-content');
-            content.innerHTML = `
+            document.getElementById('cart-content').innerHTML = `
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-bold text-lg">Keranjang Belanja</h3>
-                    <button onclick="closeCart()" class="text-gray-400 p-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
+                    <button onclick="closeCart()" class="text-gray-400 p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
                 </div>
-                
-                <div id="cart-list" class="max-h-48 overflow-y-auto border-b pb-4 mb-4" style="-webkit-overflow-scrolling: touch;"></div>
-                
+                <div id="cart-list" class="max-h-48 overflow-y-auto border-b pb-4 mb-4"></div>
                 <div class="mb-4">
                     <div class="flex gap-2">
                         <input type="text" id="coupon-input" class="input-style mb-0 text-sm flex-1" placeholder="Kode Kupon" value="${appliedCoupon ? appliedCoupon.code : ''}">
@@ -1013,12 +1019,7 @@
                     </div>
                     <p id="coupon-msg" class="text-[11px] mt-1 hidden"></p>
                 </div>
-                
-                <div class="mb-4 bg-gray-50 p-3 rounded-xl text-xs text-gray-600">
-                    <p class="font-semibold text-gray-700 mb-1">Ongkos Kirim:</p>
-                    <p class="text-gray-500">Akan dikonfirmasi via WhatsApp.</p>
-                </div>
-                
+                <div class="mb-4 bg-gray-50 p-3 rounded-xl text-xs text-gray-600"><p class="font-semibold text-gray-700 mb-1">Ongkos Kirim:</p><p class="text-gray-500">Akan dikonfirmasi via WhatsApp.</p></div>
                 <div class="mb-4">
                     <label class="text-xs text-gray-500 font-medium">Metode Pembayaran</label>
                     <select id="payment-method" class="input-style mb-0 text-sm mt-1" onchange="handlePaymentChange()">
@@ -1028,152 +1029,80 @@
                     </select>
                     <p id="payment-note" class="text-[10px] text-gray-400 mt-1 hidden"></p>
                 </div>
-
                 <div id="transfer-method-container" class="mb-4">
                     <label class="text-xs text-gray-500 font-medium">Transfer Melalui</label>
                     <select id="transfer-bank" class="input-style text-sm mt-1">
-                        <option value="BRI">Bank BRI</option>
-                        <option value="DANA">DANA</option>
-                        <option value="SeaBank">SeaBank</option>
+                        <option value="BRI">Bank BRI</option><option value="DANA">DANA</option><option value="SeaBank">SeaBank</option>
                     </select>
                 </div>
-
                 <div class="bg-emerald-50 p-4 rounded-xl mb-4 text-sm">
                     <div class="flex justify-between mb-1"><span class="text-gray-600">Subtotal</span><span id="sum-subtotal">${formatPrice(0)}</span></div>
                     <div class="flex justify-between mb-1 text-red-500"><span>Diskon Ongkir</span><span id="sum-disc">- ${formatPrice(0)}</span></div>
-                    <div class="border-t mt-2 pt-2 flex justify-between font-bold text-base">
-                        <span>Total</span>
-                        <span id="sum-total" style="color: var(--primary-dark);">${formatPrice(0)}</span>
-                    </div>
+                    <div class="border-t mt-2 pt-2 flex justify-between font-bold text-base"><span>Total</span><span id="sum-total" style="color: var(--primary-dark);">${formatPrice(0)}</span></div>
                 </div>
-                
                 <button onclick="proceedToCheckout()" class="btn-primary">Checkout Sekarang</button>`;
-            
-            renderCartItems();
-            updateCartSummary();
-            handlePaymentChange();
+            renderCartItems(); updateCartSummary(); handlePaymentChange();
         }
-
         function handlePaymentChange() {
             const method = document.getElementById('payment-method').value;
             const transferBox = document.getElementById('transfer-method-container');
             const note = document.getElementById('payment-note');
-            
-            if (method === 'cod_full') {
-                transferBox.classList.add('hidden');
-                note.innerText = "COD Full tidak mendapat potongan ongkir.";
-                note.classList.remove('hidden');
-            } else {
-                transferBox.classList.remove('hidden');
-                note.classList.add('hidden');
-            }
-            lastCheckoutData.method = method;
-            updateCartSummary();
+            if (method === 'cod_full') { transferBox.classList.add('hidden'); note.innerText = "COD Full tidak mendapat potongan ongkir."; note.classList.remove('hidden'); } 
+            else { transferBox.classList.remove('hidden'); note.classList.add('hidden'); }
+            lastCheckoutData.method = method; updateCartSummary();
         }
-
         function renderCartItems() {
             const el = document.getElementById('cart-list');
-            
-            if (cart.length === 0) {
-                el.innerHTML = '<p class="text-center text-gray-400 py-8 text-sm">Keranjang kosong</p>';
-                return;
-            }
-            
+            if (cart.length === 0) { el.innerHTML = '<p class="text-center text-gray-400 py-8 text-sm">Keranjang kosong</p>'; return; }
             el.innerHTML = cart.map(i => `
                 <div class="flex gap-3 items-center mb-3 pb-3 border-b border-gray-100">
                     <img src="${i.images?.[0] || 'https://placehold.co/100'}" class="w-14 h-14 rounded-xl object-cover">
                     <div class="flex-1">
                         <h4 class="font-semibold text-sm text-gray-800">${i.name}</h4>
                         <div class="flex items-center gap-2 mt-1">
-                            <button onclick="updateCartQty(${i.id}, -1)" class="w-6 h-6 bg-gray-100 rounded-lg text-sm font-bold hover:bg-gray-200 transition">-</button>
+                            <button onclick="updateCartQty(${i.id}, -1)" class="w-6 h-6 bg-gray-100 rounded-lg text-sm font-bold hover:bg-gray-200">-</button>
                             <span class="text-sm font-bold">${i.qty}</span>
-                            <button onclick="updateCartQty(${i.id}, 1)" class="w-6 h-6 bg-gray-100 rounded-lg text-sm font-bold hover:bg-gray-200 transition">+</button>
+                            <button onclick="updateCartQty(${i.id}, 1)" class="w-6 h-6 bg-gray-100 rounded-lg text-sm font-bold hover:bg-gray-200">+</button>
                         </div>
                     </div>
                     <span class="text-sm font-bold" style="color: var(--primary-dark);">${formatPrice(i.price * i.qty)}</span>
                 </div>
             `).join('');
         }
-
         function updateCartQty(id, delta) {
             const item = cart.find(x => x.id === id);
-            if (item) {
-                item.qty += delta;
-                if (item.qty < 1) {
-                    cart = cart.filter(x => x.id !== id);
-                }
-                saveData();
-                renderCartModal();
-                updateStickyBar();
-            }
+            if (item) { item.qty += delta; if (item.qty < 1) cart = cart.filter(x => x.id !== id); saveData(); renderCartModal(); updateStickyBar(); }
         }
-
         function updateCartSummary() {
             const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
             const method = document.getElementById('payment-method')?.value;
             let disc = 0;
-            
-            if (appliedCoupon && method !== 'cod_full') {
-                disc = appliedCoupon.value;
-            }
-            
+            if (appliedCoupon && method !== 'cod_full') disc = appliedCoupon.value;
             document.getElementById('sum-subtotal').innerText = formatPrice(subtotal);
             document.getElementById('sum-disc').innerText = `- ${formatPrice(disc)}`;
             document.getElementById('sum-total').innerText = formatPrice(Math.max(0, subtotal - disc));
         }
-
         function applyCoupon() {
             const code = document.getElementById('coupon-input').value.toUpperCase();
             const coupon = CONFIG.coupons.find(x => x.code === code);
             const msg = document.getElementById('coupon-msg');
             const method = document.getElementById('payment-method').value;
             const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-            
             msg.classList.remove('hidden');
-            
-            if (method === 'cod_full') {
-                msg.innerText = "Gagal! COD Full tidak dapat menggunakan kupon.";
-                msg.style.color = '#EF4444';
-                appliedCoupon = null;
-            } else if (coupon) {
-                if (subtotal >= coupon.minPurchase) {
-                    appliedCoupon = coupon;
-                    lastCheckoutData.coupon = coupon;
-                    msg.innerText = "Kupon berhasil diterapkan!";
-                    msg.style.color = '#059669';
-                    msg.style.fontWeight = '600';
-                } else {
-                    appliedCoupon = null;
-                    lastCheckoutData.coupon = null;
-                    msg.innerText = `Minimal belanja ${formatPrice(coupon.minPurchase)}`;
-                    msg.style.color = '#EF4444';
-                }
-            } else {
-                appliedCoupon = null;
-                lastCheckoutData.coupon = null;
-                msg.innerText = "Kode kupon tidak valid";
-                msg.style.color = '#EF4444';
-            }
-            
+            if (method === 'cod_full') { msg.innerText = "Gagal! COD Full tidak dapat menggunakan kupon."; msg.style.color = '#EF4444'; appliedCoupon = null; } 
+            else if (coupon) {
+                if (subtotal >= coupon.minPurchase) { appliedCoupon = coupon; lastCheckoutData.coupon = coupon; msg.innerText = "Kupon berhasil diterapkan!"; msg.style.color = '#059669'; } 
+                else { appliedCoupon = null; lastCheckoutData.coupon = null; msg.innerText = `Minimal belanja ${formatPrice(coupon.minPurchase)}`; msg.style.color = '#EF4444'; }
+            } else { appliedCoupon = null; lastCheckoutData.coupon = null; msg.innerText = "Kode kupon tidak valid"; msg.style.color = '#EF4444'; }
             updateCartSummary();
         }
 
         // ========== CHECKOUT FUNCTIONS ==========
-        function proceedToCheckout() {
-            if (cart.length === 0) return;
-            closeCart();
-            renderCheckout(lastCheckoutData.customer || {});
-            openModal('checkout-modal');
-        }
-
+        function proceedToCheckout() { if (cart.length === 0) return; closeCart(); renderCheckout(lastCheckoutData.customer || {}); openModal('checkout-modal'); }
         function renderCheckout(data) {
-            const content = document.getElementById('checkout-content');
-            content.innerHTML = `
-                <button onclick="backToCart()" class="absolute top-4 right-4 text-gray-400 p-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+            document.getElementById('checkout-content').innerHTML = `
+                <button onclick="backToCart()" class="absolute top-4 right-4 text-gray-400 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
                 <h3 class="font-bold text-lg mb-4">Data Pengiriman</h3>
-                
                 <input type="text" id="c-name" class="input-style" placeholder="Nama Lengkap *" value="${data.name || ''}">
                 <input type="tel" id="c-phone" class="input-style" placeholder="Nomor WhatsApp *" value="${data.phone || ''}">
                 <input type="text" id="c-address" class="input-style" placeholder="Alamat Lengkap (RT/RW + Desa) *" value="${data.address || ''}">
@@ -1181,37 +1110,21 @@
                 <input type="text" id="c-city" class="input-style" placeholder="Kabupaten/Kota *" value="${data.city || ''}">
                 <input type="text" id="c-prov" class="input-style" placeholder="Provinsi *" value="${data.prov || ''}">
                 <input type="text" id="c-notes" class="input-style" placeholder="Catatan (Opsional)" value="${data.notes || ''}">
-                
                 <button onclick="generateInvoice()" class="btn-primary mt-2">Buat Pesanan</button>`;
         }
-
-        function backToCart() {
-            closeModal('checkout-modal');
-            openCart();
-        }
+        function backToCart() { closeModal('checkout-modal'); openCart(); }
 
         // ========== INVOICE FUNCTIONS ==========
         function generateOrderId() {
             const date = new Date();
-            const y = date.getFullYear().toString().slice(-2);
-            const m = String(date.getMonth() + 1).padStart(2, '0');
-            const d = String(date.getDate()).padStart(2, '0');
-            const rand = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-            return `KM${y}${m}${d}-${rand}`;
+            return `KM${date.getFullYear().toString().slice(-2)}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
         }
-
         function copyToClipboard(text, btn) {
             navigator.clipboard.writeText(text).then(() => {
-                const originalText = btn.innerText;
-                btn.innerText = 'Tersalin!';
-                btn.style.background = '#059669';
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.style.background = '';
-                }, 1500);
+                const originalText = btn.innerText; btn.innerText = 'Tersalin!'; btn.style.background = '#059669';
+                setTimeout(() => { btn.innerText = originalText; btn.style.background = ''; }, 1500);
             });
         }
-
         function generateInvoice() {
             const name = document.getElementById('c-name').value.trim();
             const phone = document.getElementById('c-phone').value.trim();
@@ -1221,260 +1134,95 @@
             const prov = document.getElementById('c-prov').value.trim();
             const notes = document.getElementById('c-notes').value.trim();
             const payMethod = lastCheckoutData.method;
-            
-            if (!name || !phone || !address || !district || !city || !prov) {
-                alert("Mohon lengkapi semua data wajib!");
-                return;
-            }
+            if (!name || !phone || !address || !district || !city || !prov) { alert("Mohon lengkapi semua data wajib!"); return; }
             
             lastCheckoutData.customer = { name, phone, address, district, city, prov, notes };
             lastCheckoutData.coupon = appliedCoupon;
-            
             const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
             let disc = 0;
-            if (payMethod !== 'cod_full' && appliedCoupon) {
-                disc = appliedCoupon.value;
-            }
+            if (payMethod !== 'cod_full' && appliedCoupon) disc = appliedCoupon.value;
             const total = Math.max(0, subtotal - disc);
             const orderId = generateOrderId();
             const dateStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             
-            currentInvoice = {
-                id: orderId,
-                date: dateStr,
-                customer: lastCheckoutData.customer,
-                items: [...cart],
-                subtotal,
-                disc,
-                total,
-                payment: payMethod,
-                notes,
-                selectedBank: document.getElementById('transfer-bank')?.value || 'BRI'
-            };
+            currentInvoice = { id: orderId, date: dateStr, customer: lastCheckoutData.customer, items: [...cart], subtotal, disc, total, payment: payMethod, notes, selectedBank: document.getElementById('transfer-bank')?.value || 'BRI' };
             
-            cart = [];
-            saveData();
-            updateStickyBar();
-            closeModal('checkout-modal');
+            cart = []; saveData(); updateStickyBar(); closeModal('checkout-modal');
             
-            const selectedBank = currentInvoice.selectedBank;
-            const filteredBank = CONFIG.bankAccounts.find(b => b.bank === selectedBank);
-            
+            const filteredBank = CONFIG.bankAccounts.find(b => b.bank === currentInvoice.selectedBank);
             let paymentInfoHtml = '';
             if (payMethod === 'cod_full') {
-                paymentInfoHtml = `
-                    <div style="margin-top:20px; border-top:1px dashed #ddd; padding-top:15px;">
-                        <h4 style="color:#DC2626; font-weight:bold; margin-bottom:8px;">BAYAR DI TEMPAT (COD)</h4>
-                        <p style="font-size:12px; color:#6B7280;">Total dibayar saat barang diterima.</p>
-                    </div>`;
+                paymentInfoHtml = `<div style="margin-top:20px; border-top:1px dashed #ddd; padding-top:15px;"><h4 style="color:#DC2626; font-weight:bold; margin-bottom:8px;">BAYAR DI TEMPAT (COD)</h4><p style="font-size:12px; color:#6B7280;">Total dibayar saat barang diterima.</p></div>`;
             } else {
-                paymentInfoHtml = `
-                    <div style="margin-top:20px; border-top:1px dashed #ddd; padding-top:15px;">
-                        <h4 style="font-weight:bold; margin-bottom:10px;">INFORMASI PEMBAYARAN</h4>
-                        <div class="bank-card-modern ${filteredBank.cardClass}">
-                            <div class="bank-logo-container">
-                                <div class="bank-logo-box ${filteredBank.logoClass}">${filteredBank.bank}</div>
-                                <span class="bank-name-modern">${filteredBank.bank}</span>
-                            </div>
-                            <div class="bank-number-container">
-                                <span class="bank-number-modern">${filteredBank.number}</span>
-                                <button class="copy-btn" onclick="copyToClipboard('${filteredBank.number}', this)">Salin</button>
-                            </div>
-                            <div class="bank-owner-badge">a.n. ${filteredBank.name}</div>
-                        </div>
-                    </div>`;
+                paymentInfoHtml = `<div style="margin-top:20px; border-top:1px dashed #ddd; padding-top:15px;"><h4 style="font-weight:bold; margin-bottom:10px;">INFORMASI PEMBAYARAN</h4><div class="bank-card-modern ${filteredBank.cardClass}"><div class="bank-logo-container"><div class="bank-logo-box ${filteredBank.logoClass}">${filteredBank.bank}</div><span class="bank-name-modern">${filteredBank.bank}</span></div><div class="bank-number-container"><span class="bank-number-modern">${filteredBank.number}</span><button class="copy-btn" onclick="copyToClipboard('${filteredBank.number}', this)">Salin</button></div><div class="bank-owner-badge">a.n. ${filteredBank.name}</div></div></div>`;
             }
             
-            const invoiceHtml = `
+            document.getElementById('invoice-container').innerHTML = `
                 <div class="invoice-card">
-                    <div style="text-align:center; margin-bottom:20px;">
-                        <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" style="width:60px; margin:0 auto 8px auto; display:block; border-radius:12px;">
-                        <h2 style="font-size:16px; font-weight:800; color:#1F2937;">KEMOENIK OFFICIAL STORE</h2>
-                        <p style="font-size:11px; color:#6B7280; margin-top:4px;">${CONFIG.storeAddress}</p>
-                    </div>
-                    
+                    <div style="text-align:center; margin-bottom:20px;"><img src="${CONFIG.storeLogo}" style="width:60px; margin:0 auto 8px auto; display:block; border-radius:12px;"><h2 style="font-size:16px; font-weight:800; color:#1F2937;">${CONFIG.storeName}</h2><p style="font-size:11px; color:#6B7280; margin-top:4px;">${CONFIG.storeAddress}</p></div>
                     <hr style="margin:15px 0; border-style:dashed;">
-                    
                     <h3 style="text-align:center; font-weight:bold; margin-bottom:20px; font-size:14px;">INVOICE PESANAN</h3>
-                    
                     <div style="margin-bottom: 20px; font-size: 12px;">
-                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #f3f4f6; padding: 8px 0;">
-                            <span style="font-weight: 600;">Order ID</span>
-                            <span style="font-family: monospace;">#${orderId}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #f3f4f6; padding: 8px 0;">
-                            <span>Tanggal</span>
-                            <span>${dateStr}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                            <span>Status</span>
-                            <span style="color: #D97706; font-weight: bold;">Menunggu Pembayaran</span>
-                        </div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #f3f4f6; padding: 8px 0;"><span style="font-weight: 600;">Order ID</span><span style="font-family: monospace;">#${orderId}</span></div>
+                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #f3f4f6; padding: 8px 0;"><span>Tanggal</span><span>${dateStr}</span></div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0;"><span>Status</span><span style="color: #D97706; font-weight: bold;">Menunggu Pembayaran</span></div>
                     </div>
-                    
                     <div style="margin-bottom: 20px; font-size: 12px;">
                         <h4 style="font-weight: bold; margin-bottom: 8px; color:#374151;">DATA PEMBELI</h4>
-                        <p style="color: #1F2937; font-weight: 600;">${name}</p>
-                        <p style="color: #6B7280; font-size: 11px;">${phone}</p>
+                        <p style="color: #1F2937; font-weight: 600;">${name}</p><p style="color: #6B7280; font-size: 11px;">${phone}</p>
                         <p style="color: #9CA3AF; font-size: 11px; margin-top: 4px;">${address}, Kec. ${district}, ${city}, ${prov}</p>
                     </div>
-                    
                     <div style="margin-bottom: 20px;">
                         <h4 style="font-weight: bold; margin-bottom: 12px; font-size: 12px;">DETAIL PESANAN</h4>
                         <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid #e5e7eb; background: #f9fafb;">
-                                    <th style="text-align: left; padding: 8px;">Item</th>
-                                    <th style="text-align: center; padding: 8px; width: 40px;">Qty</th>
-                                    <th style="text-align: right; padding: 8px;">Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${currentInvoice.items.map(i => `
-                                    <tr style="border-bottom: 1px solid #f3f4f6;">
-                                        <td style="padding: 8px;">${i.name}</td>
-                                        <td style="padding: 8px; text-align: center;">${i.qty}</td>
-                                        <td style="padding: 8px; text-align: right;">${formatPrice(i.price * i.qty)}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
+                            <thead><tr style="border-bottom: 1px solid #e5e7eb; background: #f9fafb;"><th style="text-align: left; padding: 8px;">Item</th><th style="text-align: center; padding: 8px; width: 40px;">Qty</th><th style="text-align: right; padding: 8px;">Subtotal</th></tr></thead>
+                            <tbody>${currentInvoice.items.map(i => `<tr style="border-bottom: 1px solid #f3f4f6;"><td style="padding: 8px;">${i.name}</td><td style="padding: 8px; text-align: center;">${i.qty}</td><td style="padding: 8px; text-align: right;">${formatPrice(i.price * i.qty)}</td></tr>`).join('')}</tbody>
                         </table>
                     </div>
-                    
                     <div style="background: #F0FDF4; padding: 16px; border-radius: 12px; font-size: 12px; margin-bottom: 20px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>Subtotal</span><span>${formatPrice(subtotal)}</span></div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 6px; color: #EF4444;"><span>Diskon</span><span>- ${formatPrice(disc)}</span></div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>Ongkir</span><span style="color: #9CA3AF; font-size: 10px;">(Konfirmasi Admin)</span></div>
-                        <div style="border-top: 1px solid #D1FAE5; margin-top: 10px; padding-top: 10px; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px;">
-                            <span>Total Bayar</span>
-                            <span style="color: #059669;">${formatPrice(total)}</span>
-                        </div>
+                        <div style="border-top: 1px solid #D1FAE5; margin-top: 10px; padding-top: 10px; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px;"><span>Total Bayar</span><span style="color: #059669;">${formatPrice(total)}</span></div>
                     </div>
-                    
-                    <div style="font-size: 11px; color: #374151; margin-bottom: 12px; font-weight: 600;">
-                        Metode: ${payMethod === 'cod_full' ? 'COD Full (Bayar Ditempat)' : payMethod === 'cod_ongkir' ? 'COD Ongkir Saja' : 'Transfer Bank'}
-                    </div>
-                    
+                    <div style="font-size: 11px; color: #374151; margin-bottom: 12px; font-weight: 600;">Metode: ${payMethod === 'cod_full' ? 'COD Full (Bayar Ditempat)' : payMethod === 'cod_ongkir' ? 'COD Ongkir Saja' : 'Transfer Bank'}</div>
                     ${paymentInfoHtml}
-                    
                     ${notes ? `<div style="margin-top: 16px; font-size: 11px; color: #6B7280; border-top: 1px solid #e5e7eb; padding-top: 12px;">Catatan: ${notes}</div>` : ''}
-
-                    <div style="margin-top:24px; padding-top:16px; border-top:1px solid #e5e7eb; font-size:10px; text-align:center; color:#9CA3AF;">
-                        <p style="font-weight: 600; color: #6B7280;">Terima kasih telah berbelanja!</p>
-                        <p style="margin-top: 4px;">Pesanan akan diproses setelah konfirmasi pembayaran</p>
-                    </div>
+                    <div style="margin-top:24px; padding-top:16px; border-top:1px solid #e5e7eb; font-size:10px; text-align:center; color:#9CA3AF;"><p style="font-weight: 600; color: #6B7280;">Terima kasih telah berbelanja!</p><p style="margin-top: 4px;">Pesanan akan diproses setelah konfirmasi pembayaran</p></div>
                 </div>`;
-            
-            document.getElementById('invoice-container').innerHTML = invoiceHtml;
             openModal('invoiceModal');
         }
-
-        function closeInvoice() {
-            closeModal('invoiceModal');
-            window.scrollTo(0, 0);
-        }
-
-        function editInvoice() {
-            cart = [...currentInvoice.items];
-            saveData();
-            updateStickyBar();
-            appliedCoupon = lastCheckoutData.coupon || null;
-            closeModal('invoiceModal');
-            openCart();
-        }
-
-        function printInvoice() {
-            window.print();
-        }
-
+        function closeInvoice() { closeModal('invoiceModal'); window.scrollTo(0, 0); }
+        function editInvoice() { cart = [...currentInvoice.items]; saveData(); updateStickyBar(); appliedCoupon = lastCheckoutData.coupon || null; closeModal('invoiceModal'); openCart(); }
+        function printInvoice() { window.print(); }
         function generateWAText() {
-            const d = currentInvoice;
-            const addr = d.customer;
-            
-            let text = `*INVOICE PESANAN*\n`;
-            text += `====================\n`;
-            text += `Order ID: #${d.id}\n`;
-            text += `Tanggal: ${d.date}\n\n`;
-            text += `*DATA PEMBELI*\n`;
-            text += `Nama: ${addr.name}\n`;
-            text += `No HP: ${addr.phone}\n`;
-            text += `Alamat: ${addr.address}, Kec. ${addr.district}, ${addr.city}, ${addr.prov}\n\n`;
-            text += `*DETAIL PESANAN*\n`;
-            text += `-------------------\n`;
-            d.items.forEach(i => {
-                text += `${i.name}\n`;
-                text += `${i.qty} x ${formatPrice(i.price)} = ${formatPrice(i.price * i.qty)}\n`;
-            });
-            text += `-------------------\n`;
-            text += `Subtotal: ${formatPrice(d.subtotal)}\n`;
-            text += `Diskon: ${formatPrice(d.disc)}\n`;
-            text += `Ongkir: (Konfirmasi Admin)\n`;
-            text += `*TOTAL: ${formatPrice(d.total)}*\n\n`;
-            text += `Metode: ${d.payment === 'cod_full' ? 'COD Full' : d.payment === 'cod_ongkir' ? 'COD Ongkir' : 'Transfer'}\n`;
+            const d = currentInvoice; const addr = d.customer;
+            let text = `*INVOICE PESANAN*\n====================\nOrder ID: #${d.id}\nTanggal: ${d.date}\n\n*DATA PEMBELI*\nNama: ${addr.name}\nNo HP: ${addr.phone}\nAlamat: ${addr.address}, Kec. ${addr.district}, ${addr.city}, ${addr.prov}\n\n*DETAIL PESANAN*\n-------------------\n`;
+            d.items.forEach(i => { text += `${i.name}\n${i.qty} x ${formatPrice(i.price)} = ${formatPrice(i.price * i.qty)}\n`; });
+            text += `-------------------\nSubtotal: ${formatPrice(d.subtotal)}\nDiskon: ${formatPrice(d.disc)}\nOngkir: (Konfirmasi Admin)\n*TOTAL: ${formatPrice(d.total)}*\n\nMetode: ${d.payment === 'cod_full' ? 'COD Full' : d.payment === 'cod_ongkir' ? 'COD Ongkir' : 'Transfer'}\n`;
             if (d.notes) text += `\nCatatan: ${d.notes}`;
             return text;
         }
-
-        function sendInvoiceWA() {
-            const text = generateWAText();
-            const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`;
-            window.open(url, "_blank");
-        }
+        function sendInvoiceWA() { window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(generateWAText())}`, "_blank"); }
 
         // ========== SEARCH FUNCTIONS ==========
         function toggleSearch() {
-            document.getElementById('search-bar').classList.toggle('hidden');
-            if (!document.getElementById('search-bar').classList.contains('hidden')) {
-                document.getElementById('search-input').focus();
-            }
+            const bar = document.getElementById('search-bar');
+            bar.classList.toggle('hidden');
+            if (!bar.classList.contains('hidden')) document.getElementById('search-input').focus();
         }
-
         function searchProducts() {
             const term = document.getElementById('search-input').value.toLowerCase().trim();
-            const filtered = CONFIG.products.filter(p => 
-                p.name.toLowerCase().includes(term) || 
-                p.desc.toLowerCase().includes(term)
-            );
-            
-            activeCategory = 'all';
-            renderCategories();
-            
+            const filtered = CONFIG.products.filter(p => p.name.toLowerCase().includes(term) || p.desc.toLowerCase().includes(term));
+            activeCategory = 'all'; renderCategories();
             const container = document.getElementById('product-grid');
-            if (filtered.length === 0) {
-                container.innerHTML = '<p class="col-span-2 text-center text-gray-400 py-12">Produk tidak ditemukan</p>';
-            } else {
-                // Re-render with filtered products
+            if (filtered.length === 0) { container.innerHTML = '<p class="col-span-2 text-center text-gray-400 py-12">Produk tidak ditemukan</p>'; } 
+            else {
                 container.innerHTML = filtered.map(p => {
                     const imgSrc = p.images?.[0] || 'https://placehold.co/400x400/F3F4F6/9CA3AF?text=No+Image';
                     const isWished = wishlist.some(w => w.id === p.id);
                     const finalPrice = p.price - Math.floor(p.price * (p.discount || 0) / 100);
-                    
-                    return `
-                    <div class="product-card" onclick="openDetail(${p.id})">
-                        <div class="product-img-wrapper">
-                            <img src="${imgSrc}" class="product-img" alt="${p.name}" loading="lazy">
-                            ${p.flashSale ? '<span class="flash-sale-badge">Flash Sale</span>' : ''}
-                            ${p.discount > 0 ? `<span class="discount-badge">${p.discount}% OFF</span>` : ''}
-                            <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="wishlist-btn-card ${isWished ? 'active' : ''}">
-                                <svg fill="${isWished ? '#ef4444' : 'none'}" stroke="${isWished ? '#ef4444' : '#9ca3af'}" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">${p.name}</h3>
-                            <div class="product-meta">
-                                <span class="rating-stars">
-                                    ${generateStars(p.rating)}
-                                    <span class="ml-1 text-gray-600">${p.rating}</span>
-                                </span>
-                                <span class="sold-count">| ${formatSold(p.sold)} terjual</span>
-                            </div>
-                            <div class="product-price">${formatPrice(finalPrice)}</div>
-                            ${p.originalPrice ? `<div class="product-price-original">${formatPrice(p.originalPrice)}</div>` : '<div style="height: 16px;"></div>'}
-                            <button onclick="event.stopPropagation(); addCart(${p.id})" class="product-btn">+ Keranjang</button>
-                        </div>
-                    </div>`;
+                    return `<div class="product-card" onclick="openDetail(${p.id})"><div class="product-img-wrapper"><img src="${imgSrc}" class="product-img" alt="${p.name}" loading="lazy">${p.flashSale ? '<span class="flash-sale-badge">Flash Sale</span>' : ''}${p.discount > 0 ? `<span class="discount-badge">${p.discount}% OFF</span>` : ''}<button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="wishlist-btn-card ${isWished ? 'active' : ''}"><svg fill="${isWished ? '#ef4444' : 'none'}" stroke="${isWished ? '#ef4444' : '#9ca3af'}" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></button></div><div class="product-info"><h3 class="product-title">${p.name}</h3><div class="product-meta"><span class="rating-stars">${generateStars(p.rating)}<span class="ml-1 text-gray-600">${p.rating}</span></span><span class="sold-count">| ${formatSold(p.sold)} terjual</span></div><div class="product-price">${formatPrice(finalPrice)}</div>${p.originalPrice ? `<div class="product-price-original">${formatPrice(p.originalPrice)}</div>` : '<div style="height: 16px;"></div>'}<button onclick="event.stopPropagation(); addCart(${p.id})" class="product-btn">+ Keranjang</button></div></div>`;
                 }).join('');
             }
         }
@@ -1482,71 +1230,27 @@
         // ========== TRACKING FUNCTIONS ==========
         function openTracking() {
             document.getElementById('tracking-content').innerHTML = `
-                <button onclick="closeTracking()" class="absolute top-4 right-4 text-gray-400 p-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+                <button onclick="closeTracking()" class="absolute top-4 right-4 text-gray-400 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
                 <h3 class="font-bold text-lg mb-4">Lacak Resi J&T</h3>
-                <div class="flex gap-2 mb-6">
-                    <input type="text" id="tracking-input" class="input-style mb-0 text-sm flex-1" placeholder="Masukkan No. Resi">
-                    <button onclick="simulateTracking()" class="text-white px-4 rounded-xl text-xs font-bold" style="background: #1F2937;">Lacak</button>
-                </div>
-                <div id="tracking-result"></div>`;
+                <div class="flex gap-2 mb-6"><input type="text" id="tracking-input" class="input-style mb-0 text-sm flex-1" placeholder="Masukkan No. Resi"><button onclick="simulateTracking()" class="text-white px-4 rounded-xl text-xs font-bold" style="background: #1F2937;">Lacak</button></div><div id="tracking-result"></div>`;
             openModal('tracking-modal');
         }
-
-        function closeTracking() {
-            closeModal('tracking-modal');
-        }
-
+        function closeTracking() { closeModal('tracking-modal'); }
         function simulateTracking() {
             const resi = document.getElementById('tracking-input').value.trim();
-            if (!resi) {
-                alert("Masukkan nomor resi!");
-                return;
-            }
-            
+            if (!resi) { alert("Masukkan nomor resi!"); return; }
             const steps = ["Paket Diproses di Gudang", "Menuju Transit Hub", "Dalam Perjalanan", "Dibawa Kurir", "Terkirim"];
             const current = Math.floor(Math.random() * 5);
-            
             let html = `<h4 class="font-bold mb-4 text-sm">Resi: ${resi}</h4>`;
             steps.forEach((s, i) => {
                 const isActive = i <= current;
-                html += `
-                    <div class="relative pl-6 pb-4">
-                        <div class="absolute left-0 top-1 w-3 h-3 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-gray-300'}"></div>
-                        ${i < steps.length - 1 ? `<div class="absolute left-[5px] top-4 w-0.5 h-full ${i < current ? 'bg-emerald-500' : 'bg-gray-200'}"></div>` : ''}
-                        <p class="font-medium text-sm ${isActive ? 'text-gray-800' : 'text-gray-400'}">${s}</p>
-                    </div>`;
+                html += `<div class="relative pl-6 pb-4"><div class="absolute left-0 top-1 w-3 h-3 rounded-full ${isActive ? 'bg-emerald-500' : 'bg-gray-300'}"></div>${i < steps.length - 1 ? `<div class="absolute left-[5px] top-4 w-0.5 h-full ${i < current ? 'bg-emerald-500' : 'bg-gray-200'}"></div>` : ''}<p class="font-medium text-sm ${isActive ? 'text-gray-800' : 'text-gray-400'}">${s}</p></div>`;
             });
-            
             document.getElementById('tracking-result').innerHTML = html;
         }
 
         // ========== KEYBOARD SCROLL FIX ==========
-        document.addEventListener("focusin", function(e) {
-            if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") {
-                setTimeout(() => {
-                    e.target.scrollIntoView({ behavior: "smooth", block: "center" });
-                }, 300);
-            }
-        });
-    </script>
-
-    <script>
-        // Redirect if in-app browser
-        (function() {
-            var ua = navigator.userAgent || navigator.vendor || window.opera;
-            var isTikTok = ua.includes("TikTok");
-            var isInstagram = ua.includes("Instagram");
-            var isFacebook = ua.includes("FBAN") || ua.includes("FBAV");
-
-            if (isTikTok || isInstagram || isFacebook) {
-                // Uncomment if you have open.html page
-                // if (!window.location.pathname.includes("open.html")) {
-                //     window.location.href = "open.html";
-                // }
-            }
-        })();
+        document.addEventListener("focusin", function(e) { if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") setTimeout(() => e.target.scrollIntoView({ behavior: "smooth", block: "center" }), 300); });
     </script>
 </body>
 </html>
