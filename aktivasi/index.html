@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Verifikasi Kode Kemonik</title>
+<style>
+body {
+  font-family: Arial;
+  background: #f4f7f8;
+  text-align: center;
+  padding: 50px;
+}
+
+.box {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 350px;
+  margin: auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-top: 15px;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: #1e8e3e;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #166b2e;
+}
+
+#result {
+  margin-top: 20px;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Verifikasi Kode Konsultasi</h2>
+  <input type="text" id="kode" placeholder="Masukkan Kode">
+  <button onclick="cekKode()">Cek Kode</button>
+  <div id="result"></div>
+</div>
+
+<script>
+function cekKode() {
+  var kode = document.getElementById("kode").value;
+  var resultDiv = document.getElementById("result");
+
+  resultDiv.innerHTML = "Memproses...";
+
+  fetch("https://script.google.com/macros/s/AKfycbx_hGL_jgw12KY4tZshbK5iDzbm9V1wi_StrsIqSeUZ0TF61XuqrcEZkMJtIbmrH-7i/exec?kode=" + kode)
+  .then(response => response.text())
+  .then(data => {
+
+    if (data === "SUCCESS") {
+      resultDiv.innerHTML = "Kode berhasil diaktifkan! Redirect ke WhatsApp...";
+      
+      setTimeout(function() {
+        window.location.href = "https://wa.me/6281546450547?text=Halo%20Admin%20Kemonik,%20kode%20saya%20sudah%20aktif.";
+      }, 2000);
+
+    } else if (data === "USED") {
+      resultDiv.innerHTML = "Kode sudah digunakan.";
+
+    } else if (data === "EXPIRED") {
+      resultDiv.innerHTML = "Kode sudah expired.";
+
+    } else {
+      resultDiv.innerHTML = "Kode tidak valid.";
+    }
+
+  })
+  .catch(error => {
+    resultDiv.innerHTML = "Terjadi kesalahan.";
+  });
+}
+</script>
+
+</body>
+</html>
