@@ -366,7 +366,7 @@ function cekKode() {
 
   const formattedWA = formatWA(wa);
 
-  fetch("https://script.google.com/macros/s/AKfycbzFUTw342ab4QbZKGy-korPsfJVAG7QFLsSxlVBQfQJ6uf-tKPz7hmk6zGU9fXNx0zr/exec?kode=" + encodeURIComponent(kode) + "&nama=" + encodeURIComponent(nama) + "&wa=" + encodeURIComponent(formattedWA))
+  fetch("https://script.google.com/macros/s/AKfycbwz0RByXsJQkw5RtK5611KvLNRiO9Bv7VA61Z8sAUaSTYbbTEhG580c-sYboqBgfqWj/exec?kode=" + encodeURIComponent(kode) + "&nama=" + encodeURIComponent(nama) + "&wa=" + encodeURIComponent(formattedWA))
   .then(response => response.text())
   .then(data => {
     console.log("Response:", data);
