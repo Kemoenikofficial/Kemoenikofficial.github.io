@@ -1,164 +1,480 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Verifikasi Kode Konsultasi - Kemonik</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<title>Verifikasi Kode Konsultasi - Kemonik</title>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
+    .container {
+      background: white;
+      padding: 35px 30px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    }
 
-.container {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-}
+    .logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
 
-h2 {
-  margin-bottom: 20px;
-}
+    .logo i {
+      font-size: 50px;
+      color: #667eea;
+      margin-bottom: 10px;
+    }
 
-input {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-}
+    .logo h2 {
+      color: #333;
+      font-size: 22px;
+      font-weight: 600;
+    }
 
-button {
-  width: 100%;
-  padding: 12px;
-  background: #1f6b3c;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: bold;
-  margin-top: 10px;
-}
+    .logo p {
+      color: #888;
+      font-size: 14px;
+      margin-top: 5px;
+    }
 
-button:hover {
-  background: #15512c;
-}
+    .form-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
 
-#result {
-  margin-top: 15px;
-  font-weight: bold;
-}
-</style>
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      font-size: 16px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 14px 14px 45px;
+      border-radius: 12px;
+      border: 2px solid #e8e8e8;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      background: #fafafa;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    input::placeholder {
+      color: #bbb;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .result-box {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .result-box.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .result-box.success {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+    }
+
+    .result-box.error {
+      background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+      color: white;
+    }
+
+    .result-box.warning {
+      background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+      color: white;
+    }
+
+    .result-box i {
+      font-size: 40px;
+      margin-bottom: 15px;
+      display: block;
+      text-align: center;
+    }
+
+    .result-box h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .result-box p {
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .date-info {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .date-info div {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .date-info span:first-child {
+      font-weight: 600;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+
+    button.loading .spinner {
+      display: block;
+    }
+
+    button.loading .btn-text {
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px 20px;
+      }
+      
+      .logo h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="container">
-  <h2>Verifikasi Kode Konsultasi</h2>
-  
-  <input type="text" id="nama" placeholder="Nama Lengkap" required>
-  <input type="tel" id="wa" placeholder="Nomor WhatsApp" required pattern="[0-9]+">
-  <input type="text" id="kode" placeholder="Kode Konsultasi" required>
-  <button id="btnCek" onclick="cekKode()">Cek Kode</button>
+  <div class="logo">
+    <i class="fas fa-stethoscope"></i>
+    <h2>Kemonik</h2>
+    <p>Verifikasi Kode Konsultasi</p>
+  </div>
+
+  <div class="form-group">
+    <label><i class="fas fa-user"></i> Nama Lengkap</label>
+    <div class="input-wrapper">
+      <i class="fas fa-user"></i>
+      <input type="text" id="nama" placeholder="Masukkan nama lengkap Anda" required>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label><i class="fas fa-phone"></i> Nomor WhatsApp</label>
+    <div class="input-wrapper">
+      <i class="fas fa-whatsapp"></i>
+      <input type="tel" id="wa" placeholder="Contoh: 081234567890" required pattern="[0-9]+">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label><i class="fas fa-key"></i> Kode Konsultasi</label>
+    <div class="input-wrapper">
+      <i class="fas fa-ticket-alt"></i>
+      <input type="text" id="kode" placeholder="Masukkan kode konsultasi" required>
+    </div>
+  </div>
+
+  <button id="btnCek" onclick="cekKode()">
+    <span class="btn-text"><i class="fas fa-search"></i> Cek Kode</span>
+    <div class="spinner"></div>
+  </button>
+
   <div id="result"></div>
 
-<script>
+  <div class="footer">
+    <p>Butuh bantuan? Hubungi kami</p>
+  </div>
+</div>
 
+<script>
 function formatWA(wa) {
   wa = wa.replace(/\D/g, '');
-
   if (wa.startsWith("08")) {
     return "62" + wa.substring(1);
   }
-
+  if (wa.startsWith("+62")) {
+    return wa.replace("+62", "62");
+  }
   return wa;
 }
 
-function cekKode() {
+function formatDate(dateString) {
+  if (!dateString) return '-';
+  const date = new Date(dateString);
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  return date.toLocaleDateString('id-ID', options);
+}
 
-  var nama = document.getElementById("nama").value.trim();
-  var wa = document.getElementById("wa").value.trim();
-  var kode = document.getElementById("kode").value.trim();
-  var resultDiv = document.getElementById("result");
-  var button = document.getElementById("btnCek");
+function showResult(type, icon, title, message, dateInfo = null) {
+  const resultDiv = document.getElementById('result');
+  let dateHtml = '';
+  
+  if (dateInfo) {
+    dateHtml = `
+      <div class="date-info">
+        <div>
+          <span><i class="fas fa-play-circle"></i> Aktif Mulai:</span>
+          <span>${dateInfo.mulai}</span>
+        </div>
+        <div>
+          <span><i class="fas fa-clock"></i> Berlaku Sampai:</span>
+          <span>${dateInfo.expired}</span>
+        </div>
+      </div>
+    `;
+  }
+  
+  resultDiv.innerHTML = `
+    <div class="result-box ${type} show">
+      <i class="fas ${icon}"></i>
+      <h3>${title}</h3>
+      <p>${message}</p>
+      ${dateHtml}
+    </div>
+  `;
+}
+
+function cekKode() {
+  const nama = document.getElementById("nama").value.trim();
+  const wa = document.getElementById("wa").value.trim();
+  const kode = document.getElementById("kode").value.trim();
+  const resultDiv = document.getElementById("result");
+  const button = document.getElementById("btnCek");
 
   resultDiv.innerHTML = "";
 
+  // Validasi Nama
   if (nama.length < 3) {
-    resultDiv.innerHTML = "Nama minimal 3 karakter.";
+    showResult('error', 'fa-times-circle', 'Nama Tidak Valid', 'Nama minimal 3 karakter.');
     return;
   }
 
-  if (wa.length < 10 || !/^[0-9]+$/.test(wa)) {
-    resultDiv.innerHTML = "Nomor WA tidak valid.";
+  // Validasi WhatsApp
+  const waClean = wa.replace(/\D/g, '');
+  if (waClean.length < 10) {
+    showResult('error', 'fa-times-circle', 'Nomor Tidak Valid', 'Nomor WhatsApp minimal 10 digit.');
     return;
   }
 
+  // Validasi Kode
   if (kode.length < 6) {
-    resultDiv.innerHTML = "Kode tidak valid.";
+    showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi minimal 6 karakter.');
     return;
   }
 
+  // Loading state
   button.disabled = true;
-  button.innerHTML = "Memproses...";
+  button.classList.add('loading');
 
-  wa = formatWA(wa);
+  const formattedWA = formatWA(wa);
 
-  fetch("https://script.google.com/macros/s/AKfycbzFUTw342ab4QbZKGy-korPsfJVAG7QFLsSxlVBQfQJ6uf-tKPz7hmk6zGU9fXNx0zr/exec?kode=" + kode + "&nama=" + nama + "&wa=" + wa)
+  fetch("https://script.google.com/macros/s/AKfycbzFUTw342ab4QbZKGy-korPsfJVAG7QFLsSxlVBQfQJ6uf-tKPz7hmk6zGU9fXNx0zr/exec?kode=" + encodeURIComponent(kode) + "&nama=" + encodeURIComponent(nama) + "&wa=" + encodeURIComponent(formattedWA))
   .then(response => response.text())
   .then(data => {
-
-    if (data === "SUCCESS") {
-
-      var pesan =
-      "Halo Admin Kemonik,%0A%0A" +
-      "Nama: " + nama + "%0A" +
-      "Kode: " + kode + "%0A" +
-      "Nomor: " + wa + "%0A%0A" +
-      "Saya siap memulai konsultasi.";
-
-      resultDiv.innerHTML = "Kode aktif! Menghubungkan ke WhatsApp...";
-
-      setTimeout(function() {
-        window.location.href =
-        "https://wa.me/6281546450547?text=" + pesan;
-      }, 2000);
-
-    } else if (data === "USED") {
-      resultDiv.innerHTML = "Kode sudah digunakan.";
-      button.disabled = false;
-      button.innerHTML = "Cek Kode";
-
-    } else if (data === "EXPIRED") {
-      resultDiv.innerHTML = "Kode sudah expired.";
-      button.disabled = false;
-      button.innerHTML = "Cek Kode";
-
-    } else {
-      resultDiv.innerHTML = "Kode tidak valid.";
-      button.disabled = false;
-      button.innerHTML = "Cek Kode";
+    console.log("Response:", data);
+    
+    try {
+      // Coba parsing sebagai JSON
+      const jsonData = JSON.parse(data);
+      
+      if (jsonData.status === "SUCCESS") {
+        const dateInfo = {
+          mulai: formatDate(jsonData.tanggal_mulai),
+          expired: formatDate(jsonData.tanggal_expired)
+        };
+        
+        const pesan =
+          "Halo Admin Kemonik,%0A%0A" +
+          "Nama: " + nama + "%0A" +
+          "Kode: " + kode + "%0A" +
+          "Nomor: " + formattedWA + "%0A%0A" +
+          "Saya siap memulai konsultasi.";
+        
+        showResult(
+          'success', 
+          'fa-check-circle', 
+          'Kode Aktif! 🎉', 
+          'Selamat! Konsultasi Anda siap dimulai.',
+          dateInfo
+        );
+        
+        setTimeout(function() {
+          window.location.href = "https://wa.me/6281546450547?text=" + pesan;
+        }, 2500);
+        
+      } else if (jsonData.status === "USED") {
+        const dateInfo = jsonData.tanggal_mulai ? {
+          mulai: formatDate(jsonData.tanggal_mulai),
+          expired: formatDate(jsonData.tanggal_expired)
+        } : null;
+        
+        showResult(
+          'warning', 
+          'fa-history', 
+          'Kode Sudah Digunakan', 
+          'Kode ini sudah pernah digunakan.',
+          dateInfo
+        );
+        button.disabled = false;
+        button.classList.remove('loading');
+        
+      } else if (jsonData.status === "EXPIRED") {
+        showResult(
+          'warning', 
+          'fa-calendar-times', 
+          'Kode Sudah Expired', 
+          'Masa berlaku kode sudah berakhir.',
+          { mulai: formatDate(jsonData.tanggal_mulai), expired: formatDate(jsonData.tanggal_expired) }
+        );
+        button.disabled = false;
+        button.classList.remove('loading');
+      }
+      
+    } catch (e) {
+      // Response format lama (text biasa)
+      if (data === "SUCCESS") {
+        const pesan =
+          "Halo Admin Kemonik,%0A%0A" +
+          "Nama: " + nama + "%0A" +
+          "Kode: " + kode + "%0A" +
+          "Nomor: " + formattedWA + "%0A%0A" +
+          "Saya siap memulai konsultasi.";
+        
+        showResult('success', 'fa-check-circle', 'Kode Aktif! 🎉', 'Menghubungkan ke WhatsApp...');
+        
+        setTimeout(function() {
+          window.location.href = "https://wa.me/6281546450547?text=" + pesan;
+        }, 2500);
+        
+      } else if (data === "USED") {
+        showResult('warning', 'fa-history', 'Kode Sudah Digunakan', 'Kode ini sudah pernah digunakan.');
+        button.disabled = false;
+        button.classList.remove('loading');
+        
+      } else if (data === "EXPIRED") {
+        showResult('warning', 'fa-calendar-times', 'Kode Expired', 'Masa berlaku kode sudah berakhir.');
+        button.disabled = false;
+        button.classList.remove('loading');
+        
+      } else {
+        showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi yang Anda masukkan tidak valid.');
+        button.disabled = false;
+        button.classList.remove('loading');
+      }
     }
-
   })
   .catch(error => {
-    resultDiv.innerHTML = "Terjadi kesalahan.";
+    console.error("Error:", error);
+    showResult('error', 'fa-exclamation-triangle', 'Terjadi Kesalahan', 'Silakan coba lagi dalam beberapa saat.');
     button.disabled = false;
-    button.innerHTML = "Cek Kode";
+    button.classList.remove('loading');
   });
 }
 
+// Handle Enter key
+document.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    cekKode();
+  }
+});
 </script>
 
 </body>
