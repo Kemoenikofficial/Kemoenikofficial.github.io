@@ -66,23 +66,22 @@ button:hover {
 
 <div class="container">
   <h2>Verifikasi Kode Konsultasi</h2>
-
-  <input type="text" id="nama" placeholder="Nama Lengkap">
-  <input type="text" id="wa" placeholder="Nomor WhatsApp">
-  <input type="text" id="kode" placeholder="Kode Konsultasi">
-
-  <button onclick="cekKode()">Cek Kode</button>
-
+  
+  <input type="text" id="nama" placeholder="Nama Lengkap" required>
+  <input type="tel" id="wa" placeholder="Nomor WhatsApp" required pattern="[0-9]+">
+  <input type="text" id="kode" placeholder="Kode Konsultasi" required>
+  <button id="btnCek" onclick="cekKode()">Cek Kode</button>
   <div id="result"></div>
-</div>
 
 <script>
 
 function formatWA(wa) {
   wa = wa.replace(/\D/g, '');
+
   if (wa.startsWith("08")) {
     return "62" + wa.substring(1);
   }
+
   return wa;
 }
 
@@ -92,15 +91,29 @@ function cekKode() {
   var wa = document.getElementById("wa").value.trim();
   var kode = document.getElementById("kode").value.trim();
   var resultDiv = document.getElementById("result");
+  var button = document.getElementById("btnCek");
 
-  if (nama === "" || wa === "" || kode === "") {
-    resultDiv.innerHTML = "Semua field wajib diisi.";
+  resultDiv.innerHTML = "";
+
+  if (nama.length < 3) {
+    resultDiv.innerHTML = "Nama minimal 3 karakter.";
     return;
   }
 
-  wa = formatWA(wa);
+  if (wa.length < 10 || !/^[0-9]+$/.test(wa)) {
+    resultDiv.innerHTML = "Nomor WA tidak valid.";
+    return;
+  }
 
-  resultDiv.innerHTML = "Memproses...";
+  if (kode.length < 6) {
+    resultDiv.innerHTML = "Kode tidak valid.";
+    return;
+  }
+
+  button.disabled = true;
+  button.innerHTML = "Memproses...";
+
+  wa = formatWA(wa);
 
   fetch("https://script.google.com/macros/s/AKfycbx_hGL_jgw12KY4tZshbK5iDzbm9V1wi_StrsIqSeUZ0TF61XuqrcEZkMJtIbmrH-7i/exec?kode=" + kode + "&nama=" + nama + "&wa=" + wa)
   .then(response => response.text())
@@ -108,7 +121,7 @@ function cekKode() {
 
     if (data === "SUCCESS") {
 
-      var pesan = 
+      var pesan =
       "Halo Admin Kemonik,%0A%0A" +
       "Nama: " + nama + "%0A" +
       "Kode: " + kode + "%0A" +
@@ -118,23 +131,31 @@ function cekKode() {
       resultDiv.innerHTML = "Kode aktif! Menghubungkan ke WhatsApp...";
 
       setTimeout(function() {
-        window.location.href = 
+        window.location.href =
         "https://wa.me/6281546450547?text=" + pesan;
       }, 2000);
 
     } else if (data === "USED") {
       resultDiv.innerHTML = "Kode sudah digunakan.";
+      button.disabled = false;
+      button.innerHTML = "Cek Kode";
 
     } else if (data === "EXPIRED") {
       resultDiv.innerHTML = "Kode sudah expired.";
+      button.disabled = false;
+      button.innerHTML = "Cek Kode";
 
     } else {
       resultDiv.innerHTML = "Kode tidak valid.";
+      button.disabled = false;
+      button.innerHTML = "Cek Kode";
     }
 
   })
   .catch(error => {
     resultDiv.innerHTML = "Terjadi kesalahan.";
+    button.disabled = false;
+    button.innerHTML = "Cek Kode";
   });
 }
 
