@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CALFATLOSS - Smart Nutrition Calculator</title>
+    
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        /* ============================================
+           CORE VARIABLES & BASE STYLES
+           ============================================ */
         :root {
             --primary: #3F5F4A;
             --primary-dark: #344E3D;
@@ -32,9 +39,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -47,7 +52,9 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* App Header */
+        /* ============================================
+           HEADER STYLES
+           ============================================ */
         .app-header {
             background: var(--primary);
             padding: 48px 24px 40px;
@@ -56,32 +63,29 @@
             overflow: hidden;
         }
 
-        .app-header::before {
+        .app-header::before,
+        .app-header::after {
             content: '';
             position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .app-header::before {
             top: -50%;
             right: -20%;
             width: 200px;
             height: 200px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
         }
 
         .app-header::after {
-            content: '';
-            position: absolute;
             bottom: -30%;
             left: -10%;
             width: 150px;
             height: 150px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 50%;
         }
 
-        .app-brand {
-            position: relative;
-            z-index: 1;
-        }
+        .app-brand { position: relative; z-index: 1; }
 
         .app-logo {
             font-size: 28px;
@@ -98,7 +102,9 @@
             letter-spacing: 0.5px;
         }
 
-        /* Main Container */
+        /* ============================================
+           MAIN CONTAINER
+           ============================================ */
         .app-main {
             padding: 0 16px 100px;
             margin-top: -20px;
@@ -106,7 +112,9 @@
             z-index: 10;
         }
 
-        /* Cards */
+        /* ============================================
+           CARD COMPONENTS
+           ============================================ */
         .card {
             background: var(--card);
             border-radius: var(--radius);
@@ -115,9 +123,7 @@
             overflow: hidden;
         }
 
-        .card-body {
-            padding: 24px 20px;
-        }
+        .card-body { padding: 24px 20px; }
 
         .card-header {
             padding: 20px;
@@ -150,7 +156,9 @@
             stroke-width: 2;
         }
 
-        /* Dashboard Stats */
+        /* ============================================
+           STATS GRID
+           ============================================ */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -164,9 +172,7 @@
             text-align: center;
         }
 
-        .stat-item-full {
-            grid-column: span 2;
-        }
+        .stat-item-full { grid-column: span 2; }
 
         .stat-label {
             font-size: 11px;
@@ -202,24 +208,14 @@
             margin-top: 8px;
         }
 
-        .stat-badge-num {
-            font-size: 18px;
-            font-weight: 700;
-        }
+        .stat-badge-num { font-size: 18px; font-weight: 700; }
+        .stat-badge-text { font-size: 12px; opacity: 0.9; }
 
-        .stat-badge-text {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        /* Form Elements */
-        .form-section {
-            margin-bottom: 20px;
-        }
-
-        .form-section:last-child {
-            margin-bottom: 0;
-        }
+        /* ============================================
+           FORM ELEMENTS
+           ============================================ */
+        .form-section { margin-bottom: 20px; }
+        .form-section:last-child { margin-bottom: 0; }
 
         .form-label {
             display: block;
@@ -250,10 +246,7 @@
             border-color: var(--primary);
         }
 
-        .form-input::placeholder {
-            color: var(--text-muted);
-            opacity: 0.5;
-        }
+        .form-input::placeholder { color: var(--text-muted); opacity: 0.5; }
 
         select.form-input {
             appearance: none;
@@ -269,7 +262,9 @@
             gap: 12px;
         }
 
-        /* Activity Info Accordion */
+        /* ============================================
+           ACTIVITY INFO TOGGLE
+           ============================================ */
         .activity-info-toggle {
             display: flex;
             align-items: center;
@@ -282,15 +277,9 @@
             transition: background 0.3s ease;
         }
 
-        .activity-info-toggle:active {
-            background: rgba(63, 95, 74, 0.1);
-        }
+        .activity-info-toggle:active { background: rgba(63, 95, 74, 0.1); }
 
-        .activity-info-label {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-muted);
-        }
+        .activity-info-label { font-size: 13px; font-weight: 500; color: var(--text-muted); }
 
         .activity-info-icon {
             width: 20px;
@@ -298,9 +287,7 @@
             transition: transform 0.3s ease;
         }
 
-        .activity-info-icon.expanded {
-            transform: rotate(180deg);
-        }
+        .activity-info-icon.expanded { transform: rotate(180deg); }
 
         .activity-info-content {
             max-height: 0;
@@ -326,14 +313,8 @@
             border-bottom: 1px solid rgba(0, 0, 0, 0.04);
         }
 
-        .activity-row:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .activity-row:first-child {
-            padding-top: 0;
-        }
+        .activity-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .activity-row:first-child { padding-top: 0; }
 
         .activity-badge {
             padding: 4px 10px;
@@ -345,17 +326,11 @@
             white-space: nowrap;
         }
 
-        .activity-text {
-            font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
+        .activity-text { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
-        /* Macro Section */
-        .macro-card {
-            background: var(--card);
-        }
-
+        /* ============================================
+           MACRO SECTION
+           ============================================ */
         .macro-grid {
             display: grid;
             grid-template-columns: 130px 1fr;
@@ -363,11 +338,7 @@
             align-items: center;
         }
 
-        .chart-wrap {
-            position: relative;
-            display: flex;
-            justify-content: center;
-        }
+        .chart-wrap { position: relative; display: flex; justify-content: center; }
 
         .chart-center {
             position: absolute;
@@ -377,32 +348,12 @@
             text-align: center;
         }
 
-        .chart-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text);
-            line-height: 1;
-        }
+        .chart-value { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+        .chart-label { font-size: 10px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .chart-label {
-            font-size: 10px;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .macro-list { display: flex; flex-direction: column; gap: 16px; }
 
-        .macro-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .macro-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .macro-row { display: flex; align-items: center; gap: 12px; }
 
         .macro-dot {
             width: 8px;
@@ -415,23 +366,10 @@
         .macro-dot-lemak { background: var(--gold); }
         .macro-dot-karbo { background: var(--green-light); }
 
-        .macro-info {
-            flex: 1;
-        }
+        .macro-info { flex: 1; }
+        .macro-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
 
-        .macro-name {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-
-        .macro-track {
-            height: 5px;
-            background: var(--bg);
-            border-radius: 3px;
-            overflow: hidden;
-        }
+        .macro-track { height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; }
 
         .macro-fill {
             height: 100%;
@@ -443,13 +381,7 @@
         .macro-fill-lemak { background: var(--gold); }
         .macro-fill-karbo { background: var(--green-light); }
 
-        .macro-value {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text);
-            min-width: 55px;
-            text-align: right;
-        }
+        .macro-value { font-size: 15px; font-weight: 600; color: var(--text); min-width: 55px; text-align: right; }
 
         .macro-calories {
             display: grid;
@@ -467,21 +399,12 @@
             border-radius: 12px;
         }
 
-        .macro-cal-value {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
+        .macro-cal-value { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+        .macro-cal-label { font-size: 9px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
 
-        .macro-cal-label {
-            font-size: 9px;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        /* BMR Section */
+        /* ============================================
+           BMR SECTION
+           ============================================ */
         .bmr-section {
             display: flex;
             align-items: center;
@@ -491,31 +414,10 @@
             border-radius: 14px;
         }
 
-        .bmr-info {
-            flex: 1;
-        }
-
-        .bmr-label {
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .bmr-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .bmr-unit {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-left: 2px;
-        }
+        .bmr-info { flex: 1; }
+        .bmr-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .bmr-value { font-size: 28px; font-weight: 700; color: var(--primary); }
+        .bmr-unit { font-size: 13px; font-weight: 500; color: var(--text-muted); margin-left: 2px; }
 
         .bmr-icon {
             width: 48px;
@@ -527,14 +429,11 @@
             justify-content: center;
         }
 
-        .bmr-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: var(--primary);
-            stroke-width: 1.5;
-        }
+        .bmr-icon svg { width: 22px; height: 22px; stroke: var(--primary); stroke-width: 1.5; }
 
-        /* Status Alert */
+        /* ============================================
+           STATUS ALERT
+           ============================================ */
         .status-alert {
             margin-top: 16px;
             padding: 16px;
@@ -543,19 +442,10 @@
             display: none;
         }
 
-        .status-alert.show {
-            display: block;
-        }
+        .status-alert.show { display: block; }
+        .status-alert.warning { background: rgba(201, 178, 124, 0.15); }
 
-        .status-alert.warning {
-            background: rgba(201, 178, 124, 0.15);
-        }
-
-        .status-row {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
+        .status-row { display: flex; gap: 12px; align-items: flex-start; }
 
         .status-icon {
             width: 22px;
@@ -568,33 +458,17 @@
             flex-shrink: 0;
         }
 
-        .status-alert.warning .status-icon {
-            background: var(--gold);
-        }
+        .status-alert.warning .status-icon { background: var(--gold); }
 
-        .status-icon svg {
-            width: 12px;
-            height: 12px;
-            stroke: white;
-            stroke-width: 2.5;
-        }
+        .status-icon svg { width: 12px; height: 12px; stroke: white; stroke-width: 2.5; }
 
-        .status-msg {
-            font-size: 13px;
-            color: var(--text);
-            line-height: 1.6;
-        }
+        .status-msg { font-size: 13px; color: var(--text); line-height: 1.6; }
+        .status-msg strong { font-weight: 600; color: var(--primary); }
+        .status-alert.warning .status-msg strong { color: #8B7355; }
 
-        .status-msg strong {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .status-alert.warning .status-msg strong {
-            color: #8B7355;
-        }
-
-        /* Print Button */
+        /* ============================================
+           PRINT BUTTON
+           ============================================ */
         .print-btn {
             width: 100%;
             padding: 18px 24px;
@@ -614,27 +488,14 @@
             margin-top: 8px;
         }
 
-        .print-btn:hover {
-            background: var(--primary-dark);
-        }
+        .print-btn:hover { background: var(--primary-dark); }
+        .print-btn:active { transform: scale(0.98); }
+        .print-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+        .print-btn svg { width: 18px; height: 18px; stroke: white; stroke-width: 2; }
 
-        .print-btn:active {
-            transform: scale(0.98);
-        }
-
-        .print-btn:disabled {
-            background: var(--text-muted);
-            cursor: not-allowed;
-        }
-
-        .print-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: white;
-            stroke-width: 2;
-        }
-
-        /* Footer */
+        /* ============================================
+           FOOTER
+           ============================================ */
         .app-footer {
             text-align: center;
             padding: 24px 20px;
@@ -643,45 +504,31 @@
         }
 
         /* ============================================
-           PRINT REPORT STYLES - 2 PAGES
+           ANIMATIONS
            ============================================ */
-        
-        .print-report {
-            display: none;
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
+        .animate-in { animation: slideUp 0.5s ease forwards; }
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+        /* ============================================
+           PRINT REPORT STYLES
+           ============================================ */
+        .print-report { display: none; }
+
         @media print {
-            .app-header,
-            .app-main,
-            .app-footer,
-            .no-print {
-                display: none !important;
-            }
+            .app-header, .app-main, .app-footer, .no-print { display: none !important; }
+            .print-report { display: block !important; }
+            body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
 
-            .print-report {
-                display: block !important;
-            }
-
-            body {
-                background: white;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                margin: 0;
-                padding: 0;
-            }
-
-            @page {
-                size: A4 portrait;
-                margin: 0;
-            }
-
-            @page :first {
-                margin: 0;
-            }
-
-            .page-break {
-                page-break-before: always;
-            }
+            @page { size: A4 portrait; margin: 0; }
+            @page :first { margin: 0; }
+            .page-break { page-break-before: always; }
 
             .report-page {
                 width: 210mm;
@@ -703,7 +550,6 @@
             color: #1F1F1F;
         }
 
-        /* PAGE 1 - RINGKASAN HASIL */
         .report-header {
             text-align: center;
             padding-bottom: 20px;
@@ -711,20 +557,8 @@
             margin-bottom: 24px;
         }
 
-        .report-logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #3F5F4A;
-            letter-spacing: 3px;
-            margin-bottom: 4px;
-        }
-
-        .report-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1F1F1F;
-            margin-bottom: 12px;
-        }
+        .report-logo { font-size: 24px; font-weight: 700; color: #3F5F4A; letter-spacing: 3px; margin-bottom: 4px; }
+        .report-title { font-size: 14px; font-weight: 600; color: #1F1F1F; margin-bottom: 12px; }
 
         .report-meta {
             display: flex;
@@ -734,18 +568,10 @@
             color: #6B6B6B;
         }
 
-        .report-meta-item {
-            display: flex;
-            gap: 6px;
-        }
+        .report-meta-item { display: flex; gap: 6px; }
+        .report-meta-label { font-weight: 500; }
 
-        .report-meta-label {
-            font-weight: 500;
-        }
-
-        .report-section {
-            margin-bottom: 20px;
-        }
+        .report-section { margin-bottom: 20px; }
 
         .report-section-title {
             font-size: 11px;
@@ -771,30 +597,11 @@
             text-align: center;
         }
 
-        .report-data-label {
-            font-size: 9px;
-            color: #6B6B6B;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
+        .report-data-label { font-size: 9px; color: #6B6B6B; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+        .report-data-value { font-size: 18px; font-weight: 700; color: #3F5F4A; }
+        .report-data-unit { font-size: 10px; color: #6B6B6B; }
 
-        .report-data-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #3F5F4A;
-        }
-
-        .report-data-unit {
-            font-size: 10px;
-            color: #6B6B6B;
-        }
-
-        .report-main-results {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
+        .report-main-results { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
         .report-main-item {
             padding: 18px;
@@ -804,37 +611,13 @@
             text-align: center;
         }
 
-        .report-main-label {
-            font-size: 9px;
-            opacity: 0.9;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .report-main-label { font-size: 9px; opacity: 0.9; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .report-main-value { font-size: 28px; font-weight: 700; }
+        .report-main-unit { font-size: 11px; opacity: 0.85; margin-top: 2px; }
 
-        .report-main-value {
-            font-size: 28px;
-            font-weight: 700;
-        }
+        .report-chart-section { display: flex; gap: 24px; align-items: center; }
 
-        .report-main-unit {
-            font-size: 11px;
-            opacity: 0.85;
-            margin-top: 2px;
-        }
-
-        .report-chart-section {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .report-chart-wrap {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            flex-shrink: 0;
-        }
+        .report-chart-wrap { position: relative; width: 150px; height: 150px; flex-shrink: 0; }
 
         .report-chart-center {
             position: absolute;
@@ -844,20 +627,10 @@
             text-align: center;
         }
 
-        .report-chart-total {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1F1F1F;
-        }
+        .report-chart-total { font-size: 20px; font-weight: 700; color: #1F1F1F; }
+        .report-chart-label { font-size: 9px; color: #6B6B6B; }
 
-        .report-chart-label {
-            font-size: 9px;
-            color: #6B6B6B;
-        }
-
-        .report-macro-list {
-            flex: 1;
-        }
+        .report-macro-list { flex: 1; }
 
         .report-macro-row {
             display: flex;
@@ -867,38 +640,12 @@
             border-bottom: 1px solid #E5E5E5;
         }
 
-        .report-macro-row:last-child {
-            border-bottom: none;
-        }
+        .report-macro-row:last-child { border-bottom: none; }
+        .report-macro-dot { width: 10px; height: 10px; border-radius: 3px; }
+        .report-macro-name { flex: 1; font-size: 11px; font-weight: 500; }
+        .report-macro-gram { font-size: 13px; font-weight: 600; color: #3F5F4A; min-width: 45px; text-align: right; }
+        .report-macro-cal { font-size: 10px; color: #6B6B6B; min-width: 55px; text-align: right; }
 
-        .report-macro-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 3px;
-        }
-
-        .report-macro-name {
-            flex: 1;
-            font-size: 11px;
-            font-weight: 500;
-        }
-
-        .report-macro-gram {
-            font-size: 13px;
-            font-weight: 600;
-            color: #3F5F4A;
-            min-width: 45px;
-            text-align: right;
-        }
-
-        .report-macro-cal {
-            font-size: 10px;
-            color: #6B6B6B;
-            min-width: 55px;
-            text-align: right;
-        }
-
-        /* Estimasi Target - NEW FORMAT */
         .report-target-box {
             background: linear-gradient(135deg, #F0F4F1 0%, #E8EDE9 100%);
             border-radius: 12px;
@@ -906,19 +653,8 @@
             border: 1px solid #D4E5D6;
         }
 
-        .report-target-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #3F5F4A;
-            margin-bottom: 14px;
-            text-align: center;
-        }
-
-        .report-target-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
+        .report-target-title { font-size: 12px; font-weight: 600; color: #3F5F4A; margin-bottom: 14px; text-align: center; }
+        .report-target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
         .report-target-item {
             display: flex;
@@ -929,26 +665,10 @@
             border-radius: 10px;
         }
 
-        .report-target-icon {
-            font-size: 20px;
-        }
-
-        .report-target-info {
-            flex: 1;
-        }
-
-        .report-target-label {
-            font-size: 9px;
-            color: #6B6B6B;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .report-target-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #3F5F4A;
-        }
+        .report-target-icon { font-size: 20px; }
+        .report-target-info { flex: 1; }
+        .report-target-label { font-size: 9px; color: #6B6B6B; text-transform: uppercase; letter-spacing: 0.3px; }
+        .report-target-value { font-size: 18px; font-weight: 700; color: #3F5F4A; }
 
         .report-page1-footer {
             margin-top: 20px;
@@ -959,12 +679,8 @@
             color: #6B6B6B;
         }
 
-        /* PAGE 2 - ANALISIS DETAIL */
-        .report-detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
+        /* Page 2 Styles */
+        .report-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
         .report-detail-box {
             background: #F8F7F5;
@@ -991,22 +707,10 @@
             border-bottom: 1px solid rgba(0,0,0,0.04);
         }
 
-        .report-detail-row:last-child {
-            border-bottom: none;
-        }
+        .report-detail-row:last-child { border-bottom: none; }
+        .report-detail-label { font-size: 11px; color: #6B6B6B; }
+        .report-detail-value { font-size: 13px; font-weight: 600; color: #1F1F1F; }
 
-        .report-detail-label {
-            font-size: 11px;
-            color: #6B6B6B;
-        }
-
-        .report-detail-value {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1F1F1F;
-        }
-
-        /* Status Badge */
         .report-status-box {
             padding: 16px 20px;
             border-radius: 10px;
@@ -1014,20 +718,9 @@
             margin-bottom: 16px;
         }
 
-        .report-status-box.status-good {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-
-        .report-status-box.status-warning {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        .report-status-box.status-danger {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
+        .report-status-box.status-good { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .report-status-box.status-warning { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .report-status-box.status-danger { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); }
 
         .report-status-badge {
             display: inline-flex;
@@ -1037,41 +730,16 @@
             font-weight: 600;
         }
 
-        .report-status-box.status-good .report-status-badge {
-            color: #16a34a;
-        }
+        .report-status-box.status-good .report-status-badge { color: #16a34a; }
+        .report-status-box.status-warning .report-status-badge { color: #d97706; }
+        .report-status-box.status-danger .report-status-badge { color: #dc2626; }
 
-        .report-status-box.status-warning .report-status-badge {
-            color: #d97706;
-        }
+        .report-status-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .report-status-box.status-good .report-status-dot { background: #16a34a; }
+        .report-status-box.status-warning .report-status-dot { background: #f59e0b; }
+        .report-status-box.status-danger .report-status-dot { background: #ef4444; }
 
-        .report-status-box.status-danger .report-status-badge {
-            color: #dc2626;
-        }
-
-        .report-status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .report-status-box.status-good .report-status-dot {
-            background: #16a34a;
-        }
-
-        .report-status-box.status-warning .report-status-dot {
-            background: #f59e0b;
-        }
-
-        .report-status-box.status-danger .report-status-dot {
-            background: #ef4444;
-        }
-
-        .report-status-msg {
-            font-size: 10px;
-            color: #6B6B6B;
-            margin-top: 6px;
-        }
+        .report-status-msg { font-size: 10px; color: #6B6B6B; margin-top: 6px; }
 
         .report-footer {
             margin-top: auto;
@@ -1080,77 +748,30 @@
             text-align: center;
         }
 
-        .report-footer-note {
-            font-size: 9px;
-            color: #6B6B6B;
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
+        .report-footer-note { font-size: 9px; color: #6B6B6B; line-height: 1.6; margin-bottom: 8px; }
+        .report-footer-watermark { font-size: 8px; color: #999; }
 
-        .report-footer-watermark {
-            font-size: 8px;
-            color: #999;
-        }
-
-        /* Animations */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-in {
-            animation: slideUp 0.5s ease forwards;
-        }
-
-        .delay-1 { animation-delay: 0.1s; opacity: 0; }
-        .delay-2 { animation-delay: 0.2s; opacity: 0; }
-        .delay-3 { animation-delay: 0.3s; opacity: 0; }
-
-        /* Responsive Tablet+ */
+        /* ============================================
+           RESPONSIVE STYLES
+           ============================================ */
         @media (min-width: 768px) {
-            .app-header {
-                padding: 60px 32px 50px;
-            }
-
-            .app-logo {
-                font-size: 32px;
-            }
-
-            .app-main {
-                max-width: 480px;
-                margin: -24px auto 0;
-                padding: 0 24px 100px;
-            }
-
-            .card-body {
-                padding: 28px 24px;
-            }
-
-            .stat-value {
-                font-size: 36px;
-            }
-
-            .macro-grid {
-                grid-template-columns: 140px 1fr;
-            }
+            .app-header { padding: 60px 32px 50px; }
+            .app-logo { font-size: 32px; }
+            .app-main { max-width: 480px; margin: -24px auto 0; padding: 0 24px 100px; }
+            .card-body { padding: 28px 24px; }
+            .stat-value { font-size: 36px; }
+            .macro-grid { grid-template-columns: 140px 1fr; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
     </style>
 </head>
 <body>
-    <!-- App Header -->
+    <!-- ============================================
+         APP HEADER
+         ============================================ -->
     <header class="app-header no-print">
         <div class="app-brand">
             <div class="app-logo">CALFATLOSS</div>
@@ -1158,7 +779,9 @@
         </div>
     </header>
 
-    <!-- Main Content -->
+    <!-- ============================================
+         MAIN CONTENT
+         ============================================ -->
     <main class="app-main no-print">
         
         <!-- Dashboard Card -->
@@ -1173,1090 +796,3 @@
                     Dashboard Hasil
                 </div>
             </div>
-            <div class="card-body">
-                <div class="stats-grid">
-                    <div class="stat-item stat-item-full">
-                        <div class="stat-label">Kalori Pemeliharaan (TDEE)</div>
-                        <div class="stat-value" id="resultTDEE">0</div>
-                        <div class="stat-unit">Kcal per hari</div>
-                    </div>
-                    <div class="stat-item stat-item-full">
-                        <div class="stat-label">Kalori Diet Disarankan</div>
-                        <div class="stat-value" id="resultDiet">0</div>
-                        <div class="stat-unit">Kcal per hari</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Turun / Minggu</div>
-                        <div class="stat-badge">
-                            <span class="stat-badge-num" id="resultTurun">0</span>
-                            <span class="stat-badge-text">kg</span>
-                        </div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Capai Target</div>
-                        <div class="stat-badge">
-                            <span class="stat-badge-num" id="resultMinggu">0</span>
-                            <span class="stat-badge-text">minggu</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Status Alert -->
-                <div class="status-alert" id="statusAlert">
-                    <div class="status-row">
-                        <div class="status-icon" id="statusIcon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
-                        </div>
-                        <div class="status-msg" id="statusMsg"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Input Form Card -->
-        <div class="card animate-in delay-2">
-            <div class="card-header">
-                <div class="card-title">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </div>
-                    Data Diri
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="form-section">
-                    <label class="form-label">Nama</label>
-                    <input type="text" id="nama" class="form-input" placeholder="Masukkan nama">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-section">
-                        <label class="form-label">Gender</label>
-                        <select id="gender" class="form-input">
-                            <option value="">Pilih</option>
-                            <option value="pria">Laki-Laki</option>
-                            <option value="wanita">Perempuan</option>
-                        </select>
-                    </div>
-                    <div class="form-section">
-                        <label class="form-label">Usia</label>
-                        <input type="number" id="usia" class="form-input" placeholder="Tahun" min="15" max="80">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-section">
-                        <label class="form-label">Berat (kg)</label>
-                        <input type="number" id="berat" class="form-input" placeholder="Contoh: 75" min="30" max="300" step="0.1">
-                    </div>
-                    <div class="form-section">
-                        <label class="form-label">Tinggi (cm)</label>
-                        <input type="number" id="tinggi" class="form-input" placeholder="Contoh: 170" min="100" max="250">
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <label class="form-label">Tingkat Aktivitas</label>
-                    <select id="aktivitas" class="form-input">
-                        <option value="">Pilih aktivitas</option>
-                        <option value="1.2">Tidak Aktif</option>
-                        <option value="1.375">Ringan (1-2x Olahraga)</option>
-                        <option value="1.55">Sedang (3-5x Olahraga)</option>
-                        <option value="1.725">Berat (6-7x Olahraga)</option>
-                        <option value="1.9">Atlet</option>
-                    </select>
-
-                    <!-- Activity Info Toggle -->
-                    <div class="activity-info-toggle" id="activityToggle" role="button" tabindex="0" aria-expanded="false">
-                        <span class="activity-info-label">Lihat keterangan aktivitas</span>
-                        <svg class="activity-info-icon" id="activityIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 9l6 6 6-6"/>
-                        </svg>
-                    </div>
-                    <div class="activity-info-content" id="activityContent">
-                        <div class="activity-list">
-                            <div class="activity-row">
-                                <span class="activity-badge">Tidak Aktif</span>
-                                <span class="activity-text">Kerja duduk, jarang olahraga, aktivitas minim</span>
-                            </div>
-                            <div class="activity-row">
-                                <span class="activity-badge">Ringan</span>
-                                <span class="activity-text">Jalan 30 menit, yoga ringan, gym santai</span>
-                            </div>
-                            <div class="activity-row">
-                                <span class="activity-badge">Sedang</span>
-                                <span class="activity-text">Angkat beban rutin, lari 30-45 menit</span>
-                            </div>
-                            <div class="activity-row">
-                                <span class="activity-badge">Berat</span>
-                                <span class="activity-text">Latihan intens tiap hari, pekerja fisik berat</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-section">
-                        <label class="form-label">Target Berat (kg)</label>
-                        <input type="number" id="targetBerat" class="form-input" placeholder="Contoh: 65" min="30" max="300" step="0.1">
-                    </div>
-                    <div class="form-section">
-                        <label class="form-label">Metode Diet</label>
-                        <select id="metodeDiet" class="form-input">
-                            <option value="">Pilih</option>
-                            <option value="ringan">Ringan (300 kcal)</option>
-                            <option value="standar">Standar (500 kcal)</option>
-                            <option value="agresif">Agresif (700 kcal)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Macro Card -->
-        <div class="card macro-card animate-in delay-3">
-            <div class="card-header">
-                <div class="card-title">
-                    <div class="card-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 2a10 10 0 0 1 0 20"/>
-                        </svg>
-                    </div>
-                    Makronutrien Harian
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="macro-grid">
-                    <div class="chart-wrap">
-                        <canvas id="macroChart" width="130" height="130"></canvas>
-                        <div class="chart-center">
-                            <div class="chart-value" id="totalCalories">0</div>
-                            <div class="chart-label">Kcal</div>
-                        </div>
-                    </div>
-
-                    <div class="macro-list">
-                        <div class="macro-row">
-                            <div class="macro-dot macro-dot-protein"></div>
-                            <div class="macro-info">
-                                <div class="macro-name">Protein</div>
-                                <div class="macro-track">
-                                    <div class="macro-fill macro-fill-protein" id="proteinBar" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                            <div class="macro-value" id="proteinValue">0g</div>
-                        </div>
-                        <div class="macro-row">
-                            <div class="macro-dot macro-dot-lemak"></div>
-                            <div class="macro-info">
-                                <div class="macro-name">Lemak</div>
-                                <div class="macro-track">
-                                    <div class="macro-fill macro-fill-lemak" id="lemakBar" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                            <div class="macro-value" id="lemakValue">0g</div>
-                        </div>
-                        <div class="macro-row">
-                            <div class="macro-dot macro-dot-karbo"></div>
-                            <div class="macro-info">
-                                <div class="macro-name">Karbohidrat</div>
-                                <div class="macro-track">
-                                    <div class="macro-fill macro-fill-karbo" id="karboBar" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                            <div class="macro-value" id="karboValue">0g</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="macro-calories">
-                    <div class="macro-cal-item">
-                        <div class="macro-cal-value" id="proteinCal" style="color: var(--primary);">0</div>
-                        <div class="macro-cal-label">Kcal Protein</div>
-                    </div>
-                    <div class="macro-cal-item">
-                        <div class="macro-cal-value" id="lemakCal" style="color: var(--gold);">0</div>
-                        <div class="macro-cal-label">Kcal Lemak</div>
-                    </div>
-                    <div class="macro-cal-item">
-                        <div class="macro-cal-value" id="karboCal" style="color: var(--green-light);">0</div>
-                        <div class="macro-cal-label">Kcal Karbo</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- BMR Card -->
-        <div class="card animate-in delay-3">
-            <div class="card-body">
-                <div class="bmr-section">
-                    <div class="bmr-info">
-                        <div class="bmr-label">Basal Metabolic Rate</div>
-                        <div>
-                            <span class="bmr-value" id="resultBMR">0</span>
-                            <span class="bmr-unit">Kcal/hari</span>
-                        </div>
-                    </div>
-                    <div class="bmr-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Print Button -->
-        <button class="print-btn" id="printBtn" disabled>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M6 9V2h12v7"/>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                <rect x="6" y="14" width="12" height="8"/>
-            </svg>
-            Cetak Laporan PDF
-        </button>
-
-        <!-- Footer -->
-        <footer class="app-footer">
-            CALFATLOSS v1.0 - Semua perhitungan bersifat estimasi
-        </footer>
-    </main>
-
-    <!-- ============================================
-         PRINT REPORT - 2 PAGES
-         ============================================ -->
-    <div class="print-report" id="printReport">
-        
-        <!-- PAGE 1 - RINGKASAN HASIL -->
-        <div class="report-page">
-            <!-- Header -->
-            <div class="report-header">
-                <div class="report-logo">CALFATLOSS</div>
-                <div class="report-title">LAPORAN HASIL ANALISIS TUBUH</div>
-                <div class="report-meta">
-                    <div class="report-meta-item">
-                        <span class="report-meta-label">Nomor Laporan:</span>
-                        <span id="reportNumber">KM-00000000-0000</span>
-                    </div>
-                    <div class="report-meta-item">
-                        <span class="report-meta-label">Tanggal Pengisian:</span>
-                        <span id="reportDate">01 Januari 2025</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Data Diri -->
-            <div class="report-section">
-                <div class="report-section-title">Data Diri</div>
-                <div class="report-data-grid">
-                    <div class="report-data-item">
-                        <div class="report-data-label">Nama</div>
-                        <div class="report-data-value" id="reportNama" style="font-size: 13px;">-</div>
-                    </div>
-                    <div class="report-data-item">
-                        <div class="report-data-label">Gender</div>
-                        <div class="report-data-value" id="reportGender" style="font-size: 13px;">-</div>
-                    </div>
-                    <div class="report-data-item">
-                        <div class="report-data-label">Usia</div>
-                        <div class="report-data-value" id="reportUsia">-<span class="report-data-unit"> thn</span></div>
-                    </div>
-                    <div class="report-data-item">
-                        <div class="report-data-label">Berat Badan</div>
-                        <div class="report-data-value" id="reportBerat">-<span class="report-data-unit"> kg</span></div>
-                    </div>
-                    <div class="report-data-item">
-                        <div class="report-data-label">Tinggi Badan</div>
-                        <div class="report-data-value" id="reportTinggi">-<span class="report-data-unit"> cm</span></div>
-                    </div>
-                    <div class="report-data-item">
-                        <div class="report-data-label">BMI</div>
-                        <div class="report-data-value" id="reportBMI">-<span class="report-data-unit"> kg/m²</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hasil Utama -->
-            <div class="report-section">
-                <div class="report-section-title">Hasil Utama</div>
-                <div class="report-main-results">
-                    <div class="report-main-item">
-                        <div class="report-main-label">Kalori Pemeliharaan (TDEE)</div>
-                        <div class="report-main-value" id="reportTDEE">0</div>
-                        <div class="report-main-unit">Kcal per hari</div>
-                    </div>
-                    <div class="report-main-item">
-                        <div class="report-main-label">Kalori Diet Disarankan</div>
-                        <div class="report-main-value" id="reportDiet">0</div>
-                        <div class="report-main-unit">Kcal per hari</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Makronutrien dengan Donut Chart -->
-            <div class="report-section">
-                <div class="report-section-title">Pembagian Makronutrien</div>
-                <div class="report-chart-section">
-                    <div class="report-chart-wrap">
-                        <canvas id="reportChart" width="150" height="150"></canvas>
-                        <div class="report-chart-center">
-                            <div class="report-chart-total" id="reportTotalCal">0</div>
-                            <div class="report-chart-label">Kcal</div>
-                        </div>
-                    </div>
-                    <div class="report-macro-list">
-                        <div class="report-macro-row">
-                            <div class="report-macro-dot" style="background: #16a34a;"></div>
-                            <div class="report-macro-name">Protein</div>
-                            <div class="report-macro-gram" id="reportProteinG">0g</div>
-                            <div class="report-macro-cal" id="reportProteinCal">0 Kcal</div>
-                        </div>
-                        <div class="report-macro-row">
-                            <div class="report-macro-dot" style="background: #84cc16;"></div>
-                            <div class="report-macro-name">Lemak</div>
-                            <div class="report-macro-gram" id="reportLemakG">0g</div>
-                            <div class="report-macro-cal" id="reportLemakCal">0 Kcal</div>
-                        </div>
-                        <div class="report-macro-row">
-                            <div class="report-macro-dot" style="background: #bbf7d0;"></div>
-                            <div class="report-macro-name">Karbohidrat</div>
-                            <div class="report-macro-gram" id="reportKarboG">0g</div>
-                            <div class="report-macro-cal" id="reportKarboCal">0 Kcal</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Estimasi Target - NEW FORMAT -->
-            <div class="report-section">
-                <div class="report-target-box">
-                    <div class="report-target-title">Estimasi Pencapaian Target</div>
-                    <div class="report-target-grid">
-                        <div class="report-target-item">
-                            <div class="report-target-icon">&#x23F3;</div>
-                            <div class="report-target-info">
-                                <div class="report-target-label">Durasi Program</div>
-                                <div class="report-target-value" id="reportWeeksTarget">- Minggu</div>
-                            </div>
-                        </div>
-                        <div class="report-target-item">
-                            <div class="report-target-icon">&#x1F4C5;</div>
-                            <div class="report-target-info">
-                                <div class="report-target-label">Target Tercapai</div>
-                                <div class="report-target-value" id="reportTargetDate">-</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="report-page1-footer">
-                Lanjut ke halaman berikutnya untuk analisis detail
-            </div>
-        </div>
-
-        <!-- PAGE BREAK -->
-        <div class="page-break"></div>
-
-        <!-- PAGE 2 - ANALISIS DETAIL -->
-        <div class="report-page" style="display: flex; flex-direction: column;">
-            <!-- Header Page 2 -->
-            <div class="report-header" style="margin-bottom: 20px;">
-                <div class="report-logo">CALFATLOSS</div>
-                <div class="report-title">ANALISIS DETAIL</div>
-                <div class="report-meta">
-                    <div class="report-meta-item">
-                        <span class="report-meta-label">Nomor Laporan:</span>
-                        <span id="reportNumber2">KM-00000000-0000</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Status Badge -->
-            <div class="report-status-box status-good" id="reportStatusBox">
-                <div class="report-status-badge">
-                    <div class="report-status-dot"></div>
-                    <span id="reportStatusText">ON TRACK</span>
-                </div>
-                <div class="report-status-msg" id="reportStatusMsg">Program diet Anda dalam jalur yang baik</div>
-            </div>
-
-            <!-- Detail Perhitungan -->
-            <div class="report-section">
-                <div class="report-section-title">Detail Perhitungan</div>
-                <div class="report-detail-grid">
-                    <div class="report-detail-box">
-                        <div class="report-detail-title">Metabolisme Basal</div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">BMR</span>
-                            <span class="report-detail-value" id="reportBMRDetail">0 Kcal</span>
-                        </div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Faktor Aktivitas</span>
-                            <span class="report-detail-value" id="reportActivityFactor">1.2x</span>
-                        </div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">TDEE</span>
-                            <span class="report-detail-value" id="reportTDEEDetail">0 Kcal</span>
-                        </div>
-                    </div>
-                    <div class="report-detail-box">
-                        <div class="report-detail-title">Defisit Kalori</div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Metode Diet</span>
-                            <span class="report-detail-value" id="reportMetodeDiet">Standar</span>
-                        </div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Besar Defisit</span>
-                            <span class="report-detail-value" id="reportDefisit">500 Kcal</span>
-                        </div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Kalori Diet</span>
-                            <span class="report-detail-value" id="reportDietDetail">0 Kcal</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Rekomendasi Makronutrien -->
-            <div class="report-section">
-                <div class="report-section-title">Rekomendasi Makronutrien</div>
-                <div class="report-detail-box">
-                    <div class="report-detail-row">
-                        <span class="report-detail-label">Protein</span>
-                        <span class="report-detail-value"><span id="reportProteinDetail">0</span>g (<span id="reportProteinCalDetail">0</span> Kcal)</span>
-                    </div>
-                    <div class="report-detail-row">
-                        <span class="report-detail-label">Lemak</span>
-                        <span class="report-detail-value"><span id="reportLemakDetail">0</span>g (<span id="reportLemakCalDetail">0</span> Kcal)</span>
-                    </div>
-                    <div class="report-detail-row">
-                        <span class="report-detail-label">Karbohidrat</span>
-                        <span class="report-detail-value"><span id="reportKarboDetail">0</span>g (<span id="reportKarboCalDetail">0</span> Kcal)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Target Progress -->
-            <div class="report-section">
-                <div class="report-section-title">Target Progress</div>
-                <div class="report-detail-grid">
-                    <div class="report-detail-box">
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Berat Saat Ini</span>
-                            <span class="report-detail-value" id="reportBeratSaatIni">0 kg</span>
-                        </div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Target Berat</span>
-                            <span class="report-detail-value" id="reportTargetBerat">0 kg</span>
-                        </div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Total Penurunan</span>
-                            <span class="report-detail-value" id="reportTotalTurun">0 kg</span>
-                        </div>
-                    </div>
-                    <div class="report-detail-box">
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Turun per Minggu</span>
-                            <span class="report-detail-value" id="reportTurunPerMinggu">0 kg</span>
-                        </div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Total Minggu</span>
-                            <span class="report-detail-value" id="reportTotalMinggu">0 minggu</span>
-                        </div>
-                        <div class="report-detail-row">
-                            <span class="report-detail-label">Estimasi Selesai</span>
-                            <span class="report-detail-value" id="reportEstimasiSelesai">-</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="report-footer">
-                <div class="report-footer-note">
-                    Laporan ini dihasilkan secara otomatis oleh CALFATLOSS Smart Nutrition System. 
-                    Semua perhitungan bersifat estimasi dan tidak menggantikan konsultasi dengan tenaga medis atau ahli gizi profesional.
-                    Hasil dapat bervariasi tergantung kondisi individu, pola makan, dan aktivitas fisik.
-                </div>
-                <div class="report-footer-watermark">
-                    Dicetak pada: <span id="reportPrintDate">-</span> | CALFATLOSS - Smart Nutrition Calculator
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ============================================
-        // INITIALIZE ALL VARIABLES FIRST
-        // ============================================
-        
-        let macroChart = null;
-        let reportChart = null;
-        let activityExpanded = false;
-        let currentData = {
-            nama: '',
-            gender: '',
-            usia: 0,
-            berat: 0,
-            tinggi: 0,
-            aktivitas: '',
-            aktivitasLabel: '',
-            targetBerat: 0,
-            metodeDiet: '',
-            metodeDietLabel: '',
-            BMR: 0,
-            TDEE: 0,
-            dietCal: 0,
-            deficit: 0,
-            weeklyLoss: 0,
-            weeksToTarget: 0,
-            protein: 0,
-            lemak: 0,
-            karbo: 0
-        };
-
-        // DOM Elements - Inputs
-        const inputs = {
-            nama: document.getElementById('nama'),
-            gender: document.getElementById('gender'),
-            usia: document.getElementById('usia'),
-            berat: document.getElementById('berat'),
-            tinggi: document.getElementById('tinggi'),
-            aktivitas: document.getElementById('aktivitas'),
-            targetBerat: document.getElementById('targetBerat'),
-            metodeDiet: document.getElementById('metodeDiet')
-        };
-
-        // DOM Elements - Results
-        const results = {
-            TDEE: document.getElementById('resultTDEE'),
-            diet: document.getElementById('resultDiet'),
-            turun: document.getElementById('resultTurun'),
-            minggu: document.getElementById('resultMinggu'),
-            BMR: document.getElementById('resultBMR'),
-            statusAlert: document.getElementById('statusAlert'),
-            statusIcon: document.getElementById('statusIcon'),
-            statusMsg: document.getElementById('statusMsg'),
-            totalCalories: document.getElementById('totalCalories'),
-            proteinValue: document.getElementById('proteinValue'),
-            lemakValue: document.getElementById('lemakValue'),
-            karboValue: document.getElementById('karboValue'),
-            proteinBar: document.getElementById('proteinBar'),
-            lemakBar: document.getElementById('lemakBar'),
-            karboBar: document.getElementById('karboBar'),
-            proteinCal: document.getElementById('proteinCal'),
-            lemakCal: document.getElementById('lemakCal'),
-            karboCal: document.getElementById('karboCal')
-        };
-
-        const activityToggle = document.getElementById('activityToggle');
-        const activityIcon = document.getElementById('activityIcon');
-        const activityContent = document.getElementById('activityContent');
-        const printBtn = document.getElementById('printBtn');
-
-        // Activity factors and labels
-        const activityFactors = {
-            '1.2': { factor: 1.2, label: 'Tidak Aktif' },
-            '1.375': { factor: 1.375, label: 'Ringan (1-2x Olahraga)' },
-            '1.55': { factor: 1.55, label: 'Sedang (3-5x Olahraga)' },
-            '1.725': { factor: 1.725, label: 'Berat (6-7x Olahraga)' },
-            '1.9': { factor: 1.9, label: 'Atlet' }
-        };
-
-        // Deficit map and labels
-        const deficitMap = {
-            'ringan': { value: 300, label: 'Ringan' },
-            'standar': { value: 500, label: 'Standar' },
-            'agresif': { value: 700, label: 'Agresif' }
-        };
-
-        // Chart colors (app)
-        const chartColors = {
-            protein: '#3F5F4A',
-            lemak: '#C9B27C',
-            karbo: '#7EA88A'
-        };
-
-        // Report chart colors
-        const reportChartColors = {
-            protein: '#16a34a',
-            lemak: '#84cc16',
-            karbo: '#bbf7d0'
-        };
-
-        // ============================================
-        // UTILITY FUNCTIONS
-        // ============================================
-
-        function formatNum(n, d) {
-            d = d || 0;
-            if (isNaN(n) || !isFinite(n)) return '0';
-            return Number(n).toFixed(d);
-        }
-
-        function formatDateIndonesia(date) {
-            const bulan = [
-                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-            ];
-            const day = date.getDate();
-            const month = bulan[date.getMonth()];
-            const year = date.getFullYear();
-            return day + ' ' + month + ' ' + year;
-        }
-
-        function generateReportNumber() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const random = String(Math.floor(Math.random() * 9000) + 1000);
-            return 'KM-' + year + month + day + '-' + random;
-        }
-
-        function getDietStatus(deficit, TDEE) {
-            const ratio = deficit / TDEE;
-            
-            if (ratio <= 0.15) {
-                return {
-                    status: 'good',
-                    badge: 'ON TRACK',
-                    message: 'Program diet Anda dalam jalur yang baik dan sehat',
-                    class: 'status-good'
-                };
-            } else if (ratio <= 0.25) {
-                return {
-                    status: 'warning',
-                    badge: 'AGRESIF',
-                    message: 'Perlu konsistensi dan monitoring ketat',
-                    class: 'status-warning'
-                };
-            } else {
-                return {
-                    status: 'danger',
-                    badge: 'TERLALU RENDAH',
-                    message: 'Evaluasi defisit kalori Anda untuk keamanan',
-                    class: 'status-danger'
-                };
-            }
-        }
-
-        // ============================================
-        // CHART INITIALIZATION
-        // ============================================
-
-        function initChart() {
-            const ctx = document.getElementById('macroChart').getContext('2d');
-            macroChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Protein', 'Lemak', 'Karbo'],
-                    datasets: [{
-                        data: [1, 1, 1],
-                        backgroundColor: [chartColors.protein, chartColors.lemak, chartColors.karbo],
-                        borderWidth: 0,
-                        cutout: '74%'
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#FFFFFF',
-                            titleColor: '#1F1F1F',
-                            bodyColor: '#6B6B6B',
-                            borderColor: 'rgba(0,0,0,0.06)',
-                            borderWidth: 1,
-                            padding: 12,
-                            cornerRadius: 10,
-                            displayColors: true,
-                            callbacks: {
-                                label: function(context) {
-                                    return ' ' + context.label + ': ' + Math.round(context.raw) + 'g';
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateRotate: true,
-                        animateScale: false
-                    }
-                }
-            });
-        }
-
-        function initReportChart() {
-            const ctx = document.getElementById('reportChart').getContext('2d');
-            reportChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Protein', 'Lemak', 'Karbo'],
-                    datasets: [{
-                        data: [1, 1, 1],
-                        backgroundColor: [reportChartColors.protein, reportChartColors.lemak, reportChartColors.karbo],
-                        borderWidth: 0,
-                        cutout: '70%'
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false }
-                    },
-                    animation: false
-                }
-            });
-        }
-
-        // ============================================
-        // ACTIVITY TOGGLE
-        // ============================================
-
-        function toggleActivityInfo() {
-            activityExpanded = !activityExpanded;
-            activityIcon.classList.toggle('expanded', activityExpanded);
-            activityContent.classList.toggle('expanded', activityExpanded);
-            activityToggle.setAttribute('aria-expanded', activityExpanded);
-        }
-
-        // ============================================
-        // CALCULATIONS
-        // ============================================
-
-        function calculateBMR(gender, berat, tinggi, usia) {
-            if (gender === 'pria') {
-                return (10 * berat) + (6.25 * tinggi) - (5 * usia) + 5;
-            } else {
-                return (10 * berat) + (6.25 * tinggi) - (5 * usia) - 161;
-            }
-        }
-
-        function updateCalc() {
-            const gender = inputs.gender.value;
-            const usia = parseFloat(inputs.usia.value);
-            const berat = parseFloat(inputs.berat.value);
-            const tinggi = parseFloat(inputs.tinggi.value);
-            const aktivitasVal = inputs.aktivitas.value;
-            const targetBerat = parseFloat(inputs.targetBerat.value);
-            const metodeDiet = inputs.metodeDiet.value;
-            const nama = inputs.nama.value;
-
-            // Store current data
-            currentData.nama = nama;
-            currentData.gender = gender;
-            currentData.usia = usia;
-            currentData.berat = berat;
-            currentData.tinggi = tinggi;
-            currentData.aktivitas = aktivitasVal;
-            currentData.targetBerat = targetBerat;
-            currentData.metodeDiet = metodeDiet;
-
-            if (!gender || !usia || !berat || !tinggi || !aktivitasVal || !metodeDiet) {
-                resetResults();
-                return;
-            }
-
-            const BMR = calculateBMR(gender, berat, tinggi, usia);
-            const activityData = activityFactors[aktivitasVal] || { factor: 1.2, label: 'Tidak Aktif' };
-            const activityFactor = activityData.factor;
-            const aktivitasLabel = activityData.label;
-            
-            const TDEE = BMR * activityFactor;
-            
-            const deficitData = deficitMap[metodeDiet] || { value: 500, label: 'Standar' };
-            const deficit = deficitData.value;
-            const metodeDietLabel = deficitData.label;
-
-            let dietCal = TDEE - deficit;
-            const isLowCal = dietCal < 1200;
-            if (isLowCal) dietCal = 1200;
-
-            const weeklyLoss = (deficit * 7) / 7700;
-            let weeksToTarget = 0;
-
-            if (targetBerat && targetBerat < berat) {
-                weeksToTarget = (berat - targetBerat) / weeklyLoss;
-            }
-
-            // Macro multipliers
-            let proteinMult = 2;
-            let lemakMult = 0.8;
-
-            if (metodeDiet === 'ringan') {
-                proteinMult = 1.8;
-                lemakMult = 0.9;
-            } else if (metodeDiet === 'agresif') {
-                proteinMult = 2.2;
-                lemakMult = 0.7;
-            }
-
-            const protein = berat * proteinMult;
-            const lemak = berat * lemakMult;
-            const karbo = Math.max(0, (dietCal - (protein * 4 + lemak * 9)) / 4);
-
-            // Store calculated data
-            currentData.BMR = BMR;
-            currentData.TDEE = TDEE;
-            currentData.dietCal = dietCal;
-            currentData.deficit = deficit;
-            currentData.weeklyLoss = weeklyLoss;
-            currentData.weeksToTarget = weeksToTarget;
-            currentData.protein = protein;
-            currentData.lemak = lemak;
-            currentData.karbo = karbo;
-            currentData.aktivitasLabel = aktivitasLabel;
-            currentData.metodeDietLabel = metodeDietLabel;
-            currentData.activityFactor = activityFactor;
-
-            // Update display
-            results.TDEE.textContent = formatNum(TDEE, 0);
-            results.diet.textContent = formatNum(dietCal, 0);
-            results.turun.textContent = formatNum(weeklyLoss, 2);
-            results.minggu.textContent = formatNum(weeksToTarget, 1);
-            results.BMR.textContent = formatNum(BMR, 0);
-
-            updateStatus(targetBerat, berat, weeksToTarget, isLowCal);
-
-            const totalCal = (protein * 4) + (lemak * 9) + (karbo * 4);
-            results.totalCalories.textContent = formatNum(totalCal, 0);
-
-            results.proteinValue.textContent = formatNum(protein, 0) + 'g';
-            results.lemakValue.textContent = formatNum(lemak, 0) + 'g';
-            results.karboValue.textContent = formatNum(karbo, 0) + 'g';
-
-            results.proteinCal.textContent = formatNum(protein * 4, 0);
-            results.lemakCal.textContent = formatNum(lemak * 9, 0);
-            results.karboCal.textContent = formatNum(karbo * 4, 0);
-
-            const totalMacro = protein + lemak + karbo;
-            if (totalMacro > 0) {
-                results.proteinBar.style.width = ((protein / totalMacro) * 100) + '%';
-                results.lemakBar.style.width = ((lemak / totalMacro) * 100) + '%';
-                results.karboBar.style.width = ((karbo / totalMacro) * 100) + '%';
-            }
-
-            if (macroChart) {
-                macroChart.data.datasets[0].data = [protein, lemak, karbo];
-                macroChart.update('active');
-            }
-
-            // Enable print button if data is valid
-            printBtn.disabled = !(nama && TDEE > 0);
-        }
-
-        function updateStatus(targetBerat, berat, weeksToTarget, isLowCal) {
-            const alert = results.statusAlert;
-            const icon = results.statusIcon;
-            const msg = results.statusMsg;
-
-            if (isLowCal) {
-                alert.className = 'status-alert show warning';
-                icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
-                msg.innerHTML = '<strong>Perhatian:</strong> Kalori diet terlalu rendah. Minimum 1200 kcal untuk kesehatan. Pertimbangkan defisit lebih kecil.';
-                return;
-            }
-
-            if (targetBerat && targetBerat >= berat) {
-                alert.className = 'status-alert show warning';
-                icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
-                msg.innerHTML = '<strong>Perhatian:</strong> Target berat harus lebih rendah dari berat saat ini.';
-                return;
-            }
-
-            if (targetBerat && targetBerat < berat) {
-                const diff = berat - targetBerat;
-                const months = weeksToTarget / 4.33;
-                alert.className = 'status-alert show';
-                icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>';
-                msg.innerHTML = 'Target tercapai dalam <strong>' + formatNum(months, 1) + ' bulan</strong>. Total penurunan ' + formatNum(diff, 1) + ' kg.';
-                return;
-            }
-
-            alert.className = 'status-alert';
-        }
-
-        function resetResults() {
-            results.TDEE.textContent = '0';
-            results.diet.textContent = '0';
-            results.turun.textContent = '0';
-            results.minggu.textContent = '0';
-            results.BMR.textContent = '0';
-            results.totalCalories.textContent = '0';
-            results.proteinValue.textContent = '0g';
-            results.lemakValue.textContent = '0g';
-            results.karboValue.textContent = '0g';
-            results.proteinCal.textContent = '0';
-            results.lemakCal.textContent = '0';
-            results.karboCal.textContent = '0';
-            results.proteinBar.style.width = '0%';
-            results.lemakBar.style.width = '0%';
-            results.karboBar.style.width = '0%';
-            results.statusAlert.className = 'status-alert';
-
-            if (macroChart) {
-                macroChart.data.datasets[0].data = [1, 1, 1];
-                macroChart.update('active');
-            }
-
-            printBtn.disabled = true;
-        }
-
-        // ============================================
-        // PRINT REPORT FUNCTIONS
-        // ============================================
-
-        function generateReport() {
-            const now = new Date();
-            const reportNumber = generateReportNumber();
-
-            // Calculate BMI
-            const tinggiM = currentData.tinggi / 100;
-            const BMI = currentData.berat / (tinggiM * tinggiM);
-
-            // Calculate target date
-            let targetDateStr = '-';
-            let weeksStr = '-';
-            if (currentData.weeksToTarget > 0 && currentData.targetBerat < currentData.berat) {
-                const targetDate = new Date(now.getTime() + (currentData.weeksToTarget * 7 * 24 * 60 * 60 * 1000));
-                targetDateStr = formatDateIndonesia(targetDate);
-                weeksStr = formatNum(currentData.weeksToTarget, 0) + ' Minggu';
-            }
-
-            // Get diet status
-            const dietStatus = getDietStatus(currentData.deficit, currentData.TDEE);
-
-            // Calculate total weight loss
-            const totalTurun = currentData.berat - currentData.targetBerat;
-
-            // PAGE 1 - Populate
-            document.getElementById('reportNumber').textContent = reportNumber;
-            document.getElementById('reportDate').textContent = formatDateIndonesia(now);
-            
-            document.getElementById('reportNama').textContent = currentData.nama || '-';
-            document.getElementById('reportGender').textContent = currentData.gender === 'pria' ? 'Laki-Laki' : 'Perempuan';
-            document.getElementById('reportUsia').innerHTML = formatNum(currentData.usia, 0) + '<span class="report-data-unit"> thn</span>';
-            document.getElementById('reportBerat').innerHTML = formatNum(currentData.berat, 1) + '<span class="report-data-unit"> kg</span>';
-            document.getElementById('reportTinggi').innerHTML = formatNum(currentData.tinggi, 0) + '<span class="report-data-unit"> cm</span>';
-            document.getElementById('reportBMI').innerHTML = formatNum(BMI, 1) + '<span class="report-data-unit"> kg/m²</span>';
-
-            document.getElementById('reportTDEE').textContent = formatNum(currentData.TDEE, 0);
-            document.getElementById('reportDiet').textContent = formatNum(currentData.dietCal, 0);
-
-            const totalCal = (currentData.protein * 4) + (currentData.lemak * 9) + (currentData.karbo * 4);
-            document.getElementById('reportTotalCal').textContent = formatNum(totalCal, 0);
-
-            document.getElementById('reportProteinG').textContent = formatNum(currentData.protein, 0) + 'g';
-            document.getElementById('reportLemakG').textContent = formatNum(currentData.lemak, 0) + 'g';
-            document.getElementById('reportKarboG').textContent = formatNum(currentData.karbo, 0) + 'g';
-
-            document.getElementById('reportProteinCal').textContent = formatNum(currentData.protein * 4, 0) + ' Kcal';
-            document.getElementById('reportLemakCal').textContent = formatNum(currentData.lemak * 9, 0) + ' Kcal';
-            document.getElementById('reportKarboCal').textContent = formatNum(currentData.karbo * 4, 0) + ' Kcal';
-
-            // Estimasi Target - NEW FORMAT
-            document.getElementById('reportWeeksTarget').textContent = weeksStr;
-            document.getElementById('reportTargetDate').textContent = targetDateStr;
-
-            // PAGE 2 - Populate
-            document.getElementById('reportNumber2').textContent = reportNumber;
-
-            // Status Badge
-            const statusBox = document.getElementById('reportStatusBox');
-            statusBox.className = 'report-status-box ' + dietStatus.class;
-            document.getElementById('reportStatusText').textContent = dietStatus.badge;
-            document.getElementById('reportStatusMsg').textContent = dietStatus.message;
-
-            // Detail Perhitungan
-            document.getElementById('reportBMRDetail').textContent = formatNum(currentData.BMR, 0) + ' Kcal';
-            document.getElementById('reportActivityFactor').textContent = formatNum(currentData.activityFactor, 3) + 'x';
-            document.getElementById('reportTDEEDetail').textContent = formatNum(currentData.TDEE, 0) + ' Kcal';
-
-            document.getElementById('reportMetodeDiet').textContent = currentData.metodeDietLabel || 'Standar';
-            document.getElementById('reportDefisit').textContent = formatNum(currentData.deficit, 0) + ' Kcal';
-            document.getElementById('reportDietDetail').textContent = formatNum(currentData.dietCal, 0) + ' Kcal';
-
-            // Rekomendasi Makronutrien
-            document.getElementById('reportProteinDetail').textContent = formatNum(currentData.protein, 0);
-            document.getElementById('reportProteinCalDetail').textContent = formatNum(currentData.protein * 4, 0);
-            document.getElementById('reportLemakDetail').textContent = formatNum(currentData.lemak, 0);
-            document.getElementById('reportLemakCalDetail').textContent = formatNum(currentData.lemak * 9, 0);
-            document.getElementById('reportKarboDetail').textContent = formatNum(currentData.karbo, 0);
-            document.getElementById('reportKarboCalDetail').textContent = formatNum(currentData.karbo * 4, 0);
-
-            // Target Progress
-            document.getElementById('reportBeratSaatIni').textContent = formatNum(currentData.berat, 1) + ' kg';
-            document.getElementById('reportTargetBerat').textContent = currentData.targetBerat ? formatNum(currentData.targetBerat, 1) + ' kg' : '-';
-            document.getElementById('reportTotalTurun').textContent = totalTurun > 0 ? formatNum(totalTurun, 1) + ' kg' : '-';
-            document.getElementById('reportTurunPerMinggu').textContent = formatNum(currentData.weeklyLoss, 2) + ' kg';
-            document.getElementById('reportTotalMinggu').textContent = formatNum(currentData.weeksToTarget, 0) + ' minggu';
-            document.getElementById('reportEstimasiSelesai').textContent = targetDateStr;
-
-            // Print Date
-            const printDateStr = formatDateIndonesia(now) + ' pukul ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('reportPrintDate').textContent = printDateStr;
-
-            // Update report chart
-            if (reportChart) {
-                reportChart.data.datasets[0].data = [currentData.protein, currentData.lemak, currentData.karbo];
-                reportChart.update();
-            }
-        }
-
-        function printReport() {
-            if (!currentData.nama || currentData.TDEE <= 0) {
-                alert('Mohon lengkapi data terlebih dahulu');
-                return;
-            }
-
-            generateReport();
-
-            // Small delay to ensure chart renders
-            setTimeout(function() {
-                window.print();
-            }, 300);
-        }
-
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
-
-        activityToggle.addEventListener('click', toggleActivityInfo);
-        activityToggle.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleActivityInfo();
-            }
-        });
-
-        Object.keys(inputs).forEach(function(key) {
-            const el = inputs[key];
-            if (el) {
-                el.addEventListener('input', updateCalc);
-                el.addEventListener('change', updateCalc);
-            }
-        });
-
-        printBtn.addEventListener('click', printReport);
-
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-
-        document.addEventListener('DOMContentLoaded', function() {
-            initChart();
-            initReportChart();
-        });
-    </script>
-</body>
-</html>
