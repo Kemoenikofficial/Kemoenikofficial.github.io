@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panduan Eksklusif Kemonik</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f5f7f6;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+#content {
+  display: none;
+}
+
+.box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+</style>
+</head>
+
+<body>
+
+<div id="loading">
+  <h3>Memverifikasi akses...</h3>
+</div>
+
+<div id="content" class="box">
+  <h2>Panduan Eksklusif Kemonik</h2>
+  <p>Selamat datang di panduan resmi.</p>
+  <p>Ikuti langkah diet dan penggunaan sesuai instruksi.</p>
+  <!-- Isi konten kamu di sini -->
+</div>
+
+<script>
+
+function getKodeFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("kode");
+}
+
+var kode = getKodeFromURL();
+
+if (!kode) {
+  document.body.innerHTML = "<h3>Akses Ditolak</h3>";
+} else {
+
+  fetch("YOUR_WEBAPP_URL?action=check&kode=" + kode)
+  .then(response => response.text())
+  .then(data => {
+
+    if (data === "ACTIVE") {
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("content").style.display = "block";
+    } else {
+      document.body.innerHTML = "<h3>Akses Ditolak / Masa Aktif Habis</h3>";
+    }
+
+  })
+  .catch(error => {
+    document.body.innerHTML = "<h3>Terjadi Kesalahan</h3>";
+  });
+
+}
+
+</script>
+
+</body>
+</html>
