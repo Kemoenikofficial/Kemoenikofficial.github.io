@@ -395,48 +395,12 @@
         /* ===== TESTIMONI SLIDER ===== */
         /* ============================= */
 
-        .slider-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 16px;
-        }
-
+        /* Perbaikan CSS: Menghapus kurung kurawal ekstra yang merusak kode sebelumnya */
+        
         #category-slider {
             display: flex;
             transition: transform 0.5s ease;
         }
-
-        .slide-item {
-            min-width: 100%;
-        }
-
-        .slide-item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 16px;
-        }
-
-        .slider-dots {
-            display: flex;
-            justify-content: center;
-            margin-top: 8px;
-            gap: 6px;
-        }
-
-        .slider-dots .dot {
-            width: 8px;
-            height: 8px;
-            background: #ddd;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .slider-dots .dot.active {
-            background: #16a34a;
-        }
-
-        </style>
 
         /* Print Styles */
         @media print {
@@ -519,25 +483,19 @@
         </section>
 
         <!-- Categories -->
+        <!-- PERBAIKAN: Menutup tag h2 dengan benar -->
         <section class="mb-4">
-            <h2 cass="text-sm font-bold text-gray-700 mb-2"
-                KATEGORI PRODAK
-            </h2>
+            <h2 class="text-sm font-bold text-gray-700 mb-2">KATEGORI PRODUK</h2>
             <div class="flex flex-col gap-2 pb-2" id="category-list"></div>
         </section>
 
         <!-- Testimoni -->
         <section class="mb-6">
-
-            <h2 class="text-sm font-bold text-gray-700 mb-3">
-                TESTIMONI
-            </h2>
-
+            <h2 class="text-sm font-bold text-gray-700 mb-3">TESTIMONI</h2>
             <div class="slider-container">
-                 <div id="category-slider" class="flex transition-transform duration-500"></div>
+                 <div id="category-slider"></div>
                  <div class="slider-dots" id="category-slider-dots"></div>
             </div>
-
         </section>
 
         <!-- Products -->
@@ -626,20 +584,19 @@
                 "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+2",
                 "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+3"
             ],
-            // PRODUK DENGAN DATA LENGKAP
             products: [
                 { 
                     id: 1, 
                     category: 'calc', 
                     name: "CALCULATOR FAT LOSS - Hitung Kalori Harian", 
                     price: 60000, 
-                    originalPrice: 120000, // Harga coret
+                    originalPrice: 120000,
                     discount: 50, 
-                    flashSale: true, // Badge Flash Sale
+                    flashSale: true,
                     images: ["https://placehold.co/400x400/F3F4F6/374151?text=Calculator"], 
                     sold: 2547, 
                     rating: 4.9, 
-                    desc: 'Kalkulator premium untuk menghitung kebutuhan kalori harian Anda. Cocok untuk program diet dan fitness.' 
+                    desc: 'Kalkulator premium untuk menghitung kebutuhan kalori harian Anda.' 
                 },
                 { 
                     id: 2, 
@@ -652,7 +609,7 @@
                     images: ["https://placehold.co/400x400/DCFCE7/166534?text=Slim+1"], 
                     sold: 1892, 
                     rating: 4.8, 
-                    desc: 'Kapsul pelangsing herbal premium dengan bahan alami. Aman dan teruji kualitasnya.' 
+                    desc: 'Kapsul pelangsing herbal premium dengan bahan alami.' 
                 },
                 { 
                     id: 3, 
@@ -665,7 +622,7 @@
                     images: ["https://placehold.co/400x400/FEF3C7/92400E?text=Slim+2"], 
                     sold: 956, 
                     rating: 4.7, 
-                    desc: 'Seri kedua dari kapsul pelangsing Kemoenik dengan formula yang lebih baik.' 
+                    desc: 'Seri kedua dari kapsul pelangsing Kemoenik.' 
                 },
                 { 
                     id: 4, 
@@ -678,7 +635,7 @@
                     images: ["https://placehold.co/400x400/D1FAE5/065F46?text=Teh+Slim"], 
                     sold: 3421, 
                     rating: 4.9, 
-                    desc: 'Teh herbal alami untuk membantu program pelangsingan tubuh Anda.' 
+                    desc: 'Teh herbal alami untuk program pelangsingan.' 
                 },
                 { 
                     id: 5, 
@@ -691,7 +648,7 @@
                     images: ["https://placehold.co/400x400/ECFDF5/047857?text=Teh+Detox"], 
                     sold: 2876, 
                     rating: 4.8, 
-                    desc: 'Teh detox premium untuk membersihkan racun dalam tubuh dan membantu menurunkan berat badan.' 
+                    desc: 'Teh detox premium untuk membersihkan racun dalam tubuh.' 
                 },
                 { 
                     id: 6, 
@@ -704,7 +661,7 @@
                     images: ["https://placehold.co/400x400/FDF4FF/86198F?text=Serum"], 
                     sold: 1234, 
                     rating: 4.6, 
-                    desc: 'Serum wajah untuk kulit cerah dan glowing. Dengan vitamin C dan niacinamide.' 
+                    desc: 'Serum wajah untuk kulit cerah dan glowing.' 
                 },
                 { 
                     id: 7, 
@@ -717,7 +674,7 @@
                     images: ["https://placehold.co/400x400/FEE2E2/991B1B?text=Vit+C"], 
                     sold: 5678, 
                     rating: 4.9, 
-                    desc: 'Suplemen Vitamin C dosis tinggi untuk menjaga daya tahan tubuh.' 
+                    desc: 'Suplemen Vitamin C dosis tinggi untuk daya tahan tubuh.' 
                 },
                 { 
                     id: 8, 
@@ -730,7 +687,7 @@
                     images: ["https://placehold.co/400x400/FEF3C7/B45309?text=VCO"], 
                     sold: 892, 
                     rating: 4.7, 
-                    desc: 'Minyak kelapa murni berkualitas tinggi. Multi fungsi untuk kesehatan dan kecantikan.' 
+                    desc: 'Minyak kelapa murni berkualitas tinggi.' 
                 }
             ]
         };
@@ -744,6 +701,8 @@
         let lastCheckoutData = { customer: {}, method: 'transfer', coupon: null };
         let currentInvoice = {};
         let slideInterval = null;
+        let testimoniIndex = 0;
+        let testimoniInterval = null;
 
         // ========== INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', () => {
@@ -798,7 +757,7 @@
             return sold + '+';
         }
 
-        // ========== SLIDER FUNCTIONS ==========
+        // ========== SLIDER HERO FUNCTIONS ==========
         function renderSliders() {
             const sliderContainer = document.getElementById('hero-slider');
             const dotsContainer = document.getElementById('slider-dots');
@@ -828,7 +787,7 @@
             const slider = document.getElementById('hero-slider');
             slider.style.transform = `translateX(-${currentSlide * 100}%)`;
             
-            document.querySelectorAll('.dot').forEach((dot, i) => {
+            document.querySelectorAll('#slider-dots .dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i === currentSlide);
             });
         }
@@ -839,16 +798,14 @@
             startSlider();
         }
 
-        let testimoniIndex = 0;
-        let testimoniInterval;
-
+        // ========== SLIDER TESTIMONI FUNCTIONS ==========
         function renderTestimoniSlider() {
             const container = document.getElementById('category-slider');
             const dotsContainer = document.getElementById('category-slider-dots');
 
             container.innerHTML = CONFIG.testimoniSliders.map((img, i) => `
-                <div class="slide-item">
-                    <img src="${img}" loading="lazy">
+                <div class="slide-item" style="min-width: 100%;">
+                    <img src="${img}" loading="lazy" style="width: 100%; height: 200px; object-fit: cover; border-radius: 16px;">
                 </div>
             `).join('');
 
@@ -860,29 +817,30 @@
         }
 
         function startTestimoniSlider() {
+            if (testimoniInterval) clearInterval(testimoniInterval);
             testimoniInterval = setInterval(() => {
                 testimoniIndex++;
                 if (testimoniIndex >= CONFIG.testimoniSliders.length) {
                     testimoniIndex = 0;
                 }
                 updateTestimoniSlider();
-             }, 4000);
-         }
+            }, 4000);
+        }
 
-         function updateTestimoniSlider() {
-             const slider = document.getElementById('category-slider');
-             slider.style.transform = `translateX(-${testimoniIndex * 100}%)`;
+        function updateTestimoniSlider() {
+            const slider = document.getElementById('category-slider');
+            slider.style.transform = `translateX(-${testimoniIndex * 100}%)`;
 
-             document.querySelectorAll('#category-slider-dots .dot')
-                 .forEach((dot, i) => {
-                     dot.classList.toggle('active', i === testimoniIndex);
-                 });
-          }
+            document.querySelectorAll('#category-slider-dots .dot')
+                .forEach((dot, i) => {
+                    dot.classList.toggle('active', i === testimoniIndex);
+                });
+        }
 
-          function goToTestimoniSlide(index) {
-              testimoniIndex = index;
-              updateTestimoniSlider();
-          }
+        function goToTestimoniSlide(index) {
+            testimoniIndex = index;
+            updateTestimoniSlider();
+        }
 
         // ========== CATEGORY FUNCTIONS ==========
         function renderCategories() {
@@ -1571,7 +1529,6 @@
             if (filtered.length === 0) {
                 container.innerHTML = '<p class="col-span-2 text-center text-gray-400 py-12">Produk tidak ditemukan</p>';
             } else {
-                // Re-render with filtered products
                 container.innerHTML = filtered.map(p => {
                     const imgSrc = p.images?.[0] || 'https://placehold.co/400x400/F3F4F6/9CA3AF?text=No+Image';
                     const isWished = wishlist.some(w => w.id === p.id);
@@ -1650,29 +1607,6 @@
             document.getElementById('tracking-result').innerHTML = html;
         }
 
-            /* ===============================
-               SLIDER TESTIMONI
-            ================================= */
-
-            let testimoniIndex = 0;
-            let testimoniInterval;
-
-            function renderTestimoniSlider() {
-               ...
-            }
-
-            function startTestimoniSlider() {
-               ...
-            }
-
-            function updateTestimoniSlider() {
-               ...
-            }
-
-            function goToTestimoniSlide(index) {
-               ...
-            }
-
         // ========== KEYBOARD SCROLL FIX ==========
         document.addEventListener("focusin", function(e) {
             if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") {
@@ -1685,7 +1619,6 @@
 
     <script>
         // Redirect if in-app browser
-        (function() {
             var ua = navigator.userAgent || navigator.vendor || window.opera;
             var isTikTok = ua.includes("TikTok");
             var isInstagram = ua.includes("Instagram");
