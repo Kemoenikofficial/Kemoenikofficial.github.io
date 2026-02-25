@@ -377,6 +377,66 @@
             font-size: 18px;
             margin-bottom: 4px;
         }
+        .category-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6B7280;
+            cursor: pointer;
+            padding: 6px 0;
+            transition: all 0.2s ease;
+        }
+
+        .category-text.active {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        /* ============================= */
+        /* ===== TESTIMONI SLIDER ===== */
+        /* ============================= */
+
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        #category-slider {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .slide-item {
+            min-width: 100%;
+        }
+
+        .slide-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+            gap: 6px;
+        }
+
+        .slider-dots .dot {
+            width: 8px;
+            height: 8px;
+            background: #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider-dots .dot.active {
+            background: #16a34a;
+        }
+
+        </style>
 
         /* Print Styles */
         @media print {
@@ -460,7 +520,24 @@
 
         <!-- Categories -->
         <section class="mb-4">
-            <div class="flex gap-2 overflow-x-auto pb-2" id="category-list" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;"></div>
+            <h2 cass="text-sm font-bold text-gray-700 mb-2"
+                KATEGORI PRODAK
+            </h2>
+            <div class="flex flex-col gap-2 pb-2" id="category-list"></div>
+        </section>
+
+        <!-- Testimoni -->
+        <section class="mb-6">
+
+            <h2 class="text-sm font-bold text-gray-700 mb-3">
+                TESTIMONI
+            </h2>
+
+            <div class="slider-container">
+                 <div id="category-slider" class="flex transition-transform duration-500"></div>
+                 <div class="slider-dots" id="category-slider-dots"></div>
+            </div>
+
         </section>
 
         <!-- Products -->
@@ -543,6 +620,11 @@
                 "https://placehold.co/800x400/10B981/FFFFFF?text=Flash+Sale+50%25&font=plus-jakarta-sans",
                 "https://placehold.co/800x400/059669/FFFFFF?text=Gratis+Ongkir&font=plus-jakarta-sans",
                 "https://placehold.co/800x400/FCD34D/1F2937?text=Promo+Spesial&font=plus-jakarta-sans"
+            ],
+            testimoniSliders: [
+                "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+1",
+                "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+2",
+                "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+3"
             ],
             // PRODUK DENGAN DATA LENGKAP
             products: [
@@ -669,6 +751,7 @@
             renderCategories();
             renderProducts();
             renderSliders();
+            renderTestimoniSlider();
             document.getElementById('wa-btn-header').href = `https://wa.me/${CONFIG.whatsappNumber}`;
             document.getElementById('store-name').innerText = CONFIG.storeName;
         });
@@ -756,14 +839,59 @@
             startSlider();
         }
 
+        let testimoniIndex = 0;
+        let testimoniInterval;
+
+        function renderTestimoniSlider() {
+            const container = document.getElementById('category-slider');
+            const dotsContainer = document.getElementById('category-slider-dots');
+
+            container.innerHTML = CONFIG.testimoniSliders.map((img, i) => `
+                <div class="slide-item">
+                    <img src="${img}" loading="lazy">
+                </div>
+            `).join('');
+
+            dotsContainer.innerHTML = CONFIG.testimoniSliders.map((_, i) => `
+                <div class="dot ${i === 0 ? 'active' : ''}" onclick="goToTestimoniSlide(${i})"></div>
+            `).join('');
+
+            startTestimoniSlider();
+        }
+
+        function startTestimoniSlider() {
+            testimoniInterval = setInterval(() => {
+                testimoniIndex++;
+                if (testimoniIndex >= CONFIG.testimoniSliders.length) {
+                    testimoniIndex = 0;
+                }
+                updateTestimoniSlider();
+             }, 4000);
+         }
+
+         function updateTestimoniSlider() {
+             const slider = document.getElementById('category-slider');
+             slider.style.transform = `translateX(-${testimoniIndex * 100}%)`;
+
+             document.querySelectorAll('#category-slider-dots .dot')
+                 .forEach((dot, i) => {
+                     dot.classList.toggle('active', i === testimoniIndex);
+                 });
+          }
+
+          function goToTestimoniSlide(index) {
+              testimoniIndex = index;
+              updateTestimoniSlider();
+          }
+
         // ========== CATEGORY FUNCTIONS ==========
         function renderCategories() {
             const container = document.getElementById('category-list');
             container.innerHTML = CONFIG.categories.map(c => `
-                <button onclick="filterCategory('${c.id}')" class="category-pill ${c.id === activeCategory ? 'active' : ''}">
-                    <span class="category-icon">${c.icon}</span>
-                    <span>${c.name}</span>
-                </button>
+               <div onclick="filterCategory('${c.id}')" 
+                    class="category-text ${c.id === activeCategory ? 'active' : ''}">
+                   ${c.name}
+               </div>
             `).join('');
         }
 
@@ -1522,6 +1650,29 @@
             document.getElementById('tracking-result').innerHTML = html;
         }
 
+            /* ===============================
+               SLIDER TESTIMONI
+            ================================= */
+
+            let testimoniIndex = 0;
+            let testimoniInterval;
+
+            function renderTestimoniSlider() {
+               ...
+            }
+
+            function startTestimoniSlider() {
+               ...
+            }
+
+            function updateTestimoniSlider() {
+               ...
+            }
+
+            function goToTestimoniSlide(index) {
+               ...
+            }
+
         // ========== KEYBOARD SCROLL FIX ==========
         document.addEventListener("focusin", function(e) {
             if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") {
@@ -1550,4 +1701,3 @@
     </script>
 </body>
 </html>
-
