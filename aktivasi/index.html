@@ -86,7 +86,7 @@
       transform: translateY(-50%);
       color: #aaa;
       font-size: 16px;
-      pointer-events: none; /* Agar klik tidak mengenai icon */
+      pointer-events: none;
     }
 
     input {
@@ -314,7 +314,7 @@
 <script>
   // Fungsi untuk memformat nomor WA ke format internasional (62)
   function formatWA(wa) {
-    wa = wa.replace(/\D/g, ''); // Hapus karakter non-digit
+    wa = wa.replace(/\D/g, '');
     if (wa.startsWith("08")) {
       return "62" + wa.substring(1);
     }
@@ -324,20 +324,16 @@
     return wa;
   }
 
-  // Fungsi untuk memformat tanggal ke Bahasa Indonesia
+  // Fungsi untuk memformat tanggal
   function formatDate(dateString) {
     if (!dateString) return '-';
-    
     let date;
-    // Cek apakah format YYYY-MM-DD (dari spreadsheet)
     if (typeof dateString === 'string' && dateString.includes('-') && !dateString.includes('T')) {
       const parts = dateString.split('-');
-      // Buat date dengan waktu lokal agar tidak ke-shift oleh UTC
       date = new Date(parts[0], parts[1] - 1, parts[2]);
     } else {
       date = new Date(dateString);
     }
-    
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
     return date.toLocaleDateString('id-ID', options);
   }
@@ -347,7 +343,6 @@
     const resultDiv = document.getElementById('result');
     let dateHtml = '';
     
-    // Jika ada informasi tanggal (untuk sukses, expired, atau sudah digunakan)
     if (dateInfo) {
       dateHtml = `
         <div class="date-info">
@@ -385,23 +380,20 @@
     const resultDiv = document.getElementById("result");
     const button = document.getElementById("btnCek");
 
-    // Reset hasil sebelumnya
     resultDiv.innerHTML = "";
 
-    // Validasi Input Nama
+    // Validasi Input
     if (nama.length < 3) {
       showResult('error', 'fa-times-circle', 'Nama Tidak Valid', 'Nama minimal 3 karakter.');
       return;
     }
 
-    // Validasi Input WA
     const waClean = wa.replace(/\D/g, '');
     if (waClean.length < 10) {
       showResult('error', 'fa-times-circle', 'Nomor Tidak Valid', 'Nomor WhatsApp minimal 10 digit.');
       return;
     }
 
-    // Validasi Input Kode
     if (kode.length < 6) {
       showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi minimal 6 karakter.');
       return;
@@ -414,16 +406,21 @@
     const formattedWA = formatWA(wa);
     const scriptURL = "https://script.google.com/macros/s/AKfycbw0Y6FZTNY1LxXyrCYvcn2Z9tDH8DqPoCdsXh1VO7XQ0GzlXZgnxg-qIYSy26_GLiDy/exec";
     
-    const urlFinal = `${scriptURL}?kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(formattedWA)}`;
+    // Tambahkan parameter anti-cache (_) agar respons selalu baru
+    const urlFinal = `${scriptURL}?kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(formattedWA)}&_=${new Date().getTime()}`;
 
     fetch(urlFinal)
-      .then(response => response.json())
+      .then(response => {
+          // Cek apakah response ok, jika tidak throw error
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
       .then(jsonData => {
         console.log("Response:", jsonData);
         
-        // Reset tombol
-        button.disabled = false;
-        button.classList.remove('loading');
+        // Reset tombol (hanya jika bukan sukses, karena jika sukses akan redirect)
         
         if (jsonData.status === "SUCCESS") {
           const dateInfo = {
@@ -440,12 +437,15 @@
             dateInfo
           );
           
-          // Redirect setelah 3 detik
-          setTimeout(function() {
+          // --- PERBAIKAN REDIRECT ---
+          // Pastikan redirect dieksekusi
+          setTimeout(() => {
             window.location.href = "panduan.html?kode=" + encodeURIComponent(kode);
           }, 3000);
           
         } else if (jsonData.status === "USED") {
+          button.disabled = false;
+          button.classList.remove('loading');
           const dateInfo = jsonData.tanggal_mulai ? {
             status_text: "SUDAH DIGUNAKAN",
             mulai: formatDate(jsonData.tanggal_mulai),
@@ -461,6 +461,8 @@
           );
           
         } else if (jsonData.status === "EXPIRED") {
+          button.disabled = false;
+          button.classList.remove('loading');
           const dateInfo = {
             status_text: "KADALUARSA",
             mulai: formatDate(jsonData.tanggal_mulai),
@@ -476,15 +478,17 @@
           );
           
         } else {
-          // Jika status INVALID atau lainnya
+          button.disabled = false;
+          button.classList.remove('loading');
           showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi tidak ditemukan.');
         }
       })
       .catch(error => {
         console.error("Error:", error);
-        showResult('error', 'fa-exclamation-triangle', 'Terjadi Kesalahan', 'Gagal menghubungi server. Cek koneksi internet Anda.');
+        // Jika error, pastikan tombol di-reset agar user bisa coba lagi
         button.disabled = false;
         button.classList.remove('loading');
+        showResult('error', 'fa-exclamation-triangle', 'Terjadi Kesalahan', 'Gagal menghubungi server. Cek koneksi internet Anda.');
       });
   }
 
