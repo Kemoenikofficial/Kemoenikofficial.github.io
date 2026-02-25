@@ -1,128 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Verifikasi Kode Konsultasi - Kemoenik</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:linear-gradient(135deg,#e6f4ea 0%,#f5fdf8 60%,#ffffff 100%);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.container{
+  background:white;
+  padding:35px 30px;
+  border-radius:20px;
+  width:100%;
+  max-width:420px;
+  box-shadow:0 25px 50px rgba(0,0,0,0.15);
+}
+
+.logo{text-align:center;margin-bottom:25px;}
+.logo img{width:90px;border-radius:50%;margin-bottom:10px;}
+.logo h2{font-size:22px;font-weight:600;}
+.logo p{font-size:14px;color:#888;margin-top:5px;}
+
+.form-group{margin-bottom:18px;}
+.form-group label{font-size:13px;font-weight:600;color:#555;margin-bottom:8px;display:block;}
+
+.input-wrapper{position:relative;}
+.input-wrapper i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#aaa;}
+
+input{
+  width:100%;
+  padding:14px 14px 14px 45px;
+  border-radius:12px;
+  border:2px solid #e8e8e8;
+  font-size:15px;
+  background:#fafafa;
+}
+
+input:focus{
+  outline:none;
+  border-color:#16a34a;
+  background:white;
+  box-shadow:0 0 0 4px rgba(22,163,74,0.1);
+}
+
+button{
+  width:100%;
+  padding:16px;
+  background:linear-gradient(135deg,#16a34a 0%,#4ade80 100%);
+  color:white;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:600;
+  margin-top:10px;
+  cursor:pointer;
+}
+
+button.loading .btn-text{display:none;}
+
+.spinner{
+  width:20px;height:20px;
+  border:3px solid rgba(255,255,255,0.3);
+  border-top-color:white;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  display:none;
+}
+
+button.loading .spinner{display:block;}
+
+.result-box{
+  margin-top:25px;
+  padding:20px;
+  border-radius:12px;
+  color:white;
+}
+
+.success{background:linear-gradient(135deg,#11998e,#38ef7d);}
+.warning{background:linear-gradient(135deg,#f2994a,#f2c94c);}
+.error{background:linear-gradient(135deg,#eb3349,#f45c43);}
+
+.date-info{
+  margin-top:15px;
+  font-size:13px;
+}
+
+.btn-lanjut{
+  display:none;
+  margin-top:15px;
+  text-align:center;
+  padding:14px;
+  border-radius:12px;
+  border:2px solid #16a34a;
+  color:#16a34a;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.btn-lanjut:hover{
+  background:#16a34a;
+  color:white;
+}
+
+.footer{
+  text-align:center;
+  margin-top:25px;
+  font-size:13px;
+  color:#888;
+}
+
+.link-bantuan{
+  color:#16a34a;
+  font-weight:600;
+  text-decoration:none;
+}
+
+.link-bantuan:hover{text-decoration:underline;}
+
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+<img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg">
+<h2>Kemoenik</h2>
+<p>Verifikasi Kode Konsultasi</p>
+</div>
+
+<div class="form-group">
+<label>Nama Lengkap</label>
+<div class="input-wrapper">
+<i class="fas fa-user"></i>
+<input type="text" id="nama" required>
+</div>
+</div>
+
+<div class="form-group">
+<label>Nomor WhatsApp</label>
+<div class="input-wrapper">
+<i class="fab fa-whatsapp"></i>
+<input type="tel" id="wa" required>
+</div>
+</div>
+
+<div class="form-group">
+<label>Kode Konsultasi</label>
+<div class="input-wrapper">
+<i class="fas fa-ticket-alt"></i>
+<input type="text" id="kode" required>
+</div>
+</div>
+
+<button id="btnCek" onclick="cekKode()">
+<span class="btn-text">Cek Kode</span>
+<div class="spinner"></div>
+</button>
+
+<a id="btnLanjutManual" class="btn-lanjut">
+🔓 Akses Panduan
+</a>
+
+<div id="result"></div>
+
+<div class="footer">
+Butuh bantuan?
+<a href="https://wa.me/6281234567890?text=Halo%20admin,%20saya%20butuh%20bantuan%20kode%20konsultasi"
+   target="_blank"
+   class="link-bantuan">
+   Hubungi kami
+</a>
+</div>
+
+</div>
+
 <script>
-  function formatWA(wa) {
-    wa = wa.replace(/\D/g, '');
-    if (wa.startsWith("08")) return "62" + wa.substring(1);
-    if (wa.startsWith("+62")) return wa.replace("+62", "62");
-    return wa;
-  }
+function formatWA(wa){
+  wa=wa.replace(/\D/g,'');
+  if(wa.startsWith("08")) return "62"+wa.substring(1);
+  return wa;
+}
 
-  function formatDate(dateString) {
-    if (!dateString) return '-';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-  }
+function cekKode(){
 
-  function showResult(type, icon, title, message, dateInfo = null, kode = '') {
-    const resultDiv = document.getElementById('result');
-    const btnLanjut = document.getElementById('btnLanjutManual');
-    let dateHtml = '';
+const nama=document.getElementById("nama").value.trim();
+const wa=document.getElementById("wa").value.trim();
+const kode=document.getElementById("kode").value.trim();
+const btn=document.getElementById("btnCek");
+const result=document.getElementById("result");
+const btnLanjut=document.getElementById("btnLanjutManual");
 
-    if (dateInfo) {
-      dateHtml = `
-        <div class="date-info">
-          <div><span>Status:</span><span>${dateInfo.status_text}</span></div>
-          <div><span>Aktif Mulai:</span><span>${dateInfo.mulai}</span></div>
-          <div><span>Berlaku Sampai:</span><span>${dateInfo.expired}</span></div>
-        </div>
-      `;
-    }
+result.innerHTML="";
+btnLanjut.style.display="none";
 
-    resultDiv.innerHTML = `
-      <div class="result-box ${type} show">
-        <i class="fas ${icon}"></i>
-        <h3>${title}</h3>
-        <p>${message}</p>
-        ${dateHtml}
-      </div>
-    `;
+if(nama.length<3) return show("error","Nama tidak valid");
+if(wa.replace(/\D/g,'').length<10) return show("error","Nomor tidak valid");
+if(kode.length<6) return show("error","Kode tidak valid");
 
-    if (type === 'success' && kode) {
-      btnLanjut.href = "/panduan/?kode=" + encodeURIComponent(kode);
-      btnLanjut.style.display = "flex";
-    } else {
-      btnLanjut.style.display = "none";
-    }
-  }
+btn.classList.add("loading");
 
-  function cekKode() {
-    const nama = document.getElementById("nama").value.trim();
-    const wa = document.getElementById("wa").value.trim();
-    const kode = document.getElementById("kode").value.trim();
-    const button = document.getElementById("btnCek");
+fetch("https://script.google.com/macros/s/AKfycby9fuehTsnTzQBgh39RaywCHcCQAKZeda_2Z8MVp-TLC2H1A4f2SEhrTUV9FkE4mTpX/exec?kode="+kode+"&nama="+nama+"&wa="+formatWA(wa)+"&_="+Date.now())
+.then(res=>res.json())
+.then(data=>{
 
-    document.getElementById('result').innerHTML = "";
-    document.getElementById('btnLanjutManual').style.display = 'none';
+btn.classList.remove("loading");
 
-    if (nama.length < 3) return showResult('error','fa-times-circle','Nama Tidak Valid','Nama minimal 3 karakter.');
-    if (wa.replace(/\D/g,'').length < 10) return showResult('error','fa-times-circle','Nomor Tidak Valid','Nomor WhatsApp minimal 10 digit.');
-    if (kode.length < 6) return showResult('error','fa-times-circle','Kode Tidak Valid','Kode minimal 6 karakter.');
+if(data.status==="SUCCESS"){
+show("success","Kode berhasil diaktifkan 🎉");
+setTimeout(()=>{
+window.location.href="/panduan/?kode="+kode;
+},2000);
+}
 
-    button.disabled = true;
-    button.classList.add('loading');
+else if(data.status==="USED"||data.status==="ACTIVE"){
+show("success","Kode masih aktif. Silakan lanjut ke panduan.");
+btnLanjut.href="/panduan/?kode="+kode;
+btnLanjut.style.display="block";
+}
 
-    const formattedWA = formatWA(wa);
-    const scriptURL = "https://script.google.com/macros/s/AKfycby9fuehTsnTzQBgh39RaywCHcCQAKZeda_2Z8MVp-TLC2H1A4f2SEhrTUV9FkE4mTpX/exec";
+else if(data.status==="EXPIRED"){
+show("warning","Kode sudah expired.");
+}
 
-    fetch(`${scriptURL}?kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(formattedWA)}&_=${Date.now()}`)
-      .then(res => res.json())
-      .then(jsonData => {
+else{
+show("error","Kode tidak ditemukan.");
+}
 
-        button.disabled = false;
-        button.classList.remove('loading');
+})
+.catch(()=>{
+btn.classList.remove("loading");
+show("error","Gagal terhubung ke server.");
+});
+}
 
-        // === SUCCESS (pertama kali aktivasi) ===
-        if (jsonData.status === "SUCCESS") {
-
-          const dateInfo = {
-            status_text: "AKTIF",
-            mulai: formatDate(jsonData.tanggal_mulai),
-            expired: formatDate(jsonData.tanggal_expired)
-          };
-
-          showResult('success','fa-check-circle','Kode Berhasil Diaktifkan 🎉','Mengalihkan ke panduan...',dateInfo,kode);
-
-          setTimeout(() => {
-            window.location.href = "/panduan/?kode=" + encodeURIComponent(kode);
-          }, 2000);
-        }
-
-        // === SUDAH AKTIF / SUDAH DIGUNAKAN ===
-        else if (jsonData.status === "USED" || jsonData.status === "ACTIVE") {
-
-          const dateInfo = {
-            status_text: "MASIH AKTIF",
-            mulai: formatDate(jsonData.tanggal_mulai),
-            expired: formatDate(jsonData.tanggal_expired)
-          };
-
-          showResult('success','fa-unlock','Kode Masih Aktif','Silakan lanjut ke panduan.',dateInfo,kode);
-        }
-
-        // === EXPIRED ===
-        else if (jsonData.status === "EXPIRED") {
-
-          const dateInfo = {
-            status_text: "KADALUARSA",
-            mulai: formatDate(jsonData.tanggal_mulai),
-            expired: formatDate(jsonData.tanggal_expired)
-          };
-
-          showResult('warning','fa-calendar-times','Kode Sudah Expired','Masa berlaku sudah habis.',dateInfo);
-        }
-
-        // === INVALID ===
-        else {
-          showResult('error','fa-times-circle','Kode Tidak Valid','Kode tidak ditemukan.');
-        }
-      })
-      .catch(() => {
-        button.disabled = false;
-        button.classList.remove('loading');
-        showResult('error','fa-exclamation-triangle','Kesalahan Jaringan','Tidak bisa terhubung ke server.');
-      });
-  }
-
-  document.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') cekKode();
-  });
+function show(type,msg){
+document.getElementById("result").innerHTML=
+`<div class="result-box ${type}">${msg}</div>`;
+}
 </script>
+
+</body>
+</html>
