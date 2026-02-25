@@ -254,9 +254,7 @@
             color: #F59E0B;
             font-weight: 600;
         }
-        .sold-count {
-            color: #9CA3AF;
-        }
+        .sold-count { color: #9CA3AF; }
         
         .product-price { 
             font-size: 15px; 
@@ -307,7 +305,7 @@
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
-        #hero-slider {
+        #hero-slider, #category-slider {
             display: flex;
             transition: transform 0.5s ease;
         }
@@ -347,36 +345,6 @@
         }
 
         /* Category Pills */
-        .category-pill {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px 16px;
-            border-radius: 14px;
-            font-size: 11px;
-            font-weight: 600;
-            white-space: nowrap;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-        .category-pill.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-        .category-pill:not(.active) {
-            background: white;
-            color: #4B5563;
-            border-color: #E5E7EB;
-        }
-        .category-pill:not(.active):hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-        .category-icon {
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
         .category-text {
             font-size: 14px;
             font-weight: 500;
@@ -385,21 +353,51 @@
             padding: 6px 0;
             transition: all 0.2s ease;
         }
-
         .category-text.active {
             color: var(--primary-dark);
             font-weight: 700;
         }
 
-        /* ============================= */
-        /* ===== TESTIMONI SLIDER ===== */
-        /* ============================= */
-
-        /* Perbaikan CSS: Menghapus kurung kurawal ekstra yang merusak kode sebelumnya */
-        
-        #category-slider {
-            display: flex;
-            transition: transform 0.5s ease;
+        /* Promo Container */
+        #promo-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .promo-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+        .promo-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .promo-content {
+            padding: 10px;
+        }
+        .promo-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .promo-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--danger);
+        }
+        .promo-old-price {
+            font-size: 10px;
+            color: #9CA3AF;
+            text-decoration: line-through;
+            margin-left: 4px;
         }
 
         /* Print Styles */
@@ -483,7 +481,6 @@
         </section>
 
         <!-- Categories -->
-        <!-- PERBAIKAN: Menutup tag h2 dengan benar -->
         <section class="mb-4">
             <h2 class="text-sm font-bold text-gray-700 mb-2">KATEGORI PRODUK</h2>
             <div class="flex flex-col gap-2 pb-2" id="category-list"></div>
@@ -496,6 +493,12 @@
                  <div id="category-slider"></div>
                  <div class="slider-dots" id="category-slider-dots"></div>
             </div>
+        </section>
+
+        <!-- Promo Spesial -->
+        <section class="mb-6">
+            <h2 class="text-sm font-bold text-red-600 mb-3">🔥 PROMO SPESIAL</h2>
+            <div id="promo-container"></div>
         </section>
 
         <!-- Products -->
@@ -568,11 +571,11 @@
             ],
             coupons: [ { code: "KEMOENIK26", type: "shipping", value: 15000, minPurchase: 120000 } ],
             categories: [ 
-                { id: 'all', name: "Semua", }, 
-                { id: 'calc', name: "Calculator", }, 
-                { id: 'kapsul', name: "Kapsul", }, 
-                { id: 'teh', name: "Teh", },
-                { id: 'lainnya', name: "Lainnya", }
+                { id: 'all', name: "Semua" }, 
+                { id: 'calc', name: "Calculator" }, 
+                { id: 'kapsul', name: "Kapsul" }, 
+                { id: 'teh', name: "Teh" },
+                { id: 'lainnya', name: "Lainnya" }
             ],
             sliders: [
                 "https://placehold.co/800x400/10B981/FFFFFF?text=Flash+Sale+50%25&font=plus-jakarta-sans",
@@ -583,6 +586,22 @@
                 "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+1",
                 "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+2",
                 "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+3"
+            ],
+            promoProducts: [
+                {
+                    id: "promo1",
+                    name: "Kapsul Pelangsing Premium",
+                    price: 120000,
+                    oldPrice: 180000,
+                    image: "https://placehold.co/400x400/fee2e2/991b1b?text=Promo+1"
+                },
+                {
+                    id: "promo2",
+                    name: "Teh Detox Herbal",
+                    price: 95000,
+                    oldPrice: 150000,
+                    image: "https://placehold.co/400x400/d1fae5/065f46?text=Promo+2"
+                }
             ],
             products: [
                 { 
@@ -711,6 +730,7 @@
             renderProducts();
             renderSliders();
             renderTestimoniSlider();
+            renderPromoProducts(); // Fungsi baru untuk promo
             document.getElementById('wa-btn-header').href = `https://wa.me/${CONFIG.whatsappNumber}`;
             document.getElementById('store-name').innerText = CONFIG.storeName;
         });
@@ -804,7 +824,7 @@
             const dotsContainer = document.getElementById('category-slider-dots');
 
             container.innerHTML = CONFIG.testimoniSliders.map((img, i) => `
-                <div class="slide-item" style="min-width: 100%;">
+                <div class="slide-item">
                     <img src="${img}" loading="lazy" style="width: 100%; height: 200px; object-fit: cover; border-radius: 16px;">
                 </div>
             `).join('');
@@ -819,10 +839,7 @@
         function startTestimoniSlider() {
             if (testimoniInterval) clearInterval(testimoniInterval);
             testimoniInterval = setInterval(() => {
-                testimoniIndex++;
-                if (testimoniIndex >= CONFIG.testimoniSliders.length) {
-                    testimoniIndex = 0;
-                }
+                testimoniIndex = (testimoniIndex + 1) % CONFIG.testimoniSliders.length;
                 updateTestimoniSlider();
             }, 4000);
         }
@@ -831,15 +848,33 @@
             const slider = document.getElementById('category-slider');
             slider.style.transform = `translateX(-${testimoniIndex * 100}%)`;
 
-            document.querySelectorAll('#category-slider-dots .dot')
-                .forEach((dot, i) => {
-                    dot.classList.toggle('active', i === testimoniIndex);
-                });
+            document.querySelectorAll('#category-slider-dots .dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === testimoniIndex);
+            });
         }
 
         function goToTestimoniSlide(index) {
             testimoniIndex = index;
             updateTestimoniSlider();
+        }
+
+        // ========== PROMO PRODUCTS RENDER ==========
+        function renderPromoProducts() {
+            const container = document.getElementById('promo-container');
+            if (!container) return;
+
+            container.innerHTML = CONFIG.promoProducts.map(p => `
+                <div class="promo-card" onclick="openDetail('${p.id}')">
+                    <img src="${p.image}" alt="${p.name}">
+                    <div class="promo-content">
+                        <div class="promo-title">${p.name}</div>
+                        <div>
+                            <span class="promo-price">${formatPrice(p.price)}</span>
+                            <span class="promo-old-price">${formatPrice(p.oldPrice)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // ========== CATEGORY FUNCTIONS ==========
@@ -919,7 +954,19 @@
 
         // ========== DETAIL MODAL ==========
         function openDetail(id) {
-            const p = CONFIG.products.find(x => x.id === id);
+            // Cek apakah produk promo atau produk biasa
+            let p = CONFIG.products.find(x => x.id == id);
+            if(!p) {
+                p = CONFIG.promoProducts.find(x => x.id == id);
+                // Jika promo, konversi ke format standar untuk modal (optional)
+                if(p) {
+                   // Sederhananya, untuk demo ini kita abaikan detail modal promo spesial
+                   // atau Anda bisa tambahkan logic khusus di sini.
+                   alert("Detail Promo: " + p.name + "\nHarga: " + formatPrice(p.price));
+                   return;
+                }
+            }
+            
             if (!p) return;
             
             const finalPrice = p.price - Math.floor(p.price * (p.discount || 0) / 100);
@@ -938,22 +985,22 @@
                 
                 <div class="flex items-center gap-3 mb-3">
                     <span class="rating-stars text-sm">
-                        ${generateStars(p.rating)}
-                        <span class="ml-1 text-gray-700 font-semibold">${p.rating}</span>
+                        ${generateStars(p.rating || 5)}
+                        <span class="ml-1 text-gray-700 font-semibold">${p.rating || 5}</span>
                     </span>
                     <span class="text-gray-400">|</span>
-                    <span class="text-sm text-gray-500">${formatSold(p.sold)} terjual</span>
+                    <span class="text-sm text-gray-500">${formatSold(p.sold || 100)} terjual</span>
                 </div>
                 
                 <div class="flex items-baseline gap-2 mb-4">
-                    <span class="text-2xl font-bold" style="color: var(--primary-dark);">${formatPrice(finalPrice)}</span>
+                    <span class="text-2xl font-bold" style="color: var(--primary-dark);">${formatPrice(finalPrice || p.price)}</span>
                     ${p.originalPrice ? `<span class="text-sm text-gray-400 line-through">${formatPrice(p.originalPrice)}</span>` : ''}
                     ${p.discount > 0 ? `<span class="text-xs font-bold px-2 py-1 rounded-full" style="background: #FEF3C7; color: #B45309;">${p.discount}% OFF</span>` : ''}
                 </div>
                 
                 <div class="border-t border-b border-gray-100 my-4 py-4">
                     <h4 class="font-semibold mb-2 text-sm text-gray-700">Deskripsi Produk</h4>
-                    <p class="text-sm text-gray-600 leading-relaxed">${p.desc}</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">${p.desc || 'Produk berkualitas dari Kemoenik Official Store.'}</p>
                 </div>
                 
                 <div class="flex gap-3 mt-4">
@@ -1037,9 +1084,15 @@
         // ========== CART FUNCTIONS ==========
         function addCart(id) {
             const p = CONFIG.products.find(x => x.id === id);
-            if (!p || p.price === 0) {
-                alert("Produk tidak tersedia");
-                return;
+            if (!p) {
+                 // Jika produk tidak ditemukan di list utama, coba cari di promo (logika sederhana)
+                 const promo = CONFIG.promoProducts.find(x => x.id == id);
+                 if(promo) {
+                     alert("Produk promo berhasil ditambahkan (demo).");
+                     // Logika tambah keranjang promo bisa ditambahkan di sini jika perlu
+                     return;
+                 }
+                 return;
             }
             
             const exist = cart.find(i => i.id === id);
@@ -1615,22 +1668,6 @@
                 }, 300);
             }
         });
-    </script>
-
-    <script>
-        // Redirect if in-app browser
-            var ua = navigator.userAgent || navigator.vendor || window.opera;
-            var isTikTok = ua.includes("TikTok");
-            var isInstagram = ua.includes("Instagram");
-            var isFacebook = ua.includes("FBAN") || ua.includes("FBAV");
-
-            if (isTikTok || isInstagram || isFacebook) {
-                // Uncomment if you have open.html page
-                // if (!window.location.pathname.includes("open.html")) {
-                //     window.location.href = "open.html";
-                // }
-            }
-        })();
     </script>
 </body>
 </html>
