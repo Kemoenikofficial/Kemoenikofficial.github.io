@@ -1,171 +1,3 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Verifikasi Kode Konsultasi - Kemoenik</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* Reset & Base */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .container {
-      background: white;
-      padding: 35px 30px;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-    }
-
-    .logo { text-align: center; margin-bottom: 25px; }
-    .logo img { width: 90px; height: auto; margin-bottom: 10px; border-radius: 50%; object-fit: cover; }
-    .logo h2 { color: #333; font-size: 22px; font-weight: 600; }
-    .logo p { color: #888; font-size: 14px; margin-top: 5px; }
-
-    .form-group { margin-bottom: 18px; text-align: left; }
-    .form-group label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 8px; }
-
-    .input-wrapper { position: relative; }
-    .input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 16px; pointer-events: none; }
-
-    input {
-      width: 100%;
-      padding: 14px 14px 14px 45px;
-      border-radius: 12px;
-      border: 2px solid #e8e8e8;
-      font-size: 15px;
-      transition: all 0.3s ease;
-      background: #fafafa;
-    }
-
-    input:focus { outline: none; border-color: #16a34a; background: white; box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1); }
-    input::placeholder { color: #bbb; }
-
-    button {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #16a34a 0%, #4ade80 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      margin-top: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-
-    button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(22, 163, 74, 0.4); }
-    button:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
-    
-    /* Tambahan: Style untuk tombol lanjut manual */
-    .btn-lanjut {
-      background: white;
-      color: #16a34a;
-      border: 2px solid #16a34a;
-      margin-top: 15px;
-      text-decoration: none;
-      display: none; /* Hidden by default */
-    }
-    .btn-lanjut:hover {
-      background: #16a34a;
-      color: white;
-    }
-
-    /* Result Box */
-    .result-box { margin-top: 25px; padding: 20px; border-radius: 12px; display: none; }
-    .result-box.show { display: block; animation: fadeIn 0.5s ease; }
-    .result-box.success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
-    .result-box.error { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); color: white; }
-    .result-box.warning { background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%); color: white; }
-
-    .result-box i { font-size: 40px; margin-bottom: 15px; display: block; text-align: center; }
-    .result-box h3 { font-size: 18px; margin-bottom: 10px; text-align: center; }
-    .result-box p { font-size: 14px; text-align: center; line-height: 1.6; }
-
-    .date-info { background: rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 15px; margin-top: 15px; text-align: left; }
-    .date-info div { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
-    .date-info div:last-child { border-bottom: none; margin-bottom: 0; }
-    .date-info span:first-child { font-weight: 600; display: flex; align-items: center; gap: 6px; }
-
-    .spinner { width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
-    button.loading .spinner { display: block; }
-    button.loading .btn-text { display: none; }
-
-    .footer { text-align: center; margin-top: 25px; color: #aaa; font-size: 12px; }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 480px) { .container { padding: 25px 20px; } .logo h2 { font-size: 20px; } }
-  </style>
-</head>
-
-<body>
-
-<div class="container">
-  <div class="logo">
-    <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo Kemoenik">
-    <h2>Kemoenik</h2>
-    <p>Verifikasi Kode Konsultasi</p>
-  </div>
-
-  <div class="form-group">
-    <label><i class="fas fa-user"></i> Nama Lengkap</label>
-    <div class="input-wrapper">
-      <i class="fas fa-user"></i>
-      <input type="text" id="nama" placeholder="Masukkan nama lengkap Anda" required>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label><i class="fas fa-phone"></i> Nomor WhatsApp</label>
-    <div class="input-wrapper">
-      <i class="fab fa-whatsapp"></i>
-      <input type="tel" id="wa" placeholder="Contoh: 081234567890" required pattern="[0-9]+">
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label><i class="fas fa-key"></i> Kode Konsultasi</label>
-    <div class="input-wrapper">
-      <i class="fas fa-ticket-alt"></i>
-      <input type="text" id="kode" placeholder="Masukkan kode konsultasi" required>
-    </div>
-  </div>
-
-  <button id="btnCek" onclick="cekKode()">
-    <span class="btn-text"><i class="fas fa-search"></i> Cek Kode</span>
-    <div class="spinner"></div>
-  </button>
-
-  <!-- Tombol Cadangan jika Redirect Otomatis Gagal -->
-  <a href="#" id="btnLanjutManual" class="btn-lanjut" style="display:none;">
-    <i class="fas fa-arrow-right"></i> Lanjut ke Panduan
-  </a>
-
-  <div id="result"></div>
-
-  <div class="footer">
-    <p>Butuh bantuan? Hubungi kami</p>
-  </div>
-</div>
-
 <script>
   function formatWA(wa) {
     wa = wa.replace(/\D/g, '');
@@ -176,13 +8,7 @@
 
   function formatDate(dateString) {
     if (!dateString) return '-';
-    let date;
-    if (typeof dateString === 'string' && dateString.includes('-') && !dateString.includes('T')) {
-      const parts = dateString.split('-');
-      date = new Date(parts[0], parts[1] - 1, parts[2]);
-    } else {
-      date = new Date(dateString);
-    }
+    const date = new Date(dateString);
     return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
@@ -190,17 +16,17 @@
     const resultDiv = document.getElementById('result');
     const btnLanjut = document.getElementById('btnLanjutManual');
     let dateHtml = '';
-    
+
     if (dateInfo) {
       dateHtml = `
         <div class="date-info">
-          <div><span><i class="fas fa-check-circle"></i> Status Kode:</span><span>${dateInfo.status_text}</span></div>
-          <div><span><i class="fas fa-play-circle"></i> Aktif Mulai:</span><span>${dateInfo.mulai}</span></div>
-          <div><span><i class="fas fa-stop-circle"></i> Berlaku Sampai:</span><span>${dateInfo.expired}</span></div>
+          <div><span>Status:</span><span>${dateInfo.status_text}</span></div>
+          <div><span>Aktif Mulai:</span><span>${dateInfo.mulai}</span></div>
+          <div><span>Berlaku Sampai:</span><span>${dateInfo.expired}</span></div>
         </div>
       `;
     }
-    
+
     resultDiv.innerHTML = `
       <div class="result-box ${type} show">
         <i class="fas ${icon}"></i>
@@ -210,12 +36,11 @@
       </div>
     `;
 
-    // Logika Tombol Lanjut Manual
     if (type === 'success' && kode) {
       btnLanjut.href = "/panduan/?kode=" + encodeURIComponent(kode);
-      btnLanjut.style.display = "flex"; // Tampilkan tombol
+      btnLanjut.style.display = "flex";
     } else {
-      btnLanjut.style.display = "none"; // Sembunyikan jika gagal
+      btnLanjut.style.display = "none";
     }
   }
 
@@ -223,66 +48,77 @@
     const nama = document.getElementById("nama").value.trim();
     const wa = document.getElementById("wa").value.trim();
     const kode = document.getElementById("kode").value.trim();
-    const resultDiv = document.getElementById("result");
     const button = document.getElementById("btnCek");
 
-    // Reset UI
-    resultDiv.innerHTML = "";
+    document.getElementById('result').innerHTML = "";
     document.getElementById('btnLanjutManual').style.display = 'none';
 
-    // Validasi
-    if (nama.length < 3) { showResult('error', 'fa-times-circle', 'Nama Tidak Valid', 'Nama minimal 3 karakter.'); return; }
-    if (wa.replace(/\D/g, '').length < 10) { showResult('error', 'fa-times-circle', 'Nomor Tidak Valid', 'Nomor WhatsApp minimal 10 digit.'); return; }
-    if (kode.length < 6) { showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi minimal 6 karakter.'); return; }
+    if (nama.length < 3) return showResult('error','fa-times-circle','Nama Tidak Valid','Nama minimal 3 karakter.');
+    if (wa.replace(/\D/g,'').length < 10) return showResult('error','fa-times-circle','Nomor Tidak Valid','Nomor WhatsApp minimal 10 digit.');
+    if (kode.length < 6) return showResult('error','fa-times-circle','Kode Tidak Valid','Kode minimal 6 karakter.');
 
-    // Loading
     button.disabled = true;
     button.classList.add('loading');
 
     const formattedWA = formatWA(wa);
     const scriptURL = "https://script.google.com/macros/s/AKfycby9fuehTsnTzQBgh39RaywCHcCQAKZeda_2Z8MVp-TLC2H1A4f2SEhrTUV9FkE4mTpX/exec";
-    
-    // Tambah timestamp untuk menghindari cache
-    const urlFinal = `${scriptURL}?kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(formattedWA)}&_=${Date.now()}`;
 
-    fetch(urlFinal)
-      .then(response => response.json())
+    fetch(`${scriptURL}?kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(formattedWA)}&_=${Date.now()}`)
+      .then(res => res.json())
       .then(jsonData => {
-        console.log("DATA DITERIMA:", jsonData); // Debugging
-        
-        // Matikan loading
+
         button.disabled = false;
         button.classList.remove('loading');
 
+        // === SUCCESS (pertama kali aktivasi) ===
         if (jsonData.status === "SUCCESS") {
+
           const dateInfo = {
             status_text: "AKTIF",
             mulai: formatDate(jsonData.tanggal_mulai),
             expired: formatDate(jsonData.tanggal_expired)
           };
-          
-          showResult('success', 'fa-check-circle', 'Kode Terverifikasi! 🎉', 'Anda akan dialihkan secara otomatis...', dateInfo, kode);
-          
-          // Redirect Otomatis 2.5 detik
+
+          showResult('success','fa-check-circle','Kode Berhasil Diaktifkan 🎉','Mengalihkan ke panduan...',dateInfo,kode);
+
           setTimeout(() => {
             window.location.href = "/panduan/?kode=" + encodeURIComponent(kode);
-          }, 2500);
-          
-        } else if (jsonData.status === "USED") {
-          const dateInfo = jsonData.tanggal_mulai ? { status_text: "SUDAH DIGUNAKAN", mulai: formatDate(jsonData.tanggal_mulai), expired: formatDate(jsonData.tanggal_expired) } : null;
-          showResult('warning', 'fa-history', 'Kode Sudah Digunakan', 'Kode ini sudah pernah digunakan sebelumnya.', dateInfo);
-        } else if (jsonData.status === "EXPIRED") {
-          const dateInfo = { status_text: "KADALUARSA", mulai: formatDate(jsonData.tanggal_mulai), expired: formatDate(jsonData.tanggal_expired) };
-          showResult('warning', 'fa-calendar-times', 'Kode Sudah Expired', 'Masa berlaku kode sudah berakhir.', dateInfo);
-        } else {
-          showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi tidak ditemukan di sistem.');
+          }, 2000);
+        }
+
+        // === SUDAH AKTIF / SUDAH DIGUNAKAN ===
+        else if (jsonData.status === "USED" || jsonData.status === "ACTIVE") {
+
+          const dateInfo = {
+            status_text: "MASIH AKTIF",
+            mulai: formatDate(jsonData.tanggal_mulai),
+            expired: formatDate(jsonData.tanggal_expired)
+          };
+
+          showResult('success','fa-unlock','Kode Masih Aktif','Silakan lanjut ke panduan.',dateInfo,kode);
+        }
+
+        // === EXPIRED ===
+        else if (jsonData.status === "EXPIRED") {
+
+          const dateInfo = {
+            status_text: "KADALUARSA",
+            mulai: formatDate(jsonData.tanggal_mulai),
+            expired: formatDate(jsonData.tanggal_expired)
+          };
+
+          showResult('warning','fa-calendar-times','Kode Sudah Expired','Masa berlaku sudah habis.',dateInfo);
+        }
+
+        // === INVALID ===
+        else {
+          showResult('error','fa-times-circle','Kode Tidak Valid','Kode tidak ditemukan.');
         }
       })
-      .catch(error => {
-        console.error("FETCH ERROR:", error);
+      .catch(() => {
         button.disabled = false;
         button.classList.remove('loading');
-        showResult('error', 'fa-exclamation-triangle', 'Kesalahan Jaringan', 'Tidak dapat terhubung ke server. Coba lagi atau gunakan tombol manual di bawah.');
+        showResult('error','fa-exclamation-triangle','Kesalahan Jaringan','Tidak bisa terhubung ke server.');
       });
   }
 
@@ -290,6 +126,3 @@
     if (e.key === 'Enter') cekKode();
   });
 </script>
-
-</body>
-</html>
