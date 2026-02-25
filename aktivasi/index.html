@@ -212,7 +212,7 @@
 
     // Logika Tombol Lanjut Manual
     if (type === 'success' && kode) {
-      btnLanjut.href = "panduan.html?kode=" + encodeURIComponent(kode);
+      btnLanjut.href = "/panduan/?kode=" + encodeURIComponent(kode);
       btnLanjut.style.display = "flex"; // Tampilkan tombol
     } else {
       btnLanjut.style.display = "none"; // Sembunyikan jika gagal
