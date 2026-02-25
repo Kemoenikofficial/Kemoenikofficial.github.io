@@ -7,11 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Reset & Base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,7 +19,6 @@
       padding: 20px;
     }
 
-    /* Container Utama */
     .container {
       background: white;
       padding: 35px 30px;
@@ -33,61 +28,16 @@
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
     }
 
-    /* Header & Logo */
-    .logo {
-      text-align: center;
-      margin-bottom: 25px;
-    }
+    .logo { text-align: center; margin-bottom: 25px; }
+    .logo img { width: 90px; height: auto; margin-bottom: 10px; border-radius: 50%; object-fit: cover; }
+    .logo h2 { color: #333; font-size: 22px; font-weight: 600; }
+    .logo p { color: #888; font-size: 14px; margin-top: 5px; }
 
-    .logo img {
-      width: 90px;
-      height: auto;
-      margin-bottom: 10px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
+    .form-group { margin-bottom: 18px; text-align: left; }
+    .form-group label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 8px; }
 
-    .logo h2 {
-      color: #333;
-      font-size: 22px;
-      font-weight: 600;
-    }
-
-    .logo p {
-      color: #888;
-      font-size: 14px;
-      margin-top: 5px;
-    }
-
-    /* Form Styling */
-    .form-group {
-      margin-bottom: 18px;
-      text-align: left;
-    }
-
-    .form-group label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #555;
-      margin-bottom: 8px;
-    }
-
-    .input-wrapper {
-      position: relative;
-    }
-
-    .input-wrapper i {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #aaa;
-      font-size: 16px;
-      pointer-events: none;
-    }
+    .input-wrapper { position: relative; }
+    .input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 16px; pointer-events: none; }
 
     input {
       width: 100%;
@@ -99,18 +49,9 @@
       background: #fafafa;
     }
 
-    input:focus {
-      outline: none;
-      border-color: #16a34a;
-      background: white;
-      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
-    }
+    input:focus { outline: none; border-color: #16a34a; background: white; box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1); }
+    input::placeholder { color: #bbb; }
 
-    input::placeholder {
-      color: #bbb;
-    }
-
-    /* Button Styling */
     button {
       width: 100%;
       padding: 16px;
@@ -129,140 +70,49 @@
       gap: 10px;
     }
 
-    button:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(22, 163, 74, 0.4);
+    button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(22, 163, 74, 0.4); }
+    button:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    
+    /* Tambahan: Style untuk tombol lanjut manual */
+    .btn-lanjut {
+      background: white;
+      color: #16a34a;
+      border: 2px solid #16a34a;
+      margin-top: 15px;
+      text-decoration: none;
+      display: none; /* Hidden by default */
     }
-
-    button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
+    .btn-lanjut:hover {
+      background: #16a34a;
+      color: white;
     }
 
     /* Result Box */
-    .result-box {
-      margin-top: 25px;
-      padding: 20px;
-      border-radius: 12px;
-      display: none;
-    }
+    .result-box { margin-top: 25px; padding: 20px; border-radius: 12px; display: none; }
+    .result-box.show { display: block; animation: fadeIn 0.5s ease; }
+    .result-box.success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+    .result-box.error { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); color: white; }
+    .result-box.warning { background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%); color: white; }
 
-    .result-box.show {
-      display: block;
-      animation: fadeIn 0.5s ease;
-    }
+    .result-box i { font-size: 40px; margin-bottom: 15px; display: block; text-align: center; }
+    .result-box h3 { font-size: 18px; margin-bottom: 10px; text-align: center; }
+    .result-box p { font-size: 14px; text-align: center; line-height: 1.6; }
 
-    .result-box.success {
-      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-      color: white;
-    }
+    .date-info { background: rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 15px; margin-top: 15px; text-align: left; }
+    .date-info div { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
+    .date-info div:last-child { border-bottom: none; margin-bottom: 0; }
+    .date-info span:first-child { font-weight: 600; display: flex; align-items: center; gap: 6px; }
 
-    .result-box.error {
-      background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-      color: white;
-    }
+    .spinner { width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+    button.loading .spinner { display: block; }
+    button.loading .btn-text { display: none; }
 
-    .result-box.warning {
-      background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
-      color: white;
-    }
+    .footer { text-align: center; margin-top: 25px; color: #aaa; font-size: 12px; }
 
-    .result-box i {
-      font-size: 40px;
-      margin-bottom: 15px;
-      display: block;
-      text-align: center;
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .result-box h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    .result-box p {
-      font-size: 14px;
-      text-align: center;
-      line-height: 1.6;
-    }
-
-    /* Date Info Box */
-    .date-info {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 15px;
-      text-align: left;
-    }
-
-    .date-info div {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 8px 0;
-      font-size: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      padding-bottom: 5px;
-    }
-    
-    .date-info div:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-    }
-
-    .date-info span:first-child {
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Loading Spinner */
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      display: none;
-    }
-
-    button.loading .spinner {
-      display: block;
-    }
-
-    button.loading .btn-text {
-      display: none;
-    }
-
-    /* Footer & Animation */
-    .footer {
-      text-align: center;
-      margin-top: 25px;
-      color: #aaa;
-      font-size: 12px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      .container {
-        padding: 25px 20px;
-      }
-      .logo h2 {
-        font-size: 20px;
-      }
-    }
+    @media (max-width: 480px) { .container { padding: 25px 20px; } .logo h2 { font-size: 20px; } }
   </style>
 </head>
 
@@ -304,6 +154,11 @@
     <div class="spinner"></div>
   </button>
 
+  <!-- Tombol Cadangan jika Redirect Otomatis Gagal -->
+  <a href="#" id="btnLanjutManual" class="btn-lanjut" style="display:none;">
+    <i class="fas fa-arrow-right"></i> Lanjut ke Panduan
+  </a>
+
   <div id="result"></div>
 
   <div class="footer">
@@ -312,19 +167,13 @@
 </div>
 
 <script>
-  // Fungsi untuk memformat nomor WA ke format internasional (62)
   function formatWA(wa) {
     wa = wa.replace(/\D/g, '');
-    if (wa.startsWith("08")) {
-      return "62" + wa.substring(1);
-    }
-    if (wa.startsWith("+62")) {
-      return wa.replace("+62", "62");
-    }
+    if (wa.startsWith("08")) return "62" + wa.substring(1);
+    if (wa.startsWith("+62")) return wa.replace("+62", "62");
     return wa;
   }
 
-  // Fungsi untuk memformat tanggal
   function formatDate(dateString) {
     if (!dateString) return '-';
     let date;
@@ -334,30 +183,20 @@
     } else {
       date = new Date(dateString);
     }
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    return date.toLocaleDateString('id-ID', options);
+    return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  // Fungsi untuk menampilkan hasil validasi
-  function showResult(type, icon, title, message, dateInfo = null) {
+  function showResult(type, icon, title, message, dateInfo = null, kode = '') {
     const resultDiv = document.getElementById('result');
+    const btnLanjut = document.getElementById('btnLanjutManual');
     let dateHtml = '';
     
     if (dateInfo) {
       dateHtml = `
         <div class="date-info">
-          <div>
-            <span><i class="fas fa-check-circle"></i> Status Kode:</span>
-            <span>${dateInfo.status_text}</span>
-          </div>
-          <div>
-            <span><i class="fas fa-play-circle"></i> Aktif Mulai:</span>
-            <span>${dateInfo.mulai}</span>
-          </div>
-          <div>
-            <span><i class="fas fa-stop-circle"></i> Berlaku Sampai:</span>
-            <span>${dateInfo.expired}</span>
-          </div>
+          <div><span><i class="fas fa-check-circle"></i> Status Kode:</span><span>${dateInfo.status_text}</span></div>
+          <div><span><i class="fas fa-play-circle"></i> Aktif Mulai:</span><span>${dateInfo.mulai}</span></div>
+          <div><span><i class="fas fa-stop-circle"></i> Berlaku Sampai:</span><span>${dateInfo.expired}</span></div>
         </div>
       `;
     }
@@ -370,9 +209,16 @@
         ${dateHtml}
       </div>
     `;
+
+    // Logika Tombol Lanjut Manual
+    if (type === 'success' && kode) {
+      btnLanjut.href = "panduan.html?kode=" + encodeURIComponent(kode);
+      btnLanjut.style.display = "flex"; // Tampilkan tombol
+    } else {
+      btnLanjut.style.display = "none"; // Sembunyikan jika gagal
+    }
   }
 
-  // Fungsi Utama: Cek Kode
   function cekKode() {
     const nama = document.getElementById("nama").value.trim();
     const wa = document.getElementById("wa").value.trim();
@@ -380,48 +226,34 @@
     const resultDiv = document.getElementById("result");
     const button = document.getElementById("btnCek");
 
+    // Reset UI
     resultDiv.innerHTML = "";
+    document.getElementById('btnLanjutManual').style.display = 'none';
 
-    // Validasi Input
-    if (nama.length < 3) {
-      showResult('error', 'fa-times-circle', 'Nama Tidak Valid', 'Nama minimal 3 karakter.');
-      return;
-    }
+    // Validasi
+    if (nama.length < 3) { showResult('error', 'fa-times-circle', 'Nama Tidak Valid', 'Nama minimal 3 karakter.'); return; }
+    if (wa.replace(/\D/g, '').length < 10) { showResult('error', 'fa-times-circle', 'Nomor Tidak Valid', 'Nomor WhatsApp minimal 10 digit.'); return; }
+    if (kode.length < 6) { showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi minimal 6 karakter.'); return; }
 
-    const waClean = wa.replace(/\D/g, '');
-    if (waClean.length < 10) {
-      showResult('error', 'fa-times-circle', 'Nomor Tidak Valid', 'Nomor WhatsApp minimal 10 digit.');
-      return;
-    }
-
-    if (kode.length < 6) {
-      showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi minimal 6 karakter.');
-      return;
-    }
-
-    // Set UI ke mode Loading
+    // Loading
     button.disabled = true;
     button.classList.add('loading');
 
     const formattedWA = formatWA(wa);
     const scriptURL = "https://script.google.com/macros/s/AKfycbw0Y6FZTNY1LxXyrCYvcn2Z9tDH8DqPoCdsXh1VO7XQ0GzlXZgnxg-qIYSy26_GLiDy/exec";
     
-    // Tambahkan parameter anti-cache (_) agar respons selalu baru
-    const urlFinal = `${scriptURL}?kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(formattedWA)}&_=${new Date().getTime()}`;
+    // Tambah timestamp untuk menghindari cache
+    const urlFinal = `${scriptURL}?kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(formattedWA)}&_=${Date.now()}`;
 
     fetch(urlFinal)
-      .then(response => {
-          // Cek apakah response ok, jika tidak throw error
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-          return response.json();
-      })
+      .then(response => response.json())
       .then(jsonData => {
-        console.log("Response:", jsonData);
+        console.log("DATA DITERIMA:", jsonData); // Debugging
         
-        // Reset tombol (hanya jika bukan sukses, karena jika sukses akan redirect)
-        
+        // Matikan loading
+        button.disabled = false;
+        button.classList.remove('loading');
+
         if (jsonData.status === "SUCCESS") {
           const dateInfo = {
             status_text: "AKTIF",
@@ -429,74 +261,33 @@
             expired: formatDate(jsonData.tanggal_expired)
           };
           
-          showResult(
-            'success', 
-            'fa-check-circle', 
-            'Kode Terverifikasi! 🎉', 
-            'Selamat! Konsultasi Anda siap dimulai. Mengalihkan ke halaman panduan...',
-            dateInfo
-          );
+          showResult('success', 'fa-check-circle', 'Kode Terverifikasi! 🎉', 'Anda akan dialihkan secara otomatis...', dateInfo, kode);
           
-          // --- PERBAIKAN REDIRECT ---
-          // Pastikan redirect dieksekusi
+          // Redirect Otomatis 2.5 detik
           setTimeout(() => {
             window.location.href = "panduan.html?kode=" + encodeURIComponent(kode);
-          }, 3000);
+          }, 2500);
           
         } else if (jsonData.status === "USED") {
-          button.disabled = false;
-          button.classList.remove('loading');
-          const dateInfo = jsonData.tanggal_mulai ? {
-            status_text: "SUDAH DIGUNAKAN",
-            mulai: formatDate(jsonData.tanggal_mulai),
-            expired: formatDate(jsonData.tanggal_expired)
-          } : null;
-          
-          showResult(
-            'warning', 
-            'fa-history', 
-            'Kode Sudah Digunakan', 
-            'Kode ini sudah pernah digunakan sebelumnya.',
-            dateInfo
-          );
-          
+          const dateInfo = jsonData.tanggal_mulai ? { status_text: "SUDAH DIGUNAKAN", mulai: formatDate(jsonData.tanggal_mulai), expired: formatDate(jsonData.tanggal_expired) } : null;
+          showResult('warning', 'fa-history', 'Kode Sudah Digunakan', 'Kode ini sudah pernah digunakan sebelumnya.', dateInfo);
         } else if (jsonData.status === "EXPIRED") {
-          button.disabled = false;
-          button.classList.remove('loading');
-          const dateInfo = {
-            status_text: "KADALUARSA",
-            mulai: formatDate(jsonData.tanggal_mulai),
-            expired: formatDate(jsonData.tanggal_expired)
-          };
-          
-          showResult(
-            'warning', 
-            'fa-calendar-times', 
-            'Kode Sudah Expired', 
-            'Masa berlaku kode sudah berakhir.',
-            dateInfo
-          );
-          
+          const dateInfo = { status_text: "KADALUARSA", mulai: formatDate(jsonData.tanggal_mulai), expired: formatDate(jsonData.tanggal_expired) };
+          showResult('warning', 'fa-calendar-times', 'Kode Sudah Expired', 'Masa berlaku kode sudah berakhir.', dateInfo);
         } else {
-          button.disabled = false;
-          button.classList.remove('loading');
-          showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi tidak ditemukan.');
+          showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi tidak ditemukan di sistem.');
         }
       })
       .catch(error => {
-        console.error("Error:", error);
-        // Jika error, pastikan tombol di-reset agar user bisa coba lagi
+        console.error("FETCH ERROR:", error);
         button.disabled = false;
         button.classList.remove('loading');
-        showResult('error', 'fa-exclamation-triangle', 'Terjadi Kesalahan', 'Gagal menghubungi server. Cek koneksi internet Anda.');
+        showResult('error', 'fa-exclamation-triangle', 'Kesalahan Jaringan', 'Tidak dapat terhubung ke server. Coba lagi atau gunakan tombol manual di bawah.');
       });
   }
 
-  // Event listener untuk tombol Enter
   document.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      cekKode();
-    }
+    if (e.key === 'Enter') cekKode();
   });
 </script>
 
