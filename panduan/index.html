@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panduan Eksklusif Kemonik</title>
+<title>Panduan Eksklusif Kemoenik</title>
 
 <style>
 body {
@@ -35,7 +35,7 @@ body {
 </div>
 
 <div id="content" class="box">
-  <h2>Panduan Eksklusif Kemonik</h2>
+  <h2>Panduan Eksklusif Kemoenik</h2>
   <p>Selamat datang di panduan resmi.</p>
   <p>Ikuti langkah diet dan penggunaan sesuai instruksi.</p>
   <!-- Isi konten kamu di sini -->
@@ -54,7 +54,7 @@ if (!kode) {
   document.body.innerHTML = "<h3>Akses Ditolak</h3>";
 } else {
 
-  fetch("YOUR_WEBAPP_URL?action=check&kode=" + kode)
+  fetch("https://script.google.com/macros/s/AKfycby9fuehTsnTzQBgh39RaywCHcCQAKZeda_2Z8MVp-TLC2H1A4f2SEhrTUV9FkE4mTpX/exec?action=check&kode=" + kode)
   .then(response => response.text())
   .then(data => {
 
