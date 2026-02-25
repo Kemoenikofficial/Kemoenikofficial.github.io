@@ -6,6 +6,7 @@
   <title>Verifikasi Kode Konsultasi - Kemoenik</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Reset & Base */
     * {
       margin: 0;
       padding: 0;
@@ -14,7 +15,6 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      /* Warna background diubah ke hijau */
       background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
       min-height: 100vh;
       display: flex;
@@ -23,6 +23,7 @@
       padding: 20px;
     }
 
+    /* Container Utama */
     .container {
       background: white;
       padding: 35px 30px;
@@ -32,17 +33,18 @@
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
     }
 
+    /* Header & Logo */
     .logo {
       text-align: center;
       margin-bottom: 25px;
     }
 
-    /* CSS untuk Logo Gambar */
     .logo img {
-      width: 90px; /* Ukuran logo */
+      width: 90px;
       height: auto;
       margin-bottom: 10px;
-      border-radius: 50%; /* Membuat logo bulat (opsional, hapus jika ingin kotak) */
+      border-radius: 50%;
+      object-fit: cover;
     }
 
     .logo h2 {
@@ -57,13 +59,16 @@
       margin-top: 5px;
     }
 
+    /* Form Styling */
     .form-group {
       margin-bottom: 18px;
       text-align: left;
     }
 
     .form-group label {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 13px;
       font-weight: 600;
       color: #555;
@@ -81,6 +86,7 @@
       transform: translateY(-50%);
       color: #aaa;
       font-size: 16px;
+      pointer-events: none; /* Agar klik tidak mengenai icon */
     }
 
     input {
@@ -95,7 +101,6 @@
 
     input:focus {
       outline: none;
-      /* Warna focus diubah ke hijau */
       border-color: #16a34a;
       background: white;
       box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
@@ -105,10 +110,10 @@
       color: #bbb;
     }
 
+    /* Button Styling */
     button {
       width: 100%;
       padding: 16px;
-      /* Warna tombol diubah ke hijau */
       background: linear-gradient(135deg, #16a34a 0%, #4ade80 100%);
       color: white;
       border: none;
@@ -132,8 +137,10 @@
     button:disabled {
       opacity: 0.7;
       cursor: not-allowed;
+      transform: none;
     }
 
+    /* Result Box */
     .result-box {
       margin-top: 25px;
       padding: 20px;
@@ -180,7 +187,7 @@
       line-height: 1.6;
     }
 
-    /* Styling untuk Info Tanggal */
+    /* Date Info Box */
     .date-info {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 10px;
@@ -192,6 +199,7 @@
     .date-info div {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin: 8px 0;
       font-size: 14px;
       border-bottom: 1px solid rgba(255,255,255,0.2);
@@ -199,13 +207,18 @@
     }
     
     .date-info div:last-child {
-        border-bottom: none;
+      border-bottom: none;
+      margin-bottom: 0;
     }
 
     .date-info span:first-child {
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
+    /* Loading Spinner */
     .spinner {
       width: 20px;
       height: 20px;
@@ -224,6 +237,14 @@
       display: none;
     }
 
+    /* Footer & Animation */
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #aaa;
+      font-size: 12px;
+    }
+
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -233,18 +254,11 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .footer {
-      text-align: center;
-      margin-top: 25px;
-      color: #aaa;
-      font-size: 12px;
-    }
-
+    /* Responsive */
     @media (max-width: 480px) {
       .container {
         padding: 25px 20px;
       }
-      
       .logo h2 {
         font-size: 20px;
       }
@@ -256,7 +270,6 @@
 
 <div class="container">
   <div class="logo">
-    <!-- Logo diganti dengan gambar -->
     <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo Kemoenik">
     <h2>Kemoenik</h2>
     <p>Verifikasi Kode Konsultasi</p>
@@ -273,7 +286,7 @@
   <div class="form-group">
     <label><i class="fas fa-phone"></i> Nomor WhatsApp</label>
     <div class="input-wrapper">
-      <i class="fas fa-whatsapp"></i>
+      <i class="fab fa-whatsapp"></i>
       <input type="tel" id="wa" placeholder="Contoh: 081234567890" required pattern="[0-9]+">
     </div>
   </div>
@@ -299,191 +312,188 @@
 </div>
 
 <script>
-function formatWA(wa) {
-  wa = wa.replace(/\D/g, '');
-  if (wa.startsWith("08")) {
-    return "62" + wa.substring(1);
+  // Fungsi untuk memformat nomor WA ke format internasional (62)
+  function formatWA(wa) {
+    wa = wa.replace(/\D/g, ''); // Hapus karakter non-digit
+    if (wa.startsWith("08")) {
+      return "62" + wa.substring(1);
+    }
+    if (wa.startsWith("+62")) {
+      return wa.replace("+62", "62");
+    }
+    return wa;
   }
-  if (wa.startsWith("+62")) {
-    return wa.replace("+62", "62");
-  }
-  return wa;
-}
 
-// Perbaikan format tanggal agar sesuai dengan zona waktu Indonesia
-function formatDate(dateString) {
-  if (!dateString) return '-';
-  
-  // Jika format YYYY-MM-DD dari Apps Script, pecah secara manual untuk menghindari offset UTC
-  if (typeof dateString === 'string' && dateString.includes('-')) {
-    var parts = dateString.split('-');
-    var year = parseInt(parts[0]);
-    var month = parseInt(parts[1]) - 1; // Bulan di JS mulai dari 0
-    var day = parseInt(parts[2]);
-    var date = new Date(year, month, day);
-  } else {
-    var date = new Date(dateString);
+  // Fungsi untuk memformat tanggal ke Bahasa Indonesia
+  function formatDate(dateString) {
+    if (!dateString) return '-';
+    
+    let date;
+    // Cek apakah format YYYY-MM-DD (dari spreadsheet)
+    if (typeof dateString === 'string' && dateString.includes('-') && !dateString.includes('T')) {
+      const parts = dateString.split('-');
+      // Buat date dengan waktu lokal agar tidak ke-shift oleh UTC
+      date = new Date(parts[0], parts[1] - 1, parts[2]);
+    } else {
+      date = new Date(dateString);
+    }
+    
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('id-ID', options);
   }
-  
-  var options = { day: 'numeric', month: 'long', year: 'numeric' };
-  return date.toLocaleDateString('id-ID', options);
-}
 
-function showResult(type, icon, title, message, dateInfo = null) {
-  const resultDiv = document.getElementById('result');
-  let dateHtml = '';
-  
-  // Jika ada info tanggal (untuk SUCCESS dan EXPIRED/USED)
-  if (dateInfo) {
-    dateHtml = `
-      <div class="date-info">
-        <div>
-          <span><i class="fas fa-check-circle"></i> Status Kode:</span>
-          <span>${dateInfo.status_text}</span>
+  // Fungsi untuk menampilkan hasil validasi
+  function showResult(type, icon, title, message, dateInfo = null) {
+    const resultDiv = document.getElementById('result');
+    let dateHtml = '';
+    
+    // Jika ada informasi tanggal (untuk sukses, expired, atau sudah digunakan)
+    if (dateInfo) {
+      dateHtml = `
+        <div class="date-info">
+          <div>
+            <span><i class="fas fa-check-circle"></i> Status Kode:</span>
+            <span>${dateInfo.status_text}</span>
+          </div>
+          <div>
+            <span><i class="fas fa-play-circle"></i> Aktif Mulai:</span>
+            <span>${dateInfo.mulai}</span>
+          </div>
+          <div>
+            <span><i class="fas fa-stop-circle"></i> Berlaku Sampai:</span>
+            <span>${dateInfo.expired}</span>
+          </div>
         </div>
-        <div>
-          <span><i class="fas fa-play-circle"></i> Aktif Mulai:</span>
-          <span>${dateInfo.mulai}</span>
-        </div>
-        <div>
-          <span><i class="fas fa-stop-circle"></i> Berlaku Sampai:</span>
-          <span>${dateInfo.expired}</span>
-        </div>
+      `;
+    }
+    
+    resultDiv.innerHTML = `
+      <div class="result-box ${type} show">
+        <i class="fas ${icon}"></i>
+        <h3>${title}</h3>
+        <p>${message}</p>
+        ${dateHtml}
       </div>
     `;
   }
-  
-  resultDiv.innerHTML = `
-    <div class="result-box ${type} show">
-      <i class="fas ${icon}"></i>
-      <h3>${title}</h3>
-      <p>${message}</p>
-      ${dateHtml}
-    </div>
-  `;
-}
 
-function cekKode() {
-  const nama = document.getElementById("nama").value.trim();
-  const wa = document.getElementById("wa").value.trim();
-  const kode = document.getElementById("kode").value.trim();
-  const resultDiv = document.getElementById("result");
-  const button = document.getElementById("btnCek");
+  // Fungsi Utama: Cek Kode
+  function cekKode() {
+    const nama = document.getElementById("nama").value.trim();
+    const wa = document.getElementById("wa").value.trim();
+    const kode = document.getElementById("kode").value.trim();
+    const resultDiv = document.getElementById("result");
+    const button = document.getElementById("btnCek");
 
-  resultDiv.innerHTML = "";
+    // Reset hasil sebelumnya
+    resultDiv.innerHTML = "";
 
-  // Validasi Nama
-  if (nama.length < 3) {
-    showResult('error', 'fa-times-circle', 'Nama Tidak Valid', 'Nama minimal 3 karakter.');
-    return;
-  }
-
-  // Validasi WhatsApp
-  const waClean = wa.replace(/\D/g, '');
-  if (waClean.length < 10) {
-    showResult('error', 'fa-times-circle', 'Nomor Tidak Valid', 'Nomor WhatsApp minimal 10 digit.');
-    return;
-  }
-
-  // Validasi Kode
-  if (kode.length < 6) {
-    showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi minimal 6 karakter.');
-    return;
-  }
-
-  // Loading state
-  button.disabled = true;
-  button.classList.add('loading');
-
-  const formattedWA = formatWA(wa);
-
-  // URL Apps Script Anda (Pastikan ini sudah di-deploy sebagai Web App)
-  const scriptURL = "https://script.google.com/macros/s/AKfycbw0Y6FZTNY1LxXyrCYvcn2Z9tDH8DqPoCdsXh1VO7XQ0GzlXZgnxg-qIYSy26_GLiDy/exec";
-  
-  fetch(scriptURL + "?kode=" + encodeURIComponent(kode) + "&nama=" + encodeURIComponent(nama) + "&wa=" + encodeURIComponent(formattedWA))
-  .then(response => response.json()) // Langsung parse JSON
-  .then(jsonData => {
-    console.log("Response:", jsonData);
-    
-    // Reset button state
-    button.disabled = false;
-    button.classList.remove('loading');
-    
-    if (jsonData.status === "SUCCESS") {
-      const dateInfo = {
-        status_text: "AKTIF",
-        mulai: formatDate(jsonData.tanggal_mulai),
-        expired: formatDate(jsonData.tanggal_expired)
-      };
-      
-      const pesan =
-        "Halo Admin Kemoenik,%0A%0A" +
-        "Nama: " + nama + "%0A" +
-        "Kode: " + kode + "%0A" +
-        "Nomor: " + formattedWA + "%0A%0A" +
-        "Saya siap memulai konsultasi.";
-      
-      showResult(
-        'success', 
-        'fa-check-circle', 
-        'Kode Terverifikasi! 🎉', 
-        'Selamat! Konsultasi Anda siap dimulai. Mengalihkan ke WhatsApp...',
-        dateInfo
-      );
-      
-      setTimeout(function() {
-        window.location.href = "panduan.html?kode=" + kode;
-      }, 3000);
-      
-    } else if (jsonData.status === "USED") {
-      const dateInfo = jsonData.tanggal_mulai ? {
-        status_text: "SUDAH DIGUNAKAN",
-        mulai: formatDate(jsonData.tanggal_mulai),
-        expired: formatDate(jsonData.tanggal_expired)
-      } : null;
-      
-      showResult(
-        'warning', 
-        'fa-history', 
-        'Kode Sudah Digunakan', 
-        'Kode ini sudah pernah digunakan sebelumnya.',
-        dateInfo
-      );
-      
-    } else if (jsonData.status === "EXPIRED") {
-      const dateInfo = {
-        status_text: "KADALUARSA",
-        mulai: formatDate(jsonData.tanggal_mulai),
-        expired: formatDate(jsonData.tanggal_expired)
-      };
-      
-      showResult(
-        'warning', 
-        'fa-calendar-times', 
-        'Kode Sudah Expired', 
-        'Masa berlaku kode sudah berakhir.',
-        dateInfo
-      );
-      
-    } else {
-      // INVALID atau ERROR
-      showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi yang Anda masukkan tidak ditemukan atau tidak valid.');
+    // Validasi Input Nama
+    if (nama.length < 3) {
+      showResult('error', 'fa-times-circle', 'Nama Tidak Valid', 'Nama minimal 3 karakter.');
+      return;
     }
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    showResult('error', 'fa-exclamation-triangle', 'Terjadi Kesalahan', 'Gagal menghubungi server. Pastikan koneksi internet stabil.');
-    button.disabled = false;
-    button.classList.remove('loading');
-  });
-}
 
-// Handle Enter key
-document.addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') {
-    cekKode();
+    // Validasi Input WA
+    const waClean = wa.replace(/\D/g, '');
+    if (waClean.length < 10) {
+      showResult('error', 'fa-times-circle', 'Nomor Tidak Valid', 'Nomor WhatsApp minimal 10 digit.');
+      return;
+    }
+
+    // Validasi Input Kode
+    if (kode.length < 6) {
+      showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi minimal 6 karakter.');
+      return;
+    }
+
+    // Set UI ke mode Loading
+    button.disabled = true;
+    button.classList.add('loading');
+
+    const formattedWA = formatWA(wa);
+    const scriptURL = "https://script.google.com/macros/s/AKfycbw0Y6FZTNY1LxXyrCYvcn2Z9tDH8DqPoCdsXh1VO7XQ0GzlXZgnxg-qIYSy26_GLiDy/exec";
+    
+    const urlFinal = `${scriptURL}?kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(formattedWA)}`;
+
+    fetch(urlFinal)
+      .then(response => response.json())
+      .then(jsonData => {
+        console.log("Response:", jsonData);
+        
+        // Reset tombol
+        button.disabled = false;
+        button.classList.remove('loading');
+        
+        if (jsonData.status === "SUCCESS") {
+          const dateInfo = {
+            status_text: "AKTIF",
+            mulai: formatDate(jsonData.tanggal_mulai),
+            expired: formatDate(jsonData.tanggal_expired)
+          };
+          
+          showResult(
+            'success', 
+            'fa-check-circle', 
+            'Kode Terverifikasi! 🎉', 
+            'Selamat! Konsultasi Anda siap dimulai. Mengalihkan ke halaman panduan...',
+            dateInfo
+          );
+          
+          // Redirect setelah 3 detik
+          setTimeout(function() {
+            window.location.href = "panduan.html?kode=" + encodeURIComponent(kode);
+          }, 3000);
+          
+        } else if (jsonData.status === "USED") {
+          const dateInfo = jsonData.tanggal_mulai ? {
+            status_text: "SUDAH DIGUNAKAN",
+            mulai: formatDate(jsonData.tanggal_mulai),
+            expired: formatDate(jsonData.tanggal_expired)
+          } : null;
+          
+          showResult(
+            'warning', 
+            'fa-history', 
+            'Kode Sudah Digunakan', 
+            'Kode ini sudah pernah digunakan sebelumnya.',
+            dateInfo
+          );
+          
+        } else if (jsonData.status === "EXPIRED") {
+          const dateInfo = {
+            status_text: "KADALUARSA",
+            mulai: formatDate(jsonData.tanggal_mulai),
+            expired: formatDate(jsonData.tanggal_expired)
+          };
+          
+          showResult(
+            'warning', 
+            'fa-calendar-times', 
+            'Kode Sudah Expired', 
+            'Masa berlaku kode sudah berakhir.',
+            dateInfo
+          );
+          
+        } else {
+          // Jika status INVALID atau lainnya
+          showResult('error', 'fa-times-circle', 'Kode Tidak Valid', 'Kode konsultasi tidak ditemukan.');
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        showResult('error', 'fa-exclamation-triangle', 'Terjadi Kesalahan', 'Gagal menghubungi server. Cek koneksi internet Anda.');
+        button.disabled = false;
+        button.classList.remove('loading');
+      });
   }
-});
+
+  // Event listener untuk tombol Enter
+  document.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      cekKode();
+    }
+  });
 </script>
 
 </body>
