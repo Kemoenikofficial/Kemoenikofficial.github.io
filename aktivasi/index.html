@@ -1,268 +1,298 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Verifikasi Kode Konsultasi - Kemoenik</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Verifikasi Kode Konsultasi - Kemoenik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-body{
-  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-  background:linear-gradient(135deg,#e6f4ea 0%,#f5fdf8 60%,#ffffff 100%);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-}
+        .container {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
 
-.container{
-  background:white;
-  padding:35px 30px;
-  border-radius:20px;
-  width:100%;
-  max-width:420px;
-  box-shadow:0 25px 50px rgba(0,0,0,0.15);
-}
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
 
-.logo{text-align:center;margin-bottom:25px;}
-.logo img{width:90px;border-radius:50%;margin-bottom:10px;}
-.logo h2{font-size:22px;font-weight:600;}
-.logo p{font-size:14px;color:#888;margin-top:5px;}
+        .logo img {
+            width: 90px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
 
-.form-group{margin-bottom:18px;}
-.form-group label{font-size:13px;font-weight:600;color:#555;margin-bottom:8px;display:block;}
+        .logo h2 {
+            font-size: 22px;
+            font-weight: 600;
+        }
 
-.input-wrapper{position:relative;}
-.input-wrapper i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#aaa;}
+        .logo p {
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+        }
 
-input{
-  width:100%;
-  padding:14px 14px 14px 45px;
-  border-radius:12px;
-  border:2px solid #e8e8e8;
-  font-size:15px;
-  background:#fafafa;
-}
+        .form-group {
+            margin-bottom: 18px;
+        }
 
-input:focus{
-  outline:none;
-  border-color:#16a34a;
-  background:white;
-  box-shadow:0 0 0 4px rgba(22,163,74,0.1);
-}
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            display: block;
+        }
 
-button{
-  width:100%;
-  padding:16px;
-  background:linear-gradient(135deg,#16a34a 0%,#4ade80 100%);
-  color:white;
-  border:none;
-  border-radius:12px;
-  font-size:16px;
-  font-weight:600;
-  margin-top:10px;
-  cursor:pointer;
-}
+        .input-wrapper {
+            position: relative;
+        }
 
-button.loading .btn-text{display:none;}
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
 
-.spinner{
-  width:20px;height:20px;
-  border:3px solid rgba(255,255,255,0.3);
-  border-top-color:white;
-  border-radius:50%;
-  animation:spin 1s linear infinite;
-  display:none;
-}
+        input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border-radius: 12px;
+            border: 2px solid #e8e8e8;
+            font-size: 15px;
+            background: #fafafa;
+        }
 
-button.loading .spinner{display:block;}
+        input:focus {
+            outline: none;
+            border-color: #16a34a;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+        }
 
-.result-box{
-  margin-top:25px;
-  padding:20px;
-  border-radius:12px;
-  color:white;
-}
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #16a34a 0%, #4ade80 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            cursor: pointer;
+        }
 
-.success{background:linear-gradient(135deg,#11998e,#38ef7d);}
-.warning{background:linear-gradient(135deg,#f2994a,#f2c94c);}
-.error{background:linear-gradient(135deg,#eb3349,#f45c43);}
+        button.loading .btn-text {
+            display: none;
+        }
 
-.date-info{
-  margin-top:15px;
-  font-size:13px;
-}
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin: 0 auto; /* Ditambahkan agar spinner berada di tengah */
+        }
 
-.btn-lanjut{
-  display:none;
-  margin-top:15px;
-  text-align:center;
-  padding:14px;
-  border-radius:12px;
-  border:2px solid #16a34a;
-  color:#16a34a;
-  text-decoration:none;
-  font-weight:600;
-}
+        button.loading .spinner {
+            display: block;
+        }
 
-.btn-lanjut:hover{
-  background:#16a34a;
-  color:white;
-}
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+        }
 
-.footer{
-  text-align:center;
-  margin-top:25px;
-  font-size:13px;
-  color:#888;
-}
+        .success {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
 
-.link-bantuan{
-  color:#16a34a;
-  font-weight:600;
-  text-decoration:none;
-}
+        .warning {
+            background: linear-gradient(135deg, #f2994a, #f2c94c);
+        }
 
-.link-bantuan:hover{text-decoration:underline;}
+        .error {
+            background: linear-gradient(135deg, #eb3349, #f45c43);
+        }
 
-@keyframes spin{to{transform:rotate(360deg);}}
-</style>
+        .date-info {
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        .btn-lanjut {
+            display: none;
+            margin-top: 15px;
+            text-align: center;
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid #16a34a;
+            color: #16a34a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-lanjut:hover {
+            background: #16a34a;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .link-bantuan {
+            color: #16a34a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .link-bantuan:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo Kemoenik">
+            <h2>Kemoenik</h2>
+            <p>Verifikasi Kode Konsultasi</p>
+        </div>
 
-<div class="container">
+        <div class="form-group">
+            <label>Nama Lengkap</label>
+            <div class="input-wrapper">
+                <i class="fas fa-user"></i>
+                <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+            </div>
+        </div>
 
-<div class="logo">
-<img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg">
-<h2>Kemoenik</h2>
-<p>Verifikasi Kode Konsultasi</p>
-</div>
+        <div class="form-group">
+            <label>Nomor WhatsApp</label>
+            <div class="input-wrapper">
+                <i class="fab fa-whatsapp"></i>
+                <input type="tel" id="wa" placeholder="Contoh: 08123456789" required>
+            </div>
+        </div>
 
-<div class="form-group">
-<label>Nama Lengkap</label>
-<div class="input-wrapper">
-<i class="fas fa-user"></i>
-<input type="text" id="nama" required>
-</div>
-</div>
+        <div class="form-group">
+            <label>Kode Konsultasi</label>
+            <div class="input-wrapper">
+                <i class="fas fa-ticket-alt"></i>
+                <input type="text" id="kode" placeholder="Masukkan kode unik" required>
+            </div>
+        </div>
 
-<div class="form-group">
-<label>Nomor WhatsApp</label>
-<div class="input-wrapper">
-<i class="fab fa-whatsapp"></i>
-<input type="tel" id="wa" required>
-</div>
-</div>
+        <button id="btnCek" onclick="cekKode()">
+            <span class="btn-text">Cek Kode</span>
+            <div class="spinner"></div>
+        </button>
 
-<div class="form-group">
-<label>Kode Konsultasi</label>
-<div class="input-wrapper">
-<i class="fas fa-ticket-alt"></i>
-<input type="text" id="kode" required>
-</div>
-</div>
+        <a id="btnLanjutManual" class="btn-lanjut">
+            🔓 Akses Panduan
+        </a>
 
-<button id="btnCek" onclick="cekKode()">
-<span class="btn-text">Cek Kode</span>
-<div class="spinner"></div>
-</button>
+        <div id="result"></div>
 
-<a id="btnLanjutManual" class="btn-lanjut">
-🔓 Akses Panduan
-</a>
+        <div class="footer">
+            Butuh bantuan? 
+            <a href="https://wa.me/6281546450547?text=Halo%20admin,%20saya%20butuh%20bantuan%20kode%20konsultasi" target="_blank" class="link-bantuan">
+                Hubungi kami
+            </a>
+        </div>
+    </div>
 
-<div id="result"></div>
+    <script>
+        function formatWA(wa) {
+            wa = wa.replace(/\D/g, '');
+            if (wa.startsWith("08")) return "62" + wa.substring(1);
+            return wa;
+        }
 
-<div class="footer">
-Butuh bantuan?
-<a href="https://wa.me/6281546450547?text=Halo%20admin,%20saya%20butuh%20bantuan%20kode%20konsultasi"
-   target="_blank"
-   class="link-bantuan">
-   Hubungi kami
-</a>
-</div>
+        function cekKode() {
+            const nama = document.getElementById("nama").value.trim();
+            const wa = document.getElementById("wa").value.trim();
+            const kode = document.getElementById("kode").value.trim();
+            const btn = document.getElementById("btnCek");
+            const result = document.getElementById("result");
+            const btnLanjut = document.getElementById("btnLanjutManual");
 
-</div>
+            result.innerHTML = "";
+            btnLanjut.style.display = "none";
 
-<script>
-function formatWA(wa){
-  wa=wa.replace(/\D/g,'');
-  if(wa.startsWith("08")) return "62"+wa.substring(1);
-  return wa;
-}
+            if (nama.length < 3) return show("error", "Nama tidak valid");
+            if (wa.replace(/\D/g, '').length < 10) return show("error", "Nomor tidak valid");
+            if (kode.length < 6) return show("error", "Kode tidak valid");
 
-function cekKode(){
+            btn.classList.add("loading");
 
-const nama=document.getElementById("nama").value.trim();
-const wa=document.getElementById("wa").value.trim();
-const kode=document.getElementById("kode").value.trim();
-const btn=document.getElementById("btnCek");
-const result=document.getElementById("result");
-const btnLanjut=document.getElementById("btnLanjutManual");
+            fetch("https://script.google.com/macros/s/AKfycby9fuehTsnTzQBgh39RaywCHcCQAKZeda_2Z8MVp-TLC2H1A4f2SEhrTUV9FkE4mTpX/exec?kode=" + kode + "&nama=" + nama + "&wa=" + formatWA(wa) + "&_=" + Date.now())
+                .then(res => res.json())
+                .then(data => {
+                    btn.classList.remove("loading");
+                    if (data.status === "SUCCESS") {
+                        show("success", "Kode berhasil diaktifkan 🎉");
+                        setTimeout(() => {
+                            window.location.href = "/panduan/?kode=" + kode;
+                        }, 2000);
+                    } else if (data.status === "USED" || data.status === "ACTIVE") {
+                        show("success", "Kode masih aktif. Silakan lanjut ke panduan.");
+                        btnLanjut.href = "/panduan/?kode=" + kode;
+                        btnLanjut.style.display = "block";
+                    } else if (data.status === "EXPIRED") {
+                        show("warning", "Kode sudah expired.");
+                    } else {
+                        show("error", "Kode tidak ditemukan.");
+                    }
+                })
+                .catch(() => {
+                    btn.classList.remove("loading");
+                    show("error", "Gagal terhubung ke server.");
+                });
+        }
 
-result.innerHTML="";
-btnLanjut.style.display="none";
-
-if(nama.length<3) return show("error","Nama tidak valid");
-if(wa.replace(/\D/g,'').length<10) return show("error","Nomor tidak valid");
-if(kode.length<6) return show("error","Kode tidak valid");
-
-btn.classList.add("loading");
-
-fetch("https://script.google.com/macros/s/AKfycby9fuehTsnTzQBgh39RaywCHcCQAKZeda_2Z8MVp-TLC2H1A4f2SEhrTUV9FkE4mTpX/exec?kode="+kode+"&nama="+nama+"&wa="+formatWA(wa)+"&_="+Date.now())
-.then(res=>res.json())
-.then(data=>{
-
-btn.classList.remove("loading");
-
-if(data.status==="SUCCESS"){
-show("success","Kode berhasil diaktifkan 🎉");
-// 🔐 SIMPAN SESSION LOGIN
-localStorage.setItem("session_login","true");
-localStorage.setItem("session_wa",formatWA(wa));
-localStorage.setItem("session_kode",kode);
-localStorage.setItem("session_nama",nama);
-setTimeout(()=>{
-window.location.href="/panduan/?kode="+kode;
-},2000);
-}
-
-else if(data.status==="USED"||data.status==="ACTIVE"){
-show("success","Kode masih aktif. Silakan lanjut ke panduan.");
-// 🔐 SIMPAN SESSION LOGIN
-localStorage.setItem("session_login","true");
-localStorage.setItem("session_wa",formatWA(wa));
-localStorage.setItem("session_kode",kode);
-localStorage.setItem("session_nama",nama);
-btnLanjut.href="/panduan/?kode="+kode;
-btnLanjut.style.display="block";
-}
-
-else if(data.status==="EXPIRED"){
-show("warning","Kode sudah expired.");
-}
-
-else{
-show("error","Kode tidak ditemukan.");
-}
-
-})
-.catch(()=>{
-btn.classList.remove("loading");
-show("error","Gagal terhubung ke server.");
-});
-}
-
-function show(type,msg){
-document.getElementById("result").innerHTML=
-`<div class="result-box ${type}">${msg}</div>`;
-}
-</script>
-
+        function show(type, msg) {
+            document.getElementById("result").innerHTML = `<div class="result-box ${type}">${msg}</div>`;
+        }
+    </script>
 </body>
 </html>
