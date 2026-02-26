@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CALFATLOSS - Program Diet Herbal Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -408,7 +407,7 @@
             margin-bottom: 16px;
         }
 
-        .herbal-icon {
+        .herbal-icon-box {
             width: 48px;
             height: 48px;
             background: white;
@@ -416,8 +415,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
             box-shadow: var(--shadow-sm);
+            font-size: 20px;
+            color: var(--primary);
         }
 
         .herbal-title {
@@ -450,6 +450,21 @@
             border-radius: 10px;
             text-align: center;
             box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease;
+        }
+
+        .herbal-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .herbal-item-icon {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
         }
 
         .herbal-item-name {
@@ -583,6 +598,30 @@
             font-weight: 600;
             color: var(--primary);
             white-space: nowrap;
+        }
+
+        .meal-alternative {
+            margin-top: 16px;
+            padding: 16px;
+            background: #FEF3C7;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .meal-alternative-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #92400E;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meal-alternative-text {
+            font-size: 12px;
+            color: #78350F;
+            line-height: 1.6;
         }
 
         .progress-ring {
@@ -772,6 +811,167 @@
             animation: fadeInUp 0.5s ease;
         }
 
+        /* Evaluation Sheet Styles */
+        .eval-section {
+            margin-top: 24px;
+        }
+
+        .eval-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .eval-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .eval-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .eval-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .eval-item {
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .eval-item:hover {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .eval-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .eval-checkbox.checked {
+            background: var(--primary);
+            color: white;
+        }
+
+        .eval-checkbox i {
+            font-size: 14px;
+            opacity: 0;
+        }
+
+        .eval-checkbox.checked i {
+            opacity: 1;
+        }
+
+        .eval-content {
+            flex: 1;
+        }
+
+        .eval-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .eval-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .eval-progress {
+            margin-top: 16px;
+            padding: 16px;
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .eval-progress-bar {
+            height: 8px;
+            background: var(--bg-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .eval-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent-gold));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .eval-progress-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .code-input-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .code-input-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .code-input-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .code-input-group {
+            display: flex;
+            gap: 12px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .code-input {
+            flex: 1;
+            padding: 14px 16px;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 2px;
+            border: 2px solid var(--bg-light);
+            border-radius: var(--radius-sm);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
         @media print {
             .no-print { display: none !important; }
             .print-only { display: block !important; }
@@ -789,297 +989,370 @@
 </head>
 <body>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-pattern"></div>
-        <div class="hero-content">
-            <div class="hero-badge">
-                <i class="fas fa-leaf"></i>
-                Program Diet Herbal Premium
-            </div>
-            <h1 class="hero-title font-display">Transformasi Tubuh Alami</h1>
-            <p class="hero-subtitle">Gabungan sains nutrisi modern & kearifan lokal herbal untuk penurunan berat badan optimal</p>
-            
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="hero-stat-value" id="heroWeeks">12</div>
-                    <div class="hero-stat-label">Minggu Program</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-value" id="heroLoss">0.5-1</div>
-                    <div class="hero-stat-label">Kg/Minggu</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-value">5</div>
-                    <div class="hero-stat-label">Herba Aktif</div>
-                </div>
-            </div>
+    <!-- Code Input Section (First Time) -->
+    <div id="codeSection" class="code-input-section animate-fade-in" style="max-width: 600px; margin: 40px auto;">
+        <div class="card-icon" style="margin: 0 auto 16px; width: 60px; height: 60px; font-size: 24px;">
+            <i class="fas fa-lock-open"></i>
         </div>
-    </section>
-
-    <!-- Main Container -->
-    <div class="main-container">
-
-        <!-- STEP 1: Kalkulator -->
-        <div class="glass-card animate-fade-in delay-100" id="calculatorSection">
-            <div class="card-header">
-                <div class="card-title">
-                    <div class="card-icon"><i class="fas fa-calculator"></i></div>
-                    Kalkulator Diet Cerdas
-                </div>
-                <span class="text-xs text-gray-500">Langkah 1 dari 3</span>
-            </div>
-            <div class="card-body">
-                <!-- Results Preview -->
-                <div class="results-dashboard" id="quickResults" style="display: none;">
-                    <div class="result-card">
-                        <div class="result-label">Kalori Harian</div>
-                        <div class="result-value" id="previewCalories">0</div>
-                        <div class="result-unit">kcal</div>
-                    </div>
-                    <div class="result-card accent">
-                        <div class="result-label">Target Turun</div>
-                        <div class="result-value" id="previewWeeks">0</div>
-                        <div class="result-unit">minggu</div>
-                    </div>
-                </div>
-
-                <!-- Input Form -->
-                <div class="calc-grid">
-                    <div class="form-group">
-                        <label class="form-label">Nama Lengkap</label>
-                        <input type="text" id="inputNama" class="form-input" placeholder="Masukkan nama">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Jenis Kelamin</label>
-                        <select id="inputGender" class="form-input">
-                            <option value="">Pilih Gender</option>
-                            <option value="pria">Laki-laki</option>
-                            <option value="wanita">Perempuan</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Usia (tahun)</label>
-                        <input type="number" id="inputUsia" class="form-input" placeholder="25" min="15" max="80">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Berat Badan (kg)</label>
-                        <input type="number" id="inputBerat" class="form-input" placeholder="70" min="30" max="200" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Tinggi Badan (cm)</label>
-                        <input type="number" id="inputTinggi" class="form-input" placeholder="165" min="100" max="250">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Aktivitas Harian</label>
-                        <select id="inputAktivitas" class="form-input">
-                            <option value="">Pilih Level</option>
-                            <option value="1.2">Sedentari (Jarang Bergerak)</option>
-                            <option value="1.375">Ringan (1-2x Olahraga)</option>
-                            <option value="1.55">Sedang (3-5x Olahraga)</option>
-                            <option value="1.725">Berat (6-7x Olahraga)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Target Berat (kg)</label>
-                        <input type="number" id="inputTarget" class="form-input" placeholder="60" min="30" max="200" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Kecepatan Diet</label>
-                        <select id="inputMetode" class="form-input">
-                            <option value="ringan">Ringan (300 kcal defisit)</option>
-                            <option value="standar" selected>Standar (500 kcal defisit)</option>
-                            <option value="agresif">Agresif (700 kcal defisit)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary mt-6" onclick="calculateAndShowProgram()">
-                    <i class="fas fa-magic"></i>
-                    Generate Program Diet Saya
-                </button>
-            </div>
-        </div>
-
-        <!-- STEP 2: Program Timeline -->
-        <div class="glass-card section-hidden" id="programSection">
-            <div class="card-header">
-                <div class="card-title">
-                    <div class="card-icon"><i class="fas fa-route"></i></div>
-                    Timeline Program Anda
-                </div>
-                <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Aktif</span>
-            </div>
-            <div class="card-body">
-                
-                <!-- Progress Ring -->
-                <div class="progress-ring">
-                    <svg width="200" height="200">
-                        <defs>
-                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#2D5A3D"/>
-                                <stop offset="100%" style="stop-color:#D4AF37"/>
-                            </linearGradient>
-                        </defs>
-                        <circle class="progress-ring-bg" cx="100" cy="100" r="88"/>
-                        <circle class="progress-ring-fill" id="progressCircle" cx="100" cy="100" r="88" 
-                                stroke-dasharray="553" stroke-dashoffset="553"/>
-                    </svg>
-                    <div class="progress-content">
-                        <div class="progress-percent" id="progressPercent">0%</div>
-                        <div class="progress-label">Menuju Target</div>
-                    </div>
-                </div>
-
-                <!-- Timeline -->
-                <div class="timeline" id="dietTimeline">
-                    <!-- Generated by JS -->
-                </div>
-
-                <!-- Herbal Product Integration - DOSIS UPDATED -->
-                <div class="herbal-card">
-                    <div class="herbal-header">
-                        <div class="herbal-icon">🌿</div>
-                        <div>
-                            <div class="herbal-title">Suplemen Herbal CALFATLOSS</div>
-                            <div class="herbal-subtitle">Formula 5 Herba Aktif Premium (500mg/kapsul)</div>
-                        </div>
-                    </div>
-                    
-                    <div class="herbal-grid">
-                        <div class="herbal-item">
-                            <div class="herbal-item-name">Teh Hijau</div>
-                            <div class="herbal-item-dose">170mg</div>
-                        </div>
-                        <div class="herbal-item">
-                            <div class="herbal-item-name">Jati Belanda</div>
-                            <div class="herbal-item-dose">120mg</div>
-                        </div>
-                        <div class="herbal-item">
-                            <div class="herbal-item-name">Daun Kemuning</div>
-                            <div class="herbal-item-dose">110mg</div>
-                        </div>
-                        <div class="herbal-item">
-                            <div class="herbal-item-name">Temulawak</div>
-                            <div class="herbal-item-dose">50mg</div>
-                        </div>
-                        <div class="herbal-item">
-                            <div class="herbal-item-name">Tempuyung</div>
-                            <div class="herbal-item-dose">50mg</div>
-                        </div>
-                    </div>
-
-                    <!-- DOSIS BOX - UPDATED TO 2x3 -->
-                    <div class="dosage-box">
-                        <div class="dosage-title">
-                            <i class="fas fa-clock text-yellow-600 mr-2"></i>
-                            Jadwal Konsumsi Optimal (2x3 Kapsul)
-                        </div>
-                        
-                        <div class="dosage-schedule">
-                            <span class="dosage-time">
-                                <i class="fas fa-sun text-yellow-500 mr-2"></i>
-                                Pagi (07:00 - 08:00)
-                            </span>
-                            <span class="dosage-amount">
-                                3 Kapsul<br>
-                                <small>Sesudah Sarapan + Air Hangat</small>
-                            </span>
-                        </div>
-                        
-                        <div class="dosage-schedule">
-                            <span class="dosage-time">
-                                <i class="fas fa-moon text-blue-500 mr-2"></i>
-                                Malam (18:00 - 19:00)
-                            </span>
-                            <span class="dosage-amount">
-                                3 Kapsul<br>
-                                <small>Sesudah Makan Malam + Air Putih</small>
-                            </span>
-                        </div>
-
-                        <div class="dosage-note">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            <strong>Alternatif:</strong> Bisa juga dikonsumsi 3x2 kapsul (Pagi, Siang, Malam) sesudah makan. 
-                            Total 6 kapsul/hari untuk hasil optimal.
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-outline mt-6" onclick="showMealPlan()">
-                    Lihat Jadwal Makan Detail
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- STEP 3: Meal Plan - NO ICONS, TIME ONLY -->
-        <div class="glass-card section-hidden" id="mealSection">
-            <div class="card-header">
-                <div class="card-title">
-                    <div class="card-icon"><i class="fas fa-utensils"></i></div>
-                    Panduan Menu Harian
-                </div>
-                <div class="text-right">
-                    <div class="text-xs text-gray-500">Target Kalori</div>
-                    <div class="text-lg font-bold text-green-700" id="mealTargetCal">0 kcal</div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="meal-grid" id="mealContainer">
-                    <!-- Generated by JS - NO ICONS -->
-                </div>
-
-                <!-- Tips -->
-                <div class="mt-6">
-                    <h4 class="font-semibold mb-4 text-sm uppercase tracking-wide text-gray-600">Tips Sukses Diet</h4>
-                    <div class="tips-grid">
-                        <div class="tip-card">
-                            <div class="tip-icon text-blue-500"><i class="fas fa-tint"></i></div>
-                            <div class="tip-title">Hidrasi</div>
-                            <div class="tip-desc">Minum 8 gelas air putih sepanjang hari</div>
-                        </div>
-                        <div class="tip-card">
-                            <div class="tip-icon text-green-500"><i class="fas fa-bed"></i></div>
-                            <div class="tip-title">Tidur</div>
-                            <div class="tip-desc">Istirahat 7-8 jam untuk metabolisme optimal</div>
-                        </div>
-                        <div class="tip-card">
-                            <div class="tip-icon text-yellow-500"><i class="fas fa-walking"></i></div>
-                            <div class="tip-title">Aktivitas</div>
-                            <div class="tip-desc">Jalan 10.000 langkah setiap hari</div>
-                        </div>
-                        <div class="tip-card">
-                            <div class="tip-icon text-red-500"><i class="fas fa-ban"></i></div>
-                            <div class="tip-title">Hindari</div>
-                            <div class="tip-desc">Gula, gorengan, & minuman bersoda</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Consultation CTA - NOMOR UPDATED -->
-        <div class="consultation-card animate-fade-in delay-300 no-print">
-            <div class="consultation-badge">Gratis Konsultasi</div>
-            <h3 class="consultation-title font-display">Butuh Pendampingan?</h3>
-            <p class="consultation-desc">Dapatkan konsultasi gratis dengan ahli gizi kami untuk memaksimalkan hasil program diet herbal Anda.</p>
-            <button class="btn btn-gold" onclick="openConsultation()">
-                <i class="fab fa-whatsapp"></i>
-                Hubungi Konsultan Sekarang
+        <h2 class="code-input-title">Masukkan Kode Konsultasi</h2>
+        <p class="code-input-desc">Masukkan kode unik Anda untuk mengakses program diet personal. Data Anda akan tersimpan otomatis.</p>
+        <div class="code-input-group">
+            <input type="text" id="consultCode" class="code-input" placeholder="CONS-XXXX" maxlength="10">
+            <button class="btn btn-primary" style="width: auto; padding: 14px 24px;" onclick="verifyCode()">
+                <i class="fas fa-arrow-right"></i>
             </button>
         </div>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 12px;">
+            Belum punya kode? <a href="#" onclick="generateNewCode()" style="color: var(--primary); font-weight: 600;">Buat kode baru</a>
+        </p>
+    </div>
 
-        <!-- Footer -->
-        <footer class="text-center text-gray-400 text-xs mt-8 pb-8">
-            <p class="mb-2">CALFATLOSS - Smart Nutrition System</p>
-            <p>Hasil estimasi, konsultasikan dengan ahli gizi untuk kondisi khusus</p>
-        </footer>
+    <!-- Main App (Hidden until code entered) -->
+    <div id="mainApp" class="section-hidden">
+        
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-pattern"></div>
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-leaf"></i>
+                    Program Diet Herbal Premium
+                </div>
+                <h1 class="hero-title font-display">Transformasi Tubuh Alami</h1>
+                <p class="hero-subtitle">Gabungan sains nutrisi modern & kearifan lokal herbal untuk penurunan berat badan optimal</p>
+                
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value" id="heroWeeks">12</div>
+                        <div class="hero-stat-label">Minggu Program</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value" id="heroLoss">0.5-1</div>
+                        <div class="hero-stat-label">Kg/Minggu</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">5</div>
+                        <div class="hero-stat-label">Herba Aktif</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <!-- Main Container -->
+        <div class="main-container">
+
+            <!-- STEP 1: Kalkulator -->
+            <div class="glass-card animate-fade-in delay-100" id="calculatorSection">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                        Kalkulator Diet Cerdas
+                    </div>
+                    <span class="text-xs text-gray-500" id="userCodeDisplay">Kode: -</span>
+                </div>
+                <div class="card-body">
+                    <div class="results-dashboard" id="quickResults" style="display: none;">
+                        <div class="result-card">
+                            <div class="result-label">Kalori Harian</div>
+                            <div class="result-value" id="previewCalories">0</div>
+                            <div class="result-unit">kcal</div>
+                        </div>
+                        <div class="result-card accent">
+                            <div class="result-label">Target Turun</div>
+                            <div class="result-value" id="previewWeeks">0</div>
+                            <div class="result-unit">minggu</div>
+                        </div>
+                    </div>
+
+                    <div class="calc-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" id="inputNama" class="form-input" placeholder="Masukkan nama">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Jenis Kelamin</label>
+                            <select id="inputGender" class="form-input">
+                                <option value="">Pilih Gender</option>
+                                <option value="pria">Laki-laki</option>
+                                <option value="wanita">Perempuan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Usia (tahun)</label>
+                            <input type="number" id="inputUsia" class="form-input" placeholder="25" min="15" max="80">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Berat Badan (kg)</label>
+                            <input type="number" id="inputBerat" class="form-input" placeholder="70" min="30" max="200" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tinggi Badan (cm)</label>
+                            <input type="number" id="inputTinggi" class="form-input" placeholder="165" min="100" max="250">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Aktivitas Harian</label>
+                            <select id="inputAktivitas" class="form-input">
+                                <option value="">Pilih Level</option>
+                                <option value="1.2">Sedentari (Jarang Bergerak)</option>
+                                <option value="1.375">Ringan (1-2x Olahraga)</option>
+                                <option value="1.55">Sedang (3-5x Olahraga)</option>
+                                <option value="1.725">Berat (6-7x Olahraga)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Target Berat (kg)</label>
+                            <input type="number" id="inputTarget" class="form-input" placeholder="60" min="30" max="200" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Kecepatan Diet</label>
+                            <select id="inputMetode" class="form-input">
+                                <option value="ringan">Ringan (300 kcal defisit)</option>
+                                <option value="standar" selected>Standar (500 kcal defisit)</option>
+                                <option value="agresif">Agresif (700 kcal defisit)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary mt-6" onclick="calculateAndShowProgram()">
+                        <i class="fas fa-magic"></i>
+                        Generate Program Diet Saya
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Program Timeline -->
+            <div class="glass-card section-hidden" id="programSection">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon"><i class="fas fa-route"></i></div>
+                        Timeline Program Anda
+                    </div>
+                    <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Aktif</span>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="progress-ring">
+                        <svg width="200" height="200">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#2D5A3D"/>
+                                    <stop offset="100%" style="stop-color:#D4AF37"/>
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-ring-bg" cx="100" cy="100" r="88"/>
+                            <circle class="progress-ring-fill" id="progressCircle" cx="100" cy="100" r="88" 
+                                    stroke-dasharray="553" stroke-dashoffset="553"/>
+                        </svg>
+                        <div class="progress-content">
+                            <div class="progress-percent" id="progressPercent">0%</div>
+                            <div class="progress-label">Menuju Target</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline" id="dietTimeline">
+                        <!-- Generated by JS - NO ICONS -->
+                    </div>
+
+                    <!-- Herbal Product - NO LEAF ICON, REAL ICONS -->
+                    <div class="herbal-card">
+                        <div class="herbal-header">
+                            <div class="herbal-icon-box">
+                                <i class="fas fa-capsules"></i>
+                            </div>
+                            <div>
+                                <div class="herbal-title">Suplemen Herbal CALFATLOSS</div>
+                                <div class="herbal-subtitle">Formula 5 Herba Aktif Premium (500mg/kapsul)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="herbal-grid">
+                            <div class="herbal-item">
+                                <div class="herbal-item-icon">🍃</div>
+                                <div class="herbal-item-name">Teh Hijau</div>
+                                <div class="herbal-item-dose">170mg</div>
+                            </div>
+                            <div class="herbal-item">
+                                <div class="herbal-item-icon">🌳</div>
+                                <div class="herbal-item-name">Jati Belanda</div>
+                                <div class="herbal-item-dose">120mg</div>
+                            </div>
+                            <div class="herbal-item">
+                                <div class="herbal-item-icon">🌿</div>
+                                <div class="herbal-item-name">Daun Kemuning</div>
+                                <div class="herbal-item-dose">110mg</div>
+                            </div>
+                            <div class="herbal-item">
+                                <div class="herbal-item-icon">🫚</div>
+                                <div class="herbal-item-name">Temulawak</div>
+                                <div class="herbal-item-dose">50mg</div>
+                            </div>
+                            <div class="herbal-item">
+                                <div class="herbal-item-icon">🌱</div>
+                                <div class="herbal-item-name">Tempuyung</div>
+                                <div class="herbal-item-dose">50mg</div>
+                            </div>
+                        </div>
+
+                        <div class="dosage-box">
+                            <div class="dosage-title">
+                                <i class="fas fa-clock text-yellow-600 mr-2"></i>
+                                Jadwal Konsumsi Optimal (2x3 Kapsul)
+                            </div>
+                            
+                            <div class="dosage-schedule">
+                                <span class="dosage-time">
+                                    <i class="fas fa-sun text-yellow-500 mr-2"></i>
+                                    Pagi (07:00 - 08:00)
+                                </span>
+                                <span class="dosage-amount">
+                                    3 Kapsul<br>
+                                    <small>Sesudah Sarapan + Air Hangat</small>
+                                </span>
+                            </div>
+                            
+                            <div class="dosage-schedule">
+                                <span class="dosage-time">
+                                    <i class="fas fa-moon text-blue-500 mr-2"></i>
+                                    Malam (18:00 - 19:00)
+                                </span>
+                                <span class="dosage-amount">
+                                    3 Kapsul<br>
+                                    <small>Sesudah Makan Malam + Air Putih</small>
+                                </span>
+                            </div>
+
+                            <div class="dosage-note">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                <strong>Alternatif:</strong> Bisa juga dikonsumsi 3x2 kapsul (Pagi, Siang, Malam) sesudah makan. 
+                                Total 6 kapsul/hari untuk hasil optimal.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Section -->
+                    <div class="mt-6 p-4 bg-blue-50 rounded-xl border-l-4 border-blue-500">
+                        <h4 class="font-semibold text-blue-800 mb-2 text-sm">
+                            <i class="fas fa-running mr-2"></i>Aktivitas Fisik Harian (Minimal 30 Menit)
+                        </h4>
+                        <ul class="text-sm text-blue-700 space-y-1">
+                            <li><i class="fas fa-check mr-2"></i>Jalan kaki cepat (brisk walking)</li>
+                            <li><i class="fas fa-check mr-2"></i>Lompat tali (jump rope)</li>
+                            <li><i class="fas fa-check mr-2"></i>Jumping jack</li>
+                            <li><i class="fas fa-check mr-2"></i>Senam aerobik ringan</li>
+                        </ul>
+                    </div>
+
+                    <button class="btn btn-outline mt-6" onclick="showMealPlan()">
+                        Lihat Jadwal Makan Detail
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Meal Plan -->
+            <div class="glass-card section-hidden" id="mealSection">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon"><i class="fas fa-utensils"></i></div>
+                        Panduan Menu Harian
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-gray-500">Target Kalori</div>
+                        <div class="text-lg font-bold text-green-700" id="mealTargetCal">0 kcal</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="meal-grid" id="mealContainer">
+                        <!-- Generated by JS -->
+                    </div>
+
+                    <!-- Alternative Menu Note -->
+                    <div class="meal-alternative">
+                        <div class="meal-alternative-title">
+                            <i class="fas fa-lightbulb"></i>
+                            Catatan Alternatif Menu
+                        </div>
+                        <div class="meal-alternative-text">
+                            Tidak harus mengikuti menu di atas persis! Yang penting <strong>asupan kalori tetap terjaga</strong> sesuai target. 
+                            Anda bisa mengganti dengan makanan lain yang setara kalori dan nutrisinya. Contoh: Nasi bisa diganti roti gandum, 
+                            ayam bisa diganti ikan atau tahu/tempe. Yang terpenting adalah <strong>defisit kalori dan konsistensi minum herbal</strong>.
+                        </div>
+                    </div>
+
+                    <!-- Evaluation Sheet -->
+                    <div class="eval-section">
+                        <div class="eval-header">
+                            <div class="eval-title">
+                                <i class="fas fa-clipboard-check mr-2 text-green-600"></i>
+                                Lembar Evaluasi Harian
+                            </div>
+                            <div class="eval-date" id="evalDate">-</div>
+                        </div>
+                        
+                        <div class="eval-grid" id="evalContainer">
+                            <!-- Generated by JS -->
+                        </div>
+
+                        <div class="eval-progress">
+                            <div class="eval-progress-bar">
+                                <div class="eval-progress-fill" id="evalProgressFill" style="width: 0%"></div>
+                            </div>
+                            <div class="eval-progress-text" id="evalProgressText">0% checklist selesai hari ini</div>
+                        </div>
+                    </div>
+
+                    <!-- Tips -->
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-4 text-sm uppercase tracking-wide text-gray-600">Tips Sukses Diet</h4>
+                        <div class="tips-grid">
+                            <div class="tip-card">
+                                <div class="tip-icon text-blue-500"><i class="fas fa-tint"></i></div>
+                                <div class="tip-title">Hidrasi</div>
+                                <div class="tip-desc">Minum 8 gelas air putih sepanjang hari</div>
+                            </div>
+                            <div class="tip-card">
+                                <div class="tip-icon text-green-500"><i class="fas fa-bed"></i></div>
+                                <div class="tip-title">Tidur</div>
+                                <div class="tip-desc">Istirahat 7-8 jam untuk metabolisme optimal</div>
+                            </div>
+                            <div class="tip-card">
+                                <div class="tip-icon text-yellow-500"><i class="fas fa-walking"></i></div>
+                                <div class="tip-title">Aktivitas</div>
+                                <div class="tip-desc">Minimal 30 menit aktivitas fisik</div>
+                            </div>
+                            <div class="tip-card">
+                                <div class="tip-icon text-red-500"><i class="fas fa-ban"></i></div>
+                                <div class="tip-title">Hindari</div>
+                                <div class="tip-desc">Gula, gorengan, & minuman bersoda</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consultation CTA -->
+            <div class="consultation-card animate-fade-in delay-300 no-print">
+                <div class="consultation-badge">Gratis Konsultasi</div>
+                <h3 class="consultation-title font-display">Butuh Pendampingan?</h3>
+                <p class="consultation-desc">Dapatkan konsultasi gratis dengan ahli gizi kami untuk memaksimalkan hasil program diet herbal Anda.</p>
+                <button class="btn btn-gold" onclick="openConsultation()">
+                    <i class="fab fa-whatsapp"></i>
+                    Hubungi Konsultan Sekarang
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <footer class="text-center text-gray-400 text-xs mt-8 pb-8">
+                <p class="mb-2">CALFATLOSS - Smart Nutrition System</p>
+                <p>Hasil estimasi, konsultasikan dengan ahli gizi untuk kondisi khusus</p>
+            </footer>
+
+        </div>
     </div>
 
     <script>
-        // Data Storage
+        // Global Variables
+        let currentCode = '';
         let userData = {
             nama: '',
             gender: '',
@@ -1098,6 +1371,108 @@
             karbo: 0
         };
 
+        let evalItems = [
+            { id: 'herbal_pagi', label: 'Minum 3 kapsul herbal pagi', desc: 'Sesudah sarapan' },
+            { id: 'sarapan', label: 'Sarapan sehat', desc: 'Sesuai porsi kalori' },
+            { id: 'aktivitas', label: 'Aktivitas fisik 30 menit', desc: 'Jalan kaki/lompat tali/jumping jack' },
+            { id: 'snack_pagi', label: 'Snack pagi sehat', desc: 'Buah atau kacang almond' },
+            { id: 'makan_siang', label: 'Makan siang terkontrol', desc: 'Protein + sayur + karbo kompleks' },
+            { id: 'air', label: 'Minum 8 gelas air', desc: 'Sebelum makan dan sepanjang hari' },
+            { id: 'snack_sore', label: 'Snack sore', desc: 'Yogurt atau smoothie' },
+            { id: 'makan_malam', label: 'Makan malam ringan', desc: 'Protein + sayur' },
+            { id: 'herbal_malam', label: 'Minum 3 kapsul herbal malam', desc: 'Sesudah makan malam' },
+            { id: 'tidur', label: 'Tidur 7-8 jam', desc: 'Istirahat cukup' }
+        ];
+
+        // Check if code exists in URL or localStorage
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const codeFromUrl = urlParams.get('code');
+            const savedCode = localStorage.getItem('calfatloss_code');
+            
+            if (codeFromUrl || savedCode) {
+                const code = codeFromUrl || savedCode;
+                verifyCode(code);
+            }
+        });
+
+        function generateNewCode() {
+            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const code = `CONS-${random}`;
+            document.getElementById('consultCode').value = code;
+        }
+
+        function verifyCode(inputCode) {
+            const code = inputCode || document.getElementById('consultCode').value.trim().toUpperCase();
+            
+            if (!code || code.length < 4) {
+                alert('Masukkan kode yang valid');
+                return;
+            }
+
+            currentCode = code;
+            localStorage.setItem('calfatloss_code', code);
+            
+            // Hide code section, show main app
+            document.getElementById('codeSection').style.display = 'none';
+            document.getElementById('mainApp').classList.remove('section-hidden');
+            document.getElementById('mainApp').classList.add('section-visible');
+            document.getElementById('userCodeDisplay').textContent = `Kode: ${code}`;
+            
+            // Load saved data
+            loadUserData();
+        }
+
+        function loadUserData() {
+            const saved = localStorage.getItem(`calfatloss_data_${currentCode}`);
+            const savedEval = localStorage.getItem(`calfatloss_eval_${currentCode}`);
+            
+            if (saved) {
+                const data = JSON.parse(saved);
+                userData = data;
+                
+                // Fill inputs
+                if (data.nama) document.getElementById('inputNama').value = data.nama;
+                if (data.gender) document.getElementById('inputGender').value = data.gender;
+                if (data.usia) document.getElementById('inputUsia').value = data.usia;
+                if (data.berat) document.getElementById('inputBerat').value = data.berat;
+                if (data.tinggi) document.getElementById('inputTinggi').value = data.tinggi;
+                if (data.aktivitas) document.getElementById('inputAktivitas').value = data.aktivitas;
+                if (data.target) document.getElementById('inputTarget').value = data.target;
+                if (data.metode) document.getElementById('inputMetode').value = data.metode;
+                
+                // If data complete, show program
+                if (data.nama && data.gender) {
+                    calculateAndShowProgram();
+                }
+            }
+            
+            // Load evaluation status
+            if (savedEval) {
+                const evalStatus = JSON.parse(savedEval);
+                evalItems = evalItems.map(item => ({
+                    ...item,
+                    checked: evalStatus[item.id] || false
+                }));
+            }
+            
+            renderEvalSheet();
+            updateEvalProgress();
+        }
+
+        function saveUserData() {
+            localStorage.setItem(`calfatloss_data_${currentCode}`, JSON.stringify(userData));
+        }
+
+        function saveEvalData() {
+            const evalStatus = {};
+            evalItems.forEach(item => {
+                evalStatus[item.id] = item.checked;
+            });
+            localStorage.setItem(`calfatloss_eval_${currentCode}`, JSON.stringify(evalStatus));
+            localStorage.setItem(`calfatloss_eval_date_${currentCode}`, new Date().toDateString());
+        }
+
         // Constants
         const deficitMap = {
             'ringan': 300,
@@ -1105,7 +1480,6 @@
             'agresif': 700
         };
 
-        // Calculate BMR using Mifflin-St Jeor
         function calculateBMR(gender, weight, height, age) {
             if (gender === 'pria') {
                 return (10 * weight) + (6.25 * height) - (5 * age) + 5;
@@ -1114,9 +1488,7 @@
             }
         }
 
-        // Main Calculation Function
         function calculateAndShowProgram() {
-            // Get values
             userData.nama = document.getElementById('inputNama').value;
             userData.gender = document.getElementById('inputGender').value;
             userData.usia = parseFloat(document.getElementById('inputUsia').value);
@@ -1126,7 +1498,6 @@
             userData.target = parseFloat(document.getElementById('inputTarget').value);
             userData.metode = document.getElementById('inputMetode').value;
 
-            // Validation
             if (!userData.nama || !userData.gender || !userData.usia || !userData.berat || !userData.tinggi || !userData.aktivitas || !userData.target) {
                 alert('Mohon lengkapi semua data terlebih dahulu');
                 return;
@@ -1153,12 +1524,11 @@
             userData.lemak = userData.berat * 0.8;
             userData.karbo = (userData.dietCal - (userData.protein * 4) - (userData.lemak * 9)) / 4;
 
-            // Update UI
+            saveUserData();
             updateCalculatorUI();
             generateTimeline();
             generateMealPlan();
             
-            // Show Program Section
             document.getElementById('programSection').classList.remove('section-hidden');
             document.getElementById('programSection').classList.add('section-visible');
             
@@ -1181,11 +1551,11 @@
             timeline.innerHTML = '';
 
             const phases = [
-                { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Mulai konsumsi 2x3 kapsul herbal sesudah makan (pagi & malam). Fokus pengurangan gula.', icon: '🌱' },
-                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari (bisa 2x3 atau 3x2).', icon: '⚡' },
-                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal. Jangan skip dosis pagi & malam.', icon: '🔥' },
-                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Jika stagnan, konsultasi gratis tersedia untuk penyesuaian dosis.', icon: '📊' },
-                { week: userData.weeks, title: 'Target Tercapai!', desc: `Selamat ${userData.nama}! Capai target ${userData.target}kg. Lanjutkan maintenance dengan 2x2 kapsul.`, icon: '🏆' }
+                { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Mulai konsumsi 2x3 kapsul herbal sesudah makan (pagi & malam). Fokus pengurangan gula.' },
+                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari (bisa 2x3 atau 3x2). Aktivitas 30 menit/hari.' },
+                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal. Jangan skip dosis pagi & malam. Minimal 30 menit jalan kaki/lompat tali.' },
+                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Jika stagnan, konsultasi gratis tersedia untuk penyesuaian dosis atau pola makan.' },
+                { week: userData.weeks, title: 'Target Tercapai!', desc: `Selamat ${userData.nama}! Capai target ${userData.target}kg. Lanjutkan ke FASE MAINTENANCE: Turun dosis herbal jadi 2x2 kapsul/hari + pola makan seimbang untuk menjaga berat.` }
             ];
 
             phases.forEach((phase, index) => {
@@ -1196,7 +1566,7 @@
                     <div class="timeline-item">
                         <div class="timeline-dot ${dotClass}">${isLast ? '<i class="fas fa-flag"></i>' : phase.week}</div>
                         <div class="timeline-content">
-                            <h4>${phase.icon} ${phase.title}</h4>
+                            <h4>${phase.title}</h4>
                             <p>${phase.desc}</p>
                         </div>
                     </div>
@@ -1204,7 +1574,6 @@
                 timeline.innerHTML += html;
             });
 
-            // Animate progress ring
             setTimeout(() => {
                 const circle = document.getElementById('progressCircle');
                 const radius = circle.r.baseVal.value;
@@ -1215,7 +1584,6 @@
             }, 500);
         }
 
-        // MEAL PLAN - NO ICONS, TIME ONLY
         function generateMealPlan() {
             const container = document.getElementById('mealContainer');
             document.getElementById('mealTargetCal').textContent = Math.round(userData.dietCal) + ' kcal';
@@ -1233,7 +1601,6 @@
                   menu: `Ikan kukus 150g + salad sayur + kentang rebus + 3 kapsul herbal sesudah makan` }
             ];
 
-            // Render without icons, time only
             container.innerHTML = meals.map(meal => `
                 <div class="meal-card">
                     <div class="meal-time-box">
@@ -1249,40 +1616,93 @@
             `).join('');
         }
 
+        function renderEvalSheet() {
+            const container = document.getElementById('evalContainer');
+            const today = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('evalDate').textContent = today;
+            
+            container.innerHTML = evalItems.map((item, index) => `
+                <div class="eval-item" onclick="toggleEvalItem(${index})">
+                    <div class="eval-checkbox ${item.checked ? 'checked' : ''}" id="checkbox-${index}">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="eval-content">
+                        <div class="eval-label">${item.label}</div>
+                        <div class="eval-desc">${item.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleEvalItem(index) {
+            evalItems[index].checked = !evalItems[index].checked;
+            const checkbox = document.getElementById(`checkbox-${index}`);
+            checkbox.classList.toggle('checked', evalItems[index].checked);
+            
+            saveEvalData();
+            updateEvalProgress();
+        }
+
+        function updateEvalProgress() {
+            const checkedCount = evalItems.filter(item => item.checked).length;
+            const percentage = Math.round((checkedCount / evalItems.length) * 100);
+            
+            document.getElementById('evalProgressFill').style.width = percentage + '%';
+            document.getElementById('evalProgressText').textContent = `${percentage}% checklist selesai hari ini (${checkedCount}/${evalItems.length})`;
+        }
+
         function showMealPlan() {
             document.getElementById('mealSection').classList.remove('section-hidden');
             document.getElementById('mealSection').classList.add('section-visible');
+            renderEvalSheet();
             setTimeout(() => {
                 document.getElementById('mealSection').scrollIntoView({ behavior: 'smooth' });
             }, 100);
         }
 
-        // WHATSAPP NUMBER UPDATED
+        // UPDATED WHATSAPP FUNCTION WITH FORMAT
         function openConsultation() {
-            const phone = '6281546450547'; // Nomor baru
-            const message = `Halo, saya ${userData.nama || ''} ingin konsultasi program diet CALFATLOSS. Berat saya ${userData.berat || '-'}kg, target ${userData.target || '-'}kg.`;
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+            const phone = '6281546450547';
+            
+            const formatMessage = `*KONSULTASI CALFATLOSS - KODE: ${currentCode}*
+
+*Data Pengguna:*
+• Nama: ${userData.nama || '-'}
+• Gender: ${userData.gender === 'pria' ? 'Laki-laki' : userData.gender === 'wanita' ? 'Perempuan' : '-'}
+• Usia: ${userData.usia || '-'} tahun
+• Berat Saat Ini: ${userData.berat || '-'} kg
+• Tinggi: ${userData.tinggi || '-'} cm
+• Target Berat: ${userData.target || '-'} kg
+• Target Minggu: ${userData.weeks || '-'} minggu
+
+*Kebutuhan Kalori:*
+• TDEE: ${Math.round(userData.tdee || 0)} kcal
+• Target Diet: ${Math.round(userData.dietCal || 0)} kcal
+
+*Pertanyaan/Kendala:*
+[Tulis pertanyaan atau kendala Anda di sini]
+
+*Progress Checklist Hari Ini: ${evalItems.filter(i => i.checked).length}/${evalItems.length}*`;
+
+            const encodedMessage = encodeURIComponent(formatMessage);
+            window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
         }
 
-        // Auto-save to localStorage
-        window.addEventListener('beforeunload', () => {
-            localStorage.setItem('calfatloss_data', JSON.stringify(userData));
-        });
-
-        // Load from localStorage on startup
-        window.addEventListener('load', () => {
-            const saved = localStorage.getItem('calfatloss_data');
-            if (saved) {
-                const data = JSON.parse(saved);
-                if (data.nama) document.getElementById('inputNama').value = data.nama;
-                if (data.gender) document.getElementById('inputGender').value = data.gender;
-                if (data.usia) document.getElementById('inputUsia').value = data.usia;
-                if (data.berat) document.getElementById('inputBerat').value = data.berat;
-                if (data.tinggi) document.getElementById('inputTinggi').value = data.tinggi;
-                if (data.aktivitas) document.getElementById('inputAktivitas').value = data.aktivitas;
-                if (data.target) document.getElementById('inputTarget').value = data.target;
-                if (data.metode) document.getElementById('inputMetode').value = data.metode;
-            }
+        // Auto-save inputs on change
+        ['inputNama', 'inputGender', 'inputUsia', 'inputBerat', 'inputTinggi', 'inputAktivitas', 'inputTarget', 'inputMetode'].forEach(id => {
+            document.getElementById(id)?.addEventListener('change', () => {
+                if (currentCode) {
+                    userData.nama = document.getElementById('inputNama').value;
+                    userData.gender = document.getElementById('inputGender').value;
+                    userData.usia = parseFloat(document.getElementById('inputUsia').value) || 0;
+                    userData.berat = parseFloat(document.getElementById('inputBerat').value) || 0;
+                    userData.tinggi = parseFloat(document.getElementById('inputTinggi').value) || 0;
+                    userData.aktivitas = parseFloat(document.getElementById('inputAktivitas').value) || 0;
+                    userData.target = parseFloat(document.getElementById('inputTarget').value) || 0;
+                    userData.metode = document.getElementById('inputMetode').value;
+                    saveUserData();
+                }
+            });
         });
     </script>
 </body>
