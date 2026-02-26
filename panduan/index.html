@@ -50,12 +50,10 @@
             overflow-x: hidden;
         }
 
-        /* Typography */
         .font-display {
             font-family: 'Playfair Display', serif;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -67,7 +65,6 @@
             border-radius: 4px;
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -83,11 +80,6 @@
             50% { transform: translateY(-10px); }
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
         .animate-fade-in {
             animation: fadeInUp 0.6s ease forwards;
         }
@@ -96,7 +88,6 @@
         .delay-200 { animation-delay: 0.2s; opacity: 0; }
         .delay-300 { animation-delay: 0.3s; opacity: 0; }
 
-        /* Header */
         .hero-section {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             position: relative;
@@ -177,7 +168,6 @@
             letter-spacing: 1px;
         }
 
-        /* Main Container */
         .main-container {
             max-width: 800px;
             margin: -40px auto 0;
@@ -186,7 +176,6 @@
             z-index: 10;
         }
 
-        /* Cards */
         .glass-card {
             background: white;
             border-radius: var(--radius);
@@ -229,7 +218,6 @@
             padding: 24px;
         }
 
-        /* Calculator Section */
         .calc-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -283,7 +271,6 @@
             cursor: pointer;
         }
 
-        /* Results Dashboard */
         .results-dashboard {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -336,51 +323,6 @@
             opacity: 0.8;
         }
 
-        /* Program Diet Section */
-        .program-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-
-        .program-tab {
-            flex: 1;
-            min-width: 100px;
-            padding: 16px 12px;
-            background: var(--bg-light);
-            border: 2px solid transparent;
-            border-radius: var(--radius-sm);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .program-tab.active {
-            background: white;
-            border-color: var(--primary);
-            box-shadow: var(--shadow-md);
-        }
-
-        .program-tab-icon {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-
-        .program-tab-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 4px;
-        }
-
-        .program-tab-desc {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        /* Timeline */
         .timeline {
             position: relative;
             padding-left: 32px;
@@ -451,7 +393,6 @@
             line-height: 1.6;
         }
 
-        /* Herbal Product Card */
         .herbal-card {
             background: linear-gradient(135deg, #F0F7F2 0%, #E8F5E9 100%);
             border: 1px solid #C8E6C9;
@@ -497,6 +438,12 @@
             margin-bottom: 16px;
         }
 
+        @media (min-width: 768px) {
+            .herbal-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
         .herbal-item {
             background: white;
             padding: 12px;
@@ -527,7 +474,7 @@
         .dosage-title {
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             color: var(--text-dark);
         }
 
@@ -535,7 +482,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
@@ -544,7 +491,7 @@
         }
 
         .dosage-time {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--primary);
         }
@@ -552,9 +499,19 @@
         .dosage-amount {
             font-size: 12px;
             color: var(--text-muted);
+            text-align: right;
         }
 
-        /* Meal Plan */
+        .dosage-note {
+            margin-top: 12px;
+            padding: 10px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
         .meal-grid {
             display: grid;
             gap: 16px;
@@ -576,9 +533,9 @@
             box-shadow: var(--shadow-md);
         }
 
-        .meal-time {
-            width: 60px;
-            height: 60px;
+        .meal-time-box {
+            width: 70px;
+            height: 70px;
             background: white;
             border-radius: 12px;
             display: flex;
@@ -587,17 +544,22 @@
             justify-content: center;
             box-shadow: var(--shadow-sm);
             flex-shrink: 0;
-        }
-
-        .meal-time-icon {
-            font-size: 20px;
-            margin-bottom: 4px;
+            border: 2px solid var(--primary);
         }
 
         .meal-time-label {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
-            color: var(--text-muted);
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meal-time-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-top: 2px;
         }
 
         .meal-content {
@@ -620,9 +582,9 @@
             font-size: 13px;
             font-weight: 600;
             color: var(--primary);
+            white-space: nowrap;
         }
 
-        /* Progress Tracker */
         .progress-ring {
             position: relative;
             width: 200px;
@@ -669,7 +631,6 @@
             margin-top: 4px;
         }
 
-        /* Action Buttons */
         .btn {
             width: 100%;
             padding: 16px 24px;
@@ -710,11 +671,16 @@
             color: var(--primary);
         }
 
-        /* Tips Section */
         .tips-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .tips-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
 
         .tip-card {
@@ -749,7 +715,6 @@
             line-height: 1.5;
         }
 
-        /* Consultation CTA */
         .consultation-card {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
             border-radius: var(--radius);
@@ -798,7 +763,6 @@
             position: relative;
         }
 
-        /* Hidden sections */
         .section-hidden {
             display: none;
         }
@@ -808,18 +772,14 @@
             animation: fadeInUp 0.5s ease;
         }
 
-        /* Print styles */
         @media print {
             .no-print { display: none !important; }
             .print-only { display: block !important; }
         }
 
-        /* Responsive */
         @media (min-width: 768px) {
             .hero-title { font-size: 48px; }
             .main-container { padding: 0 40px 60px; }
-            .tips-grid { grid-template-columns: repeat(4, 1fr); }
-            .herbal-grid { grid-template-columns: repeat(5, 1fr); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -860,7 +820,7 @@
     <!-- Main Container -->
     <div class="main-container">
 
-        <!-- STEP 1: Kalkulator (Your Existing Code Integrated) -->
+        <!-- STEP 1: Kalkulator -->
         <div class="glass-card animate-fade-in delay-100" id="calculatorSection">
             <div class="card-header">
                 <div class="card-title">
@@ -941,7 +901,7 @@
             </div>
         </div>
 
-        <!-- STEP 2: Program Timeline (Hidden Initially) -->
+        <!-- STEP 2: Program Timeline -->
         <div class="glass-card section-hidden" id="programSection">
             <div class="card-header">
                 <div class="card-title">
@@ -976,13 +936,13 @@
                     <!-- Generated by JS -->
                 </div>
 
-                <!-- Herbal Product Integration -->
+                <!-- Herbal Product Integration - DOSIS UPDATED -->
                 <div class="herbal-card">
                     <div class="herbal-header">
                         <div class="herbal-icon">🌿</div>
                         <div>
                             <div class="herbal-title">Suplemen Herbal CALFATLOSS</div>
-                            <div class="herbal-subtitle">Formula 5 Herba Aktif Premium</div>
+                            <div class="herbal-subtitle">Formula 5 Herba Aktif Premium (500mg/kapsul)</div>
                         </div>
                     </div>
                     
@@ -1009,19 +969,39 @@
                         </div>
                     </div>
 
+                    <!-- DOSIS BOX - UPDATED TO 2x3 -->
                     <div class="dosage-box">
-                        <div class="dosage-title"><i class="fas fa-clock text-yellow-600 mr-2"></i>Jadwal Konsumsi Optimal</div>
-                        <div class="dosage-schedule">
-                            <span class="dosage-time"><i class="fas fa-sun text-yellow-500 mr-2"></i>Pagi (07:00)</span>
-                            <span class="dosage-amount">2 Kapsul + Air Hangat</span>
+                        <div class="dosage-title">
+                            <i class="fas fa-clock text-yellow-600 mr-2"></i>
+                            Jadwal Konsumsi Optimal (2x3 Kapsul)
                         </div>
+                        
                         <div class="dosage-schedule">
-                            <span class="dosage-time"><i class="fas fa-sun text-orange-500 mr-2"></i>Siang (12:00)</span>
-                            <span class="dosage-amount">2 Kapsul + Sebelum Makan</span>
+                            <span class="dosage-time">
+                                <i class="fas fa-sun text-yellow-500 mr-2"></i>
+                                Pagi (07:00 - 08:00)
+                            </span>
+                            <span class="dosage-amount">
+                                3 Kapsul<br>
+                                <small>Sesudah Sarapan + Air Hangat</small>
+                            </span>
                         </div>
+                        
                         <div class="dosage-schedule">
-                            <span class="dosage-time"><i class="fas fa-moon text-blue-500 mr-2"></i>Malam (18:00)</span>
-                            <span class="dosage-amount">2 Kapsul + Air Putih</span>
+                            <span class="dosage-time">
+                                <i class="fas fa-moon text-blue-500 mr-2"></i>
+                                Malam (18:00 - 19:00)
+                            </span>
+                            <span class="dosage-amount">
+                                3 Kapsul<br>
+                                <small>Sesudah Makan Malam + Air Putih</small>
+                            </span>
+                        </div>
+
+                        <div class="dosage-note">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            <strong>Alternatif:</strong> Bisa juga dikonsumsi 3x2 kapsul (Pagi, Siang, Malam) sesudah makan. 
+                            Total 6 kapsul/hari untuk hasil optimal.
                         </div>
                     </div>
                 </div>
@@ -1033,7 +1013,7 @@
             </div>
         </div>
 
-        <!-- STEP 3: Meal Plan (Hidden Initially) -->
+        <!-- STEP 3: Meal Plan - NO ICONS, TIME ONLY -->
         <div class="glass-card section-hidden" id="mealSection">
             <div class="card-header">
                 <div class="card-title">
@@ -1047,7 +1027,7 @@
             </div>
             <div class="card-body">
                 <div class="meal-grid" id="mealContainer">
-                    <!-- Generated by JS -->
+                    <!-- Generated by JS - NO ICONS -->
                 </div>
 
                 <!-- Tips -->
@@ -1079,13 +1059,13 @@
             </div>
         </div>
 
-        <!-- Consultation CTA -->
+        <!-- Consultation CTA - NOMOR UPDATED -->
         <div class="consultation-card animate-fade-in delay-300 no-print">
             <div class="consultation-badge">Gratis Konsultasi</div>
             <h3 class="consultation-title font-display">Butuh Pendampingan?</h3>
             <p class="consultation-desc">Dapatkan konsultasi gratis dengan ahli gizi kami untuk memaksimalkan hasil program diet herbal Anda.</p>
             <button class="btn btn-gold" onclick="openConsultation()">
-                <i class="fas fa-whatsapp"></i>
+                <i class="fab fa-whatsapp"></i>
                 Hubungi Konsultan Sekarang
             </button>
         </div>
@@ -1123,13 +1103,6 @@
             'ringan': 300,
             'standar': 500,
             'agresif': 700
-        };
-
-        const activityLabels = {
-            '1.2': 'Sedentari',
-            '1.375': 'Ringan',
-            '1.55': 'Sedang',
-            '1.725': 'Berat'
         };
 
         // Calculate BMR using Mifflin-St Jeor
@@ -1174,7 +1147,7 @@
             const weeklyLoss = (deficit * 7) / 7700;
             userData.weeks = Math.ceil((userData.berat - userData.target) / weeklyLoss);
 
-            // Macros (High protein for muscle preservation)
+            // Macros
             const proteinMult = userData.metode === 'agresif' ? 2.2 : (userData.metode === 'ringan' ? 1.8 : 2.0);
             userData.protein = userData.berat * proteinMult;
             userData.lemak = userData.berat * 0.8;
@@ -1189,7 +1162,6 @@
             document.getElementById('programSection').classList.remove('section-hidden');
             document.getElementById('programSection').classList.add('section-visible');
             
-            // Scroll to program
             setTimeout(() => {
                 document.getElementById('programSection').scrollIntoView({ behavior: 'smooth' });
             }, 100);
@@ -1200,7 +1172,6 @@
             document.getElementById('previewCalories').textContent = Math.round(userData.dietCal);
             document.getElementById('previewWeeks').textContent = userData.weeks;
             
-            // Update hero stats
             document.getElementById('heroWeeks').textContent = userData.weeks;
             document.getElementById('heroLoss').textContent = userData.metode === 'agresif' ? '0.7-1' : (userData.metode === 'ringan' ? '0.3-0.5' : '0.5-0.7');
         }
@@ -1210,11 +1181,11 @@
             timeline.innerHTML = '';
 
             const phases = [
-                { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Fokus pada pengurangan gula & karbo sederhana. Kapsul herbal 3x2 sehari dimulai.', icon: },
-                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme mulai meningkat. Berat badan turun 0.5-1kg. Tingkatkan konsumsi air putih.', icon: },
-                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak mulai terbakar efektif. Kombinasi diet + herbal mencapai sinergi optimal.', icon: },
-                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Jika stagnan, lakukan refeed day 1x seminggu. Konsultasi gratis tersedia.', icon: },
-                { week: userData.weeks, title: 'Target Tercapai!', desc: `Selamat ${userData.nama}! Anda telah mencapai target ${userData.target}kg. Lanjutkan ke fase maintenance.`, icon: }
+                { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Mulai konsumsi 2x3 kapsul herbal sesudah makan (pagi & malam). Fokus pengurangan gula.', icon: '🌱' },
+                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari (bisa 2x3 atau 3x2).', icon: '⚡' },
+                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal. Jangan skip dosis pagi & malam.', icon: '🔥' },
+                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Jika stagnan, konsultasi gratis tersedia untuk penyesuaian dosis.', icon: '📊' },
+                { week: userData.weeks, title: 'Target Tercapai!', desc: `Selamat ${userData.nama}! Capai target ${userData.target}kg. Lanjutkan maintenance dengan 2x2 kapsul.`, icon: '🏆' }
             ];
 
             phases.forEach((phase, index) => {
@@ -1238,40 +1209,42 @@
                 const circle = document.getElementById('progressCircle');
                 const radius = circle.r.baseVal.value;
                 const circumference = radius * 2 * Math.PI;
-                const offset = circumference - (10/100) * circumference; // Start at 10%
+                const offset = circumference - (10/100) * circumference;
                 circle.style.strokeDashoffset = offset;
                 document.getElementById('progressPercent').textContent = '10%';
             }, 500);
         }
 
+        // MEAL PLAN - NO ICONS, TIME ONLY
         function generateMealPlan() {
             const container = document.getElementById('mealContainer');
             document.getElementById('mealTargetCal').textContent = Math.round(userData.dietCal) + ' kcal';
             
             const meals = [
-                { time: '07:00', icon: , title: 'Sarapan (25%)', cal: Math.round(userData.dietCal * 0.25), 
-                  menu: `Oatmeal + susu low fat + pisang + 2 kapsul herbal` },
-                { time: '10:00', icon: , title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), 
+                { time: '07:00', title: 'Sarapan (25%)', cal: Math.round(userData.dietCal * 0.25), 
+                  menu: `Oatmeal + susu low fat + pisang + 3 kapsul herbal sesudah makan` },
+                { time: '10:00', title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), 
                   menu: `Buah segar (apel/jeruk) + kacang almond 10 butir` },
-                { time: '12:00', icon: , title: 'Makan Siang (30%)', cal: Math.round(userData.dietCal * 0.30), 
-                  menu: `Nasi merah 100g + dada ayam 150g + sayur tumis + 2 kapsul herbal` },
-                { time: '15:00', icon: , title: 'Snack Sore (10%)', cal: Math.round(userData.dietCal * 0.10), 
+                { time: '12:00', title: 'Makan Siang (30%)', cal: Math.round(userData.dietCal * 0.30), 
+                  menu: `Nasi merah 100g + dada ayam 150g + sayur tumis` },
+                { time: '15:00', title: 'Snack Sore (10%)', cal: Math.round(userData.dietCal * 0.10), 
                   menu: `Yogurt plain + granola atau smoothie green` },
-                { time: '18:00', icon: , title: 'Makan Malam (25%)', cal: Math.round(userData.dietCal * 0.25), 
-                  menu: `Ikan kukus 150g + salad sayur + kentang rebus + 2 kapsul herbal` }
+                { time: '18:00', title: 'Makan Malam (25%)', cal: Math.round(userData.dietCal * 0.25), 
+                  menu: `Ikan kukus 150g + salad sayur + kentang rebus + 3 kapsul herbal sesudah makan` }
             ];
 
+            // Render without icons, time only
             container.innerHTML = meals.map(meal => `
                 <div class="meal-card">
-                    <div class="meal-time">
-                        <div class="meal-time-icon">${meal.icon}</div>
-                        <div class="meal-time-label">${meal.time}</div>
+                    <div class="meal-time-box">
+                        <div class="meal-time-label">JAM</div>
+                        <div class="meal-time-value">${meal.time}</div>
                     </div>
                     <div class="meal-content">
                         <div class="meal-title">${meal.title}</div>
                         <div class="meal-desc">${meal.menu}</div>
                     </div>
-                    <div class="meal-cal">~${meal.cal} kcal</div>
+                    <div class="meal-cal">~${meal.cal}<br><small>kcal</small></div>
                 </div>
             `).join('');
         }
@@ -1284,9 +1257,9 @@
             }, 100);
         }
 
+        // WHATSAPP NUMBER UPDATED
         function openConsultation() {
-            // Replace with your WhatsApp number
-            const phone = '6281234567890';
+            const phone = '6281546450547'; // Nomor baru
             const message = `Halo, saya ${userData.nama || ''} ingin konsultasi program diet CALFATLOSS. Berat saya ${userData.berat || '-'}kg, target ${userData.target || '-'}kg.`;
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
         }
@@ -1303,7 +1276,12 @@
                 const data = JSON.parse(saved);
                 if (data.nama) document.getElementById('inputNama').value = data.nama;
                 if (data.gender) document.getElementById('inputGender').value = data.gender;
-                // ... load other fields
+                if (data.usia) document.getElementById('inputUsia').value = data.usia;
+                if (data.berat) document.getElementById('inputBerat').value = data.berat;
+                if (data.tinggi) document.getElementById('inputTinggi').value = data.tinggi;
+                if (data.aktivitas) document.getElementById('inputAktivitas').value = data.aktivitas;
+                if (data.target) document.getElementById('inputTarget').value = data.target;
+                if (data.metode) document.getElementById('inputMetode').value = data.metode;
             }
         });
     </script>
