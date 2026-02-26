@@ -1,100 +1,897 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panduan Diet - Member Area</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 30px;
-  background: #f4f4f4;
-}
-.container {
-  max-width: 800px;
-  margin: auto;
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-}
-h1 { text-align: center; }
-.error {
-  text-align: center;
-  color: red;
-  font-weight: bold;
-}
-.hidden { display: none; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet & Fitness Guide - Panduan Diet dan Olahraga</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2ecc71;
+            --secondary: #27ae60;
+            --accent: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--gradient-1);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            background: white;
+            color: var(--dark);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border: 2px solid transparent;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Diet Cards Grid */
+        .diet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .diet-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .diet-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .diet-header {
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diet-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .diet-card:hover .diet-header::after {
+            transform: scale(3);
+        }
+
+        .diet-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .diet-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .diet-short-desc {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .diet-content {
+            padding: 2rem;
+            display: none;
+        }
+
+        .diet-card.expanded .diet-content {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: var(--primary);
+            margin: 1.5rem 0 0.5rem 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .food-list, .exercise-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .food-list li, .exercise-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            border-bottom: 1px solid #eee;
+        }
+
+        .food-list li::before {
+            content: '🥗';
+            position: absolute;
+            left: 0;
+        }
+
+        .exercise-list li::before {
+            content: '💪';
+            position: absolute;
+            left: 0;
+        }
+
+        .tips-box {
+            background: #e8f6f3;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .calorie-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        /* Calculator Section */
+        .calculator-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .input-group input, .input-group select {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-calculate {
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: transform 0.3s;
+            width: 100%;
+        }
+
+        .btn-calculate:hover {
+            transform: scale(1.02);
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Schedule Section */
+        .schedule-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .day-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .day-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .day-name {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .diet-grid { grid-template-columns: 1fr; }
+            .nav-container { gap: 0.5rem; }
+            .nav-btn { padding: 0.6rem 1rem; font-size: 0.9rem; }
+        }
+
+        /* Progress Bar Animation */
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-4);
+            width: 0;
+            transition: width 1s ease;
+        }
+
+        .diet-card:hover .progress-fill {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 
-<div id="errorBox" class="error hidden"></div>
+    <header>
+        <h1>🥗 Diet & Fitness Guide</h1>
+        <p class="subtitle">Panduan Lengkap Diet dan Saran Olahraga untuk Gaya Hidup Sehat</p>
+    </header>
 
-<div id="content" class="container hidden">
-  <h1>Panduan Program Diet</h1>
-  <p>Selamat datang di area member.</p>
+    <nav>
+        <div class="nav-container">
+            <button class="nav-btn active" onclick="filterDiet('all')">Semua Diet</button>
+            <button class="nav-btn" onclick="filterDiet('weight-loss')">Penurunan Berat</button>
+            <button class="nav-btn" onclick="filterDiet('muscle')">Pembentukan Otot</button>
+            <button class="nav-btn" onclick="filterDiet('health')">Kesehatan</button>
+            <button class="nav-btn" onclick="scrollToCalc()">Kalkulator</button>
+        </div>
+    </nav>
 
-  <h3>Pilih Program Diet:</h3>
-  <ul>
-    <li>Diet Defisit Kalori</li>
-    <li>Diet Intermittent Fasting</li>
-    <li>Diet Tinggi Protein</li>
-  </ul>
+    <div class="container">
+        
+        <div class="disclaimer">
+            <strong>⚠️ Disclaimer:</strong> Informasi ini bersifat umum. Konsultasikan dengan dokter atau ahli gizi sebelum memulai program diet atau olahraga baru, terutama jika Anda memiliki kondisi kesehatan tertentu.
+        </div>
 
-  <h3>Rekomendasi Olahraga:</h3>
-  <ul>
-    <li>Walking 30 menit</li>
-    <li>Angkat beban ringan</li>
-    <li>HIIT 2x seminggu</li>
-  </ul>
+        <div class="diet-grid" id="dietContainer">
 
-  <p>Silakan sesuaikan program sesuai kebutuhan Anda.</p>
-</div>
+            <!-- Diet Card 1: Defisit Kalori -->
+            <div class="diet-card" data-category="weight-loss" onclick="toggleCard(this)">
+                <div class="diet-header" style="background: var(--gradient-2);">
+                    <div class="diet-icon">📉</div>
+                    <h2 class="diet-title">Diet Defisit Kalori</h2>
+                    <p class="diet-short-desc">Fokus pada pembakaran lemak dengan konsumsi kalori lebih sedikit</p>
+                    <span class="calorie-badge">500-750 kcal defisit/hari</span>
+                </div>
+                <div class="diet-content">
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+                    
+                    <h3 class="section-title">🍽️ Panduan Makanan</h3>
+                    <ul class="food-list">
+                        <li>Protein tinggi: ayam, ikan, tahu, tempe</li>
+                        <li>Sayuran berdaun hijau dalam jumlah besar</li>
+                        <li>Karbohidrat kompleks: oatmeal, quinoa, nasi merah</li>
+                        <li>Hindari gula tambahan dan minuman manis</li>
+                        <li>Minum air putih minimal 2.5 liter/hari</li>
+                    </ul>
 
-<script>
+                    <h3 class="section-title">🏃‍♂️ Saran Olahraga</h3>
+                    <ul class="exercise-list">
+                        <li><strong>Cardio (4-5x/minggu):</strong> Lari, bersepeda, atau skipping 30-45 menit</li>
+                        <li><strong>HIIT (2-3x/minggu):</strong> Interval training intensitas tinggi 20 menit</li>
+                        <li><strong>Latihan beban ringan:</strong> Untuk menjaga massa otot</li>
+                        <li><strong>Active recovery:</strong> Jalan kaki atau yoga</li>
+                    </ul>
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9fuehTsnTzQBgh39RaywCHcCQAKZeda_2Z8MVp-TLC2H1A4f2SEhrTUV9FkE4mTpX/exec";
+                    <div class="tips-box">
+                        <strong>💡 Tips:</strong> Jangan defisit kalori terlalu ekstrem (max 1000 kcal/hari) untuk menjaga metabolisme tetap optimal.
+                    </div>
+                </div>
+            </div>
 
-function getKode() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("kode");
-}
+            <!-- Diet Card 2: Ketogenic -->
+            <div class="diet-card" data-category="weight-loss health" onclick="toggleCard(this)">
+                <div class="diet-header" style="background: var(--gradient-1);">
+                    <div class="diet-icon">🥑</div>
+                    <h2 class="diet-title">Diet Ketogenic (Keto)</h2>
+                    <p class="diet-short-desc">Rendah karbohidrat, tinggi lemak untuk memaksa tubuh membakar lemak</p>
+                    <span class="calorie-badge"><50g karbo/hari</span>
+                </div>
+                <div class="diet-content">
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
 
-function showError(msg) {
-  const errorBox = document.getElementById("errorBox");
-  errorBox.innerText = msg;
-  errorBox.classList.remove("hidden");
-}
+                    <h3 class="section-title">🍽️ Panduan Makanan</h3>
+                    <ul class="food-list">
+                        <li>Lemak sehat: alpukat, kacang-kacangan, minyak zaitun</li>
+                        <li>Protein: daging, ikan berlemak (salmon), telur</li>
+                        <li>Keju dan produk susu full-fat</li>
+                        <li>Hindari: nasi, roti, gula, kentang, buah manis</li>
+                        <li>Boleh: bayam, brokoli, asparagus (sayuran non-starch)</li>
+                    </ul>
 
-async function cekAkses() {
+                    <h3 class="section-title">🏃‍♂️ Saran Olahraga</h3>
+                    <ul class="exercise-list">
+                        <li><strong>Latihan beban (3-4x/minggu):</strong> Fokus pada compound movements</li>
+                        <li><strong>Cardio ringan:</strong> Jalan cepat atau bersepeda santai</li>
+                        <li><strong>Hindari HIIT intens:</strong> Saat adaptasi awal (2-4 minggu pertama)</li>
+                        <li><strong>Yoga/Pilates:</strong> Untuk fleksibilitas dan recovery</li>
+                    </ul>
 
-  const kode = getKode();
+                    <div class="tips-box">
+                        <strong>💡 Tips:</strong> Pastikan asupan elektrolit (natrium, magnesium, kalium) cukup untuk menghindari "keto flu".
+                    </div>
+                </div>
+            </div>
 
-  if (!kode) {
-    showError("Kode tidak ditemukan.");
-    return;
-  }
+            <!-- Diet Card 3: High Protein -->
+            <div class="diet-card" data-category="muscle" onclick="toggleCard(this)">
+                <div class="diet-header" style="background: var(--gradient-3);">
+                    <div class="diet-icon">💪</div>
+                    <h2 class="diet-title">Diet High Protein</h2>
+                    <p class="diet-short-desc">Optimal untuk pembentukan otot dan recovery</p>
+                    <span class="calorie-badge">2-2.2g protein/kg berat badan</span>
+                </div>
+                <div class="diet-content">
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
 
-  try {
+                    <h3 class="section-title">🍽️ Panduan Makanan</h3>
+                    <ul class="food-list">
+                        <li>Dada ayam, daging sapi tanpa lemak, ikan</li>
+                        <li>Telur (utuh atau putih telur)</li>
+                        <li>Protein shake (whey/casein)</li>
+                        <li>Yunani yogurt, cottage cheese</li>
+                        <li>Kacang-kacangan dan biji-bijian</li>
+                    </ul>
 
-    const response = await fetch(`${SCRIPT_URL}?action=check&kode=${encodeURIComponent(kode)}`);
-    const data = await response.json();
+                    <h3 class="section-title">🏃‍♂️ Saran Olahraga</h3>
+                    <ul class="exercise-list">
+                        <li><strong>Latihan beban (4-6x/minggu):</strong> Split routine (push/pull/legs)</li>
+                        <li><strong>Progressive overload:</strong> Tingkatkan beban secara bertahap</li>
+                        <li><strong>Compound exercises:</strong> Squat, deadlift, bench press</li>
+                        <li><strong>Cardio minimal:</strong> 2-3x seminggu untuk kesehatan jantung</li>
+                    </ul>
 
-    if (data.status === "ACTIVE" || data.status === "USED") {
-      document.getElementById("content").classList.remove("hidden");
-    } else {
-      showError("Kode tidak aktif atau sudah expired.");
-    }
+                    <div class="tips-box">
+                        <strong>💡 Tips:</strong> Konsumsi protein dalam 30 menit setelah latihan untuk optimalisasi recovery otot.
+                    </div>
+                </div>
+            </div>
 
-  } catch (err) {
-    showError("Koneksi ke server bermasalah.");
-  }
-}
+            <!-- Diet Card 4: Intermittent Fasting -->
+            <div class="diet-card" data-category="weight-loss health" onclick="toggleCard(this)">
+                <div class="diet-header" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <div class="diet-icon">⏰</div>
+                    <h2 class="diet-title">Intermittent Fasting (IF)</h2>
+                    <p class="diet-short-desc">Pola makan berbasis waktu, bukan jenis makanan</p>
+                    <span class="calorie-badge">16:8 atau 5:2 Method</span>
+                </div>
+                <div class="diet-content">
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
 
-cekAkses();
+                    <h3 class="section-title">🍽️ Panduan Makanan</h3>
+                    <ul class="food-list">
+                        <li>Metode 16:8 - Puasa 16 jam, makan 8 jam</li>
+                        <li>Fokus pada makanan nutrisi padat selama eating window</li>
+                        <li>Protein tinggi untuk kenyang lebih lama</li>
+                        <li>Air putih, kopi hitam, teh tanpa gula saat puasa</li>
+                        <li>Hindari makan berlebihan saat breaking fast</li>
+                    </ul>
 
-</script>
+                    <h3 class="section-title">🏃‍♂️ Saran Olahraga</h3>
+                    <ul class="exercise-list">
+                        <li><strong>Latihan pagi (fasted):</strong> Cardio ringan atau yoga</li>
+                        <li><strong>Latihan beban:</strong> Setelah makan pertama untuk energi maksimal</li>
+                        <li><strong>Timing:</strong> Latihan 1-2 jam sebelum eating window berakhir</li>
+                        <li><strong>Recovery:</strong> Pastikan tidur cukup (7-9 jam)</li>
+                    </ul>
+
+                    <div class="tips-box">
+                        <strong>💡 Tips:</strong> Mulai dengan 12:12, naikkan bertahap ke 16:8. Tidak disarankan untuk ibu hamil atau diabetes tipe 1.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diet Card 5: Mediterranean -->
+            <div class="diet-card" data-category="health" onclick="toggleCard(this)">
+                <div class="diet-header" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #333;">
+                    <div class="diet-icon">🫒</div>
+                    <h2 class="diet-title">Diet Mediterania</h2>
+                    <p class="diet-short-desc">Pola makan terbaik untuk kesehatan jantung dan longevity</p>
+                    <span class="calorie-badge">Seimbang & Berkelanjutan</span>
+                </div>
+                <div class="diet-content">
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+
+                    <h3 class="section-title">🍽️ Panduan Makanan</h3>
+                    <ul class="food-list">
+                        <li>Minyak zaitun extra virgin sebagai sumber lemak utama</li>
+                        <li>Buah-buahan, sayuran, kacang-kacangan, biji-bijian utuh</li>
+                        <li>Ikan dan seafood 2x seminggu</li>
+                        <li>Unggas, telur, dan produk susu secara moderat</li>
+                        <li>Hindari: gula rafinasi, daging merah berlebihan</li>
+                    </ul>
+
+                    <h3 class="section-title">🏃‍♂️ Saran Olahraga</h3>
+                    <ul class="exercise-list">
+                        <li><strong>Aktivitas harian:</strong> Berjalan, berkebun, aktivitas outdoor</li>
+                        <li><strong>Latihan fungsional:</strong> Swimming, hiking, dancing</li>
+                        <li><strong>Strength training:</strong> 2-3x seminggu untuk massa otot</li>
+                        <li><strong>Social sports:</strong> Tenis, sepak bola, atau aktivitas grup</li>
+                    </ul>
+
+                    <div class="tips-box">
+                        <strong>💡 Tips:</strong> Fokus pada enjoyment makanan dan makan bersama keluarga, bukan hanya hitungan kalori.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diet Card 6: Plant Based -->
+            <div class="diet-card" data-category="health weight-loss" onclick="toggleCard(this)">
+                <div class="diet-header" style="background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); color: #2c3e50;">
+                    <div class="diet-icon">🌱</div>
+                    <h2 class="diet-title">Diet Plant-Based</h2>
+                    <p class="diet-short-desc">Fokus pada makanan nabati untuk kesehatan optimal</p>
+                    <span class="calorie-badge">Vegan/Vegetarian/Flexitarian</span>
+                </div>
+                <div class="diet-content">
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+
+                    <h3 class="section-title">🍽️ Panduan Makanan</h3>
+                    <ul class="food-list">
+                        <li>Protein nabati: tofu, tempe, edamame, lentil, kacang-kacangan</li>
+                        <li>Sayuran warna-warni (rainbow plate)</li>
+                        <li>Biji-bijian utuh: quinoa, brown rice, oats</li>
+                        <li>Kacang-kacangan dan biji-bijian (almond, chia, flaxseed)</li>
+                        <li>Suplementasi B12 jika vegan ketat</li>
+                    </ul>
+
+                    <h3 class="section-title">🏃‍♂️ Saran Olahraga</h3>
+                    <ul class="exercise-list">
+                        <li><strong>Endurance training:</strong> Lari jarak jauh, bersepeda</li>
+                        <li><strong>Bodyweight exercises:</strong> Calisthenics, yoga</li>
+                        <li><strong>Recovery:</strong> Plant-based protein post-workout</li>
+                        <li><strong>Fleksibilitas:</strong> Pilates untuk core strength</li>
+                    </ul>
+
+                    <div class="tips-box">
+                        <strong>💡 Tips:</strong> Kombinasikan sumber protein (rice + beans) untuk mendapatkan complete amino acid profile.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Calculator Section -->
+        <div class="calculator-section" id="calculator">
+            <h2 style="text-align: center; margin-bottom: 1rem; color: var(--dark);">🧮 Kalkulator Kebutuhan Kalori (TDEE)</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 2rem;">Hitung Total Daily Energy Expenditure Anda untuk menentukan target kalori diet</p>
+            
+            <div class="calc-grid">
+                <div class="input-group">
+                    <label>Jenis Kelamin</label>
+                    <select id="gender">
+                        <option value="male">Laki-laki</option>
+                        <option value="female">Perempuan</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Berat Badan (kg)</label>
+                    <input type="number" id="weight" placeholder="Contoh: 70">
+                </div>
+                <div class="input-group">
+                    <label>Tinggi Badan (cm)</label>
+                    <input type="number" id="height" placeholder="Contoh: 170">
+                </div>
+                <div class="input-group">
+                    <label>Usia (tahun)</label>
+                    <input type="number" id="age" placeholder="Contoh: 25">
+                </div>
+                <div class="input-group">
+                    <label>Tingkat Aktivitas</label>
+                    <select id="activity">
+                        <option value="1.2">Sedentary (Jarang olahraga)</option>
+                        <option value="1.375">Light (Olahraga 1-3x/minggu)</option>
+                        <option value="1.55">Moderate (Olahraga 3-5x/minggu)</option>
+                        <option value="1.725">Active (Olahraga 6-7x/minggu)</option>
+                        <option value="1.9">Very Active (Olahraga 2x/hari)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Tujuan</label>
+                    <select id="goal">
+                        <option value="lose">Menurunkan Berat Badan</option>
+                        <option value="maintain">Menjaga Berat Badan</option>
+                        <option value="gain">Menaikkan Berat Badan</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn-calculate" onclick="calculateCalories()">Hitung Kebutuhan Kalori</button>
+            
+            <div class="result-box" id="resultBox">
+                <h3 style="margin-bottom: 1rem;">Hasil Perhitungan:</h3>
+                <p id="bmrResult"></p>
+                <p id="tdeeResult"></p>
+                <p id="targetResult" style="font-size: 1.2rem; margin-top: 1rem; font-weight: bold;"></p>
+            </div>
+        </div>
+
+        <!-- Weekly Schedule -->
+        <div class="schedule-section">
+            <h2 style="text-align: center; margin-bottom: 1rem;">📅 Contoh Jadwal Mingguan (Diet Defisit + Olahraga)</h2>
+            <div class="week-grid">
+                <div class="day-card">
+                    <div class="day-name">Senin</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <div style="margin: 0.5rem 0;">🥗 Diet: 1800 kcal</div>
+                        <div>🏃‍♂️ Lari 30 menit</div>
+                        <div>💪 Upper body workout</div>
+                    </div>
+                </div>
+                <div class="day-card">
+                    <div class="day-name">Selasa</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <div style="margin: 0.5rem 0;">🥗 Diet: 1700 kcal</div>
+                        <div>🧘 Yoga 45 menit</div>
+                        <div>🚶‍♂️ Jalan kaki 10k steps</div>
+                    </div>
+                </div>
+                <div class="day-card">
+                    <div class="day-name">Rabu</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <div style="margin: 0.5rem 0;">🥗 Diet: 1800 kcal</div>
+                        <div>🏋️‍♂️ Lower body workout</div>
+                        <div>🔥 HIIT 20 menit</div>
+                    </div>
+                </div>
+                <div class="day-card">
+                    <div class="day-name">Kamis</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <div style="margin: 0.5rem 0;">🥗 Diet: 1700 kcal</div>
+                        <div>🏊‍♂️ Berenang 45 menit</div>
+                        <div>🧘 Stretching</div>
+                    </div>
+                </div>
+                <div class="day-card">
+                    <div class="day-name">Jumat</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <div style="margin: 0.5rem 0;">🥗 Diet: 1800 kcal</div>
+                        <div>💪 Full body workout</div>
+                        <div>🚴‍♂️ Bersepeda 30 menit</div>
+                    </div>
+                </div>
+                <div class="day-card">
+                    <div class="day-name">Sabtu</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <div style="margin: 0.5rem 0;">🥗 Cheat meal 2200 kcal</div>
+                        <div>🏃‍♂️ Long run 60 menit</div>
+                        <div>⚽ Olahraga favorit</div>
+                    </div>
+                </div>
+                <div class="day-card">
+                    <div class="day-name">Minggu</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        <div style="margin: 0.5rem 0;">🥗 Diet: 1600 kcal</div>
+                        <div>🧘 Active recovery</div>
+                        <div>🚶‍♂️ Jalan santai</div>
+                        <div>😴 Tidur 8 jam</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Diet & Fitness Guide. Dibuat untuk gaya hidup sehat.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">Konsultasikan dengan profesional kesehatan sebelum memulai program baru.</p>
+    </footer>
+
+    <script>
+        // Toggle Card Expansion
+        function toggleCard(card) {
+            // Close other cards
+            document.querySelectorAll('.diet-card').forEach(c => {
+                if (c !== card) c.classList.remove('expanded');
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            
+            // Smooth scroll to card if expanding
+            if (card.classList.contains('expanded')) {
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        }
+
+        // Filter Diet Cards
+        function filterDiet(category) {
+            const cards = document.querySelectorAll('.diet-card');
+            const buttons = document.querySelectorAll('.nav-btn');
+            
+            // Update active button
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes('Semua') && category === 'all') btn.classList.add('active');
+                if (btn.textContent.includes('Penurunan') && category === 'weight-loss') btn.classList.add('active');
+                if (btn.textContent.includes('Otot') && category === 'muscle') btn.classList.add('active');
+                if (btn.textContent.includes('Kesehatan') && category === 'health') btn.classList.add('active');
+            });
+
+            // Filter cards with animation
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category.includes(category)) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                    }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        // Calculator Function
+        function calculateCalories() {
+            const gender = document.getElementById('gender').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const age = parseFloat(document.getElementById('age').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+            const goal = document.getElementById('goal').value;
+
+            if (!weight || !height || !age) {
+                alert('Mohon isi semua data dengan benar!');
+                return;
+            }
+
+            // Mifflin-St Jeor Equation
+            let bmr;
+            if (gender === 'male') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+
+            const tdee = Math.round(bmr * activity);
+            let targetCalories;
+            let goalText;
+
+            switch(goal) {
+                case 'lose':
+                    targetCalories = tdee - 500;
+                    goalText = `Defisit 500 kcal untuk menurunkan ~0.5kg/minggu`;
+                    break;
+                case 'gain':
+                    targetCalories = tdee + 300;
+                    goalText = `Surplus 300 kcal untuk menaikkan massa otot`;
+                    break;
+                default:
+                    targetCalories = tdee;
+                    goalText = `Pertahankan asupan ini untuk weight maintenance`;
+            }
+
+            // Display results
+            document.getElementById('bmrResult').innerHTML = `<strong>BMR (Basal Metabolic Rate):</strong> ${Math.round(bmr)} kcal/hari`;
+            document.getElementById('tdeeResult').innerHTML = `<strong>TDEE (Total Energy Expenditure):</strong> ${tdee} kcal/hari`;
+            document.getElementById('targetResult').innerHTML = `🎯 Target Harian: <span style="font-size: 1.5rem;">${targetCalories} kcal</span><br><small style="font-size: 0.9rem; opacity: 0.9;">${goalText}</small>`;
+            
+            const resultBox = document.getElementById('resultBox');
+            resultBox.style.display = 'block';
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function scrollToCalc() {
+            document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Add smooth reveal on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.diet-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
+        });
+    </script>
 
 </body>
 </html>
