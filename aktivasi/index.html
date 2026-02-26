@@ -222,6 +222,11 @@ btn.classList.remove("loading");
 
 if(data.status==="SUCCESS"){
 show("success","Kode berhasil diaktifkan 🎉");
+// 🔐 SIMPAN SESSION LOGIN
+localStorage.setItem("session_login","true");
+localStorage.setItem("session_wa",formatWA(wa));
+localStorage.setItem("session_kode",kode);
+localStorage.setItem("session_nama",nama);
 setTimeout(()=>{
 window.location.href="/panduan/?kode="+kode;
 },2000);
@@ -229,6 +234,11 @@ window.location.href="/panduan/?kode="+kode;
 
 else if(data.status==="USED"||data.status==="ACTIVE"){
 show("success","Kode masih aktif. Silakan lanjut ke panduan.");
+// 🔐 SIMPAN SESSION LOGIN
+localStorage.setItem("session_login","true");
+localStorage.setItem("session_wa",formatWA(wa));
+localStorage.setItem("session_kode",kode);
+localStorage.setItem("session_nama",nama);
 btnLanjut.href="/panduan/?kode="+kode;
 btnLanjut.style.display="block";
 }
