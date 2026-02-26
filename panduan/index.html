@@ -1210,11 +1210,11 @@
             timeline.innerHTML = '';
 
             const phases = [
-                { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Fokus pada pengurangan gula & karbo sederhana. Kapsul herbal 3x2 sehari dimulai.', icon: '🌱' },
-                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme mulai meningkat. Berat badan turun 0.5-1kg. Tingkatkan konsumsi air putih.', icon: '⚡' },
-                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak mulai terbakar efektif. Kombinasi diet + herbal mencapai sinergi optimal.', icon: '🔥' },
-                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Jika stagnan, lakukan refeed day 1x seminggu. Konsultasi gratis tersedia.', icon: '📊' },
-                { week: userData.weeks, title: 'Target Tercapai!', desc: `Selamat ${userData.nama}! Anda telah mencapai target ${userData.target}kg. Lanjutkan ke fase maintenance.`, icon: '🏆' }
+                { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Fokus pada pengurangan gula & karbo sederhana. Kapsul herbal 3x2 sehari dimulai.', icon: },
+                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme mulai meningkat. Berat badan turun 0.5-1kg. Tingkatkan konsumsi air putih.', icon: },
+                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak mulai terbakar efektif. Kombinasi diet + herbal mencapai sinergi optimal.', icon: },
+                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Jika stagnan, lakukan refeed day 1x seminggu. Konsultasi gratis tersedia.', icon: },
+                { week: userData.weeks, title: 'Target Tercapai!', desc: `Selamat ${userData.nama}! Anda telah mencapai target ${userData.target}kg. Lanjutkan ke fase maintenance.`, icon: }
             ];
 
             phases.forEach((phase, index) => {
@@ -1249,15 +1249,15 @@
             document.getElementById('mealTargetCal').textContent = Math.round(userData.dietCal) + ' kcal';
             
             const meals = [
-                { time: '07:00', icon: '🌅', title: 'Sarapan (25%)', cal: Math.round(userData.dietCal * 0.25), 
+                { time: '07:00', icon: , title: 'Sarapan (25%)', cal: Math.round(userData.dietCal * 0.25), 
                   menu: `Oatmeal + susu low fat + pisang + 2 kapsul herbal` },
-                { time: '10:00', icon: '☕', title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), 
+                { time: '10:00', icon: , title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), 
                   menu: `Buah segar (apel/jeruk) + kacang almond 10 butir` },
-                { time: '12:00', icon: '🌞', title: 'Makan Siang (30%)', cal: Math.round(userData.dietCal * 0.30), 
+                { time: '12:00', icon: , title: 'Makan Siang (30%)', cal: Math.round(userData.dietCal * 0.30), 
                   menu: `Nasi merah 100g + dada ayam 150g + sayur tumis + 2 kapsul herbal` },
-                { time: '15:00', icon: '🥗', title: 'Snack Sore (10%)', cal: Math.round(userData.dietCal * 0.10), 
+                { time: '15:00', icon: , title: 'Snack Sore (10%)', cal: Math.round(userData.dietCal * 0.10), 
                   menu: `Yogurt plain + granola atau smoothie green` },
-                { time: '18:00', icon: '🌙', title: 'Makan Malam (25%)', cal: Math.round(userData.dietCal * 0.25), 
+                { time: '18:00', icon: , title: 'Makan Malam (25%)', cal: Math.round(userData.dietCal * 0.25), 
                   menu: `Ikan kukus 150g + salad sayur + kentang rebus + 2 kapsul herbal` }
             ];
 
