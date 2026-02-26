@@ -466,12 +466,6 @@
             animation: pulse-gold 2s infinite;
         }
 
-        .timeline-dot.completed {
-            background: var(--success);
-            border-color: var(--success);
-            color: white;
-        }
-
         .timeline-content h4 {
             font-size: 15px;
             font-weight: 600;
@@ -817,11 +811,6 @@
             color: white;
         }
 
-        .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #16A34A 100%);
-            color: white;
-        }
-
         .btn-loading {
             opacity: 0.7;
             cursor: not-allowed;
@@ -927,12 +916,6 @@
             opacity: 0.9;
             margin-bottom: 24px;
             position: relative;
-        }
-
-        .wa-link {
-            display: block;
-            text-decoration: none;
-            color: white;
         }
 
         .section-hidden {
@@ -1099,7 +1082,7 @@
             font-size: 14px;
             font-weight: 500;
             box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
-            z-index: 1000;
+            z-index: 9999;
             opacity: 0;
             transition: all 0.4s ease;
             display: flex;
@@ -1233,6 +1216,10 @@
                         <div class="form-group">
                             <label class="form-label">Nama Lengkap</label>
                             <input type="text" id="inputNama" class="form-input" placeholder="Masukkan nama">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nomor WhatsApp</label>
+                            <input type="tel" id="inputWa" class="form-input" placeholder="08xxxxxxxxxx">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Jenis Kelamin</label>
@@ -1494,6 +1481,26 @@
                             Evaluasi Mingguan (Data untuk Admin)
                         </div>
 
+                        <!-- Week Number -->
+                        <div style="margin-bottom: 16px;">
+                            <label class="form-label">Minggu Ke-</label>
+                            <select id="mingguKe" class="form-input">
+                                <option value="">Pilih Minggu</option>
+                                <option value="1">Minggu 1</option>
+                                <option value="2">Minggu 2</option>
+                                <option value="3">Minggu 3</option>
+                                <option value="4">Minggu 4</option>
+                                <option value="5">Minggu 5</option>
+                                <option value="6">Minggu 6</option>
+                                <option value="7">Minggu 7</option>
+                                <option value="8">Minggu 8</option>
+                                <option value="9">Minggu 9</option>
+                                <option value="10">Minggu 10</option>
+                                <option value="11">Minggu 11</option>
+                                <option value="12">Minggu 12</option>
+                            </select>
+                        </div>
+
                         <!-- Weight Inputs -->
                         <div class="weight-input-group">
                             <div>
@@ -1582,20 +1589,15 @@
                 </div>
             </div>
 
-            <!-- Consultation CTA - FIXED -->
+            <!-- Consultation CTA -->
             <div class="consultation-card animate-fade-in delay-300 no-print">
                 <div class="consultation-badge">Gratis Konsultasi</div>
                 <h3 class="consultation-title font-display">Butuh Pendampingan?</h3>
                 <p class="consultation-desc">Dapatkan konsultasi gratis dengan ahli gizi kami untuk memaksimalkan hasil program diet herbal Anda.</p>
-                <a href="https://wa.me/6281546450547?text=Halo%2C%20saya%20ingin%20konsultasi%20program%20diet%20CALFATLOSS" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   class="btn btn-gold wa-link"
-                   id="waConsultBtn"
-                   onclick="handleWaClick(event)">
+                <button class="btn btn-gold" id="waConsultBtn" onclick="openWhatsApp()">
                     <i class="fab fa-whatsapp"></i>
                     Hubungi Konsultan Sekarang
-                </a>
+                </button>
             </div>
 
             <!-- Footer -->
@@ -1609,8 +1611,9 @@
 
     <script>
         // ==================== DATA STORAGE ====================
-        let userData = {
+        var userData = {
             nama: '',
+            noWa: '',
             gender: '',
             usia: 0,
             berat: 0,
@@ -1627,21 +1630,24 @@
             karbo: 0
         };
 
-        let kondisiTubuh = {
+        var kondisiTubuh = {
             energi: false,
             nafsu: false,
             efek: false,
             tidur: false
         };
 
-        const deficitMap = {
+        var deficitMap = {
             'ringan': 300,
             'standar': 500,
             'agresif': 700
         };
 
-        // Google Sheets URL - GANTI dengan URL Web App Anda yang benar
-        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzKI-T3Ft64fgfy-2w5Ag5HDxkZWGTJ3x1zrwkoMcd55e7fZmDoNroKF8tM99Oe7k4x/exec";
+        // WhatsApp Number - Ganti dengan nomor Anda
+        var WHATSAPP_NUMBER = '6281546450547';
+        
+        // Google Sheets URL - GANTI dengan URL Web App Anda
+        var GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzKI-T3Ft64fgfy-2w5Ag5HDxkZWGTJ3x1zrwkoMcd55e7fZmDoNroKF8tM99Oe7k4x/exec';
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', function() {
@@ -1652,23 +1658,23 @@
         });
 
         function loadAllData() {
-            // Load user data
-            const savedUser = localStorage.getItem('calfatloss_userdata');
+            var savedUser = localStorage.getItem('calfatloss_userdata');
             if (savedUser) {
                 try {
                     userData = JSON.parse(savedUser);
                     
-                    // Fill inputs safely
-                    const namaEl = document.getElementById('inputNama');
-                    const genderEl = document.getElementById('inputGender');
-                    const usiaEl = document.getElementById('inputUsia');
-                    const beratEl = document.getElementById('inputBerat');
-                    const tinggiEl = document.getElementById('inputTinggi');
-                    const aktivitasEl = document.getElementById('inputAktivitas');
-                    const targetEl = document.getElementById('inputTarget');
-                    const metodeEl = document.getElementById('inputMetode');
+                    var namaEl = document.getElementById('inputNama');
+                    var waEl = document.getElementById('inputWa');
+                    var genderEl = document.getElementById('inputGender');
+                    var usiaEl = document.getElementById('inputUsia');
+                    var beratEl = document.getElementById('inputBerat');
+                    var tinggiEl = document.getElementById('inputTinggi');
+                    var aktivitasEl = document.getElementById('inputAktivitas');
+                    var targetEl = document.getElementById('inputTarget');
+                    var metodeEl = document.getElementById('inputMetode');
                     
                     if (namaEl && userData.nama) namaEl.value = userData.nama;
+                    if (waEl && userData.noWa) waEl.value = userData.noWa;
                     if (genderEl && userData.gender) genderEl.value = userData.gender;
                     if (usiaEl && userData.usia) usiaEl.value = userData.usia;
                     if (beratEl && userData.berat) beratEl.value = userData.berat;
@@ -1677,7 +1683,6 @@
                     if (targetEl && userData.target) targetEl.value = userData.target;
                     if (metodeEl && userData.metode) metodeEl.value = userData.metode;
                     
-                    // If complete, show program
                     if (userData.nama && userData.gender && userData.berat > 0) {
                         updateCalculatorUI();
                         generateTimeline();
@@ -1689,15 +1694,16 @@
                 }
             }
 
-            // Load weekly eval data
-            const savedEval = localStorage.getItem('calfatloss_weeklyeval');
+            var savedEval = localStorage.getItem('calfatloss_weeklyeval');
             if (savedEval) {
                 try {
-                    const evalData = JSON.parse(savedEval);
-                    const beratAwalEl = document.getElementById('beratAwal');
-                    const beratAkhirEl = document.getElementById('beratAkhir');
-                    const kendalaEl = document.getElementById('kendalaText');
+                    var evalData = JSON.parse(savedEval);
+                    var mingguEl = document.getElementById('mingguKe');
+                    var beratAwalEl = document.getElementById('beratAwal');
+                    var beratAkhirEl = document.getElementById('beratAkhir');
+                    var kendalaEl = document.getElementById('kendalaText');
                     
+                    if (mingguEl && evalData.mingguKe) mingguEl.value = evalData.mingguKe;
                     if (beratAwalEl && evalData.beratAwal) beratAwalEl.value = evalData.beratAwal;
                     if (beratAkhirEl && evalData.beratAkhir) beratAkhirEl.value = evalData.beratAkhir;
                     if (kendalaEl && evalData.kendala) kendalaEl.value = evalData.kendala;
@@ -1715,11 +1721,17 @@
             try {
                 localStorage.setItem('calfatloss_userdata', JSON.stringify(userData));
                 
-                const evalData = {
-                    beratAwal: document.getElementById('beratAwal')?.value || '',
-                    beratAkhir: document.getElementById('beratAkhir')?.value || '',
+                var mingguEl = document.getElementById('mingguKe');
+                var beratAwalEl = document.getElementById('beratAwal');
+                var beratAkhirEl = document.getElementById('beratAkhir');
+                var kendalaEl = document.getElementById('kendalaText');
+                
+                var evalData = {
+                    mingguKe: mingguEl ? mingguEl.value : '',
+                    beratAwal: beratAwalEl ? beratAwalEl.value : '',
+                    beratAkhir: beratAkhirEl ? beratAkhirEl.value : '',
                     kondisi: kondisiTubuh,
-                    kendala: document.getElementById('kendalaText')?.value || '',
+                    kendala: kendalaEl ? kendalaEl.value : '',
                     timestamp: new Date().toISOString()
                 };
                 localStorage.setItem('calfatloss_weeklyeval', JSON.stringify(evalData));
@@ -1730,14 +1742,14 @@
 
         // ==================== UI SETUP ====================
         function setupActivityToggle() {
-            const toggle = document.getElementById('activityToggle');
-            const icon = document.getElementById('activityIcon');
-            const content = document.getElementById('activityContent');
+            var toggle = document.getElementById('activityToggle');
+            var icon = document.getElementById('activityIcon');
+            var content = document.getElementById('activityContent');
             
             if (!toggle || !icon || !content) return;
             
-            const handleToggle = function() {
-                const expanded = content.classList.toggle('expanded');
+            var handleToggle = function() {
+                var expanded = content.classList.toggle('expanded');
                 icon.classList.toggle('expanded', expanded);
                 toggle.setAttribute('aria-expanded', String(expanded));
             };
@@ -1752,10 +1764,10 @@
         }
 
         function setupKondisiToggle() {
-            const items = document.querySelectorAll('.weekly-eval-item[data-kondisi]');
+            var items = document.querySelectorAll('.weekly-eval-item[data-kondisi]');
             items.forEach(function(item) {
                 item.addEventListener('click', function() {
-                    const kondisi = this.getAttribute('data-kondisi');
+                    var kondisi = this.getAttribute('data-kondisi');
                     if (kondisi) {
                         toggleKondisi(kondisi);
                     }
@@ -1764,8 +1776,8 @@
         }
 
         function setupWeightListeners() {
-            const beratAwalEl = document.getElementById('beratAwal');
-            const beratAkhirEl = document.getElementById('beratAkhir');
+            var beratAwalEl = document.getElementById('beratAwal');
+            var beratAkhirEl = document.getElementById('beratAkhir');
             
             if (beratAwalEl) {
                 beratAwalEl.addEventListener('input', hitungTurunBerat);
@@ -1778,7 +1790,7 @@
         }
 
         function showSection(sectionId) {
-            const section = document.getElementById(sectionId);
+            var section = document.getElementById(sectionId);
             if (section) {
                 section.classList.remove('section-hidden');
                 section.classList.add('section-visible');
@@ -1795,86 +1807,90 @@
         }
 
         function calculateAndShowProgram() {
-            // Get values
-            const namaEl = document.getElementById('inputNama');
-            const genderEl = document.getElementById('inputGender');
-            const usiaEl = document.getElementById('inputUsia');
-            const beratEl = document.getElementById('inputBerat');
-            const tinggiEl = document.getElementById('inputTinggi');
-            const aktivitasEl = document.getElementById('inputAktivitas');
-            const targetEl = document.getElementById('inputTarget');
-            const metodeEl = document.getElementById('inputMetode');
+            var namaEl = document.getElementById('inputNama');
+            var waEl = document.getElementById('inputWa');
+            var genderEl = document.getElementById('inputGender');
+            var usiaEl = document.getElementById('inputUsia');
+            var beratEl = document.getElementById('inputBerat');
+            var tinggiEl = document.getElementById('inputTinggi');
+            var aktivitasEl = document.getElementById('inputAktivitas');
+            var targetEl = document.getElementById('inputTarget');
+            var metodeEl = document.getElementById('inputMetode');
             
-            userData.nama = namaEl?.value?.trim() || '';
-            userData.gender = genderEl?.value || '';
-            userData.usia = parseFloat(usiaEl?.value) || 0;
-            userData.berat = parseFloat(beratEl?.value) || 0;
-            userData.tinggi = parseFloat(tinggiEl?.value) || 0;
-            userData.aktivitas = parseFloat(aktivitasEl?.value) || 0;
-            userData.target = parseFloat(targetEl?.value) || 0;
-            userData.metode = metodeEl?.value || 'standar';
+            userData.nama = namaEl ? namaEl.value.trim() : '';
+            userData.noWa = waEl ? waEl.value.trim() : '';
+            userData.gender = genderEl ? genderEl.value : '';
+            userData.usia = usiaEl ? parseFloat(usiaEl.value) || 0 : 0;
+            userData.berat = beratEl ? parseFloat(beratEl.value) || 0 : 0;
+            userData.tinggi = tinggiEl ? parseFloat(tinggiEl.value) || 0 : 0;
+            userData.aktivitas = aktivitasEl ? parseFloat(aktivitasEl.value) || 0 : 0;
+            userData.target = targetEl ? parseFloat(targetEl.value) || 0 : 0;
+            userData.metode = metodeEl ? metodeEl.value : 'standar';
 
-            // Validation
             if (!userData.nama) {
                 showToast('Mohon isi nama lengkap Anda', 'error');
-                namaEl?.focus();
+                if (namaEl) namaEl.focus();
+                return;
+            }
+            
+            if (!userData.noWa) {
+                showToast('Mohon isi nomor WhatsApp', 'error');
+                if (waEl) waEl.focus();
                 return;
             }
             
             if (!userData.gender) {
                 showToast('Mohon pilih jenis kelamin', 'error');
-                genderEl?.focus();
+                if (genderEl) genderEl.focus();
                 return;
             }
             
             if (!userData.usia || userData.usia < 15 || userData.usia > 80) {
                 showToast('Mohon isi usia yang valid (15-80 tahun)', 'error');
-                usiaEl?.focus();
+                if (usiaEl) usiaEl.focus();
                 return;
             }
             
             if (!userData.berat || userData.berat < 30 || userData.berat > 200) {
                 showToast('Mohon isi berat badan yang valid (30-200 kg)', 'error');
-                beratEl?.focus();
+                if (beratEl) beratEl.focus();
                 return;
             }
             
             if (!userData.tinggi || userData.tinggi < 100 || userData.tinggi > 250) {
                 showToast('Mohon isi tinggi badan yang valid (100-250 cm)', 'error');
-                tinggiEl?.focus();
+                if (tinggiEl) tinggiEl.focus();
                 return;
             }
             
             if (!userData.aktivitas) {
                 showToast('Mohon pilih level aktivitas', 'error');
-                aktivitasEl?.focus();
+                if (aktivitasEl) aktivitasEl.focus();
                 return;
             }
             
             if (!userData.target || userData.target < 30 || userData.target > 200) {
                 showToast('Mohon isi target berat yang valid', 'error');
-                targetEl?.focus();
+                if (targetEl) targetEl.focus();
                 return;
             }
 
             if (userData.target >= userData.berat) {
                 showToast('Target berat harus lebih rendah dari berat saat ini', 'error');
-                targetEl?.focus();
+                if (targetEl) targetEl.focus();
                 return;
             }
 
-            // Calculations
             userData.bmr = calculateBMR(userData.gender, userData.berat, userData.tinggi, userData.usia);
             userData.tdee = userData.bmr * userData.aktivitas;
             
-            const deficit = deficitMap[userData.metode] || 500;
+            var deficit = deficitMap[userData.metode] || 500;
             userData.dietCal = Math.max(1200, userData.tdee - deficit);
             
-            const weeklyLoss = (deficit * 7) / 7700;
+            var weeklyLoss = (deficit * 7) / 7700;
             userData.weeks = Math.ceil((userData.berat - userData.target) / weeklyLoss);
 
-            // Macros
-            const proteinMult = userData.metode === 'agresif' ? 2.2 : (userData.metode === 'ringan' ? 1.8 : 2.0);
+            var proteinMult = userData.metode === 'agresif' ? 2.2 : (userData.metode === 'ringan' ? 1.8 : 2.0);
             userData.protein = userData.berat * proteinMult;
             userData.lemak = userData.berat * 0.8;
             userData.karbo = (userData.dietCal - (userData.protein * 4) - (userData.lemak * 9)) / 4;
@@ -1887,18 +1903,19 @@
             showSection('programSection');
             
             setTimeout(function() {
-                document.getElementById('programSection')?.scrollIntoView({ behavior: 'smooth' });
+                var programSection = document.getElementById('programSection');
+                if (programSection) programSection.scrollIntoView({ behavior: 'smooth' });
             }, 100);
             
             showToast('Program diet berhasil dibuat!', 'success');
         }
 
         function updateCalculatorUI() {
-            const quickResults = document.getElementById('quickResults');
-            const previewCalories = document.getElementById('previewCalories');
-            const previewWeeks = document.getElementById('previewWeeks');
-            const heroWeeks = document.getElementById('heroWeeks');
-            const heroLoss = document.getElementById('heroLoss');
+            var quickResults = document.getElementById('quickResults');
+            var previewCalories = document.getElementById('previewCalories');
+            var previewWeeks = document.getElementById('previewWeeks');
+            var heroWeeks = document.getElementById('heroWeeks');
+            var heroLoss = document.getElementById('heroLoss');
             
             if (quickResults) quickResults.style.display = 'grid';
             if (previewCalories) previewCalories.textContent = Math.round(userData.dietCal);
@@ -1910,12 +1927,12 @@
         }
 
         function generateTimeline() {
-            const timeline = document.getElementById('dietTimeline');
+            var timeline = document.getElementById('dietTimeline');
             if (!timeline) return;
             
             timeline.innerHTML = '';
 
-            const phases = [
+            var phases = [
                 { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Mulai konsumsi 2x3 kapsul herbal sesudah makan (pagi & malam). Fokus pengurangan gula. Minimal 30 menit olahraga lymphatic/jalan kaki.' },
                 { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari. Lanjutkan olahraga lymphatic dan jalan kaki 30 menit/hari.' },
                 { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal. Jangan skip dosis pagi & malam. Minimal 30 menit aktivitas fisik.' },
@@ -1924,11 +1941,11 @@
             ];
 
             phases.forEach(function(phase, index) {
-                const isLast = index === phases.length - 1;
-                const dotClass = isLast ? 'active' : '';
-                const dotContent = isLast ? '✓' : phase.week;
+                var isLast = index === phases.length - 1;
+                var dotClass = isLast ? 'active' : '';
+                var dotContent = isLast ? '✓' : phase.week;
                 
-                const html = '<div class="timeline-item">' +
+                var html = '<div class="timeline-item">' +
                     '<div class="timeline-dot ' + dotClass + '">' + dotContent + '</div>' +
                     '<div class="timeline-content">' +
                     '<h4>' + phase.title + '</h4>' +
@@ -1938,15 +1955,13 @@
                 timeline.innerHTML += html;
             });
 
-            // Animate progress
             setTimeout(function() {
-                const circle = document.getElementById('progressCircle');
-                const percentEl = document.getElementById('progressPercent');
+                var circle = document.getElementById('progressCircle');
+                var percentEl = document.getElementById('progressPercent');
                 
                 if (circle && percentEl) {
-                    const radius = 88;
-                    const circumference = radius * 2 * Math.PI;
-                    const offset = circumference - (10/100) * circumference;
+                    var circumference = 88 * 2 * Math.PI;
+                    var offset = circumference - (10/100) * circumference;
                     circle.style.strokeDashoffset = offset;
                     percentEl.textContent = '10%';
                 }
@@ -1954,13 +1969,13 @@
         }
 
         function generateMealPlan() {
-            const container = document.getElementById('mealContainer');
-            const mealTargetCal = document.getElementById('mealTargetCal');
+            var container = document.getElementById('mealContainer');
+            var mealTargetCal = document.getElementById('mealTargetCal');
             
             if (!container) return;
             if (mealTargetCal) mealTargetCal.textContent = Math.round(userData.dietCal) + ' kcal';
             
-            const meals = [
+            var meals = [
                 { time: '07:00', title: 'Sarapan (25%)', cal: Math.round(userData.dietCal * 0.25), 
                   menu: '2 Telur rebus + 1 pisang + 3 kapsul herbal sesudah makan' },
                 { time: '10:00', title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), 
@@ -1973,7 +1988,7 @@
                   menu: 'Ikan kukus 150g + salad sayur + kentang rebus + 3 kapsul herbal sesudah makan' }
             ];
 
-            let html = '';
+            var html = '';
             meals.forEach(function(meal) {
                 html += '<div class="meal-card">' +
                     '<div class="meal-time-box">' +
@@ -1994,21 +2009,22 @@
         function showMealPlan() {
             showSection('mealSection');
             setTimeout(function() {
-                document.getElementById('mealSection')?.scrollIntoView({ behavior: 'smooth' });
+                var mealSection = document.getElementById('mealSection');
+                if (mealSection) mealSection.scrollIntoView({ behavior: 'smooth' });
             }, 100);
         }
 
         // ==================== WEEKLY EVALUATION ====================
         function hitungTurunBerat() {
-            const awalEl = document.getElementById('beratAwal');
-            const akhirEl = document.getElementById('beratAkhir');
-            const turunEl = document.getElementById('turunBerat');
+            var beratAwalEl = document.getElementById('beratAwal');
+            var beratAkhirEl = document.getElementById('beratAkhir');
+            var turunEl = document.getElementById('turunBerat');
             
             if (!turunEl) return;
             
-            const awal = parseFloat(awalEl?.value) || 0;
-            const akhir = parseFloat(akhirEl?.value) || 0;
-            const turun = awal - akhir;
+            var awal = beratAwalEl ? parseFloat(beratAwalEl.value) || 0 : 0;
+            var akhir = beratAkhirEl ? parseFloat(beratAkhirEl.value) || 0 : 0;
+            var turun = awal - akhir;
             
             turunEl.textContent = (turun >= 0 ? '-' : '+') + Math.abs(turun).toFixed(1) + ' kg';
             turunEl.className = 'weight-result-value' + (turun < 0 ? ' negative' : '');
@@ -2024,7 +2040,7 @@
 
         function updateKondisiUI() {
             Object.keys(kondisiTubuh).forEach(function(id) {
-                const checkbox = document.querySelector('[data-id="' + id + '"]');
+                var checkbox = document.querySelector('[data-id="' + id + '"]');
                 if (checkbox) {
                     if (kondisiTubuh[id]) {
                         checkbox.classList.add('checked');
@@ -2036,29 +2052,36 @@
         }
 
         function submitWeeklyEval() {
-            const beratAwalEl = document.getElementById('beratAwal');
-            const beratAkhirEl = document.getElementById('beratAkhir');
-            const kendalaEl = document.getElementById('kendalaText');
-            const submitBtn = document.getElementById('submitEvalBtn');
-            const submitBtnText = document.getElementById('submitBtnText');
+            var mingguEl = document.getElementById('mingguKe');
+            var beratAwalEl = document.getElementById('beratAwal');
+            var beratAkhirEl = document.getElementById('beratAkhir');
+            var kendalaEl = document.getElementById('kendalaText');
+            var submitBtn = document.getElementById('submitEvalBtn');
+            var submitBtnText = document.getElementById('submitBtnText');
             
-            const awal = beratAwalEl?.value?.trim();
-            const akhir = beratAkhirEl?.value?.trim();
-            const kendala = kendalaEl?.value?.trim() || '-';
+            var mingguKe = mingguEl ? mingguEl.value : '';
+            var awal = beratAwalEl ? beratAwalEl.value.trim() : '';
+            var akhir = beratAkhirEl ? beratAkhirEl.value.trim() : '';
+            var kendala = kendalaEl ? kendalaEl.value.trim() : '';
+            
+            if (!mingguKe) {
+                showToast('Mohon pilih minggu ke-', 'error');
+                if (mingguEl) mingguEl.focus();
+                return;
+            }
             
             if (!awal) {
                 showToast('Mohon isi berat awal minggu', 'error');
-                beratAwalEl?.focus();
+                if (beratAwalEl) beratAwalEl.focus();
                 return;
             }
             
             if (!akhir) {
                 showToast('Mohon isi berat akhir minggu', 'error');
-                beratAkhirEl?.focus();
+                if (beratAkhirEl) beratAkhirEl.focus();
                 return;
             }
             
-            // Show loading state
             if (submitBtn) {
                 submitBtn.classList.add('btn-loading');
             }
@@ -2066,70 +2089,60 @@
                 submitBtnText.innerHTML = '<span class="spinner" style="display: inline-block;"></span> Mengirim...';
             }
 
-            // Prepare data - format for Google Sheets
-            const formData = new FormData();
+            // Format kondisi tubuh sebagai string
+            var kondisiList = [];
+            if (kondisiTubuh.energi) kondisiList.push('Energi stabil');
+            if (kondisiTubuh.nafsu) kondisiList.push('Nafsu makan terkontrol');
+            if (kondisiTubuh.efek) kondisiList.push('Tidak ada efek samping');
+            if (kondisiTubuh.tidur) kondisiList.push('Tidur cukup');
+            var kondisiStr = kondisiList.length > 0 ? kondisiList.join(', ') : 'Tidak ada';
+
+            // Prepare data - SEMUA FIELD LENGKAP
+            var formData = new FormData();
+            formData.append('timestamp', new Date().toLocaleString('id-ID'));
             formData.append('nama', userData.nama || '-');
+            formData.append('noWa', userData.noWa || '-');
             formData.append('gender', userData.gender || '-');
             formData.append('usia', String(userData.usia || 0));
             formData.append('beratAwal', awal);
             formData.append('beratAkhir', akhir);
             formData.append('turun', (parseFloat(awal) - parseFloat(akhir)).toFixed(1));
-            formData.append('kondisi', Object.keys(kondisiTubuh).filter(function(k) { return kondisiTubuh[k]; }).join(', ') || '-');
-            formData.append('kendala', kendala);
-            formData.append('timestamp', new Date().toLocaleString('id-ID'));
+            formData.append('mingguKe', mingguKe);
+            formData.append('kondisi', kondisiStr);
+            formData.append('kendala', kendala || '-');
+            formData.append('targetKalori', String(Math.round(userData.dietCal) || 0));
 
-            // Send to Google Sheets
             fetch(GOOGLE_SHEET_URL, {
                 method: 'POST',
-                mode: 'cors',
+                mode: 'no-cors',
                 body: formData
             })
-            .then(function(response) {
-                if (response.ok) {
-                    return response.text();
-                }
-                throw new Error('Network response was not ok');
-            })
-            .then(function(data) {
-                showToast('Evaluasi mingguan berhasil dikirim ke admin!', 'success');
+            .then(function() {
+                showToast('Evaluasi mingguan berhasil dikirim!', 'success');
                 saveAllData();
-            })
-            .catch(function(error) {
-                console.error('Fetch error:', error);
-                // Try alternative method with no-cors
-                return fetch(GOOGLE_SHEET_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: formData
-                });
-            })
-            .then(function(response) {
-                if (response) {
-                    // With no-cors, we can't read response but request was sent
-                    showToast('Evaluasi mingguan berhasil dikirim ke admin!', 'success');
-                    saveAllData();
-                }
             })
             .catch(function(error) {
                 console.error('Error:', error);
                 // Save locally as backup
-                let pendingSubmissions = JSON.parse(localStorage.getItem('calfatloss_pending') || '[]');
+                var pendingSubmissions = JSON.parse(localStorage.getItem('calfatloss_pending') || '[]');
                 pendingSubmissions.push({
+                    timestamp: new Date().toLocaleString('id-ID'),
                     nama: userData.nama || '-',
+                    noWa: userData.noWa || '-',
                     gender: userData.gender || '-',
                     usia: userData.usia || 0,
                     beratAwal: awal,
                     beratAkhir: akhir,
                     turun: (parseFloat(awal) - parseFloat(akhir)).toFixed(1),
-                    kondisi: Object.keys(kondisiTubuh).filter(function(k) { return kondisiTubuh[k]; }).join(', ') || '-',
-                    kendala: kendala,
-                    timestamp: new Date().toLocaleString('id-ID')
+                    mingguKe: mingguKe,
+                    kondisi: kondisiStr,
+                    kendala: kendala || '-',
+                    targetKalori: Math.round(userData.dietCal) || 0
                 });
                 localStorage.setItem('calfatloss_pending', JSON.stringify(pendingSubmissions));
-                showToast('Data disimpan lokal. Akan dikirim saat koneksi tersedia.', 'warning');
+                showToast('Data disimpan lokal. Akan dikirim saat online.', 'warning');
             })
             .finally(function() {
-                // Reset button state
                 if (submitBtn) {
                     submitBtn.classList.remove('btn-loading');
                 }
@@ -2139,27 +2152,29 @@
             });
         }
 
-        // ==================== WHATSAPP BUTTON ====================
-        function handleWaClick(event) {
-            // Allow the link to work normally
-            // This function can be used for analytics tracking
-            console.log('WhatsApp consultation button clicked');
+        // ==================== WHATSAPP FUNCTION ====================
+        function openWhatsApp() {
+            var message = 'Halo, saya ingin konsultasi program diet CALFATLOSS';
+            var waUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(message);
             
-            // The link will open normally due to target="_blank"
-            return true;
+            // Try to open WhatsApp
+            window.open(waUrl, '_blank');
+            
+            // Fallback: try wa.me redirect
+            setTimeout(function() {
+                window.location.href = waUrl;
+            }, 100);
         }
 
         // ==================== TOAST NOTIFICATION ====================
         function showToast(message, type) {
-            const toast = document.getElementById('successToast');
-            const toastMessage = document.getElementById('toastMessage');
+            var toast = document.getElementById('successToast');
+            var toastMessage = document.getElementById('toastMessage');
             
             if (!toast || !toastMessage) return;
             
-            // Update message
             toastMessage.textContent = message;
             
-            // Update color based on type
             if (type === 'error') {
                 toast.style.background = '#EF4444';
             } else if (type === 'warning') {
@@ -2168,37 +2183,51 @@
                 toast.style.background = '#22C55E';
             }
             
-            // Show toast
             toast.classList.add('show');
             
-            // Hide after 3 seconds
             setTimeout(function() {
                 toast.classList.remove('show');
             }, 3000);
         }
 
         // ==================== AUTO-SAVE ====================
-        // Save on input changes
-        document.querySelectorAll('#inputNama, #inputGender, #inputUsia, #inputBerat, #inputTinggi, #inputAktivitas, #inputTarget, #inputMetode').forEach(function(el) {
+        document.querySelectorAll('#inputNama, #inputWa, #inputGender, #inputUsia, #inputBerat, #inputTinggi, #inputAktivitas, #inputTarget, #inputMetode').forEach(function(el) {
             if (el) {
                 el.addEventListener('change', function() {
-                    userData.nama = document.getElementById('inputNama')?.value?.trim() || '';
-                    userData.gender = document.getElementById('inputGender')?.value || '';
-                    userData.usia = parseFloat(document.getElementById('inputUsia')?.value) || 0;
-                    userData.berat = parseFloat(document.getElementById('inputBerat')?.value) || 0;
-                    userData.tinggi = parseFloat(document.getElementById('inputTinggi')?.value) || 0;
-                    userData.aktivitas = parseFloat(document.getElementById('inputAktivitas')?.value) || 0;
-                    userData.target = parseFloat(document.getElementById('inputTarget')?.value) || 0;
-                    userData.metode = document.getElementById('inputMetode')?.value || 'standar';
+                    var namaEl = document.getElementById('inputNama');
+                    var waEl = document.getElementById('inputWa');
+                    var genderEl = document.getElementById('inputGender');
+                    var usiaEl = document.getElementById('inputUsia');
+                    var beratEl = document.getElementById('inputBerat');
+                    var tinggiEl = document.getElementById('inputTinggi');
+                    var aktivitasEl = document.getElementById('inputAktivitas');
+                    var targetEl = document.getElementById('inputTarget');
+                    var metodeEl = document.getElementById('inputMetode');
+                    
+                    userData.nama = namaEl ? namaEl.value.trim() : '';
+                    userData.noWa = waEl ? waEl.value.trim() : '';
+                    userData.gender = genderEl ? genderEl.value : '';
+                    userData.usia = usiaEl ? parseFloat(usiaEl.value) || 0 : 0;
+                    userData.berat = beratEl ? parseFloat(beratEl.value) || 0 : 0;
+                    userData.tinggi = tinggiEl ? parseFloat(tinggiEl.value) || 0 : 0;
+                    userData.aktivitas = aktivitasEl ? parseFloat(aktivitasEl.value) || 0 : 0;
+                    userData.target = targetEl ? parseFloat(targetEl.value) || 0 : 0;
+                    userData.metode = metodeEl ? metodeEl.value : 'standar';
                     saveAllData();
                 });
             }
         });
 
-        // Save kendala text on change
-        document.getElementById('kendalaText')?.addEventListener('change', saveAllData);
+        var kendalaTextEl = document.getElementById('kendalaText');
+        if (kendalaTextEl) {
+            kendalaTextEl.addEventListener('change', saveAllData);
+        }
 
-        // Save on page hide/close
+        var mingguKeEl = document.getElementById('mingguKe');
+        if (mingguKeEl) {
+            mingguKeEl.addEventListener('change', saveAllData);
+        }
+
         window.addEventListener('beforeunload', saveAllData);
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'hidden') {
