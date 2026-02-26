@@ -1385,17 +1385,23 @@
         ];
 
         // Check if code exists in URL or localStorage
-        window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const codeFromUrl = urlParams.get('code');
-            const savedCode = localStorage.getItem('calfatloss_code');
-            
-            if (codeFromUrl || savedCode) {
-                const code = codeFromUrl || savedCode;
-                verifyCode(code);
-            }
-        });
+        window.addEventListener("load", function() {
 
+            const isLogin =
+        localStorage.getItem("session_login");
+            const wa = localStorage.getItem("session_wa");
+            const kode = localStorage.getItem("session_kode");
+
+            if (!isLogin || !wa || !kode) {
+                window.location.href = "/log-aktivitas/";
+                return;
+            }
+  
+            // set currentCode dari session
+            currentCode = kode;
+
+        });
+            
         function generateNewCode() {
             const random = Math.random().toString(36).substring(2, 6).toUpperCase();
             const code = `CONS-${random}`;
@@ -1411,7 +1417,6 @@
             }
 
             currentCode = code;
-            localStorage.setItem('calfatloss_code', code);
             
             // Hide code section, show main app
             document.getElementById('codeSection').style.display = 'none';
