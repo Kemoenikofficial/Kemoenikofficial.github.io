@@ -10,61 +10,51 @@
 body{
     margin:0;
     font-family:'Segoe UI',sans-serif;
-    background:#e9e4d8;
+    background:#ece7dc;
+    overflow:hidden;
 }
 
 /* HEADER */
 .header{
+    height:70px;
     background:#f5f1e8;
-    border-bottom:2px solid #d6cbb3;
-    padding:15px 30px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-}
-
-.logo-area{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.logo-area img{
-    height:45px;
+    padding:0 30px;
+    border-bottom:2px solid #d6cbb3;
 }
 
 .header h1{
-    font-size:22px;
+    font-size:20px;
     color:#2f4f2f;
-    margin:0;
 }
 
-/* LAYOUT */
-.container{
-    display:flex;
-    padding:20px;
+.logo{
+    height:45px;
+}
+
+/* MAIN LAYOUT */
+.wrapper{
+    height:calc(100vh - 70px);
+    display:grid;
+    grid-template-columns:220px 1fr 280px;
     gap:20px;
+    padding:20px;
 }
 
 /* SIDEBAR */
 .sidebar{
-    width:230px;
-    background:#f3efe6;
-    border-radius:12px;
+    background:#f5f1e8;
+    border-radius:14px;
     padding:20px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    box-shadow:0 6px 20px rgba(0,0,0,0.05);
 }
 
-.sidebar h3{
-    margin-top:0;
-    color:#2f4f2f;
-}
-
-.sidebar select,
-.sidebar button{
+.sidebar select, .sidebar button{
     width:100%;
     padding:8px;
-    margin:8px 0;
+    margin:10px 0;
     border-radius:6px;
     border:1px solid #ccc;
 }
@@ -73,28 +63,24 @@ body{
     background:#2f4f2f;
     color:white;
     border:none;
-    cursor:pointer;
 }
 
-/* MAIN */
-.main{
-    flex:1;
+/* CENTER AREA */
+.center{
     display:grid;
-    grid-template-columns:2fr 1fr;
+    grid-template-rows:1fr 1fr;
     gap:20px;
 }
 
 /* CARD */
 .card{
     background:#fdfbf6;
-    border-radius:12px;
+    border-radius:14px;
     padding:20px;
-    box-shadow:0 5px 25px rgba(0,0,0,0.08);
-}
-
-.card h3{
-    margin-top:0;
-    color:#2f4f2f;
+    box-shadow:0 6px 25px rgba(0,0,0,0.06);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
 }
 
 /* RIGHT STATS */
@@ -104,175 +90,131 @@ body{
     gap:20px;
 }
 
-.stat-box{
+.stat{
+    background:#fdfbf6;
+    padding:18px;
+    border-radius:14px;
+    box-shadow:0 6px 25px rgba(0,0,0,0.06);
+}
+
+.stat.total{
     background:#2f4f2f;
     color:white;
-    border-radius:12px;
-    padding:20px;
 }
 
-.stat-box.small{
-    background:#f3efe6;
-    color:#2f4f2f;
-    border:1px solid #ddd;
-}
-
-.stat-box h4{
+.stat h4{
     margin:0;
-    font-weight:400;
-}
-
-.stat-box h2{
-    margin:10px 0 0 0;
-    font-size:32px;
-}
-
-/* GRID BOTTOM */
-.bottom{
-    grid-column:1 / span 2;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-}
-
-/* TABLE */
-table{
-    width:100%;
-    border-collapse:collapse;
     font-size:14px;
 }
 
-th,td{
-    padding:10px;
-    border-bottom:1px solid #eee;
+.stat h2{
+    margin:10px 0;
+    font-size:30px;
 }
 
-th{
-    text-align:left;
-    background:#f3efe6;
+.progress{
+    height:8px;
+    border-radius:4px;
+    background:#ddd;
+    overflow:hidden;
 }
 
-/* FOOTER NAV */
-.footer-nav{
-    margin-top:20px;
-    padding:10px 30px;
-    background:#f5f1e8;
-    border-top:1px solid #ddd;
-    display:flex;
-    gap:20px;
+.progress div{
+    height:100%;
 }
-.footer-nav span{
-    cursor:pointer;
-    color:#2f4f2f;
-}
-.footer-nav span.active{
-    font-weight:bold;
-}
+
+.used{background:#2f4f2f;}
+.available{background:#c9a227;}
+.expired{background:#a94442;}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-    <div class="logo-area">
-        <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg">
+    <div style="display:flex;align-items:center;gap:15px;">
+        <img class="logo" src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg">
         <h1>DASHBOARD VOUCHER - CALFATLOSS</h1>
     </div>
-    <div>
-        Periode:
-        <select>
-            <option>Semua Waktu</option>
-        </select>
-    </div>
+    <div>Periode: Semua Waktu</div>
 </div>
 
-<div class="container">
+<div class="wrapper">
 
     <!-- SIDEBAR -->
     <div class="sidebar">
         <h3>Filter</h3>
         <select><option>Tahun</option></select>
         <select><option>Bulan</option></select>
-        <select><option>Semua Status</option></select>
+        <select><option>Status</option></select>
         <button>Terapkan</button>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
+    <!-- CENTER -->
+    <div class="center">
 
-        <!-- TREND -->
         <div class="card">
             <h3>Trend Penggunaan Voucher</h3>
             <canvas id="trendChart"></canvas>
         </div>
 
-        <!-- STATS -->
-        <div class="stats">
-            <div class="stat-box">
-                <h4>Total Voucher</h4>
-                <h2>120</h2>
-            </div>
+        <div class="card">
+            <h3>Distribusi Status</h3>
+            <canvas id="pieChart"></canvas>
+        </div>
 
-            <div class="stat-box small">
-                <h4>Sudah Digunakan</h4>
-                <h2>87</h2>
-            </div>
+    </div>
 
-            <div class="stat-box small">
-                <h4>Belum Digunakan</h4>
-                <h2>25</h2>
-            </div>
+    <!-- RIGHT -->
+    <div class="stats">
 
-            <div class="stat-box small">
-                <h4>Expired</h4>
-                <h2>8</h2>
+        <div class="stat total">
+            <h4>Total Voucher</h4>
+            <h2>120</h2>
+        </div>
+
+        <div class="stat">
+            <h4>Sudah Digunakan</h4>
+            <h2>87</h2>
+            <div class="progress">
+                <div class="used" style="width:72%"></div>
             </div>
         </div>
 
-        <!-- BOTTOM -->
-        <div class="bottom">
-
-            <div class="card">
-                <h3>Distribusi Status</h3>
-                <canvas id="pieChart"></canvas>
+        <div class="stat">
+            <h4>Belum Digunakan</h4>
+            <h2>25</h2>
+            <div class="progress">
+                <div class="available" style="width:21%"></div>
             </div>
+        </div>
 
-            <div class="card">
-                <h3>Top Voucher Terakhir Digunakan</h3>
-                <table>
-                    <tr><th>Kode</th><th>Nama</th><th>No WA</th></tr>
-                    <tr><td>KMK-087</td><td>Budi</td><td>08xxxx</td></tr>
-                    <tr><td>KMK-078</td><td>Alni</td><td>08xxxx</td></tr>
-                </table>
+        <div class="stat">
+            <h4>Expired</h4>
+            <h2>8</h2>
+            <div class="progress">
+                <div class="expired" style="width:7%"></div>
             </div>
-
         </div>
 
     </div>
 
 </div>
 
-<div class="footer-nav">
-    <span>RAW DATA</span>
-    <span>TRACKING</span>
-    <span class="active">DASHBOARD</span>
-</div>
-
 <script>
-const ctx = document.getElementById('trendChart').getContext('2d');
-new Chart(ctx,{
+new Chart(document.getElementById('trendChart'),{
     type:'line',
     data:{
         labels:['2 Apr','9 Apr','11 Apr','13 Apr','17 Apr','22 Apr','29 Apr'],
         datasets:[{
-            label:'Voucher Used',
             data:[3,4,8,5,4,15,8],
             borderColor:'#2f4f2f',
-            backgroundColor:'rgba(47,79,47,0.1)',
-            tension:0.4,
-            fill:true
+            backgroundColor:'rgba(47,79,47,0.15)',
+            fill:true,
+            tension:0.4
         }]
-    }
+    },
+    options:{plugins:{legend:{display:false}}}
 });
 
 new Chart(document.getElementById('pieChart'),{
@@ -281,7 +223,7 @@ new Chart(document.getElementById('pieChart'),{
         labels:['Used','Available','Expired'],
         datasets:[{
             data:[87,25,8],
-            backgroundColor:['#2f4f2f','#c9a227','#8b3a3a']
+            backgroundColor:['#2f4f2f','#c9a227','#a94442']
         }]
     }
 });
