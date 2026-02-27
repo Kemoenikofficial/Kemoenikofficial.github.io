@@ -79,10 +79,6 @@
             50% { transform: translateY(-10px); }
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .animate-fade-in {
             animation: fadeInUp 0.6s ease forwards;
         }
@@ -90,29 +86,6 @@
         .delay-100 { animation-delay: 0.1s; opacity: 0; }
         .delay-200 { animation-delay: 0.2s; opacity: 0; }
         .delay-300 { animation-delay: 0.3s; opacity: 0; }
-
-        /* Loading Screen */
-        #loadingScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-cream);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--bg-light);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
 
         .hero-section {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
@@ -175,7 +148,6 @@
             justify-content: center;
             gap: 40px;
             margin-top: 32px;
-            flex-wrap: wrap;
         }
 
         .hero-stat {
@@ -239,7 +211,6 @@
             justify-content: center;
             color: white;
             font-size: 18px;
-            box-shadow: 0 4px 10px rgba(45,90,61,0.2);
         }
 
         .card-body {
@@ -298,7 +269,7 @@
             background-position: right 14px center;
             cursor: pointer;
         }
-        
+
         .activity-desc {
             font-size: 11px;
             color: var(--text-muted);
@@ -401,7 +372,6 @@
             font-size: 11px;
             font-weight: 700;
             color: var(--primary);
-            transition: all 0.3s ease;
         }
 
         .timeline-dot.active {
@@ -683,7 +653,7 @@
             stroke: url(#gradient);
             stroke-width: 12;
             stroke-linecap: round;
-            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: stroke-dashoffset 1s ease;
         }
 
         .progress-content {
@@ -721,7 +691,6 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            text-decoration: none;
         }
 
         .btn-primary {
@@ -739,17 +708,13 @@
             background: linear-gradient(135deg, var(--accent-gold) 0%, #B8941F 100%);
             color: white;
             box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+            animation: pulse-gold 2s infinite;
         }
 
         .btn-outline {
             background: white;
             border: 2px solid var(--primary);
             color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
         }
 
         .tips-grid {
@@ -853,28 +818,6 @@
             animation: fadeInUp 0.5s ease;
         }
 
-        .eval-section {
-            margin-top: 24px;
-        }
-
-        .eval-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .eval-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .eval-date {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
         /* Weekly Evaluation Styles */
         .weekly-eval-form {
             background: var(--bg-light);
@@ -964,7 +907,6 @@
             font-size: 13px;
             resize: vertical;
             min-height: 80px;
-            background: white;
         }
 
         .obstacle-textarea:focus {
@@ -1023,8 +965,48 @@
             font-weight: 700;
         }
 
+        /* Access Denied / Redirect Message */
+        .access-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .access-content {
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .access-icon {
+            font-size: 64px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .access-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .access-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
         @media print {
             .no-print { display: none !important; }
+            .print-only { display: block !important; }
             body { background: white; }
             .glass-card { box-shadow: none; border: 1px solid #ddd; }
         }
@@ -1033,18 +1015,46 @@
             .hero-title { font-size: 48px; }
             .main-container { padding: 0 40px 60px; }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Loading Screen (Verification) -->
-    <div id="loadingScreen">
-        <div class="loader"></div>
-        <p style="margin-top: 20px; color: var(--primary); font-weight: 600;">Memverifikasi Akses...</p>
+    <!-- Access Check Layer -->
+    <div id="accessCheck" style="display: none;">
+        <div class="access-message">
+            <div class="access-content">
+                <div class="access-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2 class="access-title">Memeriksa Akses...</h2>
+                <p class="access-desc">Mohon tunggu sebentar</p>
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-700 mx-auto"></div>
+            </div>
+        </div>
     </div>
 
-    <!-- Main App (Hidden until verified) -->
-    <div id="mainApp" style="display: none;">
+    <!-- Access Denied Layer -->
+    <div id="accessDenied" style="display: none;">
+        <div class="access-message">
+            <div class="access-content">
+                <div class="access-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <h2 class="access-title">Akses Ditolak</h2>
+                <p class="access-desc">Anda perlu verifikasi kode konsultasi terlebih dahulu di halaman Log Aktivitas.</p>
+                <button onclick="goToLogin()" class="btn btn-primary mt-4" style="width: auto; padding: 12px 24px;">
+                    Ke Halaman Verifikasi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (Hidden until code verified) -->
+    <div id="mainApp" class="section-hidden">
         
         <!-- Hero Section -->
         <section class="hero-section">
@@ -1059,11 +1069,11 @@
                 
                 <div class="hero-stats">
                     <div class="hero-stat">
-                        <div class="hero-stat-value" id="heroWeeks">-</div>
+                        <div class="hero-stat-value" id="heroWeeks">12</div>
                         <div class="hero-stat-label">Minggu Program</div>
                     </div>
                     <div class="hero-stat">
-                        <div class="hero-stat-value" id="heroLoss">-</div>
+                        <div class="hero-stat-value" id="heroLoss">0.5-1</div>
                         <div class="hero-stat-label">Kg/Minggu</div>
                     </div>
                     <div class="hero-stat">
@@ -1135,11 +1145,11 @@
                             <label class="form-label">Aktivitas Harian</label>
                             <select id="inputAktivitas" class="form-input">
                                 <option value="">Pilih Level</option>
-                                <option value="1.2">Sedentari (Jarang Bergerak)</option>
-                                <option value="1.375">Ringan (1-2x Olahraga/Minggu)</option>
-                                <option value="1.55">Sedang (3-5x Olahraga/Minggu)</option>
-                                <option value="1.725">Berat (6-7x Olahraga/Minggu)</option>
-                                <option value="1.9">Sangat Berat (Pekerja Fisik/Atlet)</option>
+                                <option value="1.2">Sedentari (Jarang Bergerak) - 1.2</option>
+                                <option value="1.375">Ringan (1-2x Olahraga/Minggu) - 1.375</option>
+                                <option value="1.55">Sedang (3-5x Olahraga/Minggu) - 1.55</option>
+                                <option value="1.725">Berat (6-7x Olahraga/Minggu) - 1.725</option>
+                                <option value="1.9">Sangat Berat (Pekerja Fisik/Atlet) - 1.9</option>
                             </select>
                             <p class="activity-desc" id="activityDesc">Pilih level aktivitas untuk melihat keterangan</p>
                         </div>
@@ -1332,14 +1342,14 @@
                         </div>
                     </div>
 
-                    <!-- Weekly Evaluation Section -->
+                    <!-- Weekly Evaluation Section (Replaced Daily) -->
                     <div class="eval-section" id="weeklyEvalSection">
-                        <div class="eval-header">
+                        <div class="flex items-center justify-between mb-4">
                             <div class="eval-title">
                                 <i class="fas fa-clipboard-check mr-2 text-green-600"></i>
                                 Evaluasi Mingguan
                             </div>
-                            <div class="eval-date" id="evalWeekDisplay">Minggu ke-</div>
+                            <div class="text-sm text-gray-500" id="evalWeekDisplay">Minggu ke-1</div>
                         </div>
 
                         <div class="weekly-eval-form">
@@ -1444,7 +1454,7 @@
                 </div>
             </div>
 
-            <!-- Consultation Info -->
+            <!-- Consultation Info (Replaced CTA) -->
             <div class="consultation-card animate-fade-in delay-300 no-print">
                 <div class="consultation-badge">Gratis Konsultasi</div>
                 <h3 class="consultation-title font-display">Butuh Pendampingan?</h3>
@@ -1468,46 +1478,43 @@
     </div>
 
     <script>
-        // ==================================================
-        // LOGIKA AKSES & VERIFIKASI KODE
-        // ==================================================
-        const LOGIN_URL = '/log-aktivitas.html'; 
-        let currentCode = null;
-
-        function checkAccess() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const codeFromUrl = urlParams.get('kode');
-            const codeFromSession = sessionStorage.getItem('calfatloss_active_code');
-
-            if (codeFromUrl) {
-                currentCode = codeFromUrl.toUpperCase();
-                sessionStorage.setItem('calfatloss_active_code', currentCode);
-                initializeApp();
-            } else if (codeFromSession) {
-                currentCode = codeFromSession;
-                initializeApp();
-            } else {
-                // Jika tidak ada kode, redirect ke halaman login
-                window.location.href = LOGIN_URL;
-            }
-        }
-
-        // Jalankan pengecekan akses segera
-        checkAccess();
-
-        // ==================================================
-        // DATA & STATE MANAGEMENT
-        // ==================================================
-        
+        // Global Variables
+        let currentCode = '';
         let userData = {
-            nama: '', gender: '', usia: 0, berat: 0, tinggi: 0, aktivitas: 0, target: 0, metode: 'standar',
-            bmr: 0, tdee: 0, dietCal: 0, weeks: 0, targetDate: '', protein: 0, lemak: 0, karbo: 0
+            nama: '',
+            gender: '',
+            usia: 0,
+            berat: 0,
+            tinggi: 0,
+            aktivitas: 0,
+            target: 0,
+            metode: 'standar',
+            bmr: 0,
+            tdee: 0,
+            dietCal: 0,
+            weeks: 0,
+            targetDate: '',
+            protein: 0,
+            lemak: 0,
+            karbo: 0
         };
 
-        let weeklyConditions = { energi: false, nafsu: false, efek: false, tidur: false };
+        let weeklyConditions = {
+            energi: false,
+            nafsu: false,
+            efek: false,
+            tidur: false
+        };
+
         let weeklyHistory = [];
 
-        const deficitMap = { 'ringan': 300, 'standar': 500, 'agresif': 700 };
+        // Constants
+        const deficitMap = {
+            'ringan': 300,
+            'standar': 500,
+            'agresif': 700
+        };
+
         const activityDescriptions = {
             '1.2': 'Hampir tidak berolahraga, pekerjaan kantoran',
             '1.375': 'Olahraga ringan 1-2x per minggu',
@@ -1516,10 +1523,65 @@
             '1.9': 'Pekerja fisik atau atlet profesional'
         };
 
+        // ACCESS CONTROL - Check code on load
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const codeFromUrl = urlParams.get('kode'); // Changed from 'code' to 'kode' to match login page
+            
+            if (!codeFromUrl) {
+                // No code in URL - show access denied
+                showAccessDenied();
+                return;
+            }
+            
+            // Code exists in URL - validate and initialize
+            currentCode = codeFromUrl.toUpperCase();
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('calfatloss_code', currentCode);
+            
+            // Create session
+            createSession(currentCode);
+            
+            // Initialize app
+            initializeApp();
+        });
+
+        function showAccessDenied() {
+            document.getElementById('accessCheck').style.display = 'none';
+            document.getElementById('accessDenied').style.display = 'block';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function goToLogin() {
+            // Redirect to login/verification page
+            window.location.href = 'index.html'; // atau nama file halaman log aktivitas Anda
+        }
+
+        function createSession(code) {
+            // Simulate session creation
+            const session = {
+                code: code,
+                createdAt: new Date().toISOString(),
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
+            };
+            localStorage.setItem(`calfatloss_session_${code}`, JSON.stringify(session));
+        }
+
         function initializeApp() {
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('accessCheck').style.display = 'none';
+            document.getElementById('accessDenied').style.display = 'none';
+            document.getElementById('mainApp').classList.remove('section-hidden');
+            document.getElementById('mainApp').classList.add('section-visible');
             document.getElementById('userCodeDisplay').textContent = `Kode: ${currentCode}`;
+            
+            // Setup activity description listener
+            document.getElementById('inputAktivitas')?.addEventListener('change', function() {
+                const desc = activityDescriptions[this.value] || 'Pilih level aktivitas untuk melihat keterangan';
+                document.getElementById('activityDesc').textContent = desc;
+            });
+            
+            // Load user data for this specific code
             loadUserData();
         }
 
@@ -1531,6 +1593,7 @@
                 const data = JSON.parse(saved);
                 userData = data;
                 
+                // Fill inputs
                 if (data.nama) document.getElementById('inputNama').value = data.nama;
                 if (data.gender) document.getElementById('inputGender').value = data.gender;
                 if (data.usia) document.getElementById('inputUsia').value = data.usia;
@@ -1543,11 +1606,13 @@
                 if (data.target) document.getElementById('inputTarget').value = data.target;
                 if (data.metode) document.getElementById('inputMetode').value = data.metode;
                 
-                if (data.nama && data.gender && data.dietCal > 0) {
-                    calculateAndShowProgram(false); // false = don't scroll
+                // If data complete, show program without scrolling
+                if (data.nama && data.gender) {
+                    calculateAndShowProgram(false);
                 }
             }
             
+            // Load weekly history
             if (savedWeekly) {
                 weeklyHistory = JSON.parse(savedWeekly);
                 renderWeeklyHistory();
@@ -1590,6 +1655,7 @@
                 return;
             }
 
+            // Calculations
             userData.bmr = calculateBMR(userData.gender, userData.berat, userData.tinggi, userData.usia);
             userData.tdee = userData.bmr * userData.aktivitas;
             
@@ -1599,6 +1665,7 @@
             const weeklyLoss = (deficit * 7) / 7700;
             userData.weeks = Math.ceil((userData.berat - userData.target) / weeklyLoss);
 
+            // Calculate target date
             const today = new Date();
             const targetDate = new Date(today);
             targetDate.setDate(today.getDate() + (userData.weeks * 7));
@@ -1609,6 +1676,7 @@
                 day: 'numeric' 
             });
 
+            // Macros
             const proteinMult = userData.metode === 'agresif' ? 2.2 : (userData.metode === 'ringan' ? 1.8 : 2.0);
             userData.protein = userData.berat * proteinMult;
             userData.lemak = userData.berat * 0.8;
@@ -1637,6 +1705,7 @@
             document.getElementById('heroWeeks').textContent = userData.weeks;
             document.getElementById('heroLoss').textContent = userData.metode === 'agresif' ? '0.7-1' : (userData.metode === 'ringan' ? '0.3-0.5' : '0.5-0.7');
 
+            // Show date estimate
             document.getElementById('dateEstimate').style.display = 'block';
             document.getElementById('targetDateDisplay').textContent = userData.targetDate;
         }
@@ -1657,14 +1726,16 @@
                 const isLast = index === phases.length - 1;
                 const dotClass = isLast ? 'active' : '';
                 
-                timeline.innerHTML += `
+                const html = `
                     <div class="timeline-item">
                         <div class="timeline-dot ${dotClass}">${isLast ? '<i class="fas fa-flag"></i>' : phase.week}</div>
                         <div class="timeline-content">
                             <h4>${phase.title}</h4>
                             <p>${phase.desc}</p>
                         </div>
-                    </div>`;
+                    </div>
+                `;
+                timeline.innerHTML += html;
             });
 
             setTimeout(() => {
@@ -1713,6 +1784,7 @@
             document.getElementById('mealSection').classList.remove('section-hidden');
             document.getElementById('mealSection').classList.add('section-visible');
             
+            // Set current week
             const currentWeek = weeklyHistory.length + 1;
             document.getElementById('evalWeekDisplay').textContent = `Minggu ke-${currentWeek}`;
             
@@ -1762,6 +1834,7 @@
             saveWeeklyData();
             renderWeeklyHistory();
             
+            // Reset form
             document.getElementById('weekStartWeight').value = '';
             document.getElementById('weekEndWeight').value = '';
             document.getElementById('weeklyObstacle').value = '';
@@ -1769,6 +1842,7 @@
             weeklyConditions = { energi: false, nafsu: false, efek: false, tidur: false };
             document.getElementById('weeklyResult').style.display = 'none';
             
+            // Update week display
             document.getElementById('evalWeekDisplay').textContent = `Minggu ke-${weeklyHistory.length + 1}`;
             
             alert('Evaluasi mingguan berhasil disimpan!');
@@ -1825,12 +1899,6 @@
                     saveUserData();
                 }
             });
-        });
-
-        // Activity Description Listener
-        document.getElementById('inputAktivitas')?.addEventListener('change', function() {
-            const desc = activityDescriptions[this.value] || 'Pilih level aktivitas untuk melihat keterangan';
-            document.getElementById('activityDesc').textContent = desc;
         });
     </script>
 </body>
