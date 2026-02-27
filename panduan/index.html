@@ -30,220 +30,1160 @@
             --radius-sm: 12px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg-cream); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
-        .font-display { font-family: 'Playfair Display', serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-light); }
-        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); } }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        @keyframes countUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-        .animate-fade-in { animation: fadeInUp 0.6s ease forwards; }
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
         .delay-100 { animation-delay: 0.1s; opacity: 0; }
         .delay-200 { animation-delay: 0.2s; opacity: 0; }
         .delay-300 { animation-delay: 0.3s; opacity: 0; }
 
-        /* HERO SECTION */
         .hero-section {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            position: relative; overflow: hidden; padding: 60px 24px 80px;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 24px 80px;
         }
+
         .hero-pattern {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.05;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.05;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-        .hero-content { position: relative; z-index: 2; max-width: 600px; margin: 0 auto; text-align: center; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 50px; color: var(--accent-gold-light); font-size: 12px; font-weight: 500; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2); }
-        .hero-title { font-size: 36px; font-weight: 700; color: white; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px; }
-        .hero-subtitle { font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 300; margin-bottom: 32px; }
-        .hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 32px; }
-        .hero-stat { text-align: center; }
-        .hero-stat-value { font-size: 28px; font-weight: 700; color: var(--accent-gold); }
-        .hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CONTAINER & CARDS */
-        .main-container { max-width: 800px; margin: -40px auto 0; padding: 0 20px 60px; position: relative; z-index: 10; }
-        .glass-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.04); transition: transform 0.3s ease; }
-        .glass-card:hover { transform: translateY(-2px); }
-        .card-header { padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(to right, rgba(45,90,61,0.02), transparent); }
-        .card-title { font-size: 16px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 12px; }
-        .card-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; box-shadow: 0 4px 10px rgba(45,90,61,0.2); }
-        .card-body { padding: 24px; }
-
-        /* FORMS */
-        .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media (max-width: 640px) { .calc-grid { grid-template-columns: 1fr; } }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .form-input { width: 100%; padding: 14px 16px; font-size: 15px; font-family: 'Poppins', sans-serif; background: var(--bg-light); border: 2px solid transparent; border-radius: var(--radius-sm); color: var(--text-dark); transition: all 0.3s ease; }
-        .form-input:focus { outline: none; background: white; border-color: var(--primary-light); box-shadow: 0 0 0 4px rgba(45, 90, 61, 0.1); }
-        select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
-
-        /* RESULTS DASHBOARD */
-        .results-dashboard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
-        @media(min-width: 640px) { .results-dashboard { grid-template-columns: repeat(4, 1fr); } }
-        .result-card { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: var(--radius-sm); padding: 20px; color: white; text-align: center; position: relative; overflow: hidden; }
-        .result-card::before { content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); }
-        .result-card.accent { background: linear-gradient(135deg, var(--accent-gold) 0%, #B8941F 100%); }
-        .result-label { font-size: 11px; font-weight: 500; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .result-value { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
-        .result-unit { font-size: 12px; opacity: 0.8; }
-
-        /* MACRO NUTRIENTS BAR */
-        .macro-section { margin-top: 20px; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.08); }
-        .macro-title { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; }
-        .macro-bar-container { display: flex; height: 24px; border-radius: 12px; overflow: hidden; background: #eee; margin-bottom: 8px; }
-        .macro-segment { display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 600; transition: width 1s ease; }
-        .macro-legend { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
-
-        /* TIMELINE */
-        .timeline { position: relative; padding-left: 32px; }
-        .timeline::before { content: ''; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--primary), var(--accent-gold)); }
-        .timeline-item { position: relative; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed rgba(0,0,0,0.1); }
-        .timeline-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .timeline-dot { position: absolute; left: -32px; top: 4px; width: 24px; height: 24px; background: white; border: 3px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--primary); transition: all 0.3s ease; }
-        .timeline-dot.active { background: var(--primary); color: white; animation: pulse-gold 2s infinite; }
-        .timeline-dot.completed { background: var(--success); border-color: var(--success); color: white; }
-        .timeline-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
-        .timeline-content p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-
-        /* HERBAL CARD */
-        .herbal-card { background: linear-gradient(135deg, #F0F7F2 0%, #E8F5E9 100%); border: 1px solid #C8E6C9; border-radius: var(--radius-sm); padding: 20px; margin-top: 16px; }
-        .herbal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .herbal-icon-box { width: 48px; height: 48px; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); font-size: 20px; color: var(--primary); }
-        .herbal-title { font-size: 16px; font-weight: 600; color: var(--primary-dark); }
-        .herbal-subtitle { font-size: 12px; color: var(--text-muted); }
-        .herbal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
-        @media (min-width: 768px) { .herbal-grid { grid-template-columns: repeat(5, 1fr); } }
-        .herbal-item { background: white; padding: 12px; border-radius: 10px; text-align: center; box-shadow: var(--shadow-sm); transition: transform 0.3s ease; }
-        .herbal-item:hover { transform: translateY(-2px); }
-        .herbal-item-icon { width: 32px; height: 32px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .herbal-item-name { font-size: 12px; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
-        .herbal-item-dose { font-size: 11px; color: var(--text-muted); }
-
-        .dosage-box { background: white; border-radius: 10px; padding: 16px; border-left: 4px solid var(--accent-gold); }
-        .dosage-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); }
-        .dosage-schedule { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .dosage-schedule:last-child { border-bottom: none; }
-        .dosage-time { font-size: 13px; font-weight: 600; color: var(--primary); }
-        .dosage-amount { font-size: 12px; color: var(--text-muted); text-align: right; }
-        .dosage-note { margin-top: 12px; padding: 10px; background: var(--bg-light); border-radius: 8px; font-size: 11px; color: var(--text-muted); font-style: italic; }
-
-        /* MEAL PLAN */
-        .meal-grid { display: grid; gap: 16px; }
-        .meal-card { background: var(--bg-light); border-radius: var(--radius-sm); padding: 16px; display: flex; gap: 16px; align-items: center; transition: all 0.3s ease; }
-        .meal-card:hover { transform: translateX(4px); background: white; box-shadow: var(--shadow-md); }
-        .meal-time-box { width: 70px; height: 70px; background: white; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); flex-shrink: 0; border: 2px solid var(--primary); }
-        .meal-time-label { font-size: 11px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
-        .meal-time-value { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-top: 2px; }
-        .meal-content { flex: 1; }
-        .meal-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-        .meal-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-        .meal-cal { font-size: 13px; font-weight: 600; color: var(--primary); white-space: nowrap; }
-        .meal-alternative { margin-top: 16px; padding: 16px; background: #FEF3C7; border-radius: var(--radius-sm); border-left: 4px solid var(--accent-gold); }
-        .meal-alternative-title { font-size: 13px; font-weight: 600; color: #92400E; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .meal-alternative-text { font-size: 12px; color: #78350F; line-height: 1.6; }
-
-        /* PROGRESS RING */
-        .progress-ring { position: relative; width: 200px; height: 200px; margin: 0 auto 24px; }
-        .progress-ring svg { transform: rotate(-90deg); }
-        .progress-ring-bg { fill: none; stroke: var(--bg-light); stroke-width: 12; }
-        .progress-ring-fill { fill: none; stroke: url(#gradient); stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .progress-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-        .progress-percent { font-size: 48px; font-weight: 700; color: var(--primary); line-height: 1; }
-        .progress-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-
-        /* BUTTONS */
-        .btn { width: 100%; padding: 16px 24px; border: none; border-radius: var(--radius-sm); font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; box-shadow: 0 4px 16px rgba(45, 90, 61, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45, 90, 61, 0.4); }
-        .btn-gold { background: linear-gradient(135deg, var(--accent-gold) 0%, #B8941F 100%); color: white; box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3); animation: pulse-gold 2s infinite; }
-        .btn-outline { background: white; border: 2px solid var(--primary); color: var(--primary); }
-
-        /* TIPS */
-        .tips-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        @media (min-width: 768px) { .tips-grid { grid-template-columns: repeat(4, 1fr); } }
-        .tip-card { background: white; border-radius: var(--radius-sm); padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.04); }
-        .tip-icon { width: 36px; height: 36px; background: var(--bg-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 16px; }
-        .tip-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-        .tip-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
-
-        /* CONSULTATION CTA */
-        .consultation-card { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); border-radius: var(--radius); padding: 32px 24px; text-align: center; color: white; position: relative; overflow: hidden; }
-        .consultation-card::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%); animation: float 6s ease-in-out infinite; }
-        .consultation-badge { display: inline-block; padding: 6px 16px; background: var(--accent-gold); color: white; border-radius: 50px; font-size: 11px; font-weight: 600; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
-        .consultation-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; position: relative; }
-        .consultation-desc { font-size: 14px; opacity: 0.9; margin-bottom: 24px; position: relative; }
-
-        /* UTILITIES */
-        .section-hidden { display: none; }
-        .section-visible { display: block; animation: fadeInUp 0.5s ease; }
-
-        /* EVALUATION SHEET */
-        .eval-section { margin-top: 24px; }
-        .eval-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .eval-title { font-size: 16px; font-weight: 600; color: var(--text-dark); }
-        .eval-date { font-size: 12px; color: var(--text-muted); }
-        .eval-grid { display: grid; gap: 12px; }
-        .eval-item { background: var(--bg-light); border-radius: var(--radius-sm); padding: 16px; display: flex; align-items: center; gap: 12px; transition: all 0.3s ease; cursor: pointer; }
-        .eval-item:hover { background: white; box-shadow: var(--shadow-sm); }
-        .eval-checkbox { width: 24px; height: 24px; border: 2px solid var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s ease; color: transparent; }
-        .eval-checkbox.checked { background: var(--primary); color: white; }
-        .eval-checkbox i { font-size: 14px; }
-        .eval-content { flex: 1; }
-        .eval-label { font-size: 13px; font-weight: 500; color: var(--text-dark); margin-bottom: 2px; }
-        .eval-desc { font-size: 11px; color: var(--text-muted); }
-        .eval-progress { margin-top: 16px; padding: 16px; background: white; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); }
-        .eval-progress-bar { height: 8px; background: var(--bg-light); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
-        .eval-progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent-gold)); border-radius: 4px; transition: width 0.5s ease; }
-        .eval-progress-text { font-size: 12px; color: var(--text-muted); text-align: center; }
-
-        /* LOADING & REDIRECT SCREEN */
-        #loadingScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-cream); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 9999;
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
         }
-        .loader { width: 50px; height: 50px; border: 5px solid var(--bg-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
-        @media (min-width: 768px) { .hero-title { font-size: 48px; } .main-container { padding: 0 40px 60px; } }
-        @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; } }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            color: var(--accent-gold-light);
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: rgba(255,255,255,0.8);
+            font-weight: 300;
+            margin-bottom: 32px;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 32px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .hero-stat-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: -40px auto 0;
+            padding: 0 20px 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .glass-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            margin-bottom: 24px;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: white;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(45, 90, 61, 0.1);
+        }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            cursor: pointer;
+        }
+
+        .activity-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .results-dashboard {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .result-card.accent {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #B8941F 100%);
+        }
+
+        .result-label {
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .result-unit {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent-gold));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed rgba(0,0,0,0.1);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -32px;
+            top: 4px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .timeline-dot.active {
+            background: var(--primary);
+            color: white;
+            animation: pulse-gold 2s infinite;
+        }
+
+        .timeline-dot.completed {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .timeline-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .timeline-content p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .herbal-card {
+            background: linear-gradient(135deg, #F0F7F2 0%, #E8F5E9 100%);
+            border: 1px solid #C8E6C9;
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .herbal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .herbal-icon-box {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .herbal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .herbal-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .herbal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .herbal-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .herbal-item {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease;
+        }
+
+        .herbal-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .herbal-item-icon {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .herbal-item-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .herbal-item-dose {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .dosage-box {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .dosage-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .dosage-schedule {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .dosage-schedule:last-child {
+            border-bottom: none;
+        }
+
+        .dosage-time {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .dosage-amount {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .dosage-note {
+            margin-top: 12px;
+            padding: 10px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .meal-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .meal-card {
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .meal-card:hover {
+            transform: translateX(4px);
+            background: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .meal-time-box {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+            border: 2px solid var(--primary);
+        }
+
+        .meal-time-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meal-time-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-top: 2px;
+        }
+
+        .meal-content {
+            flex: 1;
+        }
+
+        .meal-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .meal-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .meal-cal {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .meal-alternative {
+            margin-top: 16px;
+            padding: 16px;
+            background: #FEF3C7;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .meal-alternative-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #92400E;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meal-alternative-text {
+            font-size: 12px;
+            color: #78350F;
+            line-height: 1.6;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 24px;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--bg-light);
+            stroke-width: 12;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .progress-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-percent {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(45, 90, 61, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(45, 90, 61, 0.4);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #B8941F 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+            animation: pulse-gold 2s infinite;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .tips-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .tip-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .tip-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .tip-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .consultation-card {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .consultation-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .consultation-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--accent-gold);
+            color: white;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .consultation-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .consultation-desc {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .section-hidden {
+            display: none;
+        }
+
+        .section-visible {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .eval-section {
+            margin-top: 24px;
+        }
+
+        .eval-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .eval-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .eval-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .eval-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .eval-item {
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .eval-item:hover {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .eval-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .eval-checkbox.checked {
+            background: var(--primary);
+            color: white;
+        }
+
+        .eval-checkbox i {
+            font-size: 14px;
+            opacity: 0;
+        }
+
+        .eval-checkbox.checked i {
+            opacity: 1;
+        }
+
+        .eval-content {
+            flex: 1;
+        }
+
+        .eval-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .eval-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .eval-progress {
+            margin-top: 16px;
+            padding: 16px;
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .eval-progress-bar {
+            height: 8px;
+            background: var(--bg-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .eval-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent-gold));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .eval-progress-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .code-input-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .code-input-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .code-input-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .code-input-group {
+            display: flex;
+            gap: 12px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .code-input {
+            flex: 1;
+            padding: 14px 16px;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 2px;
+            border: 2px solid var(--bg-light);
+            border-radius: var(--radius-sm);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Weekly Evaluation Styles */
+        .weekly-eval-form {
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .weekly-eval-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .weekly-eval-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .condition-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 640px) {
+            .condition-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .condition-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .condition-item:hover {
+            border-color: var(--primary-light);
+        }
+
+        .condition-item.checked {
+            background: #E8F5E9;
+            border-color: var(--primary);
+        }
+
+        .condition-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .condition-item.checked .condition-checkbox {
+            background: var(--primary);
+            color: white;
+        }
+
+        .condition-text {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .obstacle-section {
+            margin-top: 20px;
+        }
+
+        .obstacle-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .obstacle-textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+        }
+
+        .weekly-result {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .weekly-result-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .weekly-result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 13px;
+        }
+
+        .weekly-result-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .date-estimate {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .date-estimate-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .date-estimate-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white; }
+            .glass-card { box-shadow: none; border: 1px solid #ddd; }
+        }
+
+        @media (min-width: 768px) {
+            .hero-title { font-size: 48px; }
+            .main-container { padding: 0 40px 60px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Loading/Redirect Screen -->
-    <div id="loadingScreen">
-        <div class="loader"></div>
-        <p style="margin-top: 20px; color: var(--primary); font-weight: 600;">Memverifikasi Akses...</p>
+    <!-- Code Input Section (First Time) -->
+    <div id="codeSection" class="code-input-section animate-fade-in" style="max-width: 600px; margin: 40px auto;">
+        <div class="card-icon" style="margin: 0 auto 16px; width: 60px; height: 60px; font-size: 24px;">
+            <i class="fas fa-lock-open"></i>
+        </div>
+        <h2 class="code-input-title">Masukkan Kode Konsultasi</h2>
+        <p class="code-input-desc">Masukkan kode unik Anda untuk mengakses program diet personal. Data Anda akan tersimpan otomatis.</p>
+        <div class="code-input-group">
+            <input type="text" id="consultCode" class="code-input" placeholder="CONS-XXXX" maxlength="10">
+            <button class="btn btn-primary" style="width: auto; padding: 14px 24px;" onclick="verifyCode()">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 12px;">
+            Belum punya kode? <a href="#" onclick="generateNewCode()" style="color: var(--primary); font-weight: 600;">Buat kode baru</a>
+        </p>
     </div>
 
-    <!-- Main App (Hidden until verified) -->
-    <div id="mainApp" style="display: none;">
+    <!-- Main App (Hidden until code entered) -->
+    <div id="mainApp" class="section-hidden">
+        
         <!-- Hero Section -->
         <section class="hero-section">
             <div class="hero-pattern"></div>
             <div class="hero-content">
                 <div class="hero-badge">
-                    <i class="fas fa-leaf"></i> Program Diet Herbal Premium
+                    <i class="fas fa-leaf"></i>
+                    Program Diet Herbal Premium
                 </div>
                 <h1 class="hero-title font-display">Transformasi Tubuh Alami</h1>
                 <p class="hero-subtitle">Gabungan sains nutrisi modern & kearifan lokal herbal untuk penurunan berat badan optimal</p>
+                
                 <div class="hero-stats">
                     <div class="hero-stat">
-                        <div class="hero-stat-value" id="heroWeeks">-</div>
+                        <div class="hero-stat-value" id="heroWeeks">12</div>
                         <div class="hero-stat-label">Minggu Program</div>
                     </div>
                     <div class="hero-stat">
-                        <div class="hero-stat-value" id="heroLoss">-</div>
+                        <div class="hero-stat-value" id="heroLoss">0.5-1</div>
                         <div class="hero-stat-label">Kg/Minggu</div>
                     </div>
                     <div class="hero-stat">
@@ -256,6 +1196,7 @@
 
         <!-- Main Container -->
         <div class="main-container">
+
             <!-- STEP 1: Kalkulator -->
             <div class="glass-card animate-fade-in delay-100" id="calculatorSection">
                 <div class="card-header">
@@ -268,40 +1209,21 @@
                 <div class="card-body">
                     <div class="results-dashboard" id="quickResults" style="display: none;">
                         <div class="result-card">
-                            <div class="result-label">Kalori Diet</div>
+                            <div class="result-label">Kalori Harian</div>
                             <div class="result-value" id="previewCalories">0</div>
                             <div class="result-unit">kcal</div>
                         </div>
                         <div class="result-card accent">
-                            <div class="result-label">Durasi</div>
+                            <div class="result-label">Target Turun</div>
                             <div class="result-value" id="previewWeeks">0</div>
                             <div class="result-unit">minggu</div>
                         </div>
-                        <div class="result-card">
-                            <div class="result-label">Protein</div>
-                            <div class="result-value" id="previewProtein">0</div>
-                            <div class="result-unit">gram</div>
-                        </div>
-                        <div class="result-card">
-                            <div class="result-label">Target</div>
-                            <div class="result-value" id="previewTarget">0</div>
-                            <div class="result-unit">kg</div>
-                        </div>
-                        
-                        <!-- Macro Bar -->
-                        <div class="macro-section" style="grid-column: 1 / -1;">
-                            <div class="macro-title">Komposisi Makro Nutrien Harian</div>
-                            <div class="macro-bar-container">
-                                <div class="macro-segment" id="barProtein" style="background: #EF4444; width: 0%;">P</div>
-                                <div class="macro-segment" id="barLemak" style="background: #F59E0B; width: 0%;">L</div>
-                                <div class="macro-segment" id="barKarbo" style="background: #3B82F6; width: 0%;">K</div>
-                            </div>
-                            <div class="macro-legend">
-                                <span><span style="color:#EF4444">■</span> Protein (<span id="pctProtein">0</span>%)</span>
-                                <span><span style="color:#F59E0B">■</span> Lemak (<span id="pctLemak">0</span>%)</span>
-                                <span><span style="color:#3B82F6">■</span> Karbo (<span id="pctKarbo">0</span>%)</span>
-                            </div>
-                        </div>
+                    </div>
+
+                    <!-- Date Estimate Display -->
+                    <div class="date-estimate" id="dateEstimate" style="display: none;">
+                        <div class="date-estimate-label">Estimasi Tercapai</div>
+                        <div class="date-estimate-value" id="targetDateDisplay">-</div>
                     </div>
 
                     <div class="calc-grid">
@@ -333,11 +1255,13 @@
                             <label class="form-label">Aktivitas Harian</label>
                             <select id="inputAktivitas" class="form-input">
                                 <option value="">Pilih Level</option>
-                                <option value="1.2">Sedentari (Jarang Bergerak)</option>
-                                <option value="1.375">Ringan (1-2x Olahraga)</option>
-                                <option value="1.55">Sedang (3-5x Olahraga)</option>
-                                <option value="1.725">Berat (6-7x Olahraga)</option>
+                                <option value="1.2">Sedentari (Jarang Bergerak) - 1.2</option>
+                                <option value="1.375">Ringan (1-2x Olahraga/Minggu) - 1.375</option>
+                                <option value="1.55">Sedang (3-5x Olahraga/Minggu) - 1.55</option>
+                                <option value="1.725">Berat (6-7x Olahraga/Minggu) - 1.725</option>
+                                <option value="1.9">Sangat Berat (Pekerja Fisik/Atlet) - 1.9</option>
                             </select>
+                            <p class="activity-desc" id="activityDesc">Pilih level aktivitas untuk melihat keterangan</p>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Target Berat (kg)</label>
@@ -354,7 +1278,8 @@
                     </div>
 
                     <button class="btn btn-primary mt-6" onclick="calculateAndShowProgram()">
-                        <i class="fas fa-magic"></i> Generate Program Diet Saya
+                        <i class="fas fa-magic"></i>
+                        Generate Program Diet Saya
                     </button>
                 </div>
             </div>
@@ -369,6 +1294,7 @@
                     <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Aktif</span>
                 </div>
                 <div class="card-body">
+                    
                     <div class="progress-ring">
                         <svg width="200" height="200">
                             <defs>
@@ -378,7 +1304,8 @@
                                 </linearGradient>
                             </defs>
                             <circle class="progress-ring-bg" cx="100" cy="100" r="88"/>
-                            <circle class="progress-ring-fill" id="progressCircle" cx="100" cy="100" r="88" stroke-dasharray="553" stroke-dashoffset="553"/>
+                            <circle class="progress-ring-fill" id="progressCircle" cx="100" cy="100" r="88" 
+                                    stroke-dasharray="553" stroke-dashoffset="553"/>
                         </svg>
                         <div class="progress-content">
                             <div class="progress-percent" id="progressPercent">0%</div>
@@ -401,6 +1328,7 @@
                                 <div class="herbal-subtitle">Formula 5 Herba Aktif Premium (500mg/kapsul)</div>
                             </div>
                         </div>
+                        
                         <div class="herbal-grid">
                             <div class="herbal-item">
                                 <div class="herbal-item-icon">🍃</div>
@@ -428,50 +1356,68 @@
                                 <div class="herbal-item-dose">50mg</div>
                             </div>
                         </div>
+
                         <div class="dosage-box">
                             <div class="dosage-title">
-                                <i class="fas fa-clock text-yellow-600 mr-2"></i> Jadwal Konsumsi Optimal (2x3 Kapsul)
+                                <i class="fas fa-clock text-yellow-600 mr-2"></i>
+                                Jadwal Konsumsi Optimal (2x3 Kapsul)
                             </div>
+                            
                             <div class="dosage-schedule">
                                 <span class="dosage-time">
-                                    <i class="fas fa-sun text-yellow-500 mr-2"></i> Pagi (07:00 - 08:00)
+                                    <i class="fas fa-sun text-yellow-500 mr-2"></i>
+                                    Pagi (07:00 - 08:00)
                                 </span>
                                 <span class="dosage-amount">
                                     3 Kapsul<br>
                                     <small>Sesudah Sarapan + Air Hangat</small>
                                 </span>
                             </div>
+                            
                             <div class="dosage-schedule">
                                 <span class="dosage-time">
-                                    <i class="fas fa-moon text-blue-500 mr-2"></i> Malam (18:00 - 19:00)
+                                    <i class="fas fa-moon text-blue-500 mr-2"></i>
+                                    Malam (18:00 - 19:00)
                                 </span>
                                 <span class="dosage-amount">
                                     3 Kapsul<br>
                                     <small>Sesudah Makan Malam + Air Putih</small>
                                 </span>
                             </div>
+
                             <div class="dosage-note">
                                 <i class="fas fa-info-circle mr-1"></i>
-                                <strong>Alternatif:</strong> Bisa juga dikonsumsi 3x2 kapsul (Pagi, Siang, Malam) sesudah makan. Total 6 kapsul/hari untuk hasil optimal.
+                                <strong>Alternatif:</strong> Bisa juga dikonsumsi 3x2 kapsul (Pagi, Siang, Malam) sesudah makan. 
+                                Total 6 kapsul/hari untuk hasil optimal.
                             </div>
                         </div>
                     </div>
 
-                    <!-- Activity Section -->
+                    <!-- Activity Section - Updated with Lymphatic -->
                     <div class="mt-6 p-4 bg-blue-50 rounded-xl border-l-4 border-blue-500">
-                        <h4 class="font-semibold text-blue-800 mb-2 text-sm">
+                        <h4 class="font-semibold text-blue-800 mb-3 text-sm">
                             <i class="fas fa-running mr-2"></i>Aktivitas Fisik Harian (Minimal 30 Menit)
                         </h4>
-                        <ul class="text-sm text-blue-700 space-y-1">
-                            <li><i class="fas fa-check mr-2"></i>Jalan kaki cepat (brisk walking)</li>
-                            <li><i class="fas fa-check mr-2"></i>Lompat tali (jump rope)</li>
-                            <li><i class="fas fa-check mr-2"></i>Jumping jack</li>
-                            <li><i class="fas fa-check mr-2"></i>Senam aerobik ringan</li>
-                        </ul>
+                        <div class="space-y-3">
+                            <div class="bg-white p-3 rounded-lg">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="fas fa-star text-yellow-500"></i>
+                                    <span class="font-semibold text-sm text-blue-900">Direkomendasikan:</span>
+                                </div>
+                                <ul class="text-sm text-blue-700 space-y-1 ml-6">
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i><strong>Latihan Lymphatic</strong> - Pernapasan diafragma, shoulder rolls, neck rolls (lihat tutorial di YouTube: "lymphatic drainage exercise")</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i><strong>Jalan Kaki Cepat</strong> (Brisk Walking) - 30-45 menit</li>
+                                </ul>
+                            </div>
+                            <div class="text-sm text-blue-700">
+                                <strong>Alternatif:</strong> Lompat tali, jumping jack, atau berenang. Hindari olahraga berat tanpa pemanasan.
+                            </div>
+                        </div>
                     </div>
 
                     <button class="btn btn-outline mt-6" onclick="showMealPlan()">
-                        Lihat Jadwal Makan Detail <i class="fas fa-chevron-right"></i>
+                        Lihat Jadwal Makan Detail
+                        <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
             </div>
@@ -493,31 +1439,99 @@
                         <!-- Generated by JS -->
                     </div>
 
+                    <!-- Alternative Menu Note -->
                     <div class="meal-alternative">
                         <div class="meal-alternative-title">
-                            <i class="fas fa-lightbulb"></i> Catatan Alternatif Menu
+                            <i class="fas fa-lightbulb"></i>
+                            Catatan Alternatif Menu
                         </div>
                         <div class="meal-alternative-text">
-                            Tidak harus mengikuti menu di atas persis! Yang penting <strong>asupan kalori tetap terjaga</strong> sesuai target. Anda bisa mengganti dengan makanan lain yang setara kalori dan nutrisinya. Contoh: Nasi bisa diganti roti gandum, ayam bisa diganti ikan atau tahu/tempe. Yang terpenting adalah <strong>defisit kalori dan konsistensi minum herbal</strong>.
+                            Tidak harus mengikuti menu di atas persis! Yang penting <strong>asupan kalori tetap terjaga</strong> sesuai target. 
+                            Anda bisa mengganti dengan makanan lain yang setara kalori dan nutrisinya. Contoh: Nasi bisa diganti roti gandum, 
+                            ayam bisa diganti ikan atau tahu/tempe. Yang terpenting adalah <strong>defisit kalori dan konsistensi minum herbal</strong>.
                         </div>
                     </div>
 
-                    <!-- Evaluation Sheet -->
-                    <div class="eval-section">
+                    <!-- Weekly Evaluation Section (Replaced Daily) -->
+                    <div class="eval-section" id="weeklyEvalSection">
                         <div class="eval-header">
                             <div class="eval-title">
-                                <i class="fas fa-clipboard-check mr-2 text-green-600"></i> Lembar Evaluasi Harian
+                                <i class="fas fa-clipboard-check mr-2 text-green-600"></i>
+                                Evaluasi Mingguan
                             </div>
-                            <div class="eval-date" id="evalDate">-</div>
+                            <div class="eval-date" id="evalWeekDisplay">Minggu ke-</div>
                         </div>
-                        <div class="eval-grid" id="evalContainer">
+
+                        <div class="weekly-eval-form">
+                            <div class="weekly-eval-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Berat Awal Minggu (kg)</label>
+                                    <input type="number" id="weekStartWeight" class="form-input" step="0.1" placeholder="0.0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Berat Akhir Minggu (kg)</label>
+                                    <input type="number" id="weekEndWeight" class="form-input" step="0.1" placeholder="0.0" onchange="calculateWeeklyLoss()">
+                                </div>
+                            </div>
+
+                            <div class="weekly-result" id="weeklyResult" style="display: none;">
+                                <div class="weekly-result-title">Hasil Minggu Ini</div>
+                                <div class="weekly-result-item">
+                                    <span>Penurunan Berat:</span>
+                                    <span id="weightLossValue">0 kg</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <label class="form-label">Kondisi Tubuh (Centang yang sesuai)</label>
+                                <div class="condition-grid">
+                                    <div class="condition-item" onclick="toggleCondition(this, 'energi')">
+                                        <div class="condition-checkbox"><i class="fas fa-check text-xs"></i></div>
+                                        <span class="condition-text">Energi Stabil</span>
+                                    </div>
+                                    <div class="condition-item" onclick="toggleCondition(this, 'nafsu')">
+                                        <div class="condition-checkbox"><i class="fas fa-check text-xs"></i></div>
+                                        <span class="condition-text">Nafsu Makan Terkontrol</span>
+                                    </div>
+                                    <div class="condition-item" onclick="toggleCondition(this, 'efek')">
+                                        <div class="condition-checkbox"><i class="fas fa-check text-xs"></i></div>
+                                        <span class="condition-text">Tidak Ada Efek Samping</span>
+                                    </div>
+                                    <div class="condition-item" onclick="toggleCondition(this, 'tidur')">
+                                        <div class="condition-checkbox"><i class="fas fa-check text-xs"></i></div>
+                                        <span class="condition-text">Tidur Cukup (7-8 jam)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="obstacle-section">
+                                <label class="form-label">Ada kendala minggu ini?</label>
+                                <textarea id="weeklyObstacle" class="obstacle-textarea" placeholder="Ceritakan kendala atau tantangan yang Anda hadapi minggu ini..."></textarea>
+                            </div>
+
+                            <div class="flex gap-3 mt-4 no-print">
+                                <button class="btn btn-primary" onclick="saveWeeklyEval()">
+                                    <i class="fas fa-save"></i>
+                                    Simpan Evaluasi
+                                </button>
+                                <button class="btn btn-outline" onclick="printWeeklyEval()">
+                                    <i class="fas fa-print"></i>
+                                    Cetak PDF
+                                </button>
+                            </div>
+
+                            <div class="mt-4 p-4 bg-green-50 rounded-lg border border-green-200 text-center no-print">
+                                <p class="text-sm text-green-800 mb-2">Butuh bantuan atau konsultasi?</p>
+                                <a href="https://wa.me/6281546450547" target="_blank" class="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition">
+                                    <i class="fab fa-whatsapp"></i>
+                                    Hubungi Konsultan
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- History -->
+                        <div id="weeklyHistory" class="mt-6 space-y-3">
                             <!-- Generated by JS -->
-                        </div>
-                        <div class="eval-progress">
-                            <div class="eval-progress-bar">
-                                <div class="eval-progress-fill" id="evalProgressFill" style="width: 0%"></div>
-                            </div>
-                            <div class="eval-progress-text" id="evalProgressText">0% checklist selesai hari ini</div>
                         </div>
                     </div>
 
@@ -550,14 +1564,18 @@
                 </div>
             </div>
 
-            <!-- Consultation CTA -->
+            <!-- Consultation Info (Replaced CTA) -->
             <div class="consultation-card animate-fade-in delay-300 no-print">
                 <div class="consultation-badge">Gratis Konsultasi</div>
                 <h3 class="consultation-title font-display">Butuh Pendampingan?</h3>
                 <p class="consultation-desc">Dapatkan konsultasi gratis dengan ahli gizi kami untuk memaksimalkan hasil program diet herbal Anda.</p>
-                <button class="btn btn-gold" onclick="openConsultation()">
-                    <i class="fab fa-whatsapp"></i> Hubungi Konsultan Sekarang
-                </button>
+                <div class="flex flex-col gap-3">
+                    <a href="https://wa.me/6281546450547" target="_blank" class="btn btn-gold">
+                        <i class="fab fa-whatsapp"></i>
+                        Hubungi Konsultan Sekarang
+                    </a>
+                    <p class="text-xs opacity-80">Klik tombol di atas untuk terhubung via WhatsApp</p>
+                </div>
             </div>
 
             <!-- Footer -->
@@ -565,120 +1583,146 @@
                 <p class="mb-2">CALFATLOSS - Smart Nutrition System</p>
                 <p>Hasil estimasi, konsultasikan dengan ahli gizi untuk kondisi khusus</p>
             </footer>
+
         </div>
     </div>
 
     <script>
-        // =======================================================
-        // LOGIKA AKSES & VERIFIKASI KODE
-        // =======================================================
-        
-        const LOGIN_URL = '/log-aktivitas.html'; 
-        let currentCode = null;
-
-        function checkAccess() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const codeFromUrl = urlParams.get('kode');
-            const codeFromSession = sessionStorage.getItem('calfatloss_active_code');
-
-            if (codeFromUrl) {
-                currentCode = codeFromUrl.toUpperCase();
-                sessionStorage.setItem('calfatloss_active_code', currentCode);
-                initializeApp();
-            } else if (codeFromSession) {
-                currentCode = codeFromSession;
-                initializeApp();
-            } else {
-                window.location.href = LOGIN_URL;
-            }
-        }
-
-        checkAccess();
-
-        // =======================================================
-        // APLIKASI UTAMA
-        // =======================================================
-
+        // Global Variables
+        let currentCode = '';
         let userData = {
-            nama: '', gender: '', usia: 0, berat: 0, tinggi: 0, aktivitas: 0, target: 0, metode: 'standar',
-            bmr: 0, tdee: 0, dietCal: 0, weeks: 0, protein: 0, lemak: 0, karbo: 0
+            nama: '',
+            gender: '',
+            usia: 0,
+            berat: 0,
+            tinggi: 0,
+            aktivitas: 0,
+            target: 0,
+            metode: 'standar',
+            bmr: 0,
+            tdee: 0,
+            dietCal: 0,
+            weeks: 0,
+            targetDate: '',
+            protein: 0,
+            lemak: 0,
+            karbo: 0
         };
 
-        let evalItems = [
-            { id: 'herbal_pagi', label: 'Minum 3 kapsul herbal pagi', desc: 'Sesudah sarapan' },
-            { id: 'sarapan', label: 'Sarapan sehat', desc: 'Sesuai porsi kalori' },
-            { id: 'aktivitas', label: 'Aktivitas fisik 30 menit', desc: 'Jalan kaki/lompat tali/jumping jack' },
-            { id: 'snack_pagi', label: 'Snack pagi sehat', desc: 'Buah atau kacang almond' },
-            { id: 'makan_siang', label: 'Makan siang terkontrol', desc: 'Protein + sayur + karbo kompleks' },
-            { id: 'air', label: 'Minum 8 gelas air', desc: 'Sebelum makan dan sepanjang hari' },
-            { id: 'snack_sore', label: 'Snack sore', desc: 'Yogurt atau smoothie' },
-            { id: 'makan_malam', label: 'Makan malam ringan', desc: 'Protein + sayur' },
-            { id: 'herbal_malam', label: 'Minum 3 kapsul herbal malam', desc: 'Sesudah makan malam' },
-            { id: 'tidur', label: 'Tidur 7-8 jam', desc: 'Istirahat cukup' }
-        ];
+        let weeklyConditions = {
+            energi: false,
+            nafsu: false,
+            efek: false,
+            tidur: false
+        };
 
-        function initializeApp() {
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            document.getElementById('userCodeDisplay').textContent = `Kode: ${currentCode}`;
+        let weeklyHistory = [];
+
+        // Constants
+        const deficitMap = {
+            'ringan': 300,
+            'standar': 500,
+            'agresif': 700
+        };
+
+        const activityDescriptions = {
+            '1.2': 'Hampir tidak berolahraga, pekerjaan kantoran',
+            '1.375': 'Olahraga ringan 1-2x per minggu',
+            '1.55': 'Olahraga sedang 3-5x per minggu',
+            '1.725': 'Olahraga berat 6-7x per minggu',
+            '1.9': 'Pekerja fisik atau atlet profesional'
+        };
+
+        // Check if code exists in URL or localStorage
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const codeFromUrl = urlParams.get('code');
+            
+            if (codeFromUrl) {
+                verifyCode(codeFromUrl);
+            } else {
+                // Check localStorage
+                const savedCode = localStorage.getItem('calfatloss_code');
+                if (savedCode) {
+                    verifyCode(savedCode);
+                }
+            }
+
+            // Setup activity description listener
+            document.getElementById('inputAktivitas')?.addEventListener('change', function() {
+                const desc = activityDescriptions[this.value] || 'Pilih level aktivitas untuk melihat keterangan';
+                document.getElementById('activityDesc').textContent = desc;
+            });
+        });
+
+        function generateNewCode() {
+            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const code = `CONS-${random}`;
+            document.getElementById('consultCode').value = code;
+        }
+
+        function verifyCode(inputCode) {
+            const code = inputCode || document.getElementById('consultCode').value.trim().toUpperCase();
+            
+            if (!code || code.length < 4) {
+                alert('Masukkan kode yang valid');
+                return;
+            }
+
+            currentCode = code;
+            localStorage.setItem('calfatloss_code', code);
+            
+            // Hide code section, show main app
+            document.getElementById('codeSection').style.display = 'none';
+            document.getElementById('mainApp').classList.remove('section-hidden');
+            document.getElementById('mainApp').classList.add('section-visible');
+            document.getElementById('userCodeDisplay').textContent = `Kode: ${code}`;
+            
+            // Load saved data
             loadUserData();
         }
 
         function loadUserData() {
-            const storageKey = `calfatloss_data_${currentCode}`;
-            const evalKey = `calfatloss_eval_${currentCode}`;
-
-            const saved = localStorage.getItem(storageKey);
-            const savedEval = localStorage.getItem(evalKey);
-
+            const saved = localStorage.getItem(`calfatloss_data_${currentCode}`);
+            const savedWeekly = localStorage.getItem(`calfatloss_weekly_${currentCode}`);
+            
             if (saved) {
                 const data = JSON.parse(saved);
                 userData = data;
-
+                
                 // Fill inputs
                 if (data.nama) document.getElementById('inputNama').value = data.nama;
                 if (data.gender) document.getElementById('inputGender').value = data.gender;
                 if (data.usia) document.getElementById('inputUsia').value = data.usia;
                 if (data.berat) document.getElementById('inputBerat').value = data.berat;
                 if (data.tinggi) document.getElementById('inputTinggi').value = data.tinggi;
-                if (data.aktivitas) document.getElementById('inputAktivitas').value = data.aktivitas;
+                if (data.aktivitas) {
+                    document.getElementById('inputAktivitas').value = data.aktivitas;
+                    document.getElementById('activityDesc').textContent = activityDescriptions[data.aktivitas] || '';
+                }
                 if (data.target) document.getElementById('inputTarget').value = data.target;
                 if (data.metode) document.getElementById('inputMetode').value = data.metode;
-
+                
+                // If data complete, show program
                 if (data.nama && data.gender) {
-                    calculateAndShowProgram(true); 
+                    calculateAndShowProgram(false); // false = don't scroll
                 }
             }
-
-            if (savedEval) {
-                const evalStatus = JSON.parse(savedEval);
-                evalItems = evalItems.map(item => ({
-                    ...item,
-                    checked: evalStatus[item.id] || false
-                }));
-            }
             
-            renderEvalSheet();
-            updateEvalProgress();
+            // Load weekly history
+            if (savedWeekly) {
+                weeklyHistory = JSON.parse(savedWeekly);
+                renderWeeklyHistory();
+            }
         }
 
         function saveUserData() {
-            const storageKey = `calfatloss_data_${currentCode}`;
-            localStorage.setItem(storageKey, JSON.stringify(userData));
+            localStorage.setItem(`calfatloss_data_${currentCode}`, JSON.stringify(userData));
         }
 
-        function saveEvalData() {
-            const evalKey = `calfatloss_eval_${currentCode}`;
-            const evalStatus = {};
-            evalItems.forEach(item => {
-                evalStatus[item.id] = item.checked;
-            });
-            localStorage.setItem(evalKey, JSON.stringify(evalStatus));
-            localStorage.setItem(`calfatloss_eval_date_${currentCode}`, new Date().toDateString());
+        function saveWeeklyData() {
+            localStorage.setItem(`calfatloss_weekly_${currentCode}`, JSON.stringify(weeklyHistory));
         }
-
-        // Constants
-        const deficitMap = { 'ringan': 300, 'standar': 500, 'agresif': 700 };
 
         function calculateBMR(gender, weight, height, age) {
             if (gender === 'pria') {
@@ -688,7 +1732,7 @@
             }
         }
 
-        function calculateAndShowProgram(isInitialLoad = false) {
+        function calculateAndShowProgram(shouldScroll = true) {
             userData.nama = document.getElementById('inputNama').value;
             userData.gender = document.getElementById('inputGender').value;
             userData.usia = parseFloat(document.getElementById('inputUsia').value);
@@ -699,47 +1743,51 @@
             userData.metode = document.getElementById('inputMetode').value;
 
             if (!userData.nama || !userData.gender || !userData.usia || !userData.berat || !userData.tinggi || !userData.aktivitas || !userData.target) {
-                if (!isInitialLoad) alert('Mohon lengkapi semua data terlebih dahulu');
+                alert('Mohon lengkapi semua data terlebih dahulu');
                 return;
             }
 
             if (userData.target >= userData.berat) {
-                if (!isInitialLoad) alert('Target berat harus lebih rendah dari berat saat ini');
+                alert('Target berat harus lebih rendah dari berat saat ini');
                 return;
             }
 
             // Calculations
             userData.bmr = calculateBMR(userData.gender, userData.berat, userData.tinggi, userData.usia);
             userData.tdee = userData.bmr * userData.aktivitas;
+            
             const deficit = deficitMap[userData.metode];
             userData.dietCal = Math.max(1200, userData.tdee - deficit);
             
-            // Calculate weight loss per week (kg)
-            // 1 kg fat ≈ 7700 kcal. Weekly deficit = daily deficit * 7
-            const weeklyDeficitKcal = deficit * 7;
-            const weeklyLossKg = weeklyDeficitKcal / 7700; 
-            
-            // Calculate weeks needed
-            const weightToLose = userData.berat - userData.target;
-            userData.weeks = Math.ceil(weightToLose / weeklyLossKg);
+            const weeklyLoss = (deficit * 7) / 7700;
+            userData.weeks = Math.ceil((userData.berat - userData.target) / weeklyLoss);
 
-            // Macros Calculation (Flexible based on calories)
-            // Protein: 2gr per kg body weight (prioritized for muscle retention)
-            userData.protein = userData.berat * 2.0; 
-            // Fat: 25% of total calories
-            userData.lemak = (userData.dietCal * 0.25) / 9; 
-            // Carbs: Remaining calories
+            // Calculate target date
+            const today = new Date();
+            const targetDate = new Date(today);
+            targetDate.setDate(today.getDate() + (userData.weeks * 7));
+            userData.targetDate = targetDate.toLocaleDateString('id-ID', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+
+            // Macros
+            const proteinMult = userData.metode === 'agresif' ? 2.2 : (userData.metode === 'ringan' ? 1.8 : 2.0);
+            userData.protein = userData.berat * proteinMult;
+            userData.lemak = userData.berat * 0.8;
             userData.karbo = (userData.dietCal - (userData.protein * 4) - (userData.lemak * 9)) / 4;
 
             saveUserData();
             updateCalculatorUI();
             generateTimeline();
             generateMealPlan();
-
+            
             document.getElementById('programSection').classList.remove('section-hidden');
             document.getElementById('programSection').classList.add('section-visible');
-
-            if (!isInitialLoad) {
+            
+            if (shouldScroll) {
                 setTimeout(() => {
                     document.getElementById('programSection').scrollIntoView({ behavior: 'smooth' });
                 }, 100);
@@ -748,147 +1796,70 @@
 
         function updateCalculatorUI() {
             document.getElementById('quickResults').style.display = 'grid';
-            
-            // Animate numbers
             document.getElementById('previewCalories').textContent = Math.round(userData.dietCal);
             document.getElementById('previewWeeks').textContent = userData.weeks;
-            document.getElementById('previewTarget').textContent = userData.target;
-            document.getElementById('previewProtein').textContent = Math.round(userData.protein);
-
-            // Update Hero Stats
+            
             document.getElementById('heroWeeks').textContent = userData.weeks;
-            document.getElementById('heroLoss').textContent = (userData.metode === 'agresif' ? '0.7-1' : (userData.metode === 'ringan' ? '0.3-0.5' : '0.5-0.7'));
+            document.getElementById('heroLoss').textContent = userData.metode === 'agresif' ? '0.7-1' : (userData.metode === 'ringan' ? '0.3-0.5' : '0.5-0.7');
 
-            // Update Macro Bars
-            const totalMacroGrams = userData.protein + userData.lemak + userData.karbo;
-            const pctP = (userData.protein / totalMacroGrams) * 100;
-            const pctL = (userData.lemak / totalMacroGrams) * 100;
-            const pctK = (userData.karbo / totalMacroGrams) * 100;
-
-            // Calculate calorie percentage for display accuracy
-            const pctCalP = ((userData.protein * 4) / userData.dietCal) * 100;
-            const pctCalL = ((userData.lemak * 9) / userData.dietCal) * 100;
-            const pctCalK = ((userData.karbo * 4) / userData.dietCal) * 100;
-
-            document.getElementById('barProtein').style.width = pctCalP + '%';
-            document.getElementById('barLemak').style.width = pctCalL + '%';
-            document.getElementById('barKarbo').style.width = pctCalK + '%';
-
-            document.getElementById('pctProtein').textContent = Math.round(pctCalP);
-            document.getElementById('pctLemak').textContent = Math.round(pctCalL);
-            document.getElementById('pctKarbo').textContent = Math.round(pctCalK);
+            // Show date estimate
+            document.getElementById('dateEstimate').style.display = 'block';
+            document.getElementById('targetDateDisplay').textContent = userData.targetDate;
         }
 
         function generateTimeline() {
             const timeline = document.getElementById('dietTimeline');
             timeline.innerHTML = '';
 
-            const totalWeeks = userData.weeks;
-            
-            // Dynamic Phase Generation
             const phases = [
-                { 
-                    week: 1, 
-                    title: 'Fase Detox & Adaptasi', 
-                    desc: 'Mulai konsumsi 2x3 kapsul herbal. Tubuh beradaptasi dengan defisit kalori. Fokus pengurangan gula dan karbo sederhana.',
-                    progress: 10
-                },
-                { 
-                    week: Math.round(totalWeeks * 0.25), 
-                    title: 'Fase Pembakaran Awal', 
-                    desc: `Target turun sekitar ${Math.round((userData.berat - userData.target) * 0.25)}kg. Metabolisme meningkat. Konsisten minum 6 kapsul/hari + aktivitas fisik 30 menit.`,
-                    progress: 25
-                },
-                { 
-                    week: Math.round(totalWeeks * 0.5), 
-                    title: 'Fase Peak Metabolism', 
-                    desc: 'Tubuh dalam mode pembakaran lemak optimal. Jangan skip dosis herbal. Pastikan tidur cukup untuk hormon stres rendah.',
-                    progress: 50
-                },
-                { 
-                    week: Math.round(totalWeeks * 0.75), 
-                    title: 'Fase Maintenance Lanjutan', 
-                    desc: 'Mendekati target. Evaluasi progress. Jika stagnan, tingkatkan intensitas olahraga atau konsultasi gratis.',
-                    progress: 75
-                },
-                { 
-                    week: totalWeeks, 
-                    title: 'Target Tercapai!', 
-                    desc: `Selamat ${userData.nama}! Capai target ${userData.target}kg. Lanjutkan ke FASE MAINTENANCE: Turunkan dosis herbal jadi 2x2 kapsul/hari untuk menjaga berat badan ideal.`,
-                    progress: 100
-                }
+                { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Mulai konsumsi 2x3 kapsul herbal sesudah makan (pagi & malam). Fokus pengurangan gula.' },
+                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari. Aktivitas: jalan kaki + latihan lymphatic.' },
+                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal. Rutin latihan lymphatic untuk drainase optimal.' },
+                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Gunakan lembar evaluasi mingguan. Jika stagnan, konsultasi gratis tersedia.' },
+                { week: userData.weeks, title: 'Target Tercapai!', desc: `Selamat ${userData.nama}! Capai target ${userData.target}kg pada ${userData.targetDate}. Lanjutkan ke FASE MAINTENANCE: Turun dosis herbal jadi 2x2 kapsul/hari.` }
             ];
 
-            // Filter phases to avoid duplicate weeks if total weeks is low
-            const filteredPhases = phases.filter((phase, index, self) =>
-                index === self.findIndex((t) => t.week === phase.week)
-            );
-
-            filteredPhases.forEach((phase, index) => {
-                const dotClass = index === filteredPhases.length - 1 ? 'active' : '';
+            phases.forEach((phase, index) => {
+                const isLast = index === phases.length - 1;
+                const dotClass = isLast ? 'active' : '';
+                
                 const html = `
-                <div class="timeline-item">
-                    <div class="timeline-dot ${dotClass}">${index === filteredPhases.length - 1 ? '<i class="fas fa-flag"></i>' : phase.week}</div>
-                    <div class="timeline-content">
-                        <h4>${phase.title}</h4>
-                        <p>${phase.desc}</p>
+                    <div class="timeline-item">
+                        <div class="timeline-dot ${dotClass}">${isLast ? '<i class="fas fa-flag"></i>' : phase.week}</div>
+                        <div class="timeline-content">
+                            <h4>${phase.title}</h4>
+                            <p>${phase.desc}</p>
+                        </div>
                     </div>
-                </div>`;
+                `;
                 timeline.innerHTML += html;
             });
 
-            // Animate Progress Ring
             setTimeout(() => {
                 const circle = document.getElementById('progressCircle');
                 const radius = circle.r.baseVal.value;
                 const circumference = radius * 2 * Math.PI;
-                
-                // Default progress 10% start
-                const percent = 10; 
-                const offset = circumference - (percent / 100) * circumference;
-                
+                const offset = circumference - (10/100) * circumference;
                 circle.style.strokeDashoffset = offset;
-                document.getElementById('progressPercent').textContent = percent + '%';
+                document.getElementById('progressPercent').textContent = '10%';
             }, 500);
         }
 
         function generateMealPlan() {
             const container = document.getElementById('mealContainer');
             document.getElementById('mealTargetCal').textContent = Math.round(userData.dietCal) + ' kcal';
-
-            const cal = userData.dietCal;
-
+            
             const meals = [
-                { 
-                    time: '07:00', 
-                    title: 'Sarapan (25%)', 
-                    cal: Math.round(cal * 0.25), 
-                    menu: 'Oatmeal + Susu Low Fat + Pisang + 3 Kapsul Herbal' 
-                },
-                { 
-                    time: '10:00', 
-                    title: 'Snack Pagi (10%)', 
-                    cal: Math.round(cal * 0.10), 
-                    menu: 'Buah segar (Apel/Jeruk) + Kacang Almond 10 butir' 
-                },
-                { 
-                    time: '12:00', 
-                    title: 'Makan Siang (30%)', 
-                    cal: Math.round(cal * 0.30), 
-                    menu: 'Nasi Merah 100gr + Dada Ayam Rebus/Tim + Sayur Tumis' 
-                },
-                { 
-                    time: '15:00', 
-                    title: 'Snack Sore (10%)', 
-                    cal: Math.round(cal * 0.10), 
-                    menu: 'Yogurt Plain + Granola atau Smoothie Hijau' 
-                },
-                { 
-                    time: '18:00', 
-                    title: 'Makan Malam (25%)', 
-                    cal: Math.round(cal * 0.25), 
-                    menu: 'Ikan Kukus/Pepes + Salad Sayur + Kentang Rebus + 3 Kapsul Herbal' 
-                }
+                { time: '07:00', title: 'Sarapan (25%)', cal: Math.round(userData.dietCal * 0.25), 
+                  menu: `2 Telur rebus + 1 Pisang + 3 kapsul herbal sesudah makan` },
+                { time: '10:00', title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), 
+                  menu: `Buah segar (apel/jeruk) + kacang almond 10 butir` },
+                { time: '12:00', title: 'Makan Siang (30%)', cal: Math.round(userData.dietCal * 0.30), 
+                  menu: `Nasi merah 100g + dada ayam 150g + sayur tumis` },
+                { time: '15:00', title: 'Snack Sore (10%)', cal: Math.round(userData.dietCal * 0.10), 
+                  menu: `Yogurt plain + granola atau smoothie green` },
+                { time: '18:00', title: 'Makan Malam (25%)', cal: Math.round(userData.dietCal * 0.25), 
+                  menu: `Ikan kukus 150g + salad sayur + kentang rebus + 3 kapsul herbal sesudah makan` }
             ];
 
             container.innerHTML = meals.map(meal => `
@@ -906,72 +1877,108 @@
             `).join('');
         }
 
-        function renderEvalSheet() {
-            const container = document.getElementById('evalContainer');
-            const today = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            document.getElementById('evalDate').textContent = today;
-
-            container.innerHTML = evalItems.map((item, index) => `
-                <div class="eval-item" onclick="toggleEvalItem(${index})">
-                    <div class="eval-checkbox ${item.checked ? 'checked' : ''}" id="checkbox-${index}">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="eval-content">
-                        <div class="eval-label">${item.label}</div>
-                        <div class="eval-desc">${item.desc}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function toggleEvalItem(index) {
-            evalItems[index].checked = !evalItems[index].checked;
-            const checkbox = document.getElementById(`checkbox-${index}`);
-            checkbox.classList.toggle('checked', evalItems[index].checked);
-            saveEvalData();
-            updateEvalProgress();
-        }
-
-        function updateEvalProgress() {
-            const checkedCount = evalItems.filter(item => item.checked).length;
-            const percentage = Math.round((checkedCount / evalItems.length) * 100);
-            document.getElementById('evalProgressFill').style.width = percentage + '%';
-            document.getElementById('evalProgressText').textContent = `${percentage}% checklist selesai hari ini (${checkedCount}/${evalItems.length})`;
-        }
-
         function showMealPlan() {
             document.getElementById('mealSection').classList.remove('section-hidden');
             document.getElementById('mealSection').classList.add('section-visible');
-            renderEvalSheet();
+            
+            // Set current week
+            const currentWeek = weeklyHistory.length + 1;
+            document.getElementById('evalWeekDisplay').textContent = `Minggu ke-${currentWeek}`;
+            
             setTimeout(() => {
                 document.getElementById('mealSection').scrollIntoView({ behavior: 'smooth' });
             }, 100);
         }
 
-        function openConsultation() {
-            const phone = '6281546450547';
-            const formatMessage = `*KONSULTASI CALFATLOSS - KODE: ${currentCode}*
+        // Weekly Evaluation Functions
+        function toggleCondition(element, type) {
+            element.classList.toggle('checked');
+            weeklyConditions[type] = element.classList.contains('checked');
+        }
 
-*Data Pengguna:*
-• Nama: ${userData.nama || '-'}
-• Gender: ${userData.gender === 'pria' ? 'Laki-laki' : userData.gender === 'wanita' ? 'Perempuan' : '-'}
-• Usia: ${userData.usia || '-'} tahun
-• Berat Saat Ini: ${userData.berat || '-'} kg
-• Tinggi: ${userData.tinggi || '-'} cm
-• Target Berat: ${userData.target || '-'} kg
-• Target Minggu: ${userData.weeks || '-'} minggu
+        function calculateWeeklyLoss() {
+            const start = parseFloat(document.getElementById('weekStartWeight').value) || 0;
+            const end = parseFloat(document.getElementById('weekEndWeight').value) || 0;
+            
+            if (start > 0 && end > 0) {
+                const loss = (start - end).toFixed(1);
+                document.getElementById('weeklyResult').style.display = 'block';
+                document.getElementById('weightLossValue').textContent = `${loss} kg`;
+            }
+        }
 
-*Kebutuhan Kalori:*
-• TDEE: ${Math.round(userData.tdee || 0)} kcal
-• Target Diet: ${Math.round(userData.dietCal || 0)} kcal
+        function saveWeeklyEval() {
+            const startWeight = parseFloat(document.getElementById('weekStartWeight').value);
+            const endWeight = parseFloat(document.getElementById('weekEndWeight').value);
+            const obstacle = document.getElementById('weeklyObstacle').value;
+            
+            if (!startWeight || !endWeight) {
+                alert('Mohon isi berat awal dan akhir minggu');
+                return;
+            }
 
-*Pertanyaan/Kendala:*
-[Tulis pertanyaan atau kendala Anda di sini]
+            const weekData = {
+                week: weeklyHistory.length + 1,
+                date: new Date().toLocaleDateString('id-ID'),
+                startWeight: startWeight,
+                endWeight: endWeight,
+                loss: (startWeight - endWeight).toFixed(1),
+                conditions: {...weeklyConditions},
+                obstacle: obstacle
+            };
 
-*Progress Checklist Hari Ini: ${evalItems.filter(i => i.checked).length}/${evalItems.length}*`;
+            weeklyHistory.push(weekData);
+            saveWeeklyData();
+            renderWeeklyHistory();
+            
+            // Reset form
+            document.getElementById('weekStartWeight').value = '';
+            document.getElementById('weekEndWeight').value = '';
+            document.getElementById('weeklyObstacle').value = '';
+            document.querySelectorAll('.condition-item').forEach(el => el.classList.remove('checked'));
+            weeklyConditions = { energi: false, nafsu: false, efek: false, tidur: false };
+            document.getElementById('weeklyResult').style.display = 'none';
+            
+            // Update week display
+            document.getElementById('evalWeekDisplay').textContent = `Minggu ke-${weeklyHistory.length + 1}`;
+            
+            alert('Evaluasi mingguan berhasil disimpan!');
+        }
 
-            const encodedMessage = encodeURIComponent(formatMessage);
-            window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
+        function renderWeeklyHistory() {
+            const container = document.getElementById('weeklyHistory');
+            if (weeklyHistory.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 text-sm">Belum ada data evaluasi mingguan</p>';
+                return;
+            }
+
+            container.innerHTML = weeklyHistory.map((week, index) => `
+                <div class="bg-white p-4 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-sm">Minggu ${week.week}</span>
+                        <span class="text-xs text-gray-500">${week.date}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center mb-2">
+                        <div>
+                            <div class="text-xs text-gray-500">Awal</div>
+                            <div class="font-semibold">${week.startWeight} kg</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-500">Akhir</div>
+                            <div class="font-semibold">${week.endWeight} kg</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-500">Turun</div>
+                            <div class="font-semibold text-green-600">${week.loss} kg</div>
+                        </div>
+                    </div>
+                    ${week.obstacle ? `<div class="text-xs text-gray-600 mt-2"><strong>Kendala:</strong> ${week.obstacle}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function printWeeklyEval() {
+            window.print();
         }
 
         // Auto-save inputs on change
