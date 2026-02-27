@@ -53,8 +53,15 @@
         #loadingScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-cream); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         .loader { width: 50px; height: 50px; border: 5px solid var(--bg-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
 
-        .hero-section { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); position: relative; overflow: hidden; padding: 60px 24px 80px; }
-        .hero-pattern { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        /* HERO SECTION */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            position: relative; overflow: hidden; padding: 60px 24px 80px;
+        }
+        .hero-pattern {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
         .hero-content { position: relative; z-index: 2; max-width: 600px; margin: 0 auto; text-align: center; }
         .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 50px; color: var(--accent-gold-light); font-size: 12px; font-weight: 500; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2); }
         .hero-title { font-size: 36px; font-weight: 700; color: white; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px; }
@@ -64,13 +71,15 @@
         .hero-stat-value { font-size: 28px; font-weight: 700; color: var(--accent-gold); }
         .hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; }
 
+        /* CONTAINER & CARDS */
         .main-container { max-width: 800px; margin: -40px auto 0; padding: 0 20px 60px; position: relative; z-index: 10; }
         .glass-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.04); }
         .card-header { padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; }
         .card-title { font-size: 16px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 12px; }
-        .card-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .card-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; box-shadow: 0 4px 10px rgba(45,90,61,0.2); }
         .card-body { padding: 24px; }
 
+        /* FORMS */
         .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 640px) { .calc-grid { grid-template-columns: 1fr; } }
         .form-group { margin-bottom: 20px; }
@@ -82,6 +91,7 @@
         /* Info Box for Activity */
         .info-box { background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 12px; border-radius: 8px; margin-top: 8px; font-size: 12px; color: #1E40AF; display: none; }
         
+        /* RESULTS DASHBOARD */
         .results-dashboard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
         @media(min-width: 640px) { .results-dashboard { grid-template-columns: repeat(4, 1fr); } }
         
@@ -93,15 +103,25 @@
         .result-value { font-size: 24px; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
         .result-unit { font-size: 12px; opacity: 0.8; }
 
+        /* MACRO NUTRIENTS BAR */
+        .macro-section { margin-top: 20px; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.08); }
+        .macro-title { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; }
+        .macro-bar-container { display: flex; height: 24px; border-radius: 12px; overflow: hidden; background: #eee; margin-bottom: 8px; }
+        .macro-segment { display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 600; transition: width 1s ease; }
+        .macro-legend { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
+
+        /* TIMELINE */
         .timeline { position: relative; padding-left: 32px; }
         .timeline::before { content: ''; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--primary), var(--accent-gold)); }
         .timeline-item { position: relative; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed rgba(0,0,0,0.1); }
         .timeline-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .timeline-dot { position: absolute; left: -32px; top: 4px; width: 24px; height: 24px; background: white; border: 3px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--primary); }
+        .timeline-dot { position: absolute; left: -32px; top: 4px; width: 24px; height: 24px; background: white; border: 3px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--primary); transition: all 0.3s ease; }
         .timeline-dot.active { background: var(--primary); color: white; animation: pulse-gold 2s infinite; }
+        .timeline-dot.completed { background: var(--success); border-color: var(--success); color: white; }
         .timeline-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
         .timeline-content p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
+        /* HERBAL CARD */
         .herbal-card { background: linear-gradient(135deg, #F0F7F2 0%, #E8F5E9 100%); border: 1px solid #C8E6C9; border-radius: var(--radius-sm); padding: 20px; margin-top: 16px; }
         .herbal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
         .herbal-icon-box { width: 48px; height: 48px; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); font-size: 20px; color: var(--primary); }
@@ -122,6 +142,7 @@
         .dosage-amount { font-size: 12px; color: var(--text-muted); text-align: right; }
         .dosage-note { margin-top: 12px; padding: 10px; background: var(--bg-light); border-radius: 8px; font-size: 11px; color: var(--text-muted); font-style: italic; }
 
+        /* MEAL PLAN */
         .meal-grid { display: grid; gap: 16px; }
         .meal-card { background: var(--bg-light); border-radius: var(--radius-sm); padding: 16px; display: flex; gap: 16px; align-items: center; transition: all 0.3s ease; }
         .meal-card:hover { transform: translateX(4px); background: white; box-shadow: var(--shadow-md); }
@@ -133,10 +154,11 @@
         .meal-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
         .meal-cal { font-size: 13px; font-weight: 600; color: var(--primary); white-space: nowrap; }
 
+        /* PROGRESS RING */
         .progress-ring { position: relative; width: 200px; height: 200px; margin: 0 auto 24px; }
         .progress-ring svg { transform: rotate(-90deg); }
         .progress-ring-bg { fill: none; stroke: var(--bg-light); stroke-width: 12; }
-        .progress-ring-fill { fill: none; stroke: url(#gradient); stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+        .progress-ring-fill { fill: none; stroke: url(#gradient); stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .progress-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
         .progress-percent { font-size: 48px; font-weight: 700; color: var(--primary); line-height: 1; }
         .progress-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
@@ -247,6 +269,21 @@
                             <div class="result-label">Target Berat</div>
                             <div class="result-value" id="previewTarget">0</div>
                             <div class="result-unit">kg</div>
+                        </div>
+                        
+                        <!-- Macro Bar -->
+                        <div class="macro-section" style="grid-column: 1 / -1;">
+                            <div class="macro-title">Komposisi Makro Nutrien Harian</div>
+                            <div class="macro-bar-container">
+                                <div class="macro-segment" id="barProtein" style="background: #EF4444; width: 0%;">P</div>
+                                <div class="macro-segment" id="barLemak" style="background: #F59E0B; width: 0%;">L</div>
+                                <div class="macro-segment" id="barKarbo" style="background: #3B82F6; width: 0%;">K</div>
+                            </div>
+                            <div class="macro-legend">
+                                <span><span style="color:#EF4444">■</span> Protein (<span id="pctProtein">0</span>%)</span>
+                                <span><span style="color:#F59E0B">■</span> Lemak (<span id="pctLemak">0</span>%)</span>
+                                <span><span style="color:#3B82F6">■</span> Karbo (<span id="pctKarbo">0</span>%)</span>
+                            </div>
                         </div>
                     </div>
 
@@ -765,6 +802,24 @@
                 document.getElementById('previewDate').textContent = end.toLocaleDateString('id-ID', options);
                 document.getElementById('previewDateRelative').textContent = `${userData.weeks} minggu dari sekarang`;
             }
+
+            // Macro Bars Animation
+            const totalMacroGrams = userData.protein + userData.lemak + userData.karbo;
+            const pctP = (userData.protein / totalMacroGrams) * 100;
+            const pctL = (userData.lemak / totalMacroGrams) * 100;
+            const pctK = (userData.karbo / totalMacroGrams) * 100;
+
+            const pctCalP = ((userData.protein * 4) / userData.dietCal) * 100;
+            const pctCalL = ((userData.lemak * 9) / userData.dietCal) * 100;
+            const pctCalK = ((userData.karbo * 4) / userData.dietCal) * 100;
+
+            document.getElementById('barProtein').style.width = pctCalP + '%';
+            document.getElementById('barLemak').style.width = pctCalL + '%';
+            document.getElementById('barKarbo').style.width = pctCalK + '%';
+
+            document.getElementById('pctProtein').textContent = Math.round(pctCalP);
+            document.getElementById('pctLemak').textContent = Math.round(pctCalL);
+            document.getElementById('pctKarbo').textContent = Math.round(pctCalK);
         }
 
         function generateTimeline() {
@@ -778,7 +833,6 @@
                 { week: userData.weeks, title: 'Target Tercapai!', desc: `Selamat ${userData.nama}! Masuk fase maintenance.` }
             ];
             
-            // Filter unique weeks
              const filteredPhases = phases.filter((phase, index, self) =>
                 index === self.findIndex((t) => t.week === phase.week)
             );
@@ -867,7 +921,6 @@
         }
 
         function printEvaluation() {
-            // Prepare data for print
             saveEvaluation();
             window.print();
         }
