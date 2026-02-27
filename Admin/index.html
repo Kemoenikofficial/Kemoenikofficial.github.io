@@ -12,17 +12,23 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            color: #333;
+        :root {
+            --primary-color: #2d5016;
+            --secondary-color: #4a7c23;
+            --accent-color: #8fbc8f;
+            --bg-color: #f5f5dc;
+            --card-bg: #faf8f3;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --border-color: #d4d4aa;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
         }
 
         /* Login Section */
@@ -31,23 +37,58 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a3a0a 0%, #2d5016 50%, #4a7c23 100%);
+            position: relative;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg');
+            background-size: 300px;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.1;
         }
 
         .login-box {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             text-align: center;
+            position: relative;
+            z-index: 1;
+            border: 3px solid var(--primary-color);
+        }
+
+        .login-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.3);
         }
 
         .login-box h2 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .login-subtitle {
+            color: var(--text-light);
             margin-bottom: 30px;
-            color: #333;
-            font-size: 28px;
+            font-size: 14px;
         }
 
         .input-group {
@@ -59,81 +100,120 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #555;
+            color: var(--primary-color);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .input-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
             border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: white;
         }
 
         .input-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.1);
         }
 
         .btn-login {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             border: none;
             border-radius: 10px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
         }
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 30px rgba(45, 80, 22, 0.4);
         }
 
         .error-msg {
             color: #e74c3c;
             margin-top: 15px;
+            font-size: 14px;
             display: none;
+            padding: 10px;
+            background: #fdeaea;
+            border-radius: 8px;
         }
 
         /* Dashboard Section */
         .dashboard {
             display: none;
+            min-height: 100vh;
+            padding: 20px;
         }
 
+        .dashboard-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
         .header {
-            background: white;
-            padding: 20px 30px;
+            background: var(--card-bg);
+            padding: 15px 30px;
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 2px solid var(--border-color);
         }
 
-        .header h1 {
-            font-size: 24px;
-            color: #2c3e50;
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+        }
+
+        .header-title {
+            font-size: 22px;
+            color: var(--primary-color);
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header-controls {
@@ -144,53 +224,65 @@
 
         .period-selector {
             padding: 10px 20px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             background: white;
             cursor: pointer;
             font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 600;
         }
 
         .btn-logout {
-            padding: 10px 20px;
-            background: #e74c3c;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s;
+            font-weight: 700;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
         }
 
         .btn-logout:hover {
-            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
         }
 
-        /* Main Grid Layout */
-        .dashboard-grid {
+        /* Main Layout - Exact Match to Reference */
+        .main-layout {
             display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 25px;
-            height: calc(100vh - 140px);
+            grid-template-columns: 260px 1fr;
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
         }
 
-        /* Sidebar Filter */
+        /* Sidebar */
         .sidebar {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            height: fit-content;
+            border: 2px solid var(--border-color);
+            overflow-y: auto;
         }
 
         .filter-title {
             font-size: 16px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 20px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
         }
 
         .filter-section {
@@ -199,134 +291,250 @@
 
         .filter-section label {
             display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #666;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-light);
             margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .filter-select {
             width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
+            padding: 12px;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 14px;
             background: white;
             cursor: pointer;
+            color: var(--text-dark);
+            font-weight: 600;
         }
 
         .date-range {
             display: flex;
-            gap: 10px;
             flex-direction: column;
+            gap: 10px;
         }
 
         .date-input {
-            padding: 10px;
-            border: 2px solid #e0e0e0;
+            padding: 12px;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 13px;
+            color: var(--text-dark);
         }
 
         .btn-apply {
             width: 100%;
-            padding: 12px;
-            background: #27ae60;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--pri-color) 0%, var(--secondary-color) 100%);
             color: white;
             border: none;
             border-radius: 8px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 10px;
-            transition: background 0.3s;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
         }
 
         .btn-apply:hover {
-            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(45, 80, 22, 0.3);
         }
 
-        /* Main Content */
-        .main-content {
+        /* Content Area */
+        .content-area {
             display: grid;
-            grid-template-rows: auto auto 1fr;
+            grid-template-rows: auto 1fr;
             gap: 20px;
-            overflow: hidden;
+            min-height: 0;
         }
 
-        /* Stats Cards */
-        .stats-row {
+        /* Top Section: Stats + Charts */
+        .top-section {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(4, 1fr) 1.2fr;
             gap: 20px;
+            height: 280px;
         }
 
+        /* Stat Cards */
         .stat-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             position: relative;
             overflow: hidden;
         }
 
-        .stat-card.total { border-top: 4px solid #3498db; }
-        .stat-card.used { border-top: 4px solid #27ae60; }
-        .stat-card.available { border-top: 4px solid #f39c12; }
-        .stat-card.expired { border-top: 4px solid #e74c3c; }
-
-        .stat-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
         }
 
-        .stat-value {
-            font-size: 36px;
+        .stat-card.total::before { background: var(--primary-color); }
+        .stat-card.used::before { background: #27ae60; }
+        .stat-card.available::before { background: #f39c12; }
+        .stat-card.expired::before { background: #e74c3c; }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .stat-label {
+            font-size: 11px;
             font-weight: 800;
-            color: #2c3e50;
-            margin-bottom: 10px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.4;
+        }
+
+        .stat-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .stat-card.total .stat-icon { background: rgba(45, 80, 22, 0.1); }
+        .stat-card.used .stat-icon { background: rgba(39, 174, 96, 0.1); }
+        .stat-card.available .stat-icon { background: rgba(243, 156, 18, 0.1); }
+        .stat-card.expired .stat-icon { background: rgba(231, 76, 60, 0.1); }
+
+        .stat-value {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--text-dark);
+            margin: 10px 0;
+        }
+
+        .stat-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .stat-progress {
+            flex: 1;
             height: 6px;
-            background: #ecf0f1;
+            background: #e0e0e0;
             border-radius: 3px;
             overflow: hidden;
-            margin-bottom: 8px;
         }
 
         .stat-progress-bar {
             height: 100%;
             border-radius: 3px;
-            transition: width 0.5s ease;
+            transition: width 0.8s ease;
         }
 
-        .stat-card.total .stat-progress-bar { background: #3498db; }
+        .stat-card.total .stat-progress-bar { background: var(--primary-color); }
         .stat-card.used .stat-progress-bar { background: #27ae60; }
         .stat-card.available .stat-progress-bar { background: #f39c12; }
         .stat-card.expired .stat-progress-bar { background: #e74c3c; }
 
         .stat-percent {
             font-size: 13px;
-            color: #888;
-            font-weight: 600;
+            font-weight: 800;
+            color: var(--text-light);
+            min-width: 35px;
+            text-align: right;
         }
 
-        /* Charts Row */
-        .charts-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-
-        .chart-card {
-            background: white;
+        /* Pie Chart Card */
+        .pie-card {
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pie-header {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pie-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .pie-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-left: 20px;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .legend-text {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .legend-value {
+            color: var(--text-light);
+            margin-left: auto;
+            font-weight: 700;
+        }
+
+        /* Bottom Section: Trend + Table */
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            min-height: 0;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
         }
 
         .chart-header {
@@ -337,39 +545,40 @@
         }
 
         .chart-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #2c3e50;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .chart-toggle {
             padding: 6px 12px;
-            border: 1px solid #ddd;
+            border: 2px solid var(--border-color);
             border-radius: 6px;
             font-size: 12px;
             cursor: pointer;
             background: white;
+            font-weight: 600;
+            color: var(--text-dark);
         }
 
         .chart-container {
+            flex: 1;
             position: relative;
-            height: 200px;
+            min-height: 0;
         }
 
-        .pie-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 200px;
-        }
-
-        /* Table Section */
+        /* Table Card */
         .table-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
         }
 
         .table-header {
@@ -380,15 +589,24 @@
         }
 
         .table-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #2c3e50;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-info {
+            font-size: 12px;
+            color: var(--text-light);
+            font-weight: 600;
         }
 
         .table-container {
-            overflow-x: auto;
-            max-height: 200px;
-            overflow-y: auto;
+            flex: 1;
+            overflow: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
         }
 
         table {
@@ -398,34 +616,46 @@
         }
 
         thead {
-            background: #f8f9fa;
+            background: var(--primary-color);
+            color: white;
             position: sticky;
             top: 0;
+            z-index: 10;
         }
 
         th {
-            padding: 12px;
+            padding: 14px 12px;
             text-align: left;
             font-weight: 700;
-            color: #555;
-            border-bottom: 2px solid #e0e0e0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         td {
             padding: 12px;
-            border-bottom: 1px solid #ecf0f1;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(45, 80, 22, 0.03);
         }
 
         tr:hover {
-            background: #f8f9fa;
+            background: rgba(45, 80, 22, 0.08);
         }
 
         .status-badge {
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 10px;
+            font-weight: 800;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
         }
 
         .status-active {
@@ -450,18 +680,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255,255,255,0.9);
+            background: rgba(245, 245, 220, 0.9);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -471,19 +702,18 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr);
+        /* Responsive adjustments */
+        @media (max-width: 1400px) {
+            .top-section {
+                grid-template-columns: repeat(4, 1fr);
+                height: auto;
             }
-            .charts-row {
+            .pie-card {
+                grid-column: span 4;
+                height: 300px;
+            }
+            .bottom-section {
                 grid-template-columns: 1fr;
-            }
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                display: none;
             }
         }
     </style>
@@ -493,16 +723,20 @@
     <!-- Login Container -->
     <div class="login-container" id="loginSection">
         <div class="login-box">
-            <div class="logo-icon" style="margin: 0 auto 20px; width: 60px; height: 60px; font-size: 24px;">K</div>
+            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo" class="login-logo">
             <h2>Admin Dashboard</h2>
+            <p class="login-subtitle">Kemoenik Voucher Management</p>
+            
             <div class="input-group">
                 <label>Username</label>
                 <input type="text" id="username" placeholder="Masukkan username">
             </div>
+            
             <div class="input-group">
                 <label>Password</label>
                 <input type="password" id="password" placeholder="Masukkan password">
             </div>
+            
             <button class="btn-login" onclick="login()">Masuk</button>
             <div class="error-msg" id="loginError">Username atau password salah!</div>
         </div>
@@ -510,12 +744,17 @@
 
     <!-- Dashboard Container -->
     <div class="dashboard" id="dashboardSection">
-        <div class="container">
+        <div class="dashboard-inner">
+            <!-- Header -->
             <div class="header">
-                <h1>
-                    <div class="logo-icon">K</div>
+                <div class="header-left">
+                    <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo" class="header-logo">
+                </div>
+                
+                <div class="header-center">
                     DASHBOARD VOUCHER - KODE KONSULTASI
-                </h1>
+                </div>
+                
                 <div class="header-controls">
                     <select class="period-selector" id="periodSelector" onchange="updateDashboard()">
                         <option value="all">Semua Waktu</option>
@@ -527,11 +766,12 @@
                 </div>
             </div>
 
-            <div class="dashboard-grid">
-                <!-- Sidebar Filter -->
+            <!-- Main Layout -->
+            <div class="main-layout">
+                <!-- Sidebar -->
                 <div class="sidebar">
                     <div class="filter-title">
-                        🔒 FILTER
+                        <span>🔒</span> FILTER
                     </div>
                     
                     <div class="filter-section">
@@ -551,6 +791,8 @@
                             <option value="2">Februari</option>
                             <option value="3">Maret</option>
                             <option value="4">April</option>
+                            <option value="5">Mei</option>
+                            <option value="6">Juni</option>
                         </select>
                     </div>
 
@@ -575,46 +817,87 @@
                     <button class="btn-apply" onclick="applyFilters()">Terapkan</button>
                 </div>
 
-                <!-- Main Content -->
-                <div class="main-content">
-                    <!-- Stats Cards -->
-                    <div class="stats-row">
+                <!-- Content Area -->
+                <div class="content-area">
+                    <!-- Top Section: Stats + Pie Chart -->
+                    <div class="top-section">
+                        <!-- Total Card -->
                         <div class="stat-card total">
-                            <div class="stat-label">TOTAL VOUCHER</div>
+                            <div class="stat-header">
+                                <div class="stat-label">TOTAL<br>VOUCHER</div>
+                                <div class="stat-icon">📊</div>
+                            </div>
                             <div class="stat-value" id="totalVoucher">0</div>
-                            <div class="stat-progress">
-                                <div class="stat-progress-bar" style="width: 100%"></div>
+                            <div class="stat-footer">
+                                <div class="stat-progress">
+                                    <div class="stat-progress-bar" style="width: 100%"></div>
+                                </div>
+                                <div class="stat-percent">100%</div>
                             </div>
-                            <div class="stat-percent">100%</div>
                         </div>
+
+                        <!-- Used Card -->
                         <div class="stat-card used">
-                            <div class="stat-label">SUDAH DIGUNAKAN</div>
+                            <div class="stat-header">
+                                <div class="stat-label">SUDAH<br>DIGUNAKAN</div>
+                                <div class="stat-icon">✅</div>
+                            </div>
                             <div class="stat-value" id="usedVoucher">0</div>
-                            <div class="stat-progress">
-                                <div class="stat-progress-bar" id="usedProgress" style="width: 0%"></div>
+                            <div class="stat-footer">
+                                <div class="stat-progress">
+                                    <div class="stat-progress-bar" id="usedProgress" style="width: 0%"></div>
+                                </div>
+                                <div class="stat-percent" id="usedPercent">0%</div>
                             </div>
-                            <div class="stat-percent" id="usedPercent">0%</div>
                         </div>
+
+                        <!-- Available Card -->
                         <div class="stat-card available">
-                            <div class="stat-label">BELUM DIGUNAKAN</div>
+                            <div class="stat-header">
+                                <div class="stat-label">BELUM<br>DIGUNAKAN</div>
+                                <div class="stat-icon">🕐</div>
+                            </div>
                             <div class="stat-value" id="availableVoucher">0</div>
-                            <div class="stat-progress">
-                                <div class="stat-progress-bar" id="availableProgress" style="width: 0%"></div>
+                            <div class="stat-footer">
+                                <div class="stat-progress">
+                                    <div class="stat-progress-bar" id="availableProgress" style="width: 0%"></div>
+                                </div>
+                                <div class="stat-percent" id="availablePercent">0%</div>
                             </div>
-                            <div class="stat-percent" id="availablePercent">0%</div>
                         </div>
+
+                        <!-- Expired Card -->
                         <div class="stat-card expired">
-                            <div class="stat-label">EXPIRED</div>
-                            <div class="stat-value" id="expiredVoucher">0</div>
-                            <div class="stat-progress">
-                                <div class="stat-progress-bar" id="expiredProgress" style="width: 0%"></div>
+                            <div class="stat-header">
+                                <div class="stat-label">EXPIRED</div>
+                                <div class="stat-icon">⚠️</div>
                             </div>
-                            <div class="stat-percent" id="expiredPercent">0%</div>
+                            <div class="stat-value" id="expiredVoucher">0</div>
+                            <div class="stat-footer">
+                                <div class="stat-progress">
+                                    <div class="stat-progress-bar" id="expiredProgress" style="width: 0%"></div>
+                                </div>
+                                <div class="stat-percent" id="expiredPercent">0%</div>
+                            </div>
+                        </div>
+
+                        <!-- Pie Chart -->
+                        <div class="pie-card">
+                            <div class="pie-header">Distribusi Status Voucher</div>
+                            <div style="display: flex; align-items: center; justify-content: center; flex: 1;">
+                                <div class="pie-container" style="width: 180px; height: 180px;">
+                                    <canvas id="pieChart"></canvas>
+                                </div>
+                                <div class="pie-legend" id="pieLegend">
+                                    <!-- Legend generated by JS -->
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Charts -->
-                    <div class="charts-row">
+                    <!-- Bottom Section: Trend Chart + Table -->
+                    <div class="bottom-section">
+                        <!-- Trend Chart -->
                         <div class="chart-card">
                             <div class="chart-header">
                                 <div class="chart-title">Trend Penggunaan Voucher per Hari</div>
@@ -627,37 +910,29 @@
                                 <canvas id="trendChart"></canvas>
                             </div>
                         </div>
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <div class="chart-title">Distribusi Status Voucher</div>
-                            </div>
-                            <div class="pie-container">
-                                <canvas id="pieChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Table -->
-                    <div class="table-card">
-                        <div class="table-header">
-                            <div class="table-title">Top 10 Voucher Terakhir Digunakan</div>
-                            <span style="font-size: 12px; color: #888;">1-10 dari <span id="totalUsed">0</span></span>
-                        </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Kode Voucher</th>
-                                        <th>Nama User</th>
-                                        <th>No. WA</th>
-                                        <th>Tanggal Aktif</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recentTable">
-                                    <!-- Data akan diisi oleh JavaScript -->
-                                </tbody>
-                            </table>
+                        <!-- Recent Table -->
+                        <div class="table-card">
+                            <div class="table-header">
+                                <div class="table-title">Top 10 Voucher Terakhir Digunakan</div>
+                                <div class="table-info">1-10 dari <span id="totalUsed">0</span></div>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Kode Voucher</th>
+                                            <th>Nama User</th>
+                                            <th>No. WA</th>
+                                            <th>Tanggal Aktif</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentTable">
+                                        <!-- Data by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -671,9 +946,8 @@
     </div>
 
     <script>
-        // Konfigurasi Google Apps Script Web App URL
-        // GANTI DENGAN URL DEPLOYMENT ANDA
-        const GAS_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+        // GANTI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxxMTlRG16ycJqOKCwsu1gDgsTS9t52scy0mWx92-U20ks5qRpmq07vcd_udgFqKQQG/exec';
         
         let trendChartInstance = null;
         let pieChartInstance = null;
@@ -689,8 +963,8 @@
         };
 
         function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
 
             if (!username || !password) {
                 showError('Username dan password wajib diisi!');
@@ -699,12 +973,11 @@
 
             showLoading(true);
 
-            // Kirim request ke Google Apps Script untuk verifikasi
             fetch(`${GAS_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
                 .then(response => response.json())
                 .then(data => {
                     showLoading(false);
-                    if (data.success) {
+                    if (data.status === 'success') {
                         localStorage.setItem('adminSession', JSON.stringify({
                             username: username,
                             timestamp: new Date().getTime()
@@ -712,12 +985,12 @@
                         showDashboard();
                         loadDashboardData();
                     } else {
-                        showError('Username atau password salah!');
+                        showError(data.message || 'Username atau password salah!');
                     }
                 })
                 .catch(error => {
                     showLoading(false);
-                    // Untuk demo, bypass login jika kredensial sesuai
+                    // Demo mode fallback
                     if (username === 'DANIRAMDANI' && password === 'KEMOENIK26') {
                         localStorage.setItem('adminSession', JSON.stringify({
                             username: username,
@@ -761,112 +1034,114 @@
                 .then(response => response.json())
                 .then(data => {
                     showLoading(false);
-                    dashboardData = data;
-                    renderDashboard(data);
+                    if (data.status === 'success') {
+                        dashboardData = data;
+                        renderDashboard(data);
+                    } else {
+                        console.error('Error:', data.message);
+                        useDummyData();
+                    }
                 })
                 .catch(error => {
                     showLoading(false);
-                    console.error('Error:', error);
-                    // Data dummy untuk demo
-                    const dummyData = generateDummyData();
-                    dashboardData = dummyData;
-                    renderDashboard(dummyData);
+                    console.error('Fetch error:', error);
+                    useDummyData();
                 });
         }
 
-        function generateDummyData() {
-            // Generate data dummy berdasarkan struktur sheet Anda
-            const vouchers = [];
-            const names = ['Alni', 'Budi', 'Citra', 'Dewi', 'Andi', 'Bayu', 'Tini', 'Reza', '', '', '', ''];
-            const statuses = ['UNUSED', 'ACTIVE'];
+        function useDummyData() {
+            // Generate dummy data matching sheet structure
+            const dummyVouchers = [];
+            const names = ['Alni', 'Budi Santoso', 'Citra Dewi', 'Dewi Lestari', 'Andi Wijaya', 'Bayu Aji', 'Tini Susanti', 'Reza Pratama', '', '', '', '', 'Siti Aminah', 'Rudi Hartono'];
+            const today = new Date();
             
-            // Generate 30 voucher
-            for (let i = 0; i < 30; i++) {
-                const isUsed = Math.random() > 0.6;
-                const activationDate = isUsed ? new Date(2026, 1, 20 + Math.floor(Math.random() * 10)) : null;
+            for (let i = 0; i < 35; i++) {
+                const isUsed = Math.random() > 0.5;
+                const isExpired = isUsed && Math.random() > 0.7;
+                const activationDate = isUsed ? new Date(today.getTime() - Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000) : null;
                 const expiryDate = activationDate ? new Date(activationDate.getTime() + 7 * 24 * 60 * 60 * 1000) : null;
                 
-                vouchers.push({
+                if (isExpired && expiryDate) {
+                    expiryDate.setDate(expiryDate.getDate() - 10);
+                }
+                
+                dummyVouchers.push({
                     nama: names[i] || '',
-                    noWA: isUsed ? `628${Math.floor(Math.random() * 10000000000)}` : '',
+                    noWA: isUsed ? `628${Math.floor(1000000000 + Math.random() * 9000000000)}` : '',
                     kode: `KMK26-${Math.random().toString(36).substring(2, 11).toUpperCase()}`,
-                    status: isUsed ? 'ACTIVE' : 'UNUSED',
+                    status: isUsed ? (isExpired ? 'EXPIRED' : 'ACTIVE') : 'UNUSED',
                     tanggalAktif: activationDate ? formatDate(activationDate) : '',
                     tanggalExpired: expiryDate ? formatDate(expiryDate) : ''
                 });
             }
 
-            return processVoucherData(vouchers);
+            const processed = processVoucherData(dummyVouchers);
+            dashboardData = {
+                status: 'success',
+                stats: processed.stats,
+                trendData: processed.trendData,
+                recentUsed: processed.recentUsed,
+                allVouchers: dummyVouchers
+            };
+            renderDashboard(dashboardData);
         }
 
         function processVoucherData(vouchers) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            let total = vouchers.length;
-            let used = 0;
-            let available = 0;
-            let expired = 0;
-
-            const trendData = {};
-            const recentUsed = [];
+            let stats = { total: 0, used: 0, available: 0, expired: 0 };
+            let trendData = {};
+            let recentUsed = [];
 
             vouchers.forEach(v => {
-                // Hitung status berdasarkan tanggal
+                if (!v.kode) return;
+                
+                stats.total++;
+                
                 let actualStatus = v.status;
-                if (v.status === 'ACTIVE' && v.tanggalExpired) {
-                    const expDate = parseDate(v.tanggalExpired);
-                    if (expDate < today) {
-                        actualStatus = 'EXPIRED';
-                    }
+                const expDate = parseDate(v.tanggalExpired);
+                
+                if (v.status === 'ACTIVE' && expDate && expDate < today) {
+                    actualStatus = 'EXPIRED';
                 }
 
                 if (actualStatus === 'ACTIVE') {
-                    used++;
-                    // Trend data
+                    stats.used++;
                     if (v.tanggalAktif) {
-                        const date = v.tanggalAktif;
-                        trendData[date] = (trendData[date] || 0) + 1;
+                        trendData[v.tanggalAktif] = (trendData[v.tanggalAktif] || 0) + 1;
                     }
-                    // Recent used
                     recentUsed.push(v);
                 } else if (actualStatus === 'UNUSED') {
-                    available++;
+                    stats.available++;
                 } else if (actualStatus === 'EXPIRED') {
-                    expired++;
+                    stats.expired++;
                 }
             });
 
-            // Sort recent by activation date
             recentUsed.sort((a, b) => {
                 const dateA = parseDate(a.tanggalAktif) || new Date(0);
                 const dateB = parseDate(b.tanggalAktif) || new Date(0);
                 return dateB - dateA;
             });
 
-            return {
-                total,
-                used,
-                available,
-                expired,
-                trendData,
-                recentUsed: recentUsed.slice(0, 10),
-                allVouchers: vouchers
-            };
+            return { stats, trendData, recentUsed };
         }
 
         function renderDashboard(data) {
+            const stats = data.stats;
+            
             // Update stat cards
-            document.getElementById('totalVoucher').textContent = data.total;
-            document.getElementById('usedVoucher').textContent = data.used;
-            document.getElementById('availableVoucher').textContent = data.available;
-            document.getElementById('expiredVoucher').textContent = data.expired;
-            document.getElementById('totalUsed').textContent = data.used;
+            document.getElementById('totalVoucher').textContent = stats.total;
+            document.getElementById('usedVoucher').textContent = stats.used;
+            document.getElementById('availableVoucher').textContent = stats.available;
+            document.getElementById('expiredVoucher').textContent = stats.expired;
+            document.getElementById('totalUsed').textContent = stats.used;
 
             // Update progress bars
-            const usedPercent = data.total > 0 ? Math.round((data.used / data.total) * 100) : 0;
-            const availablePercent = data.total > 0 ? Math.round((data.available / data.total) * 100) : 0;
-            const expiredPercent = data.total > 0 ? Math.round((data.expired / data.total) * 100) : 0;
+            const usedPercent = stats.total > 0 ? Math.round((stats.used / stats.total) * 100) : 0;
+            const availablePercent = stats.total > 0 ? Math.round((stats.available / stats.total) * 100) : 0;
+            const expiredPercent = stats.total > 0 ? Math.round((stats.expired / stats.total) * 100) : 0;
 
             document.getElementById('usedProgress').style.width = usedPercent + '%';
             document.getElementById('usedPercent').textContent = usedPercent + '%';
@@ -878,17 +1153,92 @@
             document.getElementById('expiredPercent').textContent = expiredPercent + '%';
 
             // Render charts
+            renderPieChart(stats.used, stats.available, stats.expired, stats.total);
             renderTrendChart(data.trendData);
-            renderPieChart(data.used, data.available, data.expired);
-
-            // Render table
             renderTable(data.recentUsed);
+        }
+
+        function renderPieChart(used, available, expired, total) {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+            
+            if (pieChartInstance) {
+                pieChartInstance.destroy();
+            }
+
+            const data = [used, available, expired];
+            const labels = ['USED', 'AVAILABLE', 'EXPIRED'];
+            const colors = ['#27ae60', '#f39c12', '#e74c3c'];
+            const percentages = total > 0 ? [
+                Math.round((used/total)*100),
+                Math.round((available/total)*100),
+                Math.round((expired/total)*100)
+            ] : [0, 0, 0];
+
+            // Update legend
+            const legendHTML = labels.map((label, i) => `
+                <div class="legend-item">
+                    <div class="legend-color" style="background: ${colors[i]}"></div>
+                    <span class="legend-text">${label}</span>
+                    <span class="legend-value">${percentages[i]}% (${data[i]})</span>
+                </div>
+            `).join('');
+            document.getElementById('pieLegend').innerHTML = legendHTML;
+
+            pieChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderWidth: 0,
+                        cutout: '65%'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed;
+                                    const percentage = total > 0 ? Math.round((value/total)*100) : 0;
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'centerText',
+                    beforeDraw: function(chart) {
+                        const width = chart.width,
+                              height = chart.height,
+                              ctx = chart.ctx;
+                        
+                        ctx.restore();
+                        const fontSize = (height / 114).toFixed(2);
+                        ctx.font = `bold ${fontSize}em sans-serif`;
+                        ctx.textBaseline = "middle";
+                        ctx.fillStyle = "#2d5016";
+                        
+                        const text = total.toString(),
+                              textX = Math.round((width - ctx.measureText(text).width) / 2),
+                              textY = height / 2;
+                        
+                        ctx.fillText(text, textX, textY);
+                        ctx.save();
+                    }
+                }]
+            });
         }
 
         function renderTrendChart(trendData) {
             const ctx = document.getElementById('trendChart').getContext('2d');
             
-            // Sort dates
             const sortedDates = Object.keys(trendData).sort((a, b) => parseDate(a) - parseDate(b));
             const values = sortedDates.map(d => trendData[d]);
 
@@ -904,15 +1254,18 @@
                         return `${parts[0]}/${parts[1]}`;
                     }),
                     datasets: [{
-                        label: 'Penggunaan Voucher',
+                        label: 'Penggunaan',
                         data: values,
-                        borderColor: '#27ae60',
-                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                        borderWidth: 2,
+                        borderColor: '#2d5016',
+                        backgroundColor: 'rgba(45, 80, 22, 0.1)',
+                        borderWidth: 3,
                         fill: true,
                         tension: 0.4,
-                        pointBackgroundColor: '#27ae60',
-                        pointRadius: 4
+                        pointBackgroundColor: '#2d5016',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
                     }]
                 },
                 options: {
@@ -924,41 +1277,20 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { stepSize: 1 }
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderPieChart(used, available, expired) {
-            const ctx = document.getElementById('pieChart').getContext('2d');
-
-            if (pieChartInstance) {
-                pieChartInstance.destroy();
-            }
-
-            pieChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['USED', 'AVAILABLE', 'EXPIRED'],
-                    datasets: [{
-                        data: [used, available, expired],
-                        backgroundColor: ['#27ae60', '#f39c12', '#e74c3c'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '60%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 12,
-                                padding: 15,
+                            ticks: { 
+                                stepSize: 1,
                                 font: { size: 11 }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 11 }
+                            },
+                            grid: {
+                                display: false
                             }
                         }
                     }
@@ -970,21 +1302,27 @@
             const tbody = document.getElementById('recentTable');
             tbody.innerHTML = '';
 
-            recentUsed.forEach(v => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            recentUsed.slice(0, 10).forEach(v => {
                 const row = tbody.insertRow();
+                
                 let statusClass = 'status-unused';
                 let statusText = 'UNUSED';
                 
                 if (v.status === 'ACTIVE') {
                     const expDate = parseDate(v.tanggalExpired);
-                    const today = new Date();
-                    if (expDate < today) {
+                    if (expDate && expDate < today) {
                         statusClass = 'status-expired';
                         statusText = 'EXPIRED';
                     } else {
                         statusClass = 'status-active';
                         statusText = 'ACTIVE';
                     }
+                } else if (v.status === 'EXPIRED') {
+                    statusClass = 'status-expired';
+                    statusText = 'EXPIRED';
                 }
 
                 row.innerHTML = `
@@ -998,7 +1336,6 @@
         }
 
         function updateTrendChart() {
-            // Implementasi toggle per minggu bisa ditambahkan di sini
             if (dashboardData) {
                 renderTrendChart(dashboardData.trendData);
             }
@@ -1014,19 +1351,30 @@
         }
 
         function formatDate(date) {
-            const d = date.getDate().toString().padStart(2, '0');
-            const m = (date.getMonth() + 1).toString().padStart(2, '0');
-            const y = date.getFullYear();
-            return `${d}/${m}/${y}`;
+            if (!date) return "";
+            if (date instanceof Date) {
+                const d = date.getDate().toString().padStart(2, '0');
+                const m = (date.getMonth() + 1).toString().padStart(2, '0');
+                const y = date.getFullYear();
+                return `${d}/${m}/${y}`;
+            }
+            return date.toString();
         }
 
         function parseDate(dateStr) {
-            if (!dateStr) return null;
-            const parts = dateStr.split('/');
+            if (!dateStr || dateStr === "") return null;
+            if (dateStr instanceof Date) return dateStr;
+            
+            const parts = dateStr.toString().split('/');
             if (parts.length === 3) {
-                return new Date(parts[2], parts[1] - 1, parts[0]);
+                const day = parseInt(parts[0], 10);
+                const month = parseInt(parts[1], 10) - 1;
+                const year = parseInt(parts[2], 10);
+                return new Date(year, month, day);
             }
-            return null;
+            
+            const parsed = new Date(dateStr);
+            return isNaN(parsed.getTime()) ? null : parsed;
         }
 
         // Enter key untuk login
