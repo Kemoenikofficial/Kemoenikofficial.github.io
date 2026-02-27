@@ -1,233 +1,1038 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard Voucher - CALFATLOSS</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Voucher - KODE KONSULTASI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-*{box-sizing:border-box;}
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:#ece7dc;
-    overflow:hidden;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
 
-/* HEADER */
-.header{
-    height:70px;
-    background:#f5f1e8;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 30px;
-    border-bottom:2px solid #d6cbb3;
-}
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-.header h1{
-    font-size:20px;
-    color:#2f4f2f;
-}
+        /* Login Section */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
 
-.logo{
-    height:45px;
-}
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
 
-/* MAIN LAYOUT */
-.wrapper{
-    height:calc(100vh - 70px);
-    display:grid;
-    grid-template-columns:220px 1fr 280px;
-    gap:20px;
-    padding:20px;
-}
+        .login-box h2 {
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 28px;
+        }
 
-/* SIDEBAR */
-.sidebar{
-    background:#f5f1e8;
-    border-radius:14px;
-    padding:20px;
-    box-shadow:0 6px 20px rgba(0,0,0,0.05);
-}
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
 
-.sidebar select, .sidebar button{
-    width:100%;
-    padding:8px;
-    margin:10px 0;
-    border-radius:6px;
-    border:1px solid #ccc;
-}
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
 
-.sidebar button{
-    background:#2f4f2f;
-    color:white;
-    border:none;
-}
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
 
-/* CENTER AREA */
-.center{
-    display:grid;
-    grid-template-rows:1fr 1fr;
-    gap:20px;
-}
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
 
-/* CARD */
-.card{
-    background:#fdfbf6;
-    border-radius:14px;
-    padding:20px;
-    box-shadow:0 6px 25px rgba(0,0,0,0.06);
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-}
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-/* RIGHT STATS */
-.stats{
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-}
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
 
-.stat{
-    background:#fdfbf6;
-    padding:18px;
-    border-radius:14px;
-    box-shadow:0 6px 25px rgba(0,0,0,0.06);
-}
+        .error-msg {
+            color: #e74c3c;
+            margin-top: 15px;
+            display: none;
+        }
 
-.stat.total{
-    background:#2f4f2f;
-    color:white;
-}
+        /* Dashboard Section */
+        .dashboard {
+            display: none;
+        }
 
-.stat h4{
-    margin:0;
-    font-size:14px;
-}
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.stat h2{
-    margin:10px 0;
-    font-size:30px;
-}
+        .header h1 {
+            font-size: 24px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.progress{
-    height:8px;
-    border-radius:4px;
-    background:#ddd;
-    overflow:hidden;
-}
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
 
-.progress div{
-    height:100%;
-}
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
 
-.used{background:#2f4f2f;}
-.available{background:#c9a227;}
-.expired{background:#a94442;}
-</style>
+        .period-selector {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+
+        /* Main Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 25px;
+            height: calc(100vh - 140px);
+        }
+
+        /* Sidebar Filter */
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
+
+        .filter-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .date-input {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .btn-apply {
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn-apply:hover {
+            background: #229954;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card.total { border-top: 4px solid #3498db; }
+        .stat-card.used { border-top: 4px solid #27ae60; }
+        .stat-card.available { border-top: 4px solid #f39c12; }
+        .stat-card.expired { border-top: 4px solid #e74c3c; }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .stat-progress {
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .stat-progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .stat-card.total .stat-progress-bar { background: #3498db; }
+        .stat-card.used .stat-progress-bar { background: #27ae60; }
+        .stat-card.available .stat-progress-bar { background: #f39c12; }
+        .stat-card.expired .stat-progress-bar { background: #e74c3c; }
+
+        .stat-percent {
+            font-size: 13px;
+            color: #888;
+            font-weight: 600;
+        }
+
+        /* Charts Row */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .chart-toggle {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            background: white;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
+        }
+
+        .pie-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+        }
+
+        /* Table Section */
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .table-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 700;
+            color: #555;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-unused {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-expired {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="header">
-    <div style="display:flex;align-items:center;gap:15px;">
-        <img class="logo" src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg">
-        <h1>DASHBOARD VOUCHER - CALFATLOSS</h1>
-    </div>
-    <div>Periode: Semua Waktu</div>
-</div>
-
-<div class="wrapper">
-
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <h3>Filter</h3>
-        <select><option>Tahun</option></select>
-        <select><option>Bulan</option></select>
-        <select><option>Status</option></select>
-        <button>Terapkan</button>
-    </div>
-
-    <!-- CENTER -->
-    <div class="center">
-
-        <div class="card">
-            <h3>Trend Penggunaan Voucher</h3>
-            <canvas id="trendChart"></canvas>
+    <!-- Login Container -->
+    <div class="login-container" id="loginSection">
+        <div class="login-box">
+            <div class="logo-icon" style="margin: 0 auto 20px; width: 60px; height: 60px; font-size: 24px;">K</div>
+            <h2>Admin Dashboard</h2>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Masukkan username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Masukkan password">
+            </div>
+            <button class="btn-login" onclick="login()">Masuk</button>
+            <div class="error-msg" id="loginError">Username atau password salah!</div>
         </div>
-
-        <div class="card">
-            <h3>Distribusi Status</h3>
-            <canvas id="pieChart"></canvas>
-        </div>
-
     </div>
 
-    <!-- RIGHT -->
-    <div class="stats">
+    <!-- Dashboard Container -->
+    <div class="dashboard" id="dashboardSection">
+        <div class="container">
+            <div class="header">
+                <h1>
+                    <div class="logo-icon">K</div>
+                    DASHBOARD VOUCHER - KODE KONSULTASI
+                </h1>
+                <div class="header-controls">
+                    <select class="period-selector" id="periodSelector" onchange="updateDashboard()">
+                        <option value="all">Semua Waktu</option>
+                        <option value="today">Hari Ini</option>
+                        <option value="week">Minggu Ini</option>
+                        <option value="month">Bulan Ini</option>
+                    </select>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
 
-        <div class="stat total">
-            <h4>Total Voucher</h4>
-            <h2>120</h2>
-        </div>
+            <div class="dashboard-grid">
+                <!-- Sidebar Filter -->
+                <div class="sidebar">
+                    <div class="filter-title">
+                        🔒 FILTER
+                    </div>
+                    
+                    <div class="filter-section">
+                        <label>Tahun</label>
+                        <select class="filter-select" id="filterYear">
+                            <option value="all">Semua Tahun</option>
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                        </select>
+                    </div>
 
-        <div class="stat">
-            <h4>Sudah Digunakan</h4>
-            <h2>87</h2>
-            <div class="progress">
-                <div class="used" style="width:72%"></div>
+                    <div class="filter-section">
+                        <label>Bulan</label>
+                        <select class="filter-select" id="filterMonth">
+                            <option value="all">Semua Bulan</option>
+                            <option value="1">Januari</option>
+                            <option value="2">Februari</option>
+                            <option value="3">Maret</option>
+                            <option value="4">April</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-section">
+                        <label>Status</label>
+                        <select class="filter-select" id="filterStatus">
+                            <option value="all">Semua Status</option>
+                            <option value="UNUSED">UNUSED</option>
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="EXPIRED">EXPIRED</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-section">
+                        <label>Rentang Tanggal</label>
+                        <div class="date-range">
+                            <input type="date" class="date-input" id="dateFrom">
+                            <input type="date" class="date-input" id="dateTo">
+                        </div>
+                    </div>
+
+                    <button class="btn-apply" onclick="applyFilters()">Terapkan</button>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Stats Cards -->
+                    <div class="stats-row">
+                        <div class="stat-card total">
+                            <div class="stat-label">TOTAL VOUCHER</div>
+                            <div class="stat-value" id="totalVoucher">0</div>
+                            <div class="stat-progress">
+                                <div class="stat-progress-bar" style="width: 100%"></div>
+                            </div>
+                            <div class="stat-percent">100%</div>
+                        </div>
+                        <div class="stat-card used">
+                            <div class="stat-label">SUDAH DIGUNAKAN</div>
+                            <div class="stat-value" id="usedVoucher">0</div>
+                            <div class="stat-progress">
+                                <div class="stat-progress-bar" id="usedProgress" style="width: 0%"></div>
+                            </div>
+                            <div class="stat-percent" id="usedPercent">0%</div>
+                        </div>
+                        <div class="stat-card available">
+                            <div class="stat-label">BELUM DIGUNAKAN</div>
+                            <div class="stat-value" id="availableVoucher">0</div>
+                            <div class="stat-progress">
+                                <div class="stat-progress-bar" id="availableProgress" style="width: 0%"></div>
+                            </div>
+                            <div class="stat-percent" id="availablePercent">0%</div>
+                        </div>
+                        <div class="stat-card expired">
+                            <div class="stat-label">EXPIRED</div>
+                            <div class="stat-value" id="expiredVoucher">0</div>
+                            <div class="stat-progress">
+                                <div class="stat-progress-bar" id="expiredProgress" style="width: 0%"></div>
+                            </div>
+                            <div class="stat-percent" id="expiredPercent">0%</div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div class="chart-title">Trend Penggunaan Voucher per Hari</div>
+                                <select class="chart-toggle" id="trendToggle" onchange="updateTrendChart()">
+                                    <option value="day">Per Hari</option>
+                                    <option value="week">Per Minggu</option>
+                                </select>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="trendChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div class="chart-title">Distribusi Status Voucher</div>
+                            </div>
+                            <div class="pie-container">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-title">Top 10 Voucher Terakhir Digunakan</div>
+                            <span style="font-size: 12px; color: #888;">1-10 dari <span id="totalUsed">0</span></span>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Kode Voucher</th>
+                                        <th>Nama User</th>
+                                        <th>No. WA</th>
+                                        <th>Tanggal Aktif</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentTable">
+                                    <!-- Data akan diisi oleh JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="stat">
-            <h4>Belum Digunakan</h4>
-            <h2>25</h2>
-            <div class="progress">
-                <div class="available" style="width:21%"></div>
-            </div>
-        </div>
-
-        <div class="stat">
-            <h4>Expired</h4>
-            <h2>8</h2>
-            <div class="progress">
-                <div class="expired" style="width:7%"></div>
-            </div>
-        </div>
-
     </div>
 
-</div>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
 
-<script>
-new Chart(document.getElementById('trendChart'),{
-    type:'line',
-    data:{
-        labels:['2 Apr','9 Apr','11 Apr','13 Apr','17 Apr','22 Apr','29 Apr'],
-        datasets:[{
-            data:[3,4,8,5,4,15,8],
-            borderColor:'#2f4f2f',
-            backgroundColor:'rgba(47,79,47,0.15)',
-            fill:true,
-            tension:0.4
-        }]
-    },
-    options:{plugins:{legend:{display:false}}}
-});
+    <script>
+        // Konfigurasi Google Apps Script Web App URL
+        // GANTI DENGAN URL DEPLOYMENT ANDA
+        const GAS_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+        
+        let trendChartInstance = null;
+        let pieChartInstance = null;
+        let dashboardData = null;
 
-new Chart(document.getElementById('pieChart'),{
-    type:'doughnut',
-    data:{
-        labels:['Used','Available','Expired'],
-        datasets:[{
-            data:[87,25,8],
-            backgroundColor:['#2f4f2f','#c9a227','#a94442']
-        }]
-    }
-});
-</script>
+        // Check session
+        window.onload = function() {
+            const session = localStorage.getItem('adminSession');
+            if (session) {
+                showDashboard();
+                loadDashboardData();
+            }
+        };
 
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                showError('Username dan password wajib diisi!');
+                return;
+            }
+
+            showLoading(true);
+
+            // Kirim request ke Google Apps Script untuk verifikasi
+            fetch(`${GAS_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+                .then(response => response.json())
+                .then(data => {
+                    showLoading(false);
+                    if (data.success) {
+                        localStorage.setItem('adminSession', JSON.stringify({
+                            username: username,
+                            timestamp: new Date().getTime()
+                        }));
+                        showDashboard();
+                        loadDashboardData();
+                    } else {
+                        showError('Username atau password salah!');
+                    }
+                })
+                .catch(error => {
+                    showLoading(false);
+                    // Untuk demo, bypass login jika kredensial sesuai
+                    if (username === 'DANIRAMDANI' && password === 'KEMOENIK26') {
+                        localStorage.setItem('adminSession', JSON.stringify({
+                            username: username,
+                            timestamp: new Date().getTime()
+                        }));
+                        showDashboard();
+                        loadDashboardData();
+                    } else {
+                        showError('Terjadi kesalahan koneksi!');
+                    }
+                });
+        }
+
+        function showError(msg) {
+            const errorEl = document.getElementById('loginError');
+            errorEl.textContent = msg;
+            errorEl.style.display = 'block';
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 3000);
+        }
+
+        function showDashboard() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+        }
+
+        function logout() {
+            localStorage.removeItem('adminSession');
+            location.reload();
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        function loadDashboardData() {
+            showLoading(true);
+
+            fetch(`${GAS_URL}?action=getDashboardData`)
+                .then(response => response.json())
+                .then(data => {
+                    showLoading(false);
+                    dashboardData = data;
+                    renderDashboard(data);
+                })
+                .catch(error => {
+                    showLoading(false);
+                    console.error('Error:', error);
+                    // Data dummy untuk demo
+                    const dummyData = generateDummyData();
+                    dashboardData = dummyData;
+                    renderDashboard(dummyData);
+                });
+        }
+
+        function generateDummyData() {
+            // Generate data dummy berdasarkan struktur sheet Anda
+            const vouchers = [];
+            const names = ['Alni', 'Budi', 'Citra', 'Dewi', 'Andi', 'Bayu', 'Tini', 'Reza', '', '', '', ''];
+            const statuses = ['UNUSED', 'ACTIVE'];
+            
+            // Generate 30 voucher
+            for (let i = 0; i < 30; i++) {
+                const isUsed = Math.random() > 0.6;
+                const activationDate = isUsed ? new Date(2026, 1, 20 + Math.floor(Math.random() * 10)) : null;
+                const expiryDate = activationDate ? new Date(activationDate.getTime() + 7 * 24 * 60 * 60 * 1000) : null;
+                
+                vouchers.push({
+                    nama: names[i] || '',
+                    noWA: isUsed ? `628${Math.floor(Math.random() * 10000000000)}` : '',
+                    kode: `KMK26-${Math.random().toString(36).substring(2, 11).toUpperCase()}`,
+                    status: isUsed ? 'ACTIVE' : 'UNUSED',
+                    tanggalAktif: activationDate ? formatDate(activationDate) : '',
+                    tanggalExpired: expiryDate ? formatDate(expiryDate) : ''
+                });
+            }
+
+            return processVoucherData(vouchers);
+        }
+
+        function processVoucherData(vouchers) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            let total = vouchers.length;
+            let used = 0;
+            let available = 0;
+            let expired = 0;
+
+            const trendData = {};
+            const recentUsed = [];
+
+            vouchers.forEach(v => {
+                // Hitung status berdasarkan tanggal
+                let actualStatus = v.status;
+                if (v.status === 'ACTIVE' && v.tanggalExpired) {
+                    const expDate = parseDate(v.tanggalExpired);
+                    if (expDate < today) {
+                        actualStatus = 'EXPIRED';
+                    }
+                }
+
+                if (actualStatus === 'ACTIVE') {
+                    used++;
+                    // Trend data
+                    if (v.tanggalAktif) {
+                        const date = v.tanggalAktif;
+                        trendData[date] = (trendData[date] || 0) + 1;
+                    }
+                    // Recent used
+                    recentUsed.push(v);
+                } else if (actualStatus === 'UNUSED') {
+                    available++;
+                } else if (actualStatus === 'EXPIRED') {
+                    expired++;
+                }
+            });
+
+            // Sort recent by activation date
+            recentUsed.sort((a, b) => {
+                const dateA = parseDate(a.tanggalAktif) || new Date(0);
+                const dateB = parseDate(b.tanggalAktif) || new Date(0);
+                return dateB - dateA;
+            });
+
+            return {
+                total,
+                used,
+                available,
+                expired,
+                trendData,
+                recentUsed: recentUsed.slice(0, 10),
+                allVouchers: vouchers
+            };
+        }
+
+        function renderDashboard(data) {
+            // Update stat cards
+            document.getElementById('totalVoucher').textContent = data.total;
+            document.getElementById('usedVoucher').textContent = data.used;
+            document.getElementById('availableVoucher').textContent = data.available;
+            document.getElementById('expiredVoucher').textContent = data.expired;
+            document.getElementById('totalUsed').textContent = data.used;
+
+            // Update progress bars
+            const usedPercent = data.total > 0 ? Math.round((data.used / data.total) * 100) : 0;
+            const availablePercent = data.total > 0 ? Math.round((data.available / data.total) * 100) : 0;
+            const expiredPercent = data.total > 0 ? Math.round((data.expired / data.total) * 100) : 0;
+
+            document.getElementById('usedProgress').style.width = usedPercent + '%';
+            document.getElementById('usedPercent').textContent = usedPercent + '%';
+            
+            document.getElementById('availableProgress').style.width = availablePercent + '%';
+            document.getElementById('availablePercent').textContent = availablePercent + '%';
+            
+            document.getElementById('expiredProgress').style.width = expiredPercent + '%';
+            document.getElementById('expiredPercent').textContent = expiredPercent + '%';
+
+            // Render charts
+            renderTrendChart(data.trendData);
+            renderPieChart(data.used, data.available, data.expired);
+
+            // Render table
+            renderTable(data.recentUsed);
+        }
+
+        function renderTrendChart(trendData) {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            // Sort dates
+            const sortedDates = Object.keys(trendData).sort((a, b) => parseDate(a) - parseDate(b));
+            const values = sortedDates.map(d => trendData[d]);
+
+            if (trendChartInstance) {
+                trendChartInstance.destroy();
+            }
+
+            trendChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedDates.map(d => {
+                        const parts = d.split('/');
+                        return `${parts[0]}/${parts[1]}`;
+                    }),
+                    datasets: [{
+                        label: 'Penggunaan Voucher',
+                        data: values,
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#27ae60',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderPieChart(used, available, expired) {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+
+            if (pieChartInstance) {
+                pieChartInstance.destroy();
+            }
+
+            pieChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['USED', 'AVAILABLE', 'EXPIRED'],
+                    datasets: [{
+                        data: [used, available, expired],
+                        backgroundColor: ['#27ae60', '#f39c12', '#e74c3c'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 15,
+                                font: { size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTable(recentUsed) {
+            const tbody = document.getElementById('recentTable');
+            tbody.innerHTML = '';
+
+            recentUsed.forEach(v => {
+                const row = tbody.insertRow();
+                let statusClass = 'status-unused';
+                let statusText = 'UNUSED';
+                
+                if (v.status === 'ACTIVE') {
+                    const expDate = parseDate(v.tanggalExpired);
+                    const today = new Date();
+                    if (expDate < today) {
+                        statusClass = 'status-expired';
+                        statusText = 'EXPIRED';
+                    } else {
+                        statusClass = 'status-active';
+                        statusText = 'ACTIVE';
+                    }
+                }
+
+                row.innerHTML = `
+                    <td><strong>${v.kode}</strong></td>
+                    <td>${v.nama || '-'}</td>
+                    <td>${v.noWA || '-'}</td>
+                    <td>${v.tanggalAktif || '-'}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                `;
+            });
+        }
+
+        function updateTrendChart() {
+            // Implementasi toggle per minggu bisa ditambahkan di sini
+            if (dashboardData) {
+                renderTrendChart(dashboardData.trendData);
+            }
+        }
+
+        function updateDashboard() {
+            loadDashboardData();
+        }
+
+        function applyFilters() {
+            // Implementasi filter bisa ditambahkan di sini
+            loadDashboardData();
+        }
+
+        function formatDate(date) {
+            const d = date.getDate().toString().padStart(2, '0');
+            const m = (date.getMonth() + 1).toString().padStart(2, '0');
+            const y = date.getFullYear();
+            return `${d}/${m}/${y}`;
+        }
+
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+            return null;
+        }
+
+        // Enter key untuk login
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+    </script>
 </body>
 </html>
