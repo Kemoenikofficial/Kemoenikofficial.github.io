@@ -717,6 +717,22 @@
             color: var(--primary);
         }
 
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #DC2626 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
         .tips-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1002,6 +1018,28 @@
             font-size: 14px;
             color: var(--text-muted);
             margin-bottom: 24px;
+        }
+
+        /* History item actions */
+        .history-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .history-item {
+            position: relative;
+        }
+
+        .edit-mode-indicator {
+            background: var(--accent-gold);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 12px;
         }
 
         @media print {
@@ -1353,6 +1391,11 @@
                         </div>
 
                         <div class="weekly-eval-form">
+                            <!-- Edit Mode Indicator -->
+                            <div id="editModeIndicator" class="edit-mode-indicator" style="display: none;">
+                                <i class="fas fa-edit mr-1"></i> Mode Edit: Minggu <span id="editWeekNumber">1</span>
+                            </div>
+
                             <div class="weekly-eval-grid">
                                 <div class="form-group">
                                     <label class="form-label">Berat Awal Minggu (kg)</label>
@@ -1400,9 +1443,13 @@
                             </div>
 
                             <div class="flex gap-3 mt-4 no-print">
-                                <button class="btn btn-primary" onclick="saveWeeklyEval()">
+                                <button class="btn btn-primary" id="btnSaveEval" onclick="saveWeeklyEval()">
                                     <i class="fas fa-save"></i>
                                     Simpan Evaluasi
+                                </button>
+                                <button class="btn btn-outline" id="btnCancelEdit" onclick="cancelEdit()" style="display: none;">
+                                    <i class="fas fa-times"></i>
+                                    Batal Edit
                                 </button>
                                 <button class="btn btn-outline" onclick="printWeeklyEval()">
                                     <i class="fas fa-print"></i>
@@ -1507,6 +1554,7 @@
         };
 
         let weeklyHistory = [];
+        let editingIndex = -1; // -1 means not editing, otherwise index of item being edited
 
         // Constants
         const deficitMap = {
@@ -1820,32 +1868,128 @@
                 return;
             }
 
-            const weekData = {
-                week: weeklyHistory.length + 1,
-                date: new Date().toLocaleDateString('id-ID'),
-                startWeight: startWeight,
-                endWeight: endWeight,
-                loss: (startWeight - endWeight).toFixed(1),
-                conditions: {...weeklyConditions},
-                obstacle: obstacle
-            };
+            if (editingIndex >= 0) {
+                // Update existing entry
+                weeklyHistory[editingIndex] = {
+                    week: weeklyHistory[editingIndex].week,
+                    date: new Date().toLocaleDateString('id-ID'),
+                    startWeight: startWeight,
+                    endWeight: endWeight,
+                    loss: (startWeight - endWeight).toFixed(1),
+                    conditions: {...weeklyConditions},
+                    obstacle: obstacle
+                };
+                
+                // Reset edit mode
+                cancelEdit();
+                alert('Evaluasi mingguan berhasil diperbarui!');
+            } else {
+                // Add new entry
+                const weekData = {
+                    week: weeklyHistory.length + 1,
+                    date: new Date().toLocaleDateString('id-ID'),
+                    startWeight: startWeight,
+                    endWeight: endWeight,
+                    loss: (startWeight - endWeight).toFixed(1),
+                    conditions: {...weeklyConditions},
+                    obstacle: obstacle
+                };
 
-            weeklyHistory.push(weekData);
+                weeklyHistory.push(weekData);
+                
+                // Reset form
+                resetForm();
+                alert('Evaluasi mingguan berhasil disimpan!');
+            }
+
             saveWeeklyData();
             renderWeeklyHistory();
             
-            // Reset form
+            // Update week display
+            document.getElementById('evalWeekDisplay').textContent = `Minggu ke-${weeklyHistory.length + 1}`;
+        }
+
+        function resetForm() {
             document.getElementById('weekStartWeight').value = '';
             document.getElementById('weekEndWeight').value = '';
             document.getElementById('weeklyObstacle').value = '';
             document.querySelectorAll('.condition-item').forEach(el => el.classList.remove('checked'));
             weeklyConditions = { energi: false, nafsu: false, efek: false, tidur: false };
             document.getElementById('weeklyResult').style.display = 'none';
+        }
+
+        function editWeeklyEval(index) {
+            const weekData = weeklyHistory[index];
+            if (!weekData) return;
+
+            // Set edit mode
+            editingIndex = index;
+
+            // Fill form with existing data
+            document.getElementById('weekStartWeight').value = weekData.startWeight;
+            document.getElementById('weekEndWeight').value = weekData.endWeight;
+            document.getElementById('weeklyObstacle').value = weekData.obstacle || '';
             
+            // Set conditions
+            weeklyConditions = {...weekData.conditions};
+            document.querySelectorAll('.condition-item').forEach(el => {
+                const type = el.getAttribute('onclick').match(/'(\w+)'/)[1];
+                if (weekData.conditions[type]) {
+                    el.classList.add('checked');
+                } else {
+                    el.classList.remove('checked');
+                }
+            });
+
+            // Calculate and show loss
+            calculateWeeklyLoss();
+
+            // Show edit mode UI
+            document.getElementById('editModeIndicator').style.display = 'inline-block';
+            document.getElementById('editWeekNumber').textContent = weekData.week;
+            document.getElementById('btnSaveEval').innerHTML = '<i class="fas fa-save"></i> Update Evaluasi';
+            document.getElementById('btnCancelEdit').style.display = 'flex';
+            
+            // Scroll to form
+            document.getElementById('weeklyEvalSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteWeeklyEval(index) {
+            if (!confirm('Apakah Anda yakin ingin menghapus evaluasi minggu ini?')) {
+                return;
+            }
+
+            weeklyHistory.splice(index, 1);
+            
+            // Reorder week numbers
+            weeklyHistory.forEach((item, idx) => {
+                item.week = idx + 1;
+            });
+
+            saveWeeklyData();
+            renderWeeklyHistory();
+            
+            // If editing the deleted item, cancel edit
+            if (editingIndex === index) {
+                cancelEdit();
+            } else if (editingIndex > index) {
+                editingIndex--;
+            }
+
             // Update week display
             document.getElementById('evalWeekDisplay').textContent = `Minggu ke-${weeklyHistory.length + 1}`;
             
-            alert('Evaluasi mingguan berhasil disimpan!');
+            alert('Evaluasi mingguan berhasil dihapus!');
+        }
+
+        function cancelEdit() {
+            editingIndex = -1;
+            resetForm();
+            
+            // Reset UI
+            document.getElementById('editModeIndicator').style.display = 'none';
+            document.getElementById('btnSaveEval').innerHTML = '<i class="fas fa-save"></i> Simpan Evaluasi';
+            document.getElementById('btnCancelEdit').style.display = 'none';
         }
 
         function renderWeeklyHistory() {
@@ -1856,12 +2000,12 @@
             }
 
             container.innerHTML = weeklyHistory.map((week, index) => `
-                <div class="bg-white p-4 rounded-lg border border-gray-200">
+                <div class="bg-white p-4 rounded-lg border border-gray-200 history-item">
                     <div class="flex justify-between items-center mb-2">
                         <span class="font-semibold text-sm">Minggu ${week.week}</span>
                         <span class="text-xs text-gray-500">${week.date}</span>
                     </div>
-                    <div class="grid grid-cols-3 gap-2 text-center mb-2">
+                    <div class="grid grid-cols-3 gap-2 text-center mb-3">
                         <div>
                             <div class="text-xs text-gray-500">Awal</div>
                             <div class="font-semibold">${week.startWeight} kg</div>
@@ -1875,7 +2019,17 @@
                             <div class="font-semibold text-green-600">${week.loss} kg</div>
                         </div>
                     </div>
-                    ${week.obstacle ? `<div class="text-xs text-gray-600 mt-2"><strong>Kendala:</strong> ${week.obstacle}</div>` : ''}
+                    ${week.obstacle ? `<div class="text-xs text-gray-600 mb-3"><strong>Kendala:</strong> ${week.obstacle}</div>` : ''}
+                    
+                    <!-- Action Buttons -->
+                    <div class="history-actions no-print">
+                        <button onclick="editWeeklyEval(${index})" class="btn btn-outline btn-sm" style="flex: 1;">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button onclick="deleteWeeklyEval(${index})" class="btn btn-danger btn-sm" style="flex: 1;">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
