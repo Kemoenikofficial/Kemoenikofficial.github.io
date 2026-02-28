@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- ==========================================
-         [EDITABLE] JUDUL HALAMAN
-         ========================================== -->
     <title>Kemoenik Official Store</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,16 +13,13 @@
 
     <style>
         :root {
-            /* ==========================================
-               [EDITABLE] PALET WARNA UTAMA
-               ========================================== */
-            --primary: #10B981;        /* Warna utama hijau */
-            --primary-dark: #059669;   /* Warna utama gelap */
-            --bg-soft: #F5F7FA;        /* Background lembut */
-            --text-main: #1F2937;      /* Warna teks utama */
+            --primary: #10B981;
+            --primary-dark: #059669;
+            --bg-soft: #F5F7FA;
+            --text-main: #1F2937;
             --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.03);
-            --accent: #F59E0B;         /* Warna aksen/oranye */
-            --danger: #EF4444;         /* Warna merah/danger */
+            --accent: #F59E0B;
+            --danger: #EF4444;
         }
 
         * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -48,6 +41,36 @@
         ::-webkit-scrollbar { width: 3px; height: 3px;}
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         ::-webkit-scrollbar-track { background: transparent; }
+
+        /* KATEGORI HORIZONTAL */
+        #category-list {
+            display: flex !important;
+            flex-direction: row !important;
+            overflow-x: auto;
+            gap: 0 !important;
+            padding-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        #category-list::-webkit-scrollbar { display: none; }
+        
+        .category-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6B7280;
+            cursor: pointer;
+            padding: 8px 16px !important;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            border-right: 1px solid #E5E7EB;
+            flex-shrink: 0;
+        }
+        .category-text:last-child { border-right: none; }
+        .category-text.active {
+            color: var(--primary-dark);
+            font-weight: 700;
+            background: linear-gradient(180deg, transparent 90%, var(--primary) 90%);
+        }
 
         /* Modal Styles */
         .modal-overlay { 
@@ -79,7 +102,6 @@
         }
         @keyframes slideUp { from { transform: translateY(30%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        /* Invoice Styles */
         #invoiceModal .modal-content {
             background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
             border-radius: 24px 24px 0 0;
@@ -98,7 +120,6 @@
             overflow: hidden;
         }
 
-        /* Input Styles */
         .input-style { 
             width: 100%; 
             border: 2px solid #E5E7EB; 
@@ -181,7 +202,6 @@
         .product-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
         .product-card:hover .product-img { transform: scale(1.08); }
 
-        /* Flash Sale Badge */
         .flash-sale-badge {
             position: absolute;
             top: 0;
@@ -245,7 +265,6 @@
             height: 2.8em; 
         }
         
-        /* Rating & Sold */
         .product-meta {
             display: flex;
             align-items: center;
@@ -351,25 +370,14 @@
             border-radius: 4px;
         }
 
-        /* Category Pills */
-        .category-text {
-            font-size: 14px;
-            font-weight: 500;
-            color: #6B7280;
-            cursor: pointer;
-            padding: 6px 0;
-            transition: all 0.2s ease;
-        }
-        .category-text.active {
-            color: var(--primary-dark);
-            font-weight: 700;
-        }
-
         /* Promo Container */
         #promo-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
+        }
+        @media (min-width: 480px) {
+            #promo-container { grid-template-columns: repeat(3, 1fr); }
         }
         .promo-card {
             background: white;
@@ -377,7 +385,10 @@
             overflow: hidden;
             box-shadow: 0 2px 12px rgba(0,0,0,0.06);
             border: 1px solid rgba(239, 68, 68, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
         }
+        .promo-card:active { transform: scale(0.98); }
         .promo-card img {
             width: 100%;
             height: 120px;
@@ -407,6 +418,55 @@
             margin-left: 4px;
         }
 
+        /* Gallery Product Detail */
+        #product-gallery {
+            position: relative;
+            overflow: hidden;
+            background: #f3f4f6;
+        }
+        #gallery-slider {
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+        #gallery-slider img {
+            min-width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+        .gallery-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .gallery-dot.active {
+            background: white;
+            width: 20px;
+            border-radius: 4px;
+        }
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.9);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .gallery-nav:active { transform: translateY(-50%) scale(0.95); }
+        .gallery-prev { left: 12px; }
+        .gallery-next { right: 12px; }
+
         /* Print Styles */
         @media print {
             body * { visibility: hidden; }
@@ -427,15 +487,15 @@
     </div>
 
     <!-- ==========================================
-         [EDITABLE] HEADER - LOGO & NAMA TOKO
+         [GANTI] HEADER - LOGO & NAMA TOKO
          ========================================== -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100" style="box-shadow: 0 2px 20px rgba(0,0,0,0.04);">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <!-- [EDITABLE] URL LOGO TOKO -->
+                <!-- [GANTI] URL LOGO TOKO DI SINI -->
                 <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo" class="h-10 w-10 rounded-xl object-cover shadow-sm border border-gray-100">
                 <div>
-                    <!-- [EDITABLE] NAMA TOKO -->
+                    <!-- [GANTI] NAMA TOKO DI SINI -->
                     <h1 class="text-base font-bold text-gray-800 leading-tight" id="store-name">Kemoenik Official Store</h1>
                     <p class="text-[10px] text-gray-400 font-medium">Official Partner</p>
                 </div>
@@ -461,51 +521,55 @@
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 pb-24 pt-4">
-        <!-- Hero Slider -->
+        
+        <!-- ==========================================
+             [GANTI] SLIDER HERO - 5 GAMBAR PROMO
+             Cara dapat link: Upload ke postimg.cc atau imgur
+             ========================================== -->
         <section class="mb-5 slider-container">
             <div id="hero-slider"></div>
             <div class="slider-dots" id="slider-dots"></div>
         </section>
 
-        <!-- ==========================================
-             [EDITABLE] QUICK LINKS - SOSIAL MEDIA & KONTAK
-             ========================================== -->
+        <!-- Quick Links -->
         <section class="mb-5 grid grid-cols-4 gap-3">
-            <!-- [EDITABLE] Link Instagram -->
+            <!-- [GANTI] LINK INSTAGRAM -->
             <a href="https://instagram.com/kemoenik26" target="_blank" class="quick-link">
                 <svg class="w-6 h-6 mb-1" style="color: #E4405F;" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 <span class="text-[10px] text-gray-600 font-medium">Instagram</span>
             </a>
             
-            <!-- [EDITABLE] Alamat Toko -->
+            <!-- [GANTI] ALAMAT TOKO -->
             <a href="#" onclick="event.preventDefault(); alert('Kp Cibubuay, Desa Cibodas, Kec. Pasirjambu, Kab. Bandung')" class="quick-link">
                 <svg class="w-6 h-6 text-blue-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span class="text-[10px] text-gray-600 font-medium">Lokasi</span>
             </a>
             
-            <!-- [EDITABLE] Link TikTok -->
+            <!-- [GANTI] LINK TIKTOK -->
             <a href="https://tiktok.com/@kemoenik" target="_blank" class="quick-link">
                 <svg class="w-6 h-6 text-gray-800 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>
                 <span class="text-[10px] text-gray-600 font-medium">TikTok</span>
             </a>
             
-            <!-- [EDITABLE] Link WhatsApp (otomatis dari CONFIG) -->
             <a id="wa-btn-header" href="#" class="quick-link">
                 <svg class="w-6 h-6 mb-1" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="16" cy="16" r="14" fill="#25D366"/>
-                    <path d="M21.5 18.5c-.3-.2-1.7-.9-2-.9-.3-.1-.5-.1-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2.1-.4 0-.5-.1-.2-.6-1.5-.9-2-.2-.5-.5-.4-.7-.4-.2 0-.4 0-.6 0-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="white"/>
+                    <path d="M21.5 18.5c-.3-.2-1.7-.9-2-.9-.3-.1-.5-.1-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2.1-.4 0-.5-.1-.2-.6-1.5-.9-2-.2-.5-.5-.4-.7-.4-.2 0-.4 0-.6 0-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.6-.7 1.8-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z" fill="white"/>
+                    <path d="M16 6.5c5.2 0 9.5 4.3 9.5 9.5S21.2 25.5 16 25.5c-1.7 0-3.3-.4-4.7-1.2l-.3-.2-3.1.8.8-3-.2-.3c-.9-1.5-1.5-3.2-1.5-5.1 0-5.2 4.3-9.5 9.5-9.5m0-1.5C9.6 5 5 9.6 5 15.5c0 2.2.6 4.3 1.7 6.1L5 27l5.6-1.8c1.7.9 3.6 1.4 5.7 1.4 6.1 0 11-4.9 11-11S22.1 5 16 5z" fill="white"/>
                 </svg>
                 <span class="text-[10px] text-gray-600 font-medium">Chat</span>
             </a>
         </section>
 
-        <!-- Categories -->
+        <!-- Kategori Horizontal -->
         <section class="mb-4">
             <h2 class="text-sm font-bold text-gray-700 mb-2">KATEGORI PRODUK</h2>
-            <div class="flex flex-col gap-2 pb-2" id="category-list"></div>
+            <div id="category-list"></div>
         </section>
 
-        <!-- Testimoni -->
+        <!-- ==========================================
+             [GANTI] SLIDER TESTIMONI - 20 GAMBAR
+             ========================================== -->
         <section class="mb-6">
             <h2 class="text-sm font-bold text-gray-700 mb-3">TESTIMONI</h2>
             <div class="slider-container">
@@ -514,7 +578,9 @@
             </div>
         </section>
 
-        <!-- Promo Spesial -->
+        <!-- ==========================================
+             [GANTI] PROMO SPESIAL - 3 PRODUK
+             ========================================== -->
         <section class="mb-6">
             <h2 class="text-sm font-bold text-red-600 mb-3">🔥 PROMO SPESIAL</h2>
             <div id="promo-container"></div>
@@ -527,14 +593,14 @@
     </main>
 
     <!-- ==========================================
-         [EDITABLE] FOOTER - INFO TOKO
+         [GANTI] FOOTER - INFO TOKO
          ========================================== -->
     <footer class="bg-white text-gray-500 mt-8 shadow-inner pb-24 border-t border-gray-100">
         <div class="container mx-auto px-4 py-8 text-center">
-            <!-- [EDITABLE] Logo Footer -->
+            <!-- [GANTI] LOGO FOOTER -->
             <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="h-14 w-14 rounded-full mx-auto mb-3 shadow-md border-2 border-gray-100">
             <h3 class="font-bold text-gray-700 mb-1">Kemoenik Official Store</h3>
-            <!-- [EDITABLE] Alamat Lengkap -->
+            <!-- [GANTI] ALAMAT LENGKAP -->
             <p class="text-xs max-w-xs mx-auto leading-relaxed opacity-70">Kp Cibubuay, Desa Cibodas, Kec. Pasirjambu, Kab. Bandung, 40972</p>
             <p class="text-[10px] text-gray-400 mt-3">Produk Berkualitas & Terpercaya</p>
         </div>
@@ -583,54 +649,32 @@
 
     <script>
         // ==========================================
-        // [EDITABLE] KONFIGURASI DATA UTAMA
+        // [GANTI SEMUA INI] KONFIGURASI DATA UTAMA
         // ==========================================
+        
         const CONFIG = {
-            // [EDITABLE] Nama Toko
+            // [GANTI] Nama Toko
             storeName: "Kemoenik Official Store",
             
-            // [EDITABLE] Alamat Toko
+            // [GANTI] Alamat Toko
             storeAddress: "Kp Cibubuay, Desa Cibodas, Kec. Pasirjambu, Kab. Bandung, 40972",
             
-            // [EDITABLE] Nomor WhatsApp Admin (format: 62xxxxxxxxxx)
+            // [GANTI] Nomor WhatsApp (format: 62xxxxxxxxxx, tanpa + atau spasi)
             whatsappNumber: "6281546450547",
             
-            // [EDITABLE] Data Rekening Bank
+            // [GANTI] Data Rekening Bank
             bankAccounts: [
-                { 
-                    bank: "BRI", 
-                    number: "000501168248506", 
-                    name: "DANI RAMDANI", 
-                    logoClass: "logo-bri", 
-                    cardClass: "bank-card-bri" 
-                },
-                { 
-                    bank: "DANA", 
-                    number: "081546450547", 
-                    name: "DANI RAMDANI", 
-                    logoClass: "logo-dana", 
-                    cardClass: "bank-card-dana" 
-                },
-                { 
-                    bank: "SeaBank", 
-                    number: "901851870313", 
-                    name: "DANI RAMDANI", 
-                    logoClass: "logo-seabank", 
-                    cardClass: "bank-card-seabank" 
-                }
+                { bank: "BRI", number: "000501168248506", name: "DANI RAMDANI", logoClass: "logo-bri", cardClass: "bank-card-bri" },
+                { bank: "DANA", number: "081546450547", name: "DANI RAMDANI", logoClass: "logo-dana", cardClass: "bank-card-dana" },
+                { bank: "SeaBank", number: "901851870313", name: "DANI RAMDANI", logoClass: "logo-seabank", cardClass: "bank-card-seabank" }
             ],
             
-            // [EDITABLE] Kupon Diskon
+            // [GANTI] Kupon Diskon
             coupons: [ 
-                { 
-                    code: "KEMOENIK26", 
-                    type: "shipping", 
-                    value: 15000, 
-                    minPurchase: 120000 
-                } 
+                { code: "KEMOENIK26", type: "shipping", value: 15000, minPurchase: 120000 } 
             ],
             
-            // [EDITABLE] Kategori Produk
+            // [GANTI] Kategori Produk
             categories: [ 
                 { id: 'all', name: "Semua" }, 
                 { id: 'calc', name: "Calculator" }, 
@@ -638,50 +682,99 @@
                 { id: 'teh', name: "Teh" },
                 { id: 'lainnya', name: "Lainnya" }
             ],
-            
-            // [EDITABLE] Gambar Slider Hero (Banner)
+
+            // ==========================================
+            // [GANTI] SLIDER HERO - 5 GAMBAR BANNER
+            // Upload gambar ke postimg.cc, copy link "Direct link"
+            // Ukuran ideal: 800x400 pixel
+            // ==========================================
             sliders: [
-                "https://placehold.co/800x400/10B981/FFFFFF?text=Flash+Sale+50%25&font=plus-jakarta-sans",
-                "https://placehold.co/800x400/059669/FFFFFF?text=Gratis+Ongkir&font=plus-jakarta-sans",
-                "https://placehold.co/800x400/FCD34D/1F2937?text=Promo+Spesial&font=plus-jakarta-sans"
+                "https://i.postimg.cc/nhNRDt26/4.png",    // [GANTI] Gambar 1
+                "https://i.postimg.cc/PJNYyCrW/1.png",    // [GANTI] Gambar 2
+                "https://i.postimg.cc/tCKWdC0h/2.png",    // [GANTI] Gambar 3
+                "https://i.postimg.cc/kXbt53V8/3.png",    // [GANTI] Gambar 4
+                "https://placehold.co/800x400/3B82F6/FFFFFF?text=Banner+5"     // [GANTI] Gambar 5
             ],
-            
-            // [EDITABLE] Gambar Testimoni/Review
+
+            // ==========================================
+            // [GANTI] SLIDER TESTIMONI - 20 GAMBAR
+            // Upload screenshot testimoni customer ke postimg.cc
+            // Ukuran ideal: 800x400 pixel
+            // ==========================================
             testimoniSliders: [
-                "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+1",
-                "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+2",
-                "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+3"
+                "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+1",   // [GANTI]
+                "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+2",   // [GANTI]
+                "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+3",   // [GANTI]
+                "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+4",   // [GANTI]
+                "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+5",   // [GANTI]
+                "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+6",   // [GANTI]
+                "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+7",   // [GANTI]
+                "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+8",   // [GANTI]
+                "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+9",   // [GANTI]
+                "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+10",  // [GANTI]
+                "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+11",  // [GANTI]
+                "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+12",  // [GANTI]
+                "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+13",  // [GANTI]
+                "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+14",  // [GANTI]
+                "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+15",  // [GANTI]
+                "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+16",  // [GANTI]
+                "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+17",  // [GANTI]
+                "https://placehold.co/800x400/FCD34D/1F2937?text=Testimoni+18",  // [GANTI]
+                "https://placehold.co/800x400/10B981/FFFFFF?text=Testimoni+19",  // [GANTI]
+                "https://placehold.co/800x400/059669/FFFFFF?text=Testimoni+20"   // [GANTI]
             ],
-            
-            // [EDITABLE] Produk Promo Spesial
+
+            // ==========================================
+            // [GANTI] PROMO SPESIAL - 3 PRODUK
+            // ==========================================
             promoProducts: [
                 {
                     id: "promo1",
-                    name: "Kapsul Pelangsing Premium",
-                    price: 120000,
-                    oldPrice: 180000,
-                    image: "https://placehold.co/400x400/fee2e2/991b1b?text=Promo+1"
+                    name: "CALCULATOR FAT LOSS - Hitung Kalori Harian",           // [GANTI] Nama promo 1
+                    price: 15000,                              // [GANTI] Harga promo 1
+                    oldPrice: 20000,                           // [GANTI] Harga normal 1
+                    // [GANTI] Gambar promo 1 (ukuran 400x400)
+                    image: "https://i.postimg.cc/MHJQ89Wz/katalog-1.jpg"
                 },
                 {
                     id: "promo2",
-                    name: "Teh Detox Herbal",
-                    price: 95000,
-                    oldPrice: 150000,
+                    name: "Teh Detox Herbal",                   // [GANTI] Nama promo 2
+                    price: 95000,                               // [GANTI] Harga promo 2
+                    oldPrice: 150000,                           // [GANTI] Harga normal 2
+                    // [GANTI] Gambar promo 2 (ukuran 400x400)
                     image: "https://placehold.co/400x400/d1fae5/065f46?text=Promo+2"
+                },
+                {
+                    id: "promo3",                               // [GANTI] Promo 3 (BARU)
+                    name: "Paket Combo Diet",                   // [GANTI] Nama promo 3
+                    price: 199000,                              // [GANTI] Harga promo 3
+                    oldPrice: 350000,                           // [GANTI] Harga normal 3
+                    // [GANTI] Gambar promo 3 (ukuran 400x400)
+                    image: "https://placehold.co/400x400/fef3c7/b45309?text=Promo+3"
                 }
             ],
-            
-            // [EDITABLE] DAFTAR PRODUK UTAMA
+
+            // ==========================================
+            // [GANTI] DAFTAR PRODUK - MASING-MASING 5 GAMBAR
+            // Cara tambah gambar: Tambah URL di array images (minimal 5)
+            // ==========================================
             products: [
                 { 
                     id: 1, 
                     category: 'calc', 
                     name: "CALCULATOR FAT LOSS - Hitung Kalori Harian", 
-                    price: 60000, 
-                    originalPrice: 120000,
+                    price: 40000, 
+                    originalPrice: 40000,
                     discount: 50, 
                     flashSale: true,
-                    images: ["https://placehold.co/400x400/F3F4F6/374151?text=Calculator"], 
+                    // [GANTI] 5 GAMBAR PRODUK - Tambah link di sini
+                    images: [
+                        "https://i.postimg.cc/MHJQ89Wz/katalog-1.jpg",  // [GANTI] Gambar 1 (utama)
+                        "https://i.postimg.cc/htsqBv0R/katalog-2.jpg",  // [GANTI] Gambar 2
+                        "https://placehold.co/400x400/F3F4F6/374151?text=Calc+3",  // [GANTI] Gambar 3
+                        "https://placehold.co/400x400/F3F4F6/374151?text=Calc+4",  // [GANTI] Gambar 4
+                        "https://placehold.co/400x400/F3F4F6/374151?text=Calc+5"   // [GANTI] Gambar 5
+                    ], 
                     sold: 2547, 
                     rating: 4.9, 
                     desc: 'Kalkulator premium untuk menghitung kebutuhan kalori harian Anda.' 
@@ -689,12 +782,19 @@
                 { 
                     id: 2, 
                     category: 'kapsul', 
-                    name: "KEMOENIK SLIM 1 - Kapsul Pelangsing Herbal", 
+                    name: "KEMOENIK SLIM 1", 
                     price: 100000, 
                     originalPrice: 150000,
                     discount: 33, 
                     flashSale: true,
-                    images: ["https://placehold.co/400x400/DCFCE7/166534?text=Slim+1"], 
+                    // [GANTI] 5 GAMBAR PRODUK
+                    images: [
+                        "https://placehold.co/400x400/DCFCE7/166534?text=Slim1-1",  // [GANTI]
+                        "https://placehold.co/400x400/DCFCE7/166534?text=Slim1-2",  // [GANTI]
+                        "https://placehold.co/400x400/DCFCE7/166534?text=Slim1-3",  // [GANTI]
+                        "https://placehold.co/400x400/DCFCE7/166534?text=Slim1-4",  // [GANTI]
+                        "https://placehold.co/400x400/DCFCE7/166534?text=Slim1-5"   // [GANTI]
+                    ], 
                     sold: 1892, 
                     rating: 4.8, 
                     desc: 'Kapsul pelangsing herbal premium dengan bahan alami.' 
@@ -702,12 +802,19 @@
                 { 
                     id: 3, 
                     category: 'kapsul', 
-                    name: "KEMOENIK SLIM 2 - Kapsul Premium", 
+                    name: "KEMOENIK SLIM 2", 
                     price: 75000, 
                     originalPrice: 100000,
                     discount: 25, 
                     flashSale: false,
-                    images: ["https://placehold.co/400x400/FEF3C7/92400E?text=Slim+2"], 
+                    // [GANTI] 5 GAMBAR PRODUK
+                    images: [
+                        "https://placehold.co/400x400/FEF3C7/92400E?text=Slim2-1",  // [GANTI]
+                        "https://placehold.co/400x400/FEF3C7/92400E?text=Slim2-2",  // [GANTI]
+                        "https://placehold.co/400x400/FEF3C7/92400E?text=Slim2-3",  // [GANTI]
+                        "https://placehold.co/400x400/FEF3C7/92400E?text=Slim2-4",  // [GANTI]
+                        "https://placehold.co/400x400/FEF3C7/92400E?text=Slim2-5"   // [GANTI]
+                    ], 
                     sold: 956, 
                     rating: 4.7, 
                     desc: 'Seri kedua dari kapsul pelangsing Kemoenik.' 
@@ -715,12 +822,19 @@
                 { 
                     id: 4, 
                     category: 'teh', 
-                    name: "TEH SLIM 1 - Teh Herbal Pelangsing", 
+                    name: "TEH SLIM 1", 
                     price: 45000, 
                     originalPrice: 60000,
                     discount: 25, 
                     flashSale: true,
-                    images: ["https://placehold.co/400x400/D1FAE5/065F46?text=Teh+Slim"], 
+                    // [GANTI] 5 GAMBAR PRODUK
+                    images: [
+                        "https://placehold.co/400x400/D1FAE5/065F46?text=Teh1-1",  // [GANTI]
+                        "https://placehold.co/400x400/D1FAE5/065F46?text=Teh1-2",  // [GANTI]
+                        "https://placehold.co/400x400/D1FAE5/065F46?text=Teh1-3",  // [GANTI]
+                        "https://placehold.co/400x400/D1FAE5/065F46?text=Teh1-4",  // [GANTI]
+                        "https://placehold.co/400x400/D1FAE5/065F46?text=Teh1-5"   // [GANTI]
+                    ], 
                     sold: 3421, 
                     rating: 4.9, 
                     desc: 'Teh herbal alami untuk program pelangsingan.' 
@@ -728,12 +842,19 @@
                 { 
                     id: 5, 
                     category: 'teh', 
-                    name: "TEH SLIM 2 - Teh Premium Detox", 
+                    name: "TEH SLIM 2", 
                     price: 55000, 
                     originalPrice: 75000,
                     discount: 27, 
                     flashSale: true,
-                    images: ["https://placehold.co/400x400/ECFDF5/047857?text=Teh+Detox"], 
+                    // [GANTI] 5 GAMBAR PRODUK
+                    images: [
+                        "https://placehold.co/400x400/ECFDF5/047857?text=Teh2-1",  // [GANTI]
+                        "https://placehold.co/400x400/ECFDF5/047857?text=Teh2-2",  // [GANTI]
+                        "https://placehold.co/400x400/ECFDF5/047857?text=Teh2-3",  // [GANTI]
+                        "https://placehold.co/400x400/ECFDF5/047857?text=Teh2-4",  // [GANTI]
+                        "https://placehold.co/400x400/ECFDF5/047857?text=Teh2-5"   // [GANTI]
+                    ], 
                     sold: 2876, 
                     rating: 4.8, 
                     desc: 'Teh detox premium untuk membersihkan racun dalam tubuh.' 
@@ -741,12 +862,19 @@
                 { 
                     id: 6, 
                     category: 'lainnya', 
-                    name: "SERUM WAJAH GLOW - Perawatan Kulit", 
+                    name: "SERUM WAJAH GLOW", 
                     price: 85000, 
                     originalPrice: 120000,
                     discount: 29, 
                     flashSale: false,
-                    images: ["https://placehold.co/400x400/FDF4FF/86198F?text=Serum"], 
+                    // [GANTI] 5 GAMBAR PRODUK
+                    images: [
+                        "https://placehold.co/400x400/FDF4FF/86198F?text=Serum-1",  // [GANTI]
+                        "https://placehold.co/400x400/FDF4FF/86198F?text=Serum-2",  // [GANTI]
+                        "https://placehold.co/400x400/FDF4FF/86198F?text=Serum-3",  // [GANTI]
+                        "https://placehold.co/400x400/FDF4FF/86198F?text=Serum-4",  // [GANTI]
+                        "https://placehold.co/400x400/FDF4FF/86198F?text=Serum-5"   // [GANTI]
+                    ], 
                     sold: 1234, 
                     rating: 4.6, 
                     desc: 'Serum wajah untuk kulit cerah dan glowing.' 
@@ -754,12 +882,19 @@
                 { 
                     id: 7, 
                     category: 'kapsul', 
-                    name: "VITAMIN C 1000MG - Imunitas Tubuh", 
+                    name: "VITAMIN C 1000MG", 
                     price: 35000, 
                     originalPrice: 50000,
                     discount: 30, 
                     flashSale: true,
-                    images: ["https://placehold.co/400x400/FEE2E2/991B1B?text=Vit+C"], 
+                    // [GANTI] 5 GAMBAR PRODUK
+                    images: [
+                        "https://placehold.co/400x400/FEE2E2/991B1B?text=VitC-1",  // [GANTI]
+                        "https://placehold.co/400x400/FEE2E2/991B1B?text=VitC-2",  // [GANTI]
+                        "https://placehold.co/400x400/FEE2E2/991B1B?text=VitC-3",  // [GANTI]
+                        "https://placehold.co/400x400/FEE2E2/991B1B?text=VitC-4",  // [GANTI]
+                        "https://placehold.co/400x400/FEE2E2/991B1B?text=VitC-5"   // [GANTI]
+                    ], 
                     sold: 5678, 
                     rating: 4.9, 
                     desc: 'Suplemen Vitamin C dosis tinggi untuk daya tahan tubuh.' 
@@ -767,12 +902,19 @@
                 { 
                     id: 8, 
                     category: 'lainnya', 
-                    name: "MINYAK KELAPA MURNI - Virgin Coconut Oil", 
+                    name: "MINYAK KELAPA MURNI", 
                     price: 65000, 
                     originalPrice: 80000,
                     discount: 19, 
                     flashSale: false,
-                    images: ["https://placehold.co/400x400/FEF3C7/B45309?text=VCO"], 
+                    // [GANTI] 5 GAMBAR PRODUK
+                    images: [
+                        "https://placehold.co/400x400/FEF3C7/B45309?text=VCO-1",  // [GANTI]
+                        "https://placehold.co/400x400/FEF3C7/B45309?text=VCO-2",  // [GANTI]
+                        "https://placehold.co/400x400/FEF3C7/B45309?text=VCO-3",  // [GANTI]
+                        "https://placehold.co/400x400/FEF3C7/B45309?text=VCO-4",  // [GANTI]
+                        "https://placehold.co/400x400/FEF3C7/B45309?text=VCO-5"   // [GANTI]
+                    ], 
                     sold: 892, 
                     rating: 4.7, 
                     desc: 'Minyak kelapa murni berkualitas tinggi.' 
@@ -789,8 +931,11 @@
         let lastCheckoutData = { customer: {}, method: 'transfer', coupon: null };
         let currentInvoice = {};
         let slideInterval = null;
-        let testimoniIndex = 0;
         let testimoniInterval = null;
+
+        // ========== GALLERY VARIABLES ==========
+        let currentGallerySlide = 0;
+        let totalGallerySlides = 0;
 
         // ========== INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', () => {
@@ -801,7 +946,6 @@
             renderTestimoniSlider();
             renderPromoProducts();
             
-            // Setup WhatsApp link
             document.getElementById('wa-btn-header').href = `https://wa.me/${CONFIG.whatsappNumber}`;
             document.getElementById('store-name').innerText = CONFIG.storeName;
         });
@@ -915,6 +1059,8 @@
             }, 4000);
         }
 
+        let testimoniIndex = 0;
+
         function updateTestimoniSlider() {
             const slider = document.getElementById('category-slider');
             slider.style.transform = `translateX(-${testimoniIndex * 100}%)`;
@@ -935,7 +1081,7 @@
             if (!container) return;
 
             container.innerHTML = CONFIG.promoProducts.map(p => `
-                <div class="promo-card" onclick="openDetail('${p.id}')">
+                <div class="promo-card" onclick="openPromoDetail('${p.id}')">
                     <img src="${p.image}" alt="${p.name}">
                     <div class="promo-content">
                         <div class="promo-title">${p.name}</div>
@@ -1023,26 +1169,113 @@
             toggleBodyScroll(false);
         }
 
-        // ========== DETAIL MODAL ==========
-        function openDetail(id) {
-            let p = CONFIG.products.find(x => x.id == id);
-            if(!p) {
-                p = CONFIG.promoProducts.find(x => x.id == id);
-                if(p) {
-                   alert("Detail Promo: " + p.name + "\nHarga: " + formatPrice(p.price));
-                   return;
-                }
+        // ========== PROMO DETAIL ==========
+        function openPromoDetail(promoId) {
+            const promo = CONFIG.promoProducts.find(p => p.id === promoId);
+            if (!promo) return;
+            
+            // Langsung add to cart atau bisa buat modal khusus promo
+            const p = {
+                id: promo.id,
+                name: promo.name,
+                price: promo.price,
+                images: [promo.image],
+                qty: 1
+            };
+            
+            const exist = cart.find(i => i.id === promo.id);
+            if (exist) {
+                exist.qty++;
+            } else {
+                cart.push(p);
             }
             
-            if (!p) return;
+            saveData();
+            updateStickyBar();
+            
+            // Alert sederhana, bisa diganti modal
+            if(confirm(`${promo.name} ditambahkan ke keranjang!\n\nLihat keranjang?`)) {
+                openCart();
+            }
+        }
+
+        // ========== GALLERY FUNCTIONS ==========
+        function initGallery(total) {
+            currentGallerySlide = 0;
+            totalGallerySlides = total;
+        }
+
+        function updateGallerySlider() {
+            const slider = document.getElementById('gallery-slider');
+            if (slider) {
+                slider.style.transform = `translateX(-${currentGallerySlide * 100}%)`;
+                
+                document.querySelectorAll('.gallery-dot').forEach((dot, idx) => {
+                    dot.classList.toggle('active', idx === currentGallerySlide);
+                });
+            }
+        }
+
+        function nextGallerySlide() {
+            if (currentGallerySlide < totalGallerySlides - 1) {
+                currentGallerySlide++;
+                updateGallerySlider();
+            }
+        }
+
+        function prevGallerySlide() {
+            if (currentGallerySlide > 0) {
+                currentGallerySlide--;
+                updateGallerySlider();
+            }
+        }
+
+        function goToGallerySlide(index) {
+            currentGallerySlide = index;
+            updateGallerySlider();
+        }
+
+        // ========== DETAIL MODAL WITH GALLERY ==========
+        function openDetail(id) {
+            let p = CONFIG.products.find(x => x.id == id);
+            if(!p) return;
             
             const finalPrice = p.price - Math.floor(p.price * (p.discount || 0) / 100);
-            const imgSrc = p.images?.[0] || 'https://placehold.co/400';
+            const hasMultipleImages = p.images && p.images.length > 1;
+            
+            const galleryHtml = hasMultipleImages ? `
+                <div id="product-gallery">
+                    <div id="gallery-slider">
+                        ${p.images.map((img, idx) => `
+                            <img src="${img}" alt="${p.name} - ${idx + 1}">
+                        `).join('')}
+                    </div>
+                    
+                    <div style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10;">
+                        ${p.images.map((_, idx) => `
+                            <button onclick="goToGallerySlide(${idx})" 
+                                class="gallery-dot ${idx === 0 ? 'active' : ''}" data-index="${idx}"></button>
+                        `).join('')}
+                    </div>
+                    
+                    <button onclick="prevGallerySlide()" class="gallery-nav gallery-prev">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+                    <button onclick="nextGallerySlide()" class="gallery-nav gallery-next">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            ` : `
+                <div class="relative">
+                    <img src="${p.images?.[0] || 'https://placehold.co/400'}" class="w-full aspect-square object-cover" alt="${p.name}">
+                </div>
+            `;
             
             const content = `
             <div class="relative bg-gray-100">
-                <img src="${imgSrc}" class="w-full aspect-square object-cover" alt="${p.name}">
-                <button onclick="closeDetail()" class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition">
+                ${galleryHtml}
+                
+                <button onclick="closeDetail()" class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition z-20">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 ${p.flashSale ? '<span class="flash-sale-badge">Flash Sale</span>' : ''}
@@ -1078,10 +1311,36 @@
             
             document.getElementById('detail-content').innerHTML = content;
             openModal('detail-modal');
+            
+            if (hasMultipleImages) {
+                initGallery(p.images.length);
+            }
         }
 
         function closeDetail() {
             closeModal('detail-modal');
+        }
+
+        // Touch swipe untuk gallery
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            if (e.target.closest('#product-gallery')) {
+                touchStartX = e.changedTouches[0].screenX;
+            }
+        }, false);
+
+        document.addEventListener('touchend', e => {
+            if (e.target.closest('#product-gallery')) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleGallerySwipe();
+            }
+        }, false);
+
+        function handleGallerySwipe() {
+            if (touchEndX < touchStartX - 50) nextGallerySlide();
+            if (touchEndX > touchStartX + 50) prevGallerySlide();
         }
 
         // ========== WISHLIST FUNCTIONS ==========
@@ -1151,14 +1410,7 @@
         // ========== CART FUNCTIONS ==========
         function addCart(id) {
             const p = CONFIG.products.find(x => x.id === id);
-            if (!p) {
-                 const promo = CONFIG.promoProducts.find(x => x.id == id);
-                 if(promo) {
-                     alert("Produk promo berhasil ditambahkan (demo).");
-                     return;
-                 }
-                 return;
-            }
+            if (!p) return;
             
             const exist = cart.find(i => i.id === id);
             const finalPrice = p.price - Math.floor(p.price * (p.discount || 0) / 100);
