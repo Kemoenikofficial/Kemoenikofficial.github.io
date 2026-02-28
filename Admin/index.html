@@ -17,7 +17,7 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             color: #333;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         .container {
@@ -307,7 +307,7 @@
             min-height: 0;
         }
 
-        /* Stats Cards - KECILKAN UKURAN */
+        /* Stats Cards */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -325,7 +325,8 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 100px;
+            min-height: 90px;
+            transition: all 0.3s ease;
         }
 
         .stat-card.total { border-top: 3px solid #3498db; }
@@ -343,11 +344,12 @@
         }
 
         .stat-value {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 800;
             color: #2c3e50;
             margin-bottom: 8px;
             line-height: 1;
+            transition: all 0.3s ease;
         }
 
         .stat-progress {
@@ -423,7 +425,7 @@
             min-height: 0;
         }
 
-        /* Pie Chart Container dengan Label di Dalam */
+        /* Pie Chart Container */
         .pie-wrapper {
             position: relative;
             width: 100%;
@@ -443,7 +445,7 @@
         }
 
         .pie-total {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             color: #2c3e50;
             line-height: 1;
@@ -462,7 +464,7 @@
             padding: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             flex-shrink: 0;
-            max-height: 200px;
+            max-height: 180px;
         }
 
         .table-header {
@@ -480,7 +482,7 @@
 
         .table-container {
             overflow: auto;
-            max-height: 140px;
+            max-height: 120px;
         }
 
         table {
@@ -650,6 +652,41 @@
             border-radius: 3px;
         }
 
+        /* Polling Indicator */
+        .polling-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(30, 60, 114, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+
+        .polling-indicator.show {
+            opacity: 1;
+        }
+
+        .polling-dot {
+            width: 8px;
+            height: 8px;
+            background: #2ecc71;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .stats-row {
@@ -668,6 +705,12 @@
     </style>
 </head>
 <body>
+
+    <!-- Polling Indicator -->
+    <div class="polling-indicator" id="pollingIndicator">
+        <div class="polling-dot"></div>
+        <span>Live Update</span>
+    </div>
 
     <!-- Login Container -->
     <div class="login-container" id="loginSection">
@@ -768,7 +811,7 @@
 
                 <!-- Main Content -->
                 <div class="main-content">
-                    <!-- Stats Cards - UKURAN KECIL -->
+                    <!-- Stats Cards -->
                     <div class="stats-row">
                         <div class="stat-card total">
                             <div>
@@ -913,23 +956,36 @@
 
     <script>
         // ========================================================================
-        // GANTI URL INI DENGAN URL APPS SCRIPT ANDA
+        // KONFIGURASI - GANTI URL INI DENGAN URL APPS SCRIPT ANDA
         // ========================================================================
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbwe3KVoYHtsh0ucWO1-UxTub8_e5yyKD5nX7Hh67QDvWwYPuSxDfrlf_OMbNFyh6wBk/exec';
         
+        // ========================================================================
+        // GLOBAL VARIABLES
+        // ========================================================================
         let trendChartInstance = null;
         let pieChartInstance = null;
         let dashboardData = null;
         let allVouchersData = [];
+        let pollingInterval = null;
+        let isPolling = false;
 
-        // Check session
+        // ========================================================================
+        // SESSION MANAGEMENT
+        // ========================================================================
+        
         window.onload = function() {
+            checkSession();
+        };
+
+        function checkSession() {
             const session = localStorage.getItem('adminSession');
             if (session) {
                 showDashboard();
                 loadDashboardData();
+                startPolling(); // Start auto polling
             }
-        };
+        }
 
         function login() {
             const username = document.getElementById('username').value;
@@ -953,6 +1009,7 @@
                         }));
                         showDashboard();
                         loadDashboardData();
+                        startPolling(); // Start auto polling setelah login
                     } else {
                         showError(data.message || 'Username atau password salah!');
                     }
@@ -967,6 +1024,7 @@
                         }));
                         showDashboard();
                         loadDashboardData();
+                        startPolling();
                     } else {
                         showError('Terjadi kesalahan koneksi!');
                     }
@@ -988,6 +1046,9 @@
         }
 
         function logout() {
+            // Hentikan polling saat logout
+            stopPolling();
+            
             localStorage.removeItem('adminSession');
             location.reload();
         }
@@ -996,6 +1057,65 @@
             document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
         }
 
+        // ========================================================================
+        // AUTO POLLING SYSTEM (10 DETIK)
+        // ========================================================================
+        
+        function startPolling() {
+            // Hindari multiple interval
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+            
+            // Tampilkan indicator
+            document.getElementById('pollingIndicator').classList.add('show');
+            
+            // Jalankan sekali segera
+            refreshData();
+            
+            // Set interval 10 detik
+            pollingInterval = setInterval(() => {
+                refreshData();
+            }, 10000);
+            
+            console.log('Auto polling started (10s interval)');
+        }
+
+        function stopPolling() {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+                console.log('Auto polling stopped');
+            }
+            document.getElementById('pollingIndicator').classList.remove('show');
+        }
+
+        function refreshData() {
+            // Cegah request dobel
+            if (isPolling) return;
+            
+            isPolling = true;
+            
+            fetch(`${GAS_URL}?action=getDashboardData`)
+                .then(response => response.json())
+                .then(data => {
+                    isPolling = false;
+                    if (data.status === 'success') {
+                        dashboardData = data;
+                        allVouchersData = data.allVouchers || [];
+                        updateDashboardUI(data);
+                    }
+                })
+                .catch(error => {
+                    isPolling = false;
+                    console.error('Polling error:', error);
+                });
+        }
+
+        // ========================================================================
+        // DASHBOARD DATA & UI
+        // ========================================================================
+        
         function loadDashboardData() {
             showLoading(true);
 
@@ -1020,7 +1140,6 @@
         }
 
         function useDummyData() {
-            // Data dummy untuk demo
             const dummyData = {
                 stats: {
                     total: 120,
@@ -1041,10 +1160,7 @@
                 },
                 recentUsed: [
                     { kode: "KMK26-3YSETXS2C", nama: "Budi", noWA: "08123456789", tanggalAktif: "27/02/2026", tanggalExpired: "06/03/2026", status: "ACTIVE" },
-                    { kode: "KMK26-2BPYYVRU5", nama: "Ani", noWA: "08234567890", tanggalAktif: "27/02/2026", tanggalExpired: "06/03/2026", status: "ACTIVE" },
-                    { kode: "KMK26-OAIQNGXUD", nama: "Citra", noWA: "08345678901", tanggalAktif: "26/02/2026", tanggalExpired: "05/03/2026", status: "ACTIVE" },
-                    { kode: "KMK26-CIOFVYGZ7", nama: "Dedi", noWA: "08456789012", tanggalAktif: "25/02/2026", tanggalExpired: "04/03/2026", status: "ACTIVE" },
-                    { kode: "KMK26-EOYSZAAZG", nama: "Eka", noWA: "08567890123", tanggalAktif: "24/02/2026", tanggalExpired: "03/03/2026", status: "ACTIVE" }
+                    { kode: "KMK26-2BPYYVRU5", nama: "Ani", noWA: "08234567890", tanggalAktif: "27/02/2026", tanggalExpired: "06/03/2026", status: "ACTIVE" }
                 ]
             };
             dashboardData = dummyData;
@@ -1052,13 +1168,21 @@
         }
 
         function renderDashboard(data) {
+            updateDashboardUI(data);
+            renderTrendChart(data.trendData);
+            renderPieChart(data.stats.used, data.stats.available, data.stats.expired);
+            renderTable(data.recentUsed || []);
+        }
+
+        function updateDashboardUI(data) {
             const stats = data.stats;
             
-            // Update stat cards
-            document.getElementById('totalVoucher').textContent = stats.total;
-            document.getElementById('usedVoucher').textContent = stats.used;
-            document.getElementById('availableVoucher').textContent = stats.available;
-            document.getElementById('expiredVoucher').textContent = stats.expired;
+            // Update stat cards dengan animasi smooth
+            animateValue('totalVoucher', parseInt(document.getElementById('totalVoucher').textContent) || 0, stats.total, 500);
+            animateValue('usedVoucher', parseInt(document.getElementById('usedVoucher').textContent) || 0, stats.used, 500);
+            animateValue('availableVoucher', parseInt(document.getElementById('availableVoucher').textContent) || 0, stats.available, 500);
+            animateValue('expiredVoucher', parseInt(document.getElementById('expiredVoucher').textContent) || 0, stats.expired, 500);
+            
             document.getElementById('pieTotal').textContent = stats.total;
 
             // Update progress bars
@@ -1075,14 +1199,47 @@
             document.getElementById('expiredProgress').style.width = expiredPercent + '%';
             document.getElementById('expiredPercent').textContent = expiredPercent + '%';
 
-            // Render charts
-            renderTrendChart(data.trendData);
-            renderPieChart(stats.used, stats.available, stats.expired);
-
-            // Render table
+            // Update charts tanpa flicker
+            if (pieChartInstance) {
+                updatePieChart(stats.used, stats.available, stats.expired);
+            }
+            
+            // Update table
             renderTable(data.recentUsed || []);
         }
 
+        // Animasi angka tanpa flicker
+        function animateValue(id, start, end, duration) {
+            if (start === end) return;
+            
+            const obj = document.getElementById(id);
+            const range = end - start;
+            const minTimer = 50;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            stepTime = Math.max(stepTime, minTimer);
+            
+            let startTime = new Date().getTime();
+            let endTime = startTime + duration;
+            let timer;
+            
+            function run() {
+                let now = new Date().getTime();
+                let remaining = Math.max((endTime - now) / duration, 0);
+                let value = Math.round(end - (remaining * range));
+                obj.textContent = value;
+                if (value == end) {
+                    clearInterval(timer);
+                }
+            }
+            
+            timer = setInterval(run, stepTime);
+            run();
+        }
+
+        // ========================================================================
+        // CHARTS
+        // ========================================================================
+        
         function renderTrendChart(trendData) {
             const ctx = document.getElementById('trendChart').getContext('2d');
             
@@ -1132,15 +1289,9 @@
             const ctx = document.getElementById('pieChart').getContext('2d');
             const total = used + available + expired;
 
-            if (pieChartInstance) {
-                pieChartInstance.destroy();
-            }
-
-            // Data dan warna
             const data = [used, available, expired];
             const labels = ['USED', 'AVAILABLE', 'EXPIRED'];
             const colors = ['#27ae60', '#f39c12', '#e74c3c'];
-            const percentages = data.map(v => total > 0 ? Math.round((v / total) * 100) : 0);
 
             pieChartInstance = new Chart(ctx, {
                 type: 'doughnut',
@@ -1158,9 +1309,7 @@
                     maintainAspectRatio: false,
                     cutout: '65%',
                     plugins: {
-                        legend: {
-                            display: false // Sembunyikan legend default
-                        },
+                        legend: { display: false },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
@@ -1179,6 +1328,7 @@
                         const ctx = chart.ctx;
                         const dataset = chart.data.datasets[0];
                         const meta = chart.getDatasetMeta(0);
+                        const total = dataset.data.reduce((a, b) => a + b, 0);
                         
                         ctx.save();
                         ctx.font = 'bold 11px Arial';
@@ -1192,8 +1342,8 @@
                             const x = model.x + Math.cos(midAngle) * r;
                             const y = model.y + Math.sin(midAngle) * r;
                             
-                            const value = data[index];
-                            const pct = percentages[index];
+                            const value = dataset.data[index];
+                            const pct = total > 0 ? Math.round((value / total) * 100) : 0;
                             
                             ctx.fillStyle = 'white';
                             ctx.fillText(`${pct}%`, x, y);
@@ -1204,7 +1354,26 @@
                 }]
             });
 
-            // Render custom legend
+            updatePieLegend(data, labels, colors);
+        }
+
+        function updatePieChart(used, available, expired) {
+            const total = used + available + expired;
+            const data = [used, available, expired];
+            
+            // Update data tanpa destroy chart (no flicker)
+            pieChartInstance.data.datasets[0].data = data;
+            pieChartInstance.update('none'); // 'none' = no animation untuk menghindari flicker
+            
+            const labels = ['USED', 'AVAILABLE', 'EXPIRED'];
+            const colors = ['#27ae60', '#f39c12', '#e74c3c'];
+            updatePieLegend(data, labels, colors);
+        }
+
+        function updatePieLegend(data, labels, colors) {
+            const total = data.reduce((a, b) => a + b, 0);
+            const percentages = data.map(v => total > 0 ? Math.round((v / total) * 100) : 0);
+            
             const legendHTML = labels.map((label, i) => `
                 <div class="legend-item">
                     <div class="legend-color" style="background: ${colors[i]}"></div>
@@ -1215,6 +1384,10 @@
             document.getElementById('pieLegend').innerHTML = legendHTML;
         }
 
+        // ========================================================================
+        // TABLE & SEARCH
+        // ========================================================================
+        
         function renderTable(recentUsed) {
             const tbody = document.getElementById('recentTable');
             tbody.innerHTML = '';
@@ -1223,40 +1396,43 @@
 
             recentUsed.forEach(v => {
                 const row = tbody.insertRow();
+                const actualStatus = getActualStatus(v);
                 
-                // Tentukan status aktual berdasarkan tanggal expired
-                let actualStatus = v.status;
-                let statusClass = 'status-unused';
-                
-                if (v.status === 'ACTIVE' && v.tanggalExpired) {
-                    const expDate = parseDate(v.tanggalExpired);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    
-                    if (expDate && expDate < today) {
-                        actualStatus = 'EXPIRED';
-                        statusClass = 'status-expired';
-                    } else {
-                        statusClass = 'status-active';
-                    }
-                } else if (v.status === 'UNUSED') {
-                    statusClass = 'status-unused';
-                } else if (v.status === 'EXPIRED') {
-                    statusClass = 'status-expired';
-                }
-
                 row.innerHTML = `
                     <td><strong>${v.kode}</strong></td>
                     <td>${v.nama || '-'}</td>
                     <td>${v.noWA || '-'}</td>
                     <td>${v.tanggalAktif || '-'}</td>
                     <td>${v.tanggalExpired || '-'}</td>
-                    <td><span class="status-badge ${statusClass}">${actualStatus}</span></td>
+                    <td><span class="status-badge ${actualStatus.class}">${actualStatus.text}</span></td>
                 `;
             });
         }
 
-        // Search Functionality
+        function getActualStatus(v) {
+            let statusClass = 'status-unused';
+            let statusText = v.status || 'UNUSED';
+            
+            if (v.status === 'ACTIVE' && v.tanggalExpired) {
+                const expDate = parseDate(v.tanggalExpired);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (expDate && expDate < today) {
+                    statusText = 'EXPIRED';
+                    statusClass = 'status-expired';
+                } else {
+                    statusClass = 'status-active';
+                }
+            } else if (v.status === 'UNUSED') {
+                statusClass = 'status-unused';
+            } else if (v.status === 'EXPIRED') {
+                statusClass = 'status-expired';
+            }
+            
+            return { text: statusText, class: statusClass };
+        }
+
         function handleSearch(event) {
             if (event.key === 'Enter') {
                 const query = event.target.value.trim().toUpperCase();
@@ -1282,29 +1458,11 @@
             } else {
                 results.forEach(v => {
                     const row = tbody.insertRow();
-                    
-                    // Highlight search term
                     const highlightedKode = v.kode.replace(
                         new RegExp(query, 'gi'),
                         match => `<span class="highlight">${match}</span>`
                     );
-                    
-                    // Tentukan status
-                    let actualStatus = v.status;
-                    let statusClass = 'status-unused';
-                    
-                    if (v.status === 'ACTIVE' && v.tanggalExpired) {
-                        const expDate = parseDate(v.tanggalExpired);
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        
-                        if (expDate && expDate < today) {
-                            actualStatus = 'EXPIRED';
-                            statusClass = 'status-expired';
-                        } else {
-                            statusClass = 'status-active';
-                        }
-                    }
+                    const actualStatus = getActualStatus(v);
                     
                     row.innerHTML = `
                         <td><strong>${highlightedKode}</strong></td>
@@ -1312,7 +1470,7 @@
                         <td>${v.noWA || '-'}</td>
                         <td>${v.tanggalAktif || '-'}</td>
                         <td>${v.tanggalExpired || '-'}</td>
-                        <td><span class="status-badge ${statusClass}">${actualStatus}</span></td>
+                        <td><span class="status-badge ${actualStatus.class}">${actualStatus.text}</span></td>
                     `;
                 });
             }
@@ -1336,17 +1494,13 @@
         }
 
         function applyFilters() {
-            const year = document.getElementById('filterYear').value;
-            const month = document.getElementById('filterMonth').value;
             const status = document.getElementById('filterStatus').value;
             
-            // Filter logic
             let filtered = allVouchersData;
             
             if (status !== 'all') {
                 filtered = filtered.filter(v => {
                     if (status === 'EXPIRED') {
-                        // Cek berdasarkan tanggal expired
                         if (v.status === 'ACTIVE' && v.tanggalExpired) {
                             const expDate = parseDate(v.tanggalExpired);
                             const today = new Date();
@@ -1359,7 +1513,6 @@
                 });
             }
             
-            // Update tabel dengan hasil filter
             renderTable(filtered.slice(0, 10));
         }
 
@@ -1379,14 +1532,18 @@
             return isNaN(parsed.getTime()) ? null : parsed;
         }
 
-        // Close modal on outside click
+        // Event listeners
         document.getElementById('searchModal').addEventListener('click', function(e) {
             if (e.target === this) closeSearch();
         });
 
-        // Enter key untuk login
         document.getElementById('password').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') login();
+        });
+
+        // Cleanup saat halaman ditutup
+        window.addEventListener('beforeunload', function() {
+            stopPolling();
         });
     </script>
 </body>
