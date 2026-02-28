@@ -17,7 +17,7 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             color: #333;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         .container {
@@ -29,7 +29,7 @@
             flex-direction: column;
         }
 
-        /* Login Section - Warna dari Logo */
+        /* Login Section */
         .login-container {
             display: flex;
             justify-content: center;
@@ -212,7 +212,44 @@
             background: #c0392b;
         }
 
-        /* Main Grid Layout - Single Screen */
+        /* Generate Button */
+        .btn-generate {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-generate:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-generate:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-generate.low-stock {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Main Grid Layout */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 220px 1fr;
@@ -229,6 +266,8 @@
             padding: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .filter-title {
@@ -287,7 +326,7 @@
             border-radius: 8px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: auto;
             font-size: 13px;
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
@@ -307,7 +346,7 @@
             min-height: 0;
         }
 
-        /* Stats Cards - KECILKAN UKURAN */
+        /* Stats Cards */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -326,12 +365,48 @@
             flex-direction: column;
             justify-content: space-between;
             min-height: 100px;
+            transition: all 0.3s;
         }
 
         .stat-card.total { border-top: 3px solid #3498db; }
         .stat-card.used { border-top: 3px solid #27ae60; }
         .stat-card.available { border-top: 3px solid #f39c12; }
         .stat-card.expired { border-top: 3px solid #e74c3c; }
+
+        /* Low Stock Warning Styles */
+        .stat-card.available.warning {
+            border: 2px solid #e67e22;
+            background: linear-gradient(to bottom, #fff, #fff9f0);
+        }
+
+        .stat-card.available.danger {
+            border: 2px solid #e74c3c;
+            background: linear-gradient(to bottom, #fff, #fdf2f2);
+            animation: borderPulse 2s infinite;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { border-color: #e74c3c; }
+            50% { border-color: #ff6b6b; }
+        }
+
+        .stock-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+        }
+
+        .low-stock-label {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 9px;
+            font-weight: 700;
+            color: #e74c3c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         .stat-label {
             font-size: 10px;
@@ -340,6 +415,9 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .stat-value {
@@ -348,6 +426,15 @@
             color: #2c3e50;
             margin-bottom: 8px;
             line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .stat-card.available.warning .stat-value {
+            color: #e67e22;
+        }
+
+        .stat-card.available.danger .stat-value {
+            color: #e74c3c;
         }
 
         .stat-progress {
@@ -367,12 +454,47 @@
         .stat-card.total .stat-progress-bar { background: #3498db; }
         .stat-card.used .stat-progress-bar { background: #27ae60; }
         .stat-card.available .stat-progress-bar { background: #f39c12; }
+        .stat-card.available.warning .stat-progress-bar { background: #e67e22; }
+        .stat-card.available.danger .stat-progress-bar { background: #e74c3c; }
         .stat-card.expired .stat-progress-bar { background: #e74c3c; }
 
         .stat-percent {
             font-size: 11px;
             color: #888;
             font-weight: 700;
+        }
+
+        /* Notification Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* Charts Row */
@@ -423,7 +545,7 @@
             min-height: 0;
         }
 
-        /* Pie Chart Container dengan Label di Dalam */
+        /* Pie Chart Container */
         .pie-wrapper {
             position: relative;
             width: 100%;
@@ -669,6 +791,12 @@
 </head>
 <body>
 
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span>✓</span>
+        <span id="toastMessage">+100 voucher berhasil ditambahkan</span>
+    </div>
+
     <!-- Login Container -->
     <div class="login-container" id="loginSection">
         <div class="login-box">
@@ -700,6 +828,10 @@
                         <span class="search-icon">🔍</span>
                         <input type="text" id="searchInput" placeholder="Cari kode voucher..." onkeyup="handleSearch(event)">
                     </div>
+                    <button class="btn-generate" id="btnGenerate" onclick="generateVouchers()">
+                        <span>⚡</span>
+                        <span>Generate 100 Voucher</span>
+                    </button>
                     <select class="period-selector" id="periodSelector" onchange="updateDashboard()">
                         <option value="all">Semua Waktu</option>
                         <option value="today">Hari Ini</option>
@@ -768,7 +900,7 @@
 
                 <!-- Main Content -->
                 <div class="main-content">
-                    <!-- Stats Cards - UKURAN KECIL -->
+                    <!-- Stats Cards -->
                     <div class="stats-row">
                         <div class="stat-card total">
                             <div>
@@ -794,9 +926,12 @@
                                 <div class="stat-percent" id="usedPercent">0%</div>
                             </div>
                         </div>
-                        <div class="stat-card available">
+                        <div class="stat-card available" id="availableCard">
                             <div>
-                                <div class="stat-label">BELUM DIGUNAKAN</div>
+                                <div class="stat-label">
+                                    BELUM DIGUNAKAN
+                                    <span class="stock-indicator" id="stockIndicator"></span>
+                                </div>
                                 <div class="stat-value" id="availableVoucher">0</div>
                             </div>
                             <div>
@@ -805,6 +940,7 @@
                                 </div>
                                 <div class="stat-percent" id="availablePercent">0%</div>
                             </div>
+                            <div class="low-stock-label" id="lowStockLabel" style="display: none;">Low Stock</div>
                         </div>
                         <div class="stat-card expired">
                             <div>
@@ -913,26 +1049,69 @@
 
     <script>
         // ========================================================================
-        // GANTI URL INI DENGAN URL APPS SCRIPT ANDA
+        // KONFIGURASI - GANTI URL INI DENGAN URL APPS SCRIPT ANDA
         // ========================================================================
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbxxMTlRG16ycJqOKCwsu1gDgsTS9t52scy0mWx92-U20ks5qRpmq07vcd_udgFqKQQG/exec';
         
+        // ========================================================================
+        // GLOBAL VARIABLES
+        // ========================================================================
         let trendChartInstance = null;
         let pieChartInstance = null;
         let dashboardData = null;
         let allVouchersData = [];
+        let autoUpdateInterval = null;
+        let isGenerating = false;
 
-        // Check session
+        // ========================================================================
+        // SESSION MANAGEMENT
+        // ========================================================================
+        
+        // Check session saat load
         window.onload = function() {
-            const session = localStorage.getItem('adminSession');
-            if (session) {
-                showDashboard();
-                loadDashboardData();
-            }
+            checkSession();
         };
 
+        function checkSession() {
+            const session = localStorage.getItem('kemoenik_admin_session');
+            if (session) {
+                try {
+                    const sessionData = JSON.parse(session);
+                    // Cek apakah session masih valid (24 jam)
+                    const now = new Date().getTime();
+                    const sessionTime = sessionData.timestamp || 0;
+                    const hoursDiff = (now - sessionTime) / (1000 * 60 * 60);
+                    
+                    if (hoursDiff < 24) {
+                        showDashboard();
+                        loadDashboardData();
+                        startAutoUpdate();
+                    } else {
+                        // Session expired
+                        localStorage.removeItem('kemoenik_admin_session');
+                        showLogin();
+                    }
+                } catch(e) {
+                    localStorage.removeItem('kemoenik_admin_session');
+                    showLogin();
+                }
+            } else {
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginSection').style.display = 'flex';
+            document.getElementById('dashboardSection').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'flex';
+        }
+
         function login() {
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
 
             if (!username || !password) {
@@ -947,30 +1126,51 @@
                 .then(data => {
                     showLoading(false);
                     if (data.status === 'success') {
-                        localStorage.setItem('adminSession', JSON.stringify({
+                        // Simpan session ke localStorage
+                        localStorage.setItem('kemoenik_admin_session', JSON.stringify({
                             username: username,
                             timestamp: new Date().getTime()
                         }));
+                        
                         showDashboard();
                         loadDashboardData();
+                        startAutoUpdate();
                     } else {
                         showError(data.message || 'Username atau password salah!');
                     }
                 })
                 .catch(error => {
                     showLoading(false);
-                    // Demo mode bypass
+                    console.error('Login error:', error);
+                    
+                    // Demo mode bypass untuk testing
                     if (username === 'DANIRAMDANI' && password === 'KEMOENIK26') {
-                        localStorage.setItem('adminSession', JSON.stringify({
+                        localStorage.setItem('kemoenik_admin_session', JSON.stringify({
                             username: username,
                             timestamp: new Date().getTime()
                         }));
                         showDashboard();
                         loadDashboardData();
+                        startAutoUpdate();
                     } else {
                         showError('Terjadi kesalahan koneksi!');
                     }
                 });
+        }
+
+        function logout() {
+            // Hentikan auto update
+            stopAutoUpdate();
+            
+            // Hapus session
+            localStorage.removeItem('kemoenik_admin_session');
+            
+            // Reset form
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            
+            // Tampilkan login
+            showLogin();
         }
 
         function showError(msg) {
@@ -982,20 +1182,126 @@
             }, 3000);
         }
 
-        function showDashboard() {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('dashboardSection').style.display = 'flex';
-        }
-
-        function logout() {
-            localStorage.removeItem('adminSession');
-            location.reload();
-        }
-
         function showLoading(show) {
             document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
         }
 
+        // ========================================================================
+        // AUTO UPDATE SYSTEM (POLLING 10 DETIK)
+        // ========================================================================
+        
+        function startAutoUpdate() {
+            // Hentikan interval yang ada untuk mencegah dobel
+            stopAutoUpdate();
+            
+            // Jalankan sekali segera
+            refreshData();
+            
+            // Set interval 10 detik
+            autoUpdateInterval = setInterval(refreshData, 10000);
+            
+            console.log('Auto update started (10s interval)');
+        }
+
+        function stopAutoUpdate() {
+            if (autoUpdateInterval) {
+                clearInterval(autoUpdateInterval);
+                autoUpdateInterval = null;
+                console.log('Auto update stopped');
+            }
+        }
+
+        function refreshData() {
+            // Jangan refresh jika sedang generate voucher
+            if (isGenerating) return;
+            
+            fetch(`${GAS_URL}?action=getDashboardData`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        dashboardData = data;
+                        allVouchersData = data.allVouchers || [];
+                        updateDashboardUI(data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Auto update error:', error);
+                });
+        }
+
+        // ========================================================================
+        // GENERATE VOUCHER SYSTEM
+        // ========================================================================
+        
+        function generateVouchers() {
+            if (isGenerating) return;
+            
+            // Konfirmasi
+            if (!confirm('Anda yakin ingin generate 100 voucher baru?')) {
+                return;
+            }
+            
+            isGenerating = true;
+            const btn = document.getElementById('btnGenerate');
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳</span><span>Generating...</span>';
+            
+            fetch(`${GAS_URL}?action=generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    adminUser: 'DANIRAMDANI',
+                    adminPass: 'KEMOENIK26'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                isGenerating = false;
+                btn.disabled = false;
+                btn.innerHTML = '<span>⚡</span><span>Generate 100 Voucher</span>';
+                
+                if (data.success) {
+                    showToast(`+${data.added} voucher berhasil ditambahkan`);
+                    // Refresh data tanpa reload halaman
+                    refreshData();
+                } else {
+                    alert('Gagal generate voucher: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                isGenerating = false;
+                btn.disabled = false;
+                btn.innerHTML = '<span>⚡</span><span>Generate 100 Voucher</span>';
+                console.error('Generate error:', error);
+                
+                // Demo mode
+                showToast('+100 voucher berhasil ditambahkan (Demo)');
+                // Simulasi update data
+                if (dashboardData && dashboardData.stats) {
+                    dashboardData.stats.total += 100;
+                    dashboardData.stats.available += 100;
+                    updateDashboardUI(dashboardData);
+                }
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ========================================================================
+        // DASHBOARD DATA & UI
+        // ========================================================================
+        
         function loadDashboardData() {
             showLoading(true);
 
@@ -1020,12 +1326,11 @@
         }
 
         function useDummyData() {
-            // Data dummy untuk demo
             const dummyData = {
                 stats: {
                     total: 120,
                     used: 87,
-                    available: 25,
+                    available: 5, // Test low stock
                     expired: 8
                 },
                 trendData: {
@@ -1041,10 +1346,7 @@
                 },
                 recentUsed: [
                     { kode: "KMK26-3YSETXS2C", nama: "Budi", noWA: "08123456789", tanggalAktif: "27/02/2026", tanggalExpired: "06/03/2026", status: "ACTIVE" },
-                    { kode: "KMK26-2BPYYVRU5", nama: "Ani", noWA: "08234567890", tanggalAktif: "27/02/2026", tanggalExpired: "06/03/2026", status: "ACTIVE" },
-                    { kode: "KMK26-OAIQNGXUD", nama: "Citra", noWA: "08345678901", tanggalAktif: "26/02/2026", tanggalExpired: "05/03/2026", status: "ACTIVE" },
-                    { kode: "KMK26-CIOFVYGZ7", nama: "Dedi", noWA: "08456789012", tanggalAktif: "25/02/2026", tanggalExpired: "04/03/2026", status: "ACTIVE" },
-                    { kode: "KMK26-EOYSZAAZG", nama: "Eka", noWA: "08567890123", tanggalAktif: "24/02/2026", tanggalExpired: "03/03/2026", status: "ACTIVE" }
+                    { kode: "KMK26-2BPYYVRU5", nama: "Ani", noWA: "08234567890", tanggalAktif: "27/02/2026", tanggalExpired: "06/03/2026", status: "ACTIVE" }
                 ]
             };
             dashboardData = dummyData;
@@ -1052,6 +1354,13 @@
         }
 
         function renderDashboard(data) {
+            updateDashboardUI(data);
+            renderTrendChart(data.trendData);
+            renderPieChart(data.stats.used, data.stats.available, data.stats.expired);
+            renderTable(data.recentUsed || []);
+        }
+
+        function updateDashboardUI(data) {
             const stats = data.stats;
             
             // Update stat cards
@@ -1075,14 +1384,51 @@
             document.getElementById('expiredProgress').style.width = expiredPercent + '%';
             document.getElementById('expiredPercent').textContent = expiredPercent + '%';
 
-            // Render charts
-            renderTrendChart(data.trendData);
-            renderPieChart(stats.used, stats.available, stats.expired);
+            // Update stock indicator
+            updateStockIndicator(stats.available);
 
-            // Render table
-            renderTable(data.recentUsed || []);
+            // Update charts jika sudah ada instance
+            if (pieChartInstance) {
+                updatePieChart(stats.used, stats.available, stats.expired);
+            }
         }
 
+        // ========================================================================
+        // STOCK INDICATOR SYSTEM
+        // ========================================================================
+        
+        function updateStockIndicator(unused) {
+            const card = document.getElementById('availableCard');
+            const indicator = document.getElementById('stockIndicator');
+            const lowStockLabel = document.getElementById('lowStockLabel');
+            const btnGenerate = document.getElementById('btnGenerate');
+            
+            // Reset classes
+            card.classList.remove('warning', 'danger');
+            btnGenerate.classList.remove('low-stock');
+            indicator.textContent = '';
+            lowStockLabel.style.display = 'none';
+            
+            if (unused <= 5) {
+                // Danger - Low Stock
+                card.classList.add('danger');
+                btnGenerate.classList.add('low-stock');
+                indicator.textContent = '🔴';
+                lowStockLabel.style.display = 'block';
+            } else if (unused <= 20) {
+                // Warning - Medium Stock
+                card.classList.add('warning');
+                indicator.textContent = '⚠️';
+            } else {
+                // Normal - Green
+                indicator.textContent = '✓';
+            }
+        }
+
+        // ========================================================================
+        // CHARTS
+        // ========================================================================
+        
         function renderTrendChart(trendData) {
             const ctx = document.getElementById('trendChart').getContext('2d');
             
@@ -1136,11 +1482,9 @@
                 pieChartInstance.destroy();
             }
 
-            // Data dan warna
             const data = [used, available, expired];
             const labels = ['USED', 'AVAILABLE', 'EXPIRED'];
             const colors = ['#27ae60', '#f39c12', '#e74c3c'];
-            const percentages = data.map(v => total > 0 ? Math.round((v / total) * 100) : 0);
 
             pieChartInstance = new Chart(ctx, {
                 type: 'doughnut',
@@ -1158,9 +1502,7 @@
                     maintainAspectRatio: false,
                     cutout: '65%',
                     plugins: {
-                        legend: {
-                            display: false // Sembunyikan legend default
-                        },
+                        legend: { display: false },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
@@ -1179,6 +1521,7 @@
                         const ctx = chart.ctx;
                         const dataset = chart.data.datasets[0];
                         const meta = chart.getDatasetMeta(0);
+                        const total = dataset.data.reduce((a, b) => a + b, 0);
                         
                         ctx.save();
                         ctx.font = 'bold 11px Arial';
@@ -1192,8 +1535,8 @@
                             const x = model.x + Math.cos(midAngle) * r;
                             const y = model.y + Math.sin(midAngle) * r;
                             
-                            const value = data[index];
-                            const pct = percentages[index];
+                            const value = dataset.data[index];
+                            const pct = total > 0 ? Math.round((value / total) * 100) : 0;
                             
                             ctx.fillStyle = 'white';
                             ctx.fillText(`${pct}%`, x, y);
@@ -1204,7 +1547,25 @@
                 }]
             });
 
-            // Render custom legend
+            updatePieLegend(data, labels, colors);
+        }
+
+        function updatePieChart(used, available, expired) {
+            const total = used + available + expired;
+            const data = [used, available, expired];
+            
+            pieChartInstance.data.datasets[0].data = data;
+            pieChartInstance.update('none'); // Update tanpa animasi
+            
+            const labels = ['USED', 'AVAILABLE', 'EXPIRED'];
+            const colors = ['#27ae60', '#f39c12', '#e74c3c'];
+            updatePieLegend(data, labels, colors);
+        }
+
+        function updatePieLegend(data, labels, colors) {
+            const total = data.reduce((a, b) => a + b, 0);
+            const percentages = data.map(v => total > 0 ? Math.round((v / total) * 100) : 0);
+            
             const legendHTML = labels.map((label, i) => `
                 <div class="legend-item">
                     <div class="legend-color" style="background: ${colors[i]}"></div>
@@ -1215,6 +1576,10 @@
             document.getElementById('pieLegend').innerHTML = legendHTML;
         }
 
+        // ========================================================================
+        // TABLE & SEARCH
+        // ========================================================================
+        
         function renderTable(recentUsed) {
             const tbody = document.getElementById('recentTable');
             tbody.innerHTML = '';
@@ -1223,40 +1588,43 @@
 
             recentUsed.forEach(v => {
                 const row = tbody.insertRow();
+                const actualStatus = getActualStatus(v);
                 
-                // Tentukan status aktual berdasarkan tanggal expired
-                let actualStatus = v.status;
-                let statusClass = 'status-unused';
-                
-                if (v.status === 'ACTIVE' && v.tanggalExpired) {
-                    const expDate = parseDate(v.tanggalExpired);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    
-                    if (expDate && expDate < today) {
-                        actualStatus = 'EXPIRED';
-                        statusClass = 'status-expired';
-                    } else {
-                        statusClass = 'status-active';
-                    }
-                } else if (v.status === 'UNUSED') {
-                    statusClass = 'status-unused';
-                } else if (v.status === 'EXPIRED') {
-                    statusClass = 'status-expired';
-                }
-
                 row.innerHTML = `
                     <td><strong>${v.kode}</strong></td>
                     <td>${v.nama || '-'}</td>
                     <td>${v.noWA || '-'}</td>
                     <td>${v.tanggalAktif || '-'}</td>
                     <td>${v.tanggalExpired || '-'}</td>
-                    <td><span class="status-badge ${statusClass}">${actualStatus}</span></td>
+                    <td><span class="status-badge ${actualStatus.class}">${actualStatus.text}</span></td>
                 `;
             });
         }
 
-        // Search Functionality
+        function getActualStatus(v) {
+            let statusClass = 'status-unused';
+            let statusText = v.status || 'UNUSED';
+            
+            if (v.status === 'ACTIVE' && v.tanggalExpired) {
+                const expDate = parseDate(v.tanggalExpired);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (expDate && expDate < today) {
+                    statusText = 'EXPIRED';
+                    statusClass = 'status-expired';
+                } else {
+                    statusClass = 'status-active';
+                }
+            } else if (v.status === 'UNUSED') {
+                statusClass = 'status-unused';
+            } else if (v.status === 'EXPIRED') {
+                statusClass = 'status-expired';
+            }
+            
+            return { text: statusText, class: statusClass };
+        }
+
         function handleSearch(event) {
             if (event.key === 'Enter') {
                 const query = event.target.value.trim().toUpperCase();
@@ -1282,29 +1650,11 @@
             } else {
                 results.forEach(v => {
                     const row = tbody.insertRow();
-                    
-                    // Highlight search term
                     const highlightedKode = v.kode.replace(
                         new RegExp(query, 'gi'),
                         match => `<span class="highlight">${match}</span>`
                     );
-                    
-                    // Tentukan status
-                    let actualStatus = v.status;
-                    let statusClass = 'status-unused';
-                    
-                    if (v.status === 'ACTIVE' && v.tanggalExpired) {
-                        const expDate = parseDate(v.tanggalExpired);
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        
-                        if (expDate && expDate < today) {
-                            actualStatus = 'EXPIRED';
-                            statusClass = 'status-expired';
-                        } else {
-                            statusClass = 'status-active';
-                        }
-                    }
+                    const actualStatus = getActualStatus(v);
                     
                     row.innerHTML = `
                         <td><strong>${highlightedKode}</strong></td>
@@ -1312,7 +1662,7 @@
                         <td>${v.noWA || '-'}</td>
                         <td>${v.tanggalAktif || '-'}</td>
                         <td>${v.tanggalExpired || '-'}</td>
-                        <td><span class="status-badge ${statusClass}">${actualStatus}</span></td>
+                        <td><span class="status-badge ${actualStatus.class}">${actualStatus.text}</span></td>
                     `;
                 });
             }
@@ -1332,21 +1682,17 @@
         }
 
         function updateDashboard() {
-            loadDashboardData();
+            refreshData();
         }
 
         function applyFilters() {
-            const year = document.getElementById('filterYear').value;
-            const month = document.getElementById('filterMonth').value;
             const status = document.getElementById('filterStatus').value;
             
-            // Filter logic
             let filtered = allVouchersData;
             
             if (status !== 'all') {
                 filtered = filtered.filter(v => {
                     if (status === 'EXPIRED') {
-                        // Cek berdasarkan tanggal expired
                         if (v.status === 'ACTIVE' && v.tanggalExpired) {
                             const expDate = parseDate(v.tanggalExpired);
                             const today = new Date();
@@ -1359,7 +1705,6 @@
                 });
             }
             
-            // Update tabel dengan hasil filter
             renderTable(filtered.slice(0, 10));
         }
 
@@ -1387,6 +1732,11 @@
         // Enter key untuk login
         document.getElementById('password').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') login();
+        });
+
+        // Cleanup saat halaman ditutup
+        window.addEventListener('beforeunload', function() {
+            stopAutoUpdate();
         });
     </script>
 </body>
