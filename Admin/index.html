@@ -1048,14 +1048,14 @@
     </div>
 
     <script>
-        // ========================================================================
-        // KONFIGURASI - GANTI URL INI DENGAN URL APPS SCRIPT ANDA
-        // ========================================================================
-        const GAS_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AY5xjrQ31om1Feys7zDZDztL_8sxtJx0cmXSPI_0_O_mgX5CFKx9UE3o8mza8R1PtMIp7lGsburkmwNFllC5B3BxBFV3hpO3pMAdVrgzJTba9sC3pQYPxh-F2PkXQL8h_uQ8UGQYcRGwBDZUAAGMzqxiiJC_7e7p-_ukurrPZQLWBoz5GwTsWkuisG0-TdY2uzp1FBnZhOFmL4oXLlXHgjuAqlrnatBwBMzd6rilRPmokqsZ3yQW1Lul5Rjk0MpHEgiSGewHNMQdFpuGQrxIqcV-Qc0t1m9YKA&lib=MXQKatsIh5cS0hQmsrF-m7_2r2UOYeIoi';
+        // ============================================================================
+        // KONFIGURASI - URL APPS SCRIPT (SUDAH BENAR)
+        // ============================================================================
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbwxd8tr6OqJYVN-88CMkgxlh-wv62lmEhDPYfsuLBrrbogsRRyrYry0w9lRXAVhsd0_/exec';
         
-        // ========================================================================
+        // ============================================================================
         // GLOBAL VARIABLES
-        // ========================================================================
+        // ============================================================================
         let trendChartInstance = null;
         let pieChartInstance = null;
         let dashboardData = null;
@@ -1063,11 +1063,10 @@
         let autoUpdateInterval = null;
         let isGenerating = false;
 
-        // ========================================================================
+        // ============================================================================
         // SESSION MANAGEMENT
-        // ========================================================================
+        // ============================================================================
         
-        // Check session saat load
         window.onload = function() {
             checkSession();
         };
@@ -1077,7 +1076,6 @@
             if (session) {
                 try {
                     const sessionData = JSON.parse(session);
-                    // Cek apakah session masih valid (24 jam)
                     const now = new Date().getTime();
                     const sessionTime = sessionData.timestamp || 0;
                     const hoursDiff = (now - sessionTime) / (1000 * 60 * 60);
@@ -1087,7 +1085,6 @@
                         loadDashboardData();
                         startAutoUpdate();
                     } else {
-                        // Session expired
                         localStorage.removeItem('kemoenik_admin_session');
                         showLogin();
                     }
@@ -1126,7 +1123,6 @@
                 .then(data => {
                     showLoading(false);
                     if (data.status === 'success') {
-                        // Simpan session ke localStorage
                         localStorage.setItem('kemoenik_admin_session', JSON.stringify({
                             username: username,
                             timestamp: new Date().getTime()
@@ -1159,17 +1155,10 @@
         }
 
         function logout() {
-            // Hentikan auto update
             stopAutoUpdate();
-            
-            // Hapus session
             localStorage.removeItem('kemoenik_admin_session');
-            
-            // Reset form
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-            
-            // Tampilkan login
             showLogin();
         }
 
@@ -1186,20 +1175,14 @@
             document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
         }
 
-        // ========================================================================
+        // ============================================================================
         // AUTO UPDATE SYSTEM (POLLING 10 DETIK)
-        // ========================================================================
+        // ============================================================================
         
         function startAutoUpdate() {
-            // Hentikan interval yang ada untuk mencegah dobel
             stopAutoUpdate();
-            
-            // Jalankan sekali segera
             refreshData();
-            
-            // Set interval 10 detik
             autoUpdateInterval = setInterval(refreshData, 10000);
-            
             console.log('Auto update started (10s interval)');
         }
 
@@ -1212,15 +1195,13 @@
         }
 
         function refreshData() {
-            // Jangan refresh jika sedang generate voucher
             if (isGenerating) return;
             
             fetch(`${GAS_URL}?action=getDashboardData`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status === 'success') {
+                    if (!data.status || data.status !== 'error') {
                         dashboardData = data;
-                        allVouchersData = data.allVouchers || [];
                         updateDashboardUI(data);
                     }
                 })
@@ -1229,14 +1210,13 @@
                 });
         }
 
-        // ========================================================================
-        // GENERATE VOUCHER SYSTEM
-        // ========================================================================
+        // ============================================================================
+        // GENERATE VOUCHER SYSTEM - PERBAIKAN UTAMA
+        // ============================================================================
         
         function generateVouchers() {
             if (isGenerating) return;
             
-            // Konfirmasi
             if (!confirm('Anda yakin ingin generate 100 voucher baru?')) {
                 return;
             }
@@ -1246,28 +1226,36 @@
             btn.disabled = true;
             btn.innerHTML = '<span>⏳</span><span>Generating...</span>';
             
-            fetch(`${GAS_URL}?action=generate`, {
+            // ✅ PERBAIKAN: Kirim POST dengan action di body JSON
+            fetch(GAS_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    action: 'generate',
                     adminUser: 'DANIRAMDANI',
                     adminPass: 'KEMOENIK26'
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.status);
+                }
+                return response.json();
+            })
             .then(data => {
                 isGenerating = false;
                 btn.disabled = false;
                 btn.innerHTML = '<span>⚡</span><span>Generate 100 Voucher</span>';
                 
+                console.log('Generate response:', data);
+                
                 if (data.success) {
                     showToast(`+${data.added} voucher berhasil ditambahkan`);
-                    // Refresh data tanpa reload halaman
                     refreshData();
                 } else {
-                    alert('Gagal generate voucher: ' + (data.message || 'Unknown error'));
+                    alert('Gagal generate voucher: ' + (data.message || data.error || 'Unknown error'));
                 }
             })
             .catch(error => {
@@ -1275,15 +1263,7 @@
                 btn.disabled = false;
                 btn.innerHTML = '<span>⚡</span><span>Generate 100 Voucher</span>';
                 console.error('Generate error:', error);
-                
-                // Demo mode
-                showToast('+100 voucher berhasil ditambahkan (Demo)');
-                // Simulasi update data
-                if (dashboardData && dashboardData.stats) {
-                    dashboardData.stats.total += 100;
-                    dashboardData.stats.available += 100;
-                    updateDashboardUI(dashboardData);
-                }
+                alert('Error: ' + error.message);
             });
         }
 
@@ -1298,9 +1278,9 @@
             }, 3000);
         }
 
-        // ========================================================================
+        // ============================================================================
         // DASHBOARD DATA & UI
-        // ========================================================================
+        // ============================================================================
         
         function loadDashboardData() {
             showLoading(true);
@@ -1309,7 +1289,7 @@
                 .then(response => response.json())
                 .then(data => {
                     showLoading(false);
-                    if (data.status === 'success') {
+                    if (!data.status || data.status !== 'error') {
                         dashboardData = data;
                         allVouchersData = data.allVouchers || [];
                         renderDashboard(data);
@@ -1327,12 +1307,10 @@
 
         function useDummyData() {
             const dummyData = {
-                stats: {
-                    total: 120,
-                    used: 87,
-                    available: 5, // Test low stock
-                    expired: 8
-                },
+                total: 120,
+                used: 87,
+                unused: 5,
+                expired: 8,
                 trendData: {
                     "20/02/2026": 3,
                     "21/02/2026": 5,
@@ -1356,24 +1334,25 @@
         function renderDashboard(data) {
             updateDashboardUI(data);
             renderTrendChart(data.trendData);
-            renderPieChart(data.stats.used, data.stats.available, data.stats.expired);
+            renderPieChart(data.used, data.unused, data.expired);
             renderTable(data.recentUsed || []);
         }
 
         function updateDashboardUI(data) {
-            const stats = data.stats;
+            const total = data.total || 0;
+            const used = data.used || 0;
+            const unused = data.unused || 0;
+            const expired = data.expired || 0;
             
-            // Update stat cards
-            document.getElementById('totalVoucher').textContent = stats.total;
-            document.getElementById('usedVoucher').textContent = stats.used;
-            document.getElementById('availableVoucher').textContent = stats.available;
-            document.getElementById('expiredVoucher').textContent = stats.expired;
-            document.getElementById('pieTotal').textContent = stats.total;
+            document.getElementById('totalVoucher').textContent = total;
+            document.getElementById('usedVoucher').textContent = used;
+            document.getElementById('availableVoucher').textContent = unused;
+            document.getElementById('expiredVoucher').textContent = expired;
+            document.getElementById('pieTotal').textContent = total;
 
-            // Update progress bars
-            const usedPercent = stats.total > 0 ? Math.round((stats.used / stats.total) * 100) : 0;
-            const availablePercent = stats.total > 0 ? Math.round((stats.available / stats.total) * 100) : 0;
-            const expiredPercent = stats.total > 0 ? Math.round((stats.expired / stats.total) * 100) : 0;
+            const usedPercent = total > 0 ? Math.round((used / total) * 100) : 0;
+            const availablePercent = total > 0 ? Math.round((unused / total) * 100) : 0;
+            const expiredPercent = total > 0 ? Math.round((expired / total) * 100) : 0;
 
             document.getElementById('usedProgress').style.width = usedPercent + '%';
             document.getElementById('usedPercent').textContent = usedPercent + '%';
@@ -1384,18 +1363,16 @@
             document.getElementById('expiredProgress').style.width = expiredPercent + '%';
             document.getElementById('expiredPercent').textContent = expiredPercent + '%';
 
-            // Update stock indicator
-            updateStockIndicator(stats.available);
+            updateStockIndicator(unused);
 
-            // Update charts jika sudah ada instance
             if (pieChartInstance) {
-                updatePieChart(stats.used, stats.available, stats.expired);
+                updatePieChart(used, unused, expired);
             }
         }
 
-        // ========================================================================
+        // ============================================================================
         // STOCK INDICATOR SYSTEM
-        // ========================================================================
+        // ============================================================================
         
         function updateStockIndicator(unused) {
             const card = document.getElementById('availableCard');
@@ -1403,36 +1380,32 @@
             const lowStockLabel = document.getElementById('lowStockLabel');
             const btnGenerate = document.getElementById('btnGenerate');
             
-            // Reset classes
             card.classList.remove('warning', 'danger');
             btnGenerate.classList.remove('low-stock');
             indicator.textContent = '';
             lowStockLabel.style.display = 'none';
             
             if (unused <= 5) {
-                // Danger - Low Stock
                 card.classList.add('danger');
                 btnGenerate.classList.add('low-stock');
                 indicator.textContent = '🔴';
                 lowStockLabel.style.display = 'block';
             } else if (unused <= 20) {
-                // Warning - Medium Stock
                 card.classList.add('warning');
                 indicator.textContent = '⚠️';
             } else {
-                // Normal - Green
                 indicator.textContent = '✓';
             }
         }
 
-        // ========================================================================
+        // ============================================================================
         // CHARTS
-        // ========================================================================
+        // ============================================================================
         
         function renderTrendChart(trendData) {
             const ctx = document.getElementById('trendChart').getContext('2d');
             
-            const sortedDates = Object.keys(trendData).sort((a, b) => parseDate(a) - parseDate(b));
+            const sortedDates = Object.keys(trendData || {}).sort((a, b) => parseDate(a) - parseDate(b));
             const values = sortedDates.map(d => trendData[d]);
 
             if (trendChartInstance) {
@@ -1474,15 +1447,15 @@
             });
         }
 
-        function renderPieChart(used, available, expired) {
+        function renderPieChart(used, unused, expired) {
             const ctx = document.getElementById('pieChart').getContext('2d');
-            const total = used + available + expired;
+            const total = used + unused + expired;
 
             if (pieChartInstance) {
                 pieChartInstance.destroy();
             }
 
-            const data = [used, available, expired];
+            const data = [used, unused, expired];
             const labels = ['USED', 'AVAILABLE', 'EXPIRED'];
             const colors = ['#27ae60', '#f39c12', '#e74c3c'];
 
@@ -1550,12 +1523,12 @@
             updatePieLegend(data, labels, colors);
         }
 
-        function updatePieChart(used, available, expired) {
-            const total = used + available + expired;
-            const data = [used, available, expired];
+        function updatePieChart(used, unused, expired) {
+            const total = used + unused + expired;
+            const data = [used, unused, expired];
             
             pieChartInstance.data.datasets[0].data = data;
-            pieChartInstance.update('none'); // Update tanpa animasi
+            pieChartInstance.update('none');
             
             const labels = ['USED', 'AVAILABLE', 'EXPIRED'];
             const colors = ['#27ae60', '#f39c12', '#e74c3c'];
@@ -1576,9 +1549,9 @@
             document.getElementById('pieLegend').innerHTML = legendHTML;
         }
 
-        // ========================================================================
+        // ============================================================================
         // TABLE & SEARCH
-        // ========================================================================
+        // ============================================================================
         
         function renderTable(recentUsed) {
             const tbody = document.getElementById('recentTable');
@@ -1676,7 +1649,7 @@
         }
 
         function updateTrendChart() {
-            if (dashboardData) {
+            if (dashboardData && dashboardData.trendData) {
                 renderTrendChart(dashboardData.trendData);
             }
         }
@@ -1724,17 +1697,14 @@
             return isNaN(parsed.getTime()) ? null : parsed;
         }
 
-        // Close modal on outside click
         document.getElementById('searchModal').addEventListener('click', function(e) {
             if (e.target === this) closeSearch();
         });
 
-        // Enter key untuk login
         document.getElementById('password').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') login();
         });
 
-        // Cleanup saat halaman ditutup
         window.addEventListener('beforeunload', function() {
             stopAutoUpdate();
         });
