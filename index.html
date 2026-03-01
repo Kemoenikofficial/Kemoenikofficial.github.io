@@ -1398,20 +1398,31 @@
             const container = document.getElementById('promo-container');
             if (!container) return;
 
-            container.innerHTML = CONFIG.promoProducts.map(p => `
-              .filter(p => p.active)
-              .map(p => `
-                <div class="promo-card" onclick="openPromoDetail('${p.id}')">
-                    <img src="${p.image}" alt="${p.name}">
+            // Filter produk yang active: true AND flashSale: true
+            const promoProducts = CONFIG.products
+                .filter(p => p.active === true && p.flashSale === true)
+                .slice(0, 6); // Maksimal 6 produk promo
+
+            if (promoProducts.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-400 py-4 col-span-2">Tidak ada promo saat ini</p>';
+                return;
+            }
+
+            container.innerHTML = promoProducts.map(p => {
+                const finalPrice = p.price - Math.floor(p.price * (p.discount || 0) / 100);
+                
+                return `
+                <div class="promo-card" onclick="openDetail(${p.id})">
+                    <img src="${p.images?.[0] || 'https://placehold.co/400x400/F3F4F6/9CA3AF?text=No+Image'}" alt="${p.name}">
                     <div class="promo-content">
                         <div class="promo-title">${p.name}</div>
                         <div>
-                            <span class="promo-price">${formatPrice(p.price)}</span>
-                            <span class="promo-old-price">${formatPrice(p.oldPrice)}</span>
+                            <span class="promo-price">${formatPrice(finalPrice)}</span>
+                            ${p.originalPrice ? `<span class="promo-old-price">${formatPrice(p.originalPrice)}</span>` : ''}
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // ========== CATEGORY FUNCTIONS ==========
@@ -1435,7 +1446,14 @@
         // ========== PRODUCT RENDERING ==========
         function renderProducts() {
             const container = document.getElementById('product-grid');
-            const data = activeCategory === 'all' ? CONFIG.products : CONFIG.products.filter(p => p.category === activeCategory);
+            
+            // Filter produk yang active: true
+            let data = CONFIG.products.filter(p => p.active === true);
+            
+            // Filter berdasarkan kategori jika bukan 'all'
+            if (activeCategory !== 'all') {
+                data = data.filter(p => p.category === activeCategory);
+            }
             
             container.innerHTML = data.map(p => {
                 const imgSrc = p.images?.[0] || 'https://placehold.co/400x400/F3F4F6/9CA3AF?text=No+Image';
@@ -1487,36 +1505,6 @@
             const modal = document.getElementById(modalId);
             modal.classList.remove('active');
             toggleBodyScroll(false);
-        }
-
-        // ========== PROMO DETAIL ==========
-        function openPromoDetail(promoId) {
-            const promo = CONFIG.promoProducts.find(p => p.id === promoId);
-            if (!promo) return;
-            
-            // Langsung add to cart atau bisa buat modal khusus promo
-            const p = {
-                id: promo.id,
-                name: promo.name,
-                price: promo.price,
-                images: [promo.image],
-                qty: 1
-            };
-            
-            const exist = cart.find(i => i.id === promo.id);
-            if (exist) {
-                exist.qty++;
-            } else {
-                cart.push(p);
-            }
-            
-            saveData();
-            updateStickyBar();
-            
-            // Alert sederhana, bisa diganti modal
-            if(confirm(`${promo.name} ditambahkan ke keranjang!\n\nLihat keranjang?`)) {
-                openCart();
-            }
         }
 
         // ========== GALLERY FUNCTIONS ==========
@@ -2207,9 +2195,12 @@
 
         function searchProducts() {
             const term = document.getElementById('search-input').value.toLowerCase().trim();
+            
+            // Filter produk yang active: true dan cocok dengan pencarian
             const filtered = CONFIG.products.filter(p => 
-                p.name.toLowerCase().includes(term) || 
-                p.desc.toLowerCase().includes(term)
+                p.active === true && 
+                (p.name.toLowerCase().includes(term) || 
+                p.desc.toLowerCase().includes(term))
             );
             
             activeCategory = 'all';
@@ -2308,9 +2299,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
