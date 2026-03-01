@@ -763,7 +763,8 @@
                     id: 1, 
                     category: 'calc', 
                     name: "CALCULATOR FAT LOSS - Hitung Kalori Harian", 
-                    price: 40000, 
+                    price: 40000,
+                    active: true,
                     originalPrice: 40000,
                     discount: 50, 
                     flashSale: true,
@@ -827,7 +828,8 @@
                     id: 2, 
                     category: 'kapsul', 
                     name: "KEMOENIK SLIM 1", 
-                    price: 100000, 
+                    price: 100000,
+                    active: true,
                     originalPrice: 150000,
                     discount: 33, 
                     flashSale: true,
@@ -885,7 +887,8 @@
                     id: 3, 
                     category: 'kapsul', 
                     name: "KEMOENIK SLIM 2", 
-                    price: 75000, 
+                    price: 75000,
+                    active: false,
                     originalPrice: 100000,
                     discount: 25, 
                     flashSale: false,
@@ -943,10 +946,11 @@
                     id: 4, 
                     category: 'teh', 
                     name: "TEH SLIM 1", 
-                    price: 45000, 
+                    price: 45000,
+                    active: false,
                     originalPrice: 60000,
                     discount: 25, 
-                    flashSale: true,
+                    flashSale: false,
                     // [GANTI] 5 GAMBAR PRODUK
                     images: [
                         "https://placehold.co/400x400/D1FAE5/065F46?text=Teh1-1",  // [GANTI]
@@ -1001,10 +1005,11 @@
                     id: 5, 
                     category: 'teh', 
                     name: "TEH SLIM 2", 
-                    price: 55000, 
+                    price: 55000,
+                    active: false,
                     originalPrice: 75000,
                     discount: 27, 
-                    flashSale: true,
+                    flashSale: false,
                     // [GANTI] 5 GAMBAR PRODUK
                     images: [
                         "https://placehold.co/400x400/ECFDF5/047857?text=Teh2-1",  // [GANTI]
@@ -1059,7 +1064,8 @@
                     id: 6, 
                     category: 'lainnya', 
                     name: "SERUM WAJAH GLOW", 
-                    price: 85000, 
+                    price: 85000,
+                    active: false,
                     originalPrice: 120000,
                     discount: 29, 
                     flashSale: false,
@@ -1117,7 +1123,8 @@
                     id: 7, 
                     category: 'kapsul', 
                     name: "VITAMIN C 1000MG", 
-                    price: 35000, 
+                    price: 35000,
+                    active: false,
                     originalPrice: 50000,
                     discount: 30, 
                     flashSale: true,
@@ -1175,7 +1182,8 @@
                     id: 8, 
                     category: 'lainnya', 
                     name: "MINYAK KELAPA MURNI", 
-                    price: 65000, 
+                    price: 65000,
+                    active: false,
                     originalPrice: 80000,
                     discount: 19, 
                     flashSale: false,
@@ -1391,6 +1399,8 @@
             if (!container) return;
 
             container.innerHTML = CONFIG.promoProducts.map(p => `
+              .filter(p => p.active)
+              .map(p => `
                 <div class="promo-card" onclick="openPromoDetail('${p.id}')">
                     <img src="${p.image}" alt="${p.name}">
                     <div class="promo-content">
@@ -2298,6 +2308,7 @@
     </script>
 </body>
 </html>
+
 
 
 
