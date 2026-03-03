@@ -428,6 +428,49 @@
             box-shadow: 0 5px 15px rgba(22, 163, 74, 0.3);
         }
 
+        /* Log Aktivitas Styles */
+        .log-aktivitas {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .log-title {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .log-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .log-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .log-item i {
+            font-size: 14px;
+        }
+
+        .log-time {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-left: auto;
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -645,7 +688,8 @@
             nama: '',
             wa: '',
             voucher: '',
-            expiredDate: '',
+            activatedAt: null, // Waktu aktivasi
+            expiresAt: null,   // Waktu expired (7 hari setelah aktivasi)
             isExistingUser: false
         };
 
@@ -711,8 +755,10 @@
 
             // Simulasi API call (ganti dengan endpoint Anda)
             setTimeout(() => {
-                // Simulasi response sukses
-                handleSuccessResponse(nama, normalizedWA, kode, "2025-12-31");
+                // Simulasi response sukses - VOUCHER BARU DIAKTIFKAN
+                // Tanggal dari server (misalnya 31 Des 2025) adalah tanggal max voucher bisa digunakan
+                // Tapi masa aktif user adalah 7 hari dari SEKARANG (tanggal aktivasi)
+                handleSuccessResponse(nama, normalizedWA, kode, "2025-12-31", true);
                 
                 btn.classList.remove("loading");
                 btn.disabled = false;
@@ -726,9 +772,12 @@
                     btn.disabled = false;
                     
                     if (data.status === "SUCCESS") {
-                        handleSuccessResponse(nama, normalizedWA, kode, data.tanggal_expired);
+                        // isNewActivation = true kalau voucher baru diaktifkan sekarang
+                        // isNewActivation = false kalau voucher sudah pernah diaktifkan sebelumnya
+                        handleSuccessResponse(nama, normalizedWA, kode, data.tanggal_expired, data.is_new_activation);
                     } else if (data.status === "ACTIVE_SAME_WA") {
-                        handleExistingVoucher(nama, normalizedWA, kode, data.tanggal_expired);
+                        // Voucher sudah aktif sebelumnya, tampilkan sisa masa aktif dari data lokal
+                        handleExistingVoucher(nama, normalizedWA, kode);
                     } else if (data.status === "ACTIVE_DIFFERENT_WA") {
                         showResult("error", "Kode ini sudah digunakan oleh nomor WA lain.");
                     } else if (data.status === "EXPIRED") {
@@ -747,8 +796,41 @@
             */
         }
 
-        // Handle sukses response
-        function handleSuccessResponse(nama, wa, kode, expiredDate) {
+        // Handle sukses response - VOUCHER BARU DIKATIFKAN
+        function handleSuccessResponse(nama, wa, kode, serverExpiredDate, isNewActivation = true) {
+            const now = new Date();
+            let activatedAt, expiresAt;
+
+            if (isNewActivation) {
+                // VOUCHER BARU: Hitung 7 hari dari SEKARANG
+                activatedAt = now;
+                expiresAt = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000)); // +7 hari
+                
+                // Simpan ke localStorage untuk tracking
+                const voucherData = {
+                    kode: kode,
+                    activatedAt: activatedAt.toISOString(),
+                    expiresAt: expiresAt.toISOString(),
+                    serverMaxDate: serverExpiredDate // Tanggal max dari server (untuk referensi)
+                };
+                localStorage.setItem(`calfatloss_voucher_${wa}_${kode}`, JSON.stringify(voucherData));
+                
+                // Catat log aktivitas
+                addActivityLog(wa, `Voucher ${kode} diaktifkan`, activatedAt);
+            } else {
+                // Sudah pernah diaktifkan, ambil dari localStorage
+                const savedVoucher = localStorage.getItem(`calfatloss_voucher_${wa}_${kode}`);
+                if (savedVoucher) {
+                    const vData = JSON.parse(savedVoucher);
+                    activatedAt = new Date(vData.activatedAt);
+                    expiresAt = new Date(vData.expiresAt);
+                } else {
+                    // Fallback kalau tidak ada data tersimpan
+                    activatedAt = now;
+                    expiresAt = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+                }
+            }
+
             // Cek apakah user lama atau baru
             const existingData = localStorage.getItem(`calfatloss_data_${wa}`);
             const isExistingUser = !!existingData;
@@ -757,16 +839,17 @@
                 nama: nama,
                 wa: wa,
                 voucher: kode,
-                expiredDate: expiredDate,
+                activatedAt: activatedAt,
+                expiresAt: expiresAt,
                 isExistingUser: isExistingUser
             };
 
-            // Simpan data ke localStorage
+            // Simpan data user
             localStorage.setItem('calfatloss_wa', wa);
             localStorage.setItem('calfatloss_voucher', kode);
             localStorage.setItem(`calfatloss_data_${wa}`, JSON.stringify({
                 nama: nama,
-                lastLogin: new Date().toISOString()
+                lastLogin: now.toISOString()
             }));
 
             // Sembunyikan form, tampilkan hasil dan tombol
@@ -774,10 +857,31 @@
             document.getElementById("successActions").style.display = "block";
             
             const greeting = isExistingUser ? "Selamat datang kembali" : "Selamat datang";
+            const activationMsg = isNewActivation ? "Kode berhasil diaktifkan" : "Kode masih aktif";
+            
+            // Format log aktivitas untuk ditampilkan
+            const logHTML = generateActivityLogHTML(wa);
+            
             showResult("success", `
                 <strong>${greeting}!</strong><br>
-                Kode berhasil diaktifkan 🎉<br>
-                <small>Voucher aktif sampai: ${formatDate(expiredDate)}</small>
+                ${activationMsg} 🎉<br>
+                <div class="log-aktivitas">
+                    <div class="log-title">📋 Log Aktivitas</div>
+                    <div class="log-item">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Voucher aktif</span>
+                        <span class="log-time">${formatDateTime(activatedAt)}</span>
+                    </div>
+                    <div class="log-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Berlaku sampai</span>
+                        <span class="log-time">${formatDateTime(expiresAt)}</span>
+                    </div>
+                    <div class="log-item" style="background: rgba(255,255,255,0.25);">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span>Sisa waktu: ${calculateRemainingTime(expiresAt)}</span>
+                    </div>
+                </div>
             `);
 
             // Tampilkan tombol dengan animasi
@@ -786,13 +890,35 @@
             }, 300);
         }
 
-        // Handle voucher yang sudah aktif
-        function handleExistingVoucher(nama, wa, kode, expiredDate) {
+        // Handle voucher yang sudah aktif sebelumnya (dari localStorage)
+        function handleExistingVoucher(nama, wa, kode) {
+            const savedVoucher = localStorage.getItem(`calfatloss_voucher_${wa}_${kode}`);
+            let activatedAt, expiresAt;
+            
+            if (savedVoucher) {
+                const vData = JSON.parse(savedVoucher);
+                activatedAt = new Date(vData.activatedAt);
+                expiresAt = new Date(vData.expiresAt);
+            } else {
+                // Fallback
+                const now = new Date();
+                activatedAt = now;
+                expiresAt = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+            }
+
+            // Cek apakah sudah expired
+            const now = new Date();
+            if (now > expiresAt) {
+                showResult("warning", "Voucher sudah expired. Silakan gunakan voucher baru.");
+                return;
+            }
+
             currentUserData = {
                 nama: nama,
                 wa: wa,
                 voucher: kode,
-                expiredDate: expiredDate,
+                activatedAt: activatedAt,
+                expiresAt: expiresAt,
                 isExistingUser: true
             };
 
@@ -805,12 +931,77 @@
             showResult("success", `
                 <strong>Selamat datang kembali!</strong><br>
                 Kode masih aktif ✅<br>
-                <small>Voucher aktif sampai: ${formatDate(expiredDate)}</small>
+                <div class="log-aktivitas">
+                    <div class="log-title">📋 Log Aktivitas</div>
+                    <div class="log-item">
+                        <i class="fas fa-history"></i>
+                        <span>Pengaktifan pertama</span>
+                        <span class="log-time">${formatDateTime(activatedAt)}</span>
+                    </div>
+                    <div class="log-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Berlaku sampai</span>
+                        <span class="log-time">${formatDateTime(expiresAt)}</span>
+                    </div>
+                    <div class="log-item" style="background: rgba(255,255,255,0.25);">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span>Sisa waktu: ${calculateRemainingTime(expiresAt)}</span>
+                    </div>
+                </div>
             `);
 
             setTimeout(() => {
                 document.getElementById("btnLanjutManual").classList.add("show");
             }, 300);
+        }
+
+        // Tambah log aktivitas
+        function addActivityLog(wa, activity, timestamp) {
+            const logKey = `calfatloss_log_${wa}`;
+            let logs = JSON.parse(localStorage.getItem(logKey) || '[]');
+            logs.push({
+                activity: activity,
+                timestamp: timestamp.toISOString()
+            });
+            // Simpan max 10 log terakhir
+            if (logs.length > 10) logs = logs.slice(-10);
+            localStorage.setItem(logKey, JSON.stringify(logs));
+        }
+
+        // Generate HTML log aktivitas
+        function generateActivityLogHTML(wa) {
+            const logKey = `calfatloss_log_${wa}`;
+            const logs = JSON.parse(localStorage.getItem(logKey) || '[]');
+            
+            if (logs.length === 0) return '';
+            
+            let html = '<div class="log-aktivitas"><div class="log-title">📋 Riwayat Aktivitas</div>';
+            logs.slice(-3).reverse().forEach(log => {
+                const date = new Date(log.timestamp);
+                html += `
+                    <div class="log-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>${log.activity}</span>
+                        <span class="log-time">${formatDateTime(date)}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            return html;
+        }
+
+        // Hitung sisa waktu
+        function calculateRemainingTime(expiresAt) {
+            const now = new Date();
+            const diff = expiresAt - now;
+            
+            if (diff <= 0) return "Expired";
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            
+            if (days > 0) return `${days} hari ${hours} jam`;
+            return `${hours} jam`;
         }
 
         // Buka modal sambutan (dipanggil dari tombol Buka Panduan)
@@ -820,15 +1011,16 @@
             const title = document.getElementById("welcomeTitle");
             const desc = document.getElementById("welcomeDesc");
             
-            const { nama, expiredDate, isExistingUser } = currentUserData;
+            const { nama, expiresAt, isExistingUser } = currentUserData;
             
             if (isExistingUser) {
                 icon.innerHTML = '<i class="fas fa-user-check"></i>';
                 icon.classList.remove("new-user");
                 title.innerHTML = `Selamat datang kembali,<br>${nama}! 🌟`;
                 desc.innerHTML = `
-                    <strong>Voucher Kakak berhasil diaktifkan</strong><br>
-                    <small>(Berlaku hingga: ${formatDate(expiredDate)})</small><br><br>
+                    <strong>Voucher Kakak aktif</strong><br>
+                    <small>(Berlaku hingga: ${formatDate(expiresAt)})</small><br>
+                    <small>Sisa waktu: ${calculateRemainingTime(expiresAt)}</small><br><br>
                     Kami sudah menarik data diet Kakak sebelumnya. Mari lanjut ke target minggu ini.
                 `;
             } else {
@@ -837,7 +1029,8 @@
                 title.innerHTML = `Selamat datang,<br>${nama}! 🌟`;
                 desc.innerHTML = `
                     <strong>Voucher Kakak berhasil diaktifkan</strong><br>
-                    <small>(Berlaku hingga: ${formatDate(expiredDate)})</small><br><br>
+                    <small>(Berlaku hingga: ${formatDate(expiresAt)})</small><br>
+                    <small>Sisa waktu: 7 hari penuh</small><br><br>
                     Mari buat program diet bertarget mingguan pertama Kakak.
                 `;
             }
@@ -899,13 +1092,26 @@
             // document.getElementById("kode").value = "";
         }
 
-        // Format tanggal
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            const date = new Date(dateStr);
-            if (isNaN(date.getTime())) return dateStr;
+        // Format tanggal lengkap dengan jam
+        function formatDateTime(date) {
+            if (!date || isNaN(date.getTime())) return '-';
             
             return date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Format tanggal saja
+        function formatDate(date) {
+            if (!date || (typeof date === 'string' && !date)) return '-';
+            const d = new Date(date);
+            if (isNaN(d.getTime())) return date;
+            
+            return d.toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
