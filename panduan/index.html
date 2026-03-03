@@ -56,7 +56,7 @@
         .card-header { padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.3s ease; }
         .card-header:hover { background: var(--bg-light); }
         .card-title { font-size: 16px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 12px; }
-        .card-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .card-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
         .card-body { padding: 24px; display: none; }
         .card-body.active { display: block; animation: slideDown 0.3s ease; }
         .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -73,7 +73,7 @@
         .accordion-header:hover { background: #e8e4dc; }
         .accordion-header.active { background: var(--primary); color: white; }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: white; }
-        .accordion-content.active { max-height: 2000px; }
+        .accordion-content.active { max-height: 5000px; }
         .accordion-body { padding: 20px; font-size: 13px; line-height: 1.8; color: var(--text-muted); }
         
         /* Notification */
@@ -110,8 +110,13 @@
         .herbal-item-icon { width: 40px; height: 40px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
         .herbal-item-name { font-size: 12px; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
         .herbal-item-role { font-size: 10px; color: var(--accent-gold); font-weight: 600; }
-        .herbal-detail { display: none; margin-top: 12px; padding: 16px; background: white; border-radius: 10px; border-left: 4px solid var(--accent-gold); animation: slideDown 0.3s ease; }
-        .herbal-detail.active { display: block; }
+        
+        /* Herbal Detail Modal Style */
+        .herbal-detail-container { position: relative; margin-top: 16px; }
+        .herbal-detail { display: none; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); border-left: 4px solid var(--accent-gold); position: relative; }
+        .herbal-detail.active { display: block; animation: slideDown 0.3s ease; }
+        .herbal-detail-close { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; background: #FEE2E2; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #EF4444; font-size: 12px; transition: all 0.3s ease; z-index: 10; }
+        .herbal-detail-close:hover { background: #EF4444; color: white; }
         
         .dosage-box { background: white; border-radius: 10px; padding: 16px; border-left: 4px solid var(--accent-gold); }
         .dosage-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); }
@@ -200,14 +205,14 @@
         .date-estimate-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 4px; }
         .date-estimate-value { font-size: 18px; font-weight: 700; }
         
-        .social-links { display: flex; justify-content: center; gap: 16px; margin-top: 20px; }
+        .social-links { display: flex; justify-content: center; gap: 16px; margin-top: 20px; position: relative; z-index: 10; }
         .social-link { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; transition: transform 0.3s ease; text-decoration: none; }
         .social-link:hover { transform: translateY(-3px); }
         .social-link.instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
         .social-link.tiktok { background: #000000; }
         .social-link.telegram { background: #0088cc; }
         
-        .shop-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+        .shop-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; position: relative; z-index: 10; }
         @media (max-width: 480px) { .shop-buttons { grid-template-columns: 1fr; } }
         .shop-btn { padding: 12px 20px; border-radius: var(--radius-sm); font-weight: 600; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: white; transition: all 0.3s ease; }
         .shop-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
@@ -323,13 +328,12 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Aktivitas Harian</label>
-                            <select id="inputAktivitas" class="form-input" onchange="showActivityDesc()">
+                            <select id="inputAktivitas" class="form-input">
                                 <option value="">Pilih Level</option>
                                 <option value="1.2">Tidak Aktif</option>
                                 <option value="1.375">Ringan (1-2x Olahraga)</option>
                                 <option value="1.55">Sedang (3-5x Olahraga)</option>
                                 <option value="1.725">Berat (6-7x Olahraga)</option>
-                                <option value="1.9">Sangat Berat (Atlet)</option>
                             </select>
                         </div>
                         <!-- Activity Accordion -->
@@ -343,8 +347,7 @@
                                     <div style="margin-bottom: 12px;"><strong style="color: var(--primary);">Tidak Aktif:</strong> Kerja Duduk, Hampir tidak Olahraga, Aktivitas Minim</div>
                                     <div style="margin-bottom: 12px;"><strong style="color: var(--primary);">Ringan (1-2x Olahraga):</strong> Jalan 30 menit, Yoga Ringan, GYM santai, Kardio ringan</div>
                                     <div style="margin-bottom: 12px;"><strong style="color: var(--primary);">Sedang (3-5x Olahraga):</strong> Angkat Beban Rutin, Lari 30-45 Menit, kombinasi cardio + Strength</div>
-                                    <div style="margin-bottom: 12px;"><strong style="color: var(--primary);">Berat (6-7x Olahraga):</strong> Latihan intens Tiap Hari, Pekerja Fisik Berat + Gym</div>
-                                    <div><strong style="color: var(--primary);">Sangat Berat:</strong> Atlet profesional, pekerja fisik ekstrem</div>
+                                    <div><strong style="color: var(--primary);">Berat (6-7x Olahraga):</strong> Latihan intens Tiap Hari, Pekerja Fisik Berat + Gym</div>
                                 </div>
                             </div>
                         </div>
@@ -373,94 +376,40 @@
                     <i class="fas fa-chevron-down chevron-icon" id="faqBody-chevron"></i>
                 </div>
                 <div class="card-body" id="faqBody">
-                    <!-- Input & Evaluasi Progres -->
                     <div class="accordion-item">
                         <div class="accordion-header" onclick="toggleAccordion('faq1')"><span>Input & Evaluasi Progres</span><i class="fas fa-chevron-down"></i></div>
                         <div class="accordion-content" id="faq1">
                             <div class="accordion-body">
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kapan saya harus input berat badan terbaru?</strong><br>Untuk melakukan pengukuran, saya sarankan untuk Setiap minggu akhir setelah kapsul habis ya kak, lebih tepatnya pagi setelah bangun tidur & buang air kecil (jangan lupa untuk mengisi evaluasi mingguanya).</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kok berat badan saya belum turun di grafik?</strong><br>Baik kak saya tegaskan bahwa lemak turun bisa jadi massa otot naik, tetap konsisten untuk menjalankan programnya, jangan lupa untuk dibaca semua panduanya.</div>
-                                <div><strong style="color: var(--primary);">Saya salah masukkan angka timbangan, gimana cara ubahnya?</strong><br>Jangan khawatir kak semua data bisa di edit dan dapat dihapus, semangat kak.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kapan saya harus input berat badan terbaru?</strong><br>Setiap minggu akhir setelah kapsul habis, lebih tepatnya pagi setelah bangun tidur & buang air kecil.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kok berat badan saya belum turun di grafik?</strong><br>Lemak turun bisa jadi massa otot naik, tetap konsisten untuk menjalankan programnya.</div>
+                                <div><strong style="color: var(--primary);">Saya salah masukkan angka timbangan, gimana cara ubahnya?</strong><br>Semua data bisa di edit dan dapat dihapus.</div>
                             </div>
                         </div>
                     </div>
-                    <!-- Konsumsi Kapsul & Reaksi Tubuh -->
                     <div class="accordion-item">
                         <div class="accordion-header" onclick="toggleAccordion('faq2')"><span>Konsumsi Kapsul & Reaksi Tubuh</span><i class="fas fa-chevron-down"></i></div>
                         <div class="accordion-content" id="faq2">
                             <div class="accordion-body">
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kok belum turun di hari ke-5-7?</strong><br>Baik kak tenang dulu ya kak, untuk Proses detoks tiap orang itu beda-beda yaa, ada yang cepet ada yang lambat, yang terpenting kakak ikuti program ini supaya dapat hasil maksimal, semangat kak.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kapan waktu terbaik minum kapsul Kemoenik?</strong><br>Waktu terbaik untuk meminum kapsul KEMOENIK dianjurkan sesudah makan ya kak.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kenapa saya jadi sering buang air kecil (pipis)?</strong><br>Itu adalah reaksi normal dari kandungan Tempuyung yang bersifat diuretik alami untuk membuang kelebihan cairan dan toksin (detoks) dalam tubuh. Pastikan minum air putih 2-3 liter sehari.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">BAB jadi lebih lunak, apakah ini diare?</strong><br>Itu Bukan diare ya kak, itu merupakan efek peluruhan lemak dari kandungan Jati Belanda, maka jangan khawatir yaa tetap semangat dan konsisten.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Lagi haid/menstruasi, boleh tetap minum?</strong><br>Sarankan jeda di hari 1-3 ya kak.</div>
-                                <div><strong style="color: var(--primary);">Apakah bikin diare atau bolak-balik ke kamar mandi (BAB)?</strong><br>Kandungan Jati Belanda membantu melancarkan pencernaan, namun tidak menyebabkan diare hebat jika dosis diikuti sesuai panduan. Tekstur BAB mungkin akan lebih lunak karena lemak yang terbuang.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kok belum turun di hari ke-5-7?</strong><br>Proses detoks tiap orang berbeda-beda, ada yang cepat ada yang lambat.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kenapa saya jadi sering buang air kecil?</strong><br>Reaksi normal dari kandungan Tempuyung yang bersifat diuretik alami.</div>
+                                <div><strong style="color: var(--primary);">BAB jadi lebih lunak, apakah ini diare?</strong><br>Bukan diare, merupakan efek peluruhan lemak dari kandungan Jati Belanda.</div>
                             </div>
                         </div>
                     </div>
-                    <!-- Teknis Pelaksanaan Diet -->
                     <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion('faq3')"><span>Teknis Pelaksanaan Diet (Menu Harian)</span><i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-header" onclick="toggleAccordion('faq3')"><span>Teknis Pelaksanaan Diet</span><i class="fas fa-chevron-down"></i></div>
                         <div class="accordion-content" id="faq3">
                             <div class="accordion-body">
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Saya alergi/tidak suka menu hari ini, boleh diganti apa?</strong><br>Boleh banget kak, kami sudah siapkan plan pengantinya silahkan di cek aja ya kak, kalau tidak suka semua menu boleh diganti asal defisit kalori yaa, semangat kak.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Boleh sarapan jam 9 pagi atau makan malam jam 8 malam?</strong><br>Boleh, asal defisit kalori terjaga, tapi kami sarankan untuk maksimal makan malam itu di jam 7 yaa, kalau ga keburu saya sarankan makan sore aja biar malam ga makan, semangat ya kak.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Bagaimana kalau hari ini saya ada acara makan-makan (kondangan)?</strong><br>Gapapah kak untuk sekali kali asal dibarengi olahraga dan defisit kalori yaa dan jangan lupa minum kapsul KEMOENIK sebelum makan pesta agar lemak tidak langsung terserap, lalu kembali ke menu normal besoknya, semangat kak.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kalau saya 'Cheating' (makan sembarangan) sehari, apakah programnya gagal?</strong><br>Jangan menyerah! Lanjutkan saja program di hari berikutnya. Kapsul KEMOENIK akan membantu mengikat lemak dari makanan 'cheating' tersebut, tapi jangan sering-sering ya Kak!</div>
-                                <div><strong style="color: var(--primary);">Kenapa saya disuruh minum air putih terus?</strong><br>Untuk menidari haus berlebih, dikarnakan ada Efek detoksifikasi herbal Kemoenik kak, makanya biar menjaga tidak dehidrasi disarankan minum 2 liter/hari disesuaikan dengan aktivitas ya.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Aturan Pakai & Kondisi Khusus -->
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion('faq4')"><span>Aturan Pakai & Kondisi Khusus (Dasar)</span><i class="fas fa-chevron-down"></i></div>
-                        <div class="accordion-content" id="faq4">
-                            <div class="accordion-body">
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Boleh minum lebih dari 6 kapsul/hari sekaligus agar cepat turun?</strong><br>Saya Sarankan tetap mengikuti anjuran 6 kapsul/hari dan ikuti pemakainya sesuai panduan.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Boleh saat haid? Aman untuk Busui?</strong><br>Untuk haid lakukan Jeda saat haid H1-3 dulu ya kak, untuk Busui kami anjurkan jangan dulu ya, dikarnakan KEMOENIK ini peluntur lemak.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Boleh minum bersama obat dokter/kopi?</strong><br>Boleh kak saya sarankan untuk memberi jeda sekitar 30 menitan ya kak.</div>
-                                <div><strong style="color: var(--primary);">Apakah bikin ketergantungan atau efek samping jantung berdebar?</strong><br>KEMOENIK 100% herbal tanpa BKO (Bahan Kimia Obat). Tidak membuat jantung berdebar karena fokus pada metabolisme alami, bukan stimulan kimia.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Detail Kandungan & Efek Samping -->
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion('faq5')"><span>Detail Kandungan & Efek Samping (Kritis)</span><i class="fas fa-chevron-down"></i></div>
-                        <div class="accordion-content" id="faq5">
-                            <div class="accordion-body">
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kenapa setelah minum ini dan ikut menu diet, pipis saya jadi kuning pekat?</strong><br>Itu efek alami dari Temulawak dan Teh Hijau yang sedang bekerja mendetoksifikasi tubuh. Pastikan minum air putih sesuai anjuran secara bertahap, semangat kak.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Ada komunitas atau grup WA buat pejuang diet KEMOENIK?</strong><br>Ada Kak! Klik tombol 'Gabung Komunitas' di bawah menu. Di sana Kakak bisa berbagi foto menu makan dan saling menyemangati dengan pengguna lain.</div>
-                                <div><strong style="color: var(--primary);">Kalau voucher saya habis (Hari ke-8) tapi saya belum beli botol baru, data saya hilang?</strong><br>Data Kakak tetap aman di server kami selamanya! jika kakak sudah menyimpan data di evaluasi mingguan, Kakak bisa mengaksesnya kembali kapan saja setelah memasukkan kode voucher baru dari pembelian berikutnya.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Masalah Sinkronisasi Data & Gejala -->
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion('faq6')"><span>Masalah Sinkronisasi Data & Gejala</span><i class="fas fa-chevron-down"></i></div>
-                        <div class="accordion-content" id="faq6">
-                            <div class="accordion-body">
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kenapa berat badan saya di grafik tidak berubah padahal sudah saya update?</strong><br>Pastikan Kakak klik tombol 'Simpan Progres' di bawah tabel evaluasi. Coba refresh halaman browser Kakak agar data terbaru ditarik dari server kami.</div>
-                                <div><strong style="color: var(--primary);">Aman tidak kalau saya olahraga berat sambil minum kapsul ini?</strong><br>Sangat aman kak! Justru olahraga akan mempercepat pembakaran lemak. Jika merasa pusing, kurangi intensitasnya dan pastikan porsi karbohidrat di menu harian Anda sudah habis dikonsumsi.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Pertanyaan Khusus Fitur & Gaya Hidup -->
-                    <div class="accordion-item">
-                        <div class="accordion-header" onclick="toggleAccordion('faq7')"><span>Pertanyaan Khusus Fitur & Gaya Hidup</span><i class="fas fa-chevron-down"></i></div>
-                        <div class="accordion-content" id="faq7">
-                            <div class="accordion-body">
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Data saya di website CALCULATOR FAT LOSS aman tidak?</strong><br>Data berat badan dan progres Anda hanya digunakan untuk sistem kalkulator diet personal Anda dan tidak akan disebarluaskan.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kenapa perhitungan kalori saya berbeda dengan teman saya?</strong><br>Sistem CALCULATOR FAT LOSS menghitung secara personal berdasarkan usia, tinggi, dan aktivitas Anda agar diet tidak membuat lemas namun tetap efektif membakar lemak.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Apakah harus olahraga ketat supaya turun?</strong><br>Produk kami membantu metabolisme dan peluruhan lemak dari dalam, namun untuk hasil 'body goals' yang kencang, aktivitas fisik ringan 15-30 menit sangat disarankan seperti yang ada di Menu Panduan CALCULATOR FAT LOSS.</div>
-                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Apakah setelah berhenti minum BB akan naik drastis (Yoyo Effect)?</strong><br>Tidak, asalkan Anda tetap menjaga pola makan sesuai 'Edukasi Menu' di web kami. KEMOENIK membantu mengecilkan lambung secara alami sehingga nafsu makan lebih terkontrol.</div>
-                                <div><strong style="color: var(--primary);">Berapa hari bisa kelihatan hasilnya?</strong><br>Setiap metabolisme berbeda-beda, namun rata-rata pengguna mulai merasakan badan lebih ringan dan lingkar perut berkurang dalam 7-14 hari jika mengikuti Menu Diet di CALCULATOR FAT LOSS.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Saya alergi/tidak suka menu hari ini, boleh diganti?</strong><br>Boleh diganti asal defisit kalori terjaga.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Bagaimana kalau ada acara makan-makan?</strong><br>Asal dibarengi olahraga dan defisit kalori, minum kapsul sebelum makan pesta.</div>
+                                <div><strong style="color: var(--primary);">Kenapa disuruh minum air putih terus?</strong><br>Untuk menghindari dehidrasi saat efek detoksifikasi herbal.</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- STEP 2: Program Timeline -->
+            <!-- STEP 2: Program Timeline (Pisah) -->
             <div class="glass-card section-hidden" id="programSection">
                 <div class="card-header" onclick="toggleCard('programBody')">
                     <div class="card-title"><div class="card-icon"><i class="fas fa-route"></i></div>Timeline Program Anda</div>
@@ -492,289 +441,270 @@
                     <div style="margin-top: 24px; padding: 16px; background: #EFF6FF; border-radius: 12px; border-left: 4px solid #3B82F6;">
                         <h4 style="font-weight: 600; color: #1E40AF; margin-bottom: 8px; font-size: 14px;"><i class="fas fa-info-circle" style="margin-right: 8px;"></i>Apa itu Fase Maintenance?</h4>
                         <p style="font-size: 13px; color: #1E3A8A; line-height: 1.6;">
-                            <strong>Maintenance (Pemeliharaan)</strong> adalah fase setelah Anda mencapai target berat badan ideal. 
-                            Pada fase ini, dosis herbal dikurangi menjadi <strong>2x2 kapsul/hari</strong> (pagi dan malam) untuk 
-                            menjaga metabolisme tetap optimal dan mencegah kenaikan berat badan kembali (yoyo effect). 
-                            Tetap jaga pola makan sehat dan aktivitas fisik rutin.
+                            <strong>Maintenance (Pemeliharaan)</strong> adalah fase setelah mencapai target berat badan ideal. 
+                            Dosis herbal dikurangi menjadi <strong>2x2 kapsul/hari</strong> untuk mencegah kenaikan berat badan kembali.
                         </p>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Herbal Product -->
-                    <div class="herbal-card">
+            <!-- STEP 2b: Suplemen Herbal KEMOENIK (Pisah) -->
+            <div class="glass-card section-hidden" id="herbalSection">
+                <div class="card-header" onclick="toggleCard('herbalBody')">
+                    <div class="card-title"><div class="card-icon"><i class="fas fa-capsules"></i></div>Suplemen Herbal KEMOENIK</div>
+                    <i class="fas fa-chevron-down chevron-icon" id="herbalBody-chevron"></i>
+                </div>
+                <div class="card-body active" id="herbalBody">
+                    <div class="herbal-card" style="margin-top: 0;">
                         <div class="herbal-header">
-                            <div class="herbal-icon-box"><i class="fas fa-capsules"></i></div>
+                            <div class="herbal-icon-box"><i class="fas fa-leaf"></i></div>
                             <div>
-                                <div class="herbal-title">Suplemen Herbal KEMOENIK</div>
-                                <div style="font-size: 12px; color: var(--text-muted);">Formula 5 Herba Aktif Premium (500mg/kapsul)</div>
+                                <div class="herbal-title">Formula 5 Herba Aktif Premium</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">500mg/kapsul - Klik bahan untuk melihat detail</div>
                             </div>
                         </div>
                         <div class="herbal-grid">
-                            <div class="herbal-item" onclick="toggleHerbalDetail('teh-hijau')">
+                            <div class="herbal-item" onclick="showHerbalDetail('teh-hijau')">
                                 <div class="herbal-item-icon">🍃</div>
                                 <div class="herbal-item-name">Teh Hijau</div>
-                                <div class="herbal-item-role">Metabolism Booster</div>
+                                <div class="herbal-item-role">Metabolism</div>
                             </div>
-                            <div class="herbal-item" onclick="toggleHerbalDetail('jati-belanda')">
+                            <div class="herbal-item" onclick="showHerbalDetail('jati-belanda')">
                                 <div class="herbal-item-icon">🌳</div>
                                 <div class="herbal-item-name">Jati Belanda</div>
                                 <div class="herbal-item-role">Fat Blocker</div>
                             </div>
-                            <div class="herbal-item" onclick="toggleHerbalDetail('kemuning')">
+                            <div class="herbal-item" onclick="showHerbalDetail('kemuning')">
                                 <div class="herbal-item-icon">🌿</div>
                                 <div class="herbal-item-name">Kemuning</div>
                                 <div class="herbal-item-role">Body Shaping</div>
                             </div>
-                            <div class="herbal-item" onclick="toggleHerbalDetail('temulawak')">
+                            <div class="herbal-item" onclick="showHerbalDetail('temulawak')">
                                 <div class="herbal-item-icon">🫚</div>
                                 <div class="herbal-item-name">Temulawak</div>
-                                <div class="herbal-item-role">Stomach Protector</div>
+                                <div class="herbal-item-role">Stomach</div>
                             </div>
-                            <div class="herbal-item" onclick="toggleHerbalDetail('tempuyung')">
+                            <div class="herbal-item" onclick="showHerbalDetail('tempuyung')">
                                 <div class="herbal-item-icon">🌱</div>
                                 <div class="herbal-item-name">Tempuyung</div>
-                                <div class="herbal-item-role">Anti-Bloating</div>
+                                <div class="herbal-item-role">Anti-Bloat</div>
                             </div>
                         </div>
 
-                        <!-- Herbal Details -->
-                        <div class="herbal-detail" id="detail-teh-hijau">
-                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-bolt" style="margin-right: 8px; color: var(--accent-gold);"></i>Teh Hijau (Camellia sinensis) – The Metabolism Booster</h4>
-                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Teh Hijau Mengandung antioksidan polifenol (EGCG) yang memicu hormon pembakar lemak, yang dapat Membantu membakar kalori lebih cepat bahkan saat kamu sedang beristirahat. Kandungan ini cocok untuk untuk Pendamping Olahraga agar lemak yang terbakar saat latihan menjadi lebih maksimal.</p>
-                        </div>
-                        <div class="herbal-detail" id="detail-jati-belanda">
-                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-shield-alt" style="margin-right: 8px; color: var(--accent-gold);"></i>Jati Belanda (Guazuma ulmifolia) – The Fat Blocker</h4>
-                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Jati Belanda Mengandung tanin dan musilago yang bekerja di saluran pencernaan. Yang dapat Membantu menghambat penyerapan lemak dari makanan yang Kamu konsumsi dan memberikan efek rasa kenyang lebih lama. Kandungan ini cocok untuk Membantu Kamu yang sulit menahan nafsu makan.</p>
-                        </div>
-                        <div class="herbal-detail" id="detail-kemuning">
-                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-star" style="margin-right: 8px; color: var(--accent-gold);"></i>Kemuning (Murraya paniculata) – The Body Shaping</h4>
-                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Kemuning Membantu meluruhkan timbunan lemak yang sudah lama mengendap di bawah jaringan kulit. Yang dapat Membantu menjaga tekstur kulit agar tetap kencang dan tidak kendor saat berat badan mulai turun. Kandungan ini cocok untuk Pembentukan tubuh (body shaping) agar terlihat lebih proporsional.</p>
-                        </div>
-                        <div class="herbal-detail" id="detail-temulawak">
-                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-heart" style="margin-right: 8px; color: var(--accent-gold);"></i>Temulawak (Curcuma xanthorrhiza) – The Stomach Protector</h4>
-                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Bersifat kurkuminoid yang menenangkan dinding lambung dan melancarkan empedu. Manfaat Pelangsing: Menjaga lambung agar tidak perih saat Kakak melakukan defisit kalori (diet). Cocok Untuk: Segmen Ramah Lambung (Maag-Friendly). Diet tetap aman, lambung tetap nyaman.</p>
-                        </div>
-                        <div class="herbal-detail" id="detail-tempuyung">
-                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-tint" style="margin-right: 8px; color: var(--accent-gold);"></i>Tempuyung (Sonchus arvensis) – The Anti-Bloating (Detox)</h4>
-                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Tempuyung Bersifat diuretik alami yang membantu pengeluaran kelebihan cairan tubuh. Yang dapat Membuang sisa-sisa toksin dan air berlebih yang terjebak di area perut dan paha. Kandungan ini cocok untuk Anti-Begah & Perut Buncit. Perut terasa enteng dan rata (flat belly) sejak hari pertama.</p>
+                        <!-- Herbal Detail Container with Close Button -->
+                        <div class="herbal-detail-container">
+                            <div class="herbal-detail" id="detail-teh-hijau">
+                                <div class="herbal-detail-close" onclick="closeHerbalDetail()"><i class="fas fa-times"></i></div>
+                                <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-bolt" style="margin-right: 8px; color: var(--accent-gold);"></i>Teh Hijau (Camellia sinensis)</h4>
+                                <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted); margin-bottom: 8px;">Mengandung antioksidan polifenol (EGCG) yang memicu hormon pembakar lemak, membantu membakar kalori lebih cepat bahkan saat beristirahat.</p>
+                                <p style="font-size: 12px; color: var(--primary);"><strong>Cocok untuk:</strong> Pendamping olahraga agar lemak terbakar maksimal.</p>
+                            </div>
+                            <div class="herbal-detail" id="detail-jati-belanda">
+                                <div class="herbal-detail-close" onclick="closeHerbalDetail()"><i class="fas fa-times"></i></div>
+                                <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-shield-alt" style="margin-right: 8px; color: var(--accent-gold);"></i>Jati Belanda (Guazuma ulmifolia)</h4>
+                                <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted); margin-bottom: 8px;">Mengandung tanin dan musilago yang menghambat penyerapan lemak dan memberikan efek kenyang lebih lama.</p>
+                                <p style="font-size: 12px; color: var(--primary);"><strong>Cocok untuk:</strong> Membantu menahan nafsu makan.</p>
+                            </div>
+                            <div class="herbal-detail" id="detail-kemuning">
+                                <div class="herbal-detail-close" onclick="closeHerbalDetail()"><i class="fas fa-times"></i></div>
+                                <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-star" style="margin-right: 8px; color: var(--accent-gold);"></i>Kemuning (Murraya paniculata)</h4>
+                                <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted); margin-bottom: 8px;">Meluruhkan timbunan lemak lama, menjaga tekstur kulit tetap kencang saat berat badan turun.</p>
+                                <p style="font-size: 12px; color: var(--primary);"><strong>Cocok untuk:</strong> Body shaping tubuh proporsional.</p>
+                            </div>
+                            <div class="herbal-detail" id="detail-temulawak">
+                                <div class="herbal-detail-close" onclick="closeHerbalDetail()"><i class="fas fa-times"></i></div>
+                                <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-heart" style="margin-right: 8px; color: var(--accent-gold);"></i>Temulawak (Curcuma xanthorrhiza)</h4>
+                                <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted); margin-bottom: 8px;">Menenangkan dinding lambung dan melancarkan empedu. Menjaga lambung tetap nyaman saat diet.</p>
+                                <p style="font-size: 12px; color: var(--primary);"><strong>Cocok untuk:</strong> Ramah lambung (Maag-Friendly).</p>
+                            </div>
+                            <div class="herbal-detail" id="detail-tempuyung">
+                                <div class="herbal-detail-close" onclick="closeHerbalDetail()"><i class="fas fa-times"></i></div>
+                                <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-tint" style="margin-right: 8px; color: var(--accent-gold);"></i>Tempuyung (Sonchus arvensis)</h4>
+                                <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted); margin-bottom: 8px;">Diuretik alami yang membantu pengeluaran kelebihan cairan dan toksin dari tubuh.</p>
+                                <p style="font-size: 12px; color: var(--primary);"><strong>Cocok untuk:</strong> Anti-begah & perut buncit.</p>
+                            </div>
                         </div>
 
-                        <!-- FAQ Sebelum Jadwal -->
+                        <!-- FAQ Herbal -->
                         <div class="accordion-item" style="margin-top: 16px;">
                             <div class="accordion-header" onclick="toggleAccordion('herbal-faq')">
-                                <span><i class="fas fa-question-circle" style="margin-right: 8px;"></i>Kenapa bahannya banyak sekali? Apa tidak bahaya?</span>
+                                <span><i class="fas fa-question-circle" style="margin-right: 8px;"></i>Kenapa bahannya banyak? Apa tidak bahaya?</span>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                             <div class="accordion-content" id="herbal-faq">
-                                <div class="accordion-body">"Justru kombinasi ini diciptakan agar saling melengkapi (Sinergi Herbal). Ada yang membakar lemak, ada yang membuang air, dan ada yang menjaga lambung agar Kakak tetap sehat selama program."</div>
+                                <div class="accordion-body">"Justru kombinasi ini diciptakan agar saling melengkapi (Sinergi Herbal). Ada yang membakar lemak, membuang air, dan menjaga lambung agar tetap sehat selama program."</div>
                             </div>
                         </div>
 
                         <div class="dosage-box" style="margin-top: 16px;">
-                            <div class="dosage-title"><i class="fas fa-clock" style="color: var(--accent-gold); margin-right: 8px;"></i>Jadwal Konsumsi Optimal (2x3 Kapsul)</div>
+                            <div class="dosage-title"><i class="fas fa-clock" style="color: var(--accent-gold); margin-right: 8px;"></i>Jadwal Konsumsi (2x3 Kapsul)</div>
                             <div class="dosage-schedule">
-                                <span class="dosage-time"><i class="fas fa-sun" style="color: #F59E0B; margin-right: 8px;"></i>Pagi (07:00 - 08:00)</span>
-                                <span class="dosage-amount">3 Kapsul<br><small>Sesudah Sarapan + Air Hangat</small></span>
+                                <span class="dosage-time"><i class="fas fa-sun" style="color: #F59E0B; margin-right: 8px;"></i>Pagi (07:00)</span>
+                                <span class="dosage-amount">3 Kapsul<br><small>Sesudah Sarapan</small></span>
                             </div>
                             <div class="dosage-schedule">
-                                <span class="dosage-time"><i class="fas fa-moon" style="color: #3B82F6; margin-right: 8px;"></i>Malam (18:00 - 19:00)</span>
-                                <span class="dosage-amount">3 Kapsul<br><small>Sesudah Makan Malam + Air Putih</small></span>
+                                <span class="dosage-time"><i class="fas fa-moon" style="color: #3B82F6; margin-right: 8px;"></i>Malam (18:00)</span>
+                                <span class="dosage-amount">3 Kapsul<br><small>Sesudah Makan Malam</small></span>
                             </div>
-                            <div class="dosage-note"><i class="fas fa-info-circle" style="margin-right: 4px;"></i><strong>Alternatif:</strong> Bisa juga dikonsumsi 3x2 kapsul (Pagi, Siang, Malam) sesudah makan. Total 6 kapsul/hari untuk hasil optimal.</div>
+                            <div class="dosage-note"><i class="fas fa-info-circle" style="margin-right: 4px;"></i>Total 6 kapsul/hari untuk hasil optimal.</div>
                         </div>
                     </div>
-
-                    <!-- Activity Section - PERBAIKAN DI SINI -->
-                    <div style="margin-top: 24px; padding: 16px; background: #EFF6FF; border-radius: 12px; border-left: 4px solid #3B82F6;">
-                        <h4 style="font-weight: 600; color: #1E40AF; margin-bottom: 12px; font-size: 14px;"><i class="fas fa-running" style="margin-right: 8px;"></i>Aktivitas Fisik Harian (Minimal 30 Menit)</h4>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <div style="background: white; padding: 12px; border-radius: 8px;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                                    <i class="fas fa-star" style="color: #F59E0B;"></i>
-                                    <span style="font-weight: 600; font-size: 13px; color: #1E3A8A;">Direkomendasikan:</span>
-                                </div>
-                                <ul style="font-size: 13px; color: #1E40AF; list-style: none; padding: 0; margin: 0;">
-                                    <li style="margin-bottom: 4px;"><i class="fas fa-check" style="color: #22C55E; margin-right: 8px;"></i><strong>Latihan Lymphatic</strong> - Pernapasan diafragma, shoulder rolls, neck rolls (lihat tutorial di YouTube: "lymphatic drainage exercise")</li>
-                                    <li><i class="fas fa-check" style="color: #22C55E; margin-right: 8px;"></i><strong>Jalan Kaki Cepat</strong> (Brisk Walking) - 30-45 menit</li>
-                                </ul>
-                            </div>
-                            <div style="font-size: 13px; color: #1E40AF;"><strong>Alternatif:</strong> Lompat tali, jumping jack, atau berenang. Hindari olahraga berat tanpa pemanasan.</div>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-outline" style="margin-top: 24px;" onclick="showMealPlan()">Lihat Jadwal Makan Detail<i class="fas fa-chevron-right" style="margin-left: 8px;"></i></button>
                 </div>
             </div>
             
-            <!-- STEP 3: Meal Plan -->
+            <!-- STEP 3: Panduan Menu Harian (Dasar) - PISAH -->
             <div class="glass-card section-hidden" id="mealSection">
                 <div class="card-header" onclick="toggleCard('mealBody')">
                     <div class="card-title"><div class="card-icon"><i class="fas fa-utensils"></i></div>Panduan Menu Harian</div>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="text-align: right;"><div style="font-size: 11px; color: var(--text-muted);">Target Kalori</div><div style="font-size: 18px; font-weight: 700; color: var(--primary);" id="mealTargetCal">0 kcal</div></div>
+                        <div style="text-align: right;"><div style="font-size: 11px; color: var(--text-muted);">Target</div><div style="font-size: 18px; font-weight: 700; color: var(--primary);" id="mealTargetCal">0 kcal</div></div>
                         <i class="fas fa-chevron-down chevron-icon" id="mealBody-chevron"></i>
                     </div>
                 </div>
                 <div class="card-body active" id="mealBody">
                     <div class="meal-grid" id="mealContainer"></div>
-
-                    <!-- Alternative Menu Note -->
                     <div class="meal-alternative">
                         <div class="meal-alternative-title"><i class="fas fa-lightbulb"></i>Catatan Alternatif Menu</div>
-                        <div class="meal-alternative-text">Tidak harus mengikuti menu di atas persis! Yang penting <strong>asupan kalori tetap terjaga</strong> sesuai target. Anda bisa mengganti dengan makanan lain yang setara kalori dan nutrisinya. Contoh: Nasi bisa diganti roti gandum, ayam bisa diganti ikan atau tahu/tempe. Yang terpenting adalah <strong>defisit kalori dan konsistensi minum herbal</strong>.</div>
+                        <div class="meal-alternative-text">Tidak harus mengikuti menu di atas persis! Yang penting <strong>asupan kalori tetap terjaga</strong> sesuai target. Anda bisa mengganti dengan makanan lain yang setara kalori dan nutrisinya.</div>
                     </div>
+                    <button class="btn btn-outline" style="margin-top: 16px;" onclick="showFullMenuGuide()">Lihat Panduan Menu Lengkap (10 Hari)<i class="fas fa-chevron-right" style="margin-left: 8px;"></i></button>
+                </div>
+            </div>
 
-                    <!-- Detailed Menu Guide -->
-                    <div style="margin-top: 32px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                            <h4 style="font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-book-open" style="margin-right: 8px;"></i>PANDUAN MENU HARIAN LENGKAP</h4>
-                        </div>
-                        <div style="background: linear-gradient(to right, #ECFDF5, #FEF3C7); padding: 16px; border-radius: 12px; border: 1px solid #A7F3D0; margin-bottom: 16px;">
-                            <p style="font-size: 14px; color: #065F46; margin-bottom: 8px;"><strong>Program Transformasi Tubuh Bersama KEMOENIK</strong></p>
-                            <p style="font-size: 12px; color: #047857;">Target: <span id="targetKcalDisplay">1715</span> kcal/hari | Durasi: 10 Varian Menu</p>
-                            <div style="margin-top: 12px; padding: 12px; background: white; border-radius: 8px; font-size: 12px; color: #065F46;">
-                                <p style="margin-bottom: 4px;"><strong>Catatan:</strong></p>
-                                <p>Jika target Anda 1300-1500 kkal: "Kurangi porsi nasi/karbohidrat menjadi setengah dari yang tertulis di tabel."</p>
-                                <p>Jika target Anda 1800-2000 kkal: "Tambahkan 1 butir telur rebus atau tambah porsi sayuran/protein 1,5x lipat dari tabel."</p>
-                            </div>
-                        </div>
-
-                        <!-- Menu Tabs -->
-                        <div class="menu-tabs">
-                            <button class="menu-tab active" onclick="switchMenuTab('ekonomis')">Ekonomis</button>
-                            <button class="menu-tab" onclick="switchMenuTab('standar')">Standar</button>
-                            <button class="menu-tab" onclick="switchMenuTab('premium')">Premium</button>
-                        </div>
-
-                        <!-- Menu Ekonomis -->
-                        <div id="menu-ekonomis" class="menu-table-container">
-                            <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">KATEGORI 1: MENU EKONOMIS (BUDGET RENDAH)</h5>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Fokus: Bahan lokal pasar, harga terjangkau, nutrisi maksimal.</p>
-                            <table class="menu-table">
-                                <thead><tr><th>Hari</th><th>Sarapan (07:00)</th><th>Snack Pagi (10:00)</th><th>Makan Siang (12:00)</th><th>Snack Sore (15:00)</th><th>Makan Malam (18:00)</th></tr></thead>
-                                <tbody>
-                                    <tr><td>1</td><td>2 Telur Rebus + 1 Pisang</td><td>Jeruk Lokal + Kacang Tanah</td><td>Nasi Putih + Tahu/Tempe Bacem + Sayur Bayam</td><td>Pepaya Potong</td><td>Ikan Kembung Bakar + Labu Siam + Kentang</td></tr>
-                                    <tr><td>2</td><td>2 Telur Rebus + 1 Ubi Cilembu</td><td>Pisang Goreng (Air Fryer)</td><td>Nasi Putih + Orek Tempe + Sayur Asem</td><td>Singkong Rebus</td><td>Ayam Bakar (Tanpa Kulit) + Lalapan + Sambal</td></tr>
-                                    <tr><td>3</td><td>2 Telur Rebus + Jagung Rebus</td><td>Buah Semangka</td><td>Bihun Jagung + Telur Dadar + Tumis Kangkung</td><td>Kacang Hijau (No Santan)</td><td>Ikan Lele Bakar + Cah Genjer + Nasi Putih</td></tr>
-                                    <tr><td>4</td><td>2 Telur Rebus + Singkong Rebus</td><td>Buah Melon</td><td>Nasi Putih + Pepes Tahu + Sayur Lodeh (Bening)</td><td>Jagung Manis Pipil</td><td>Telur Ceplok Air + Tumis Sawi Putih + Kentang</td></tr>
-                                    <tr><td>5</td><td>2 Telur Rebus + Roti Tawar</td><td>Salak 2 butir</td><td>Nasi Putih + Pindang Tongkol + Sayur Sop</td><td>Pisang Rebus</td><td>Pepes Jamur + Tahu Kuning + Sambal</td></tr>
-                                    <tr><td>6</td><td>2 Telur Rebus + Pepaya</td><td>Bengkoang</td><td>Nasi Putih + Ayam Suwir + Tumis Kacang Panjang</td><td>Edamame Rebus</td><td>Ikan Mujair Goreng + Wortel & Buncis Rebus</td></tr>
-                                    <tr><td>7</td><td>2 Telur Rebus + 1/2 Alpukat</td><td>Jambu Air</td><td>Gado-Gado (Bumbu Sedikit) + Lontong</td><td>Kerupuk Putih (1)</td><td>Sup Ceker Ayam + Sayuran + Nasi Putih</td></tr>
-                                    <tr><td>8</td><td>2 Telur Rebus + Ubi Ungu</td><td>Buah Naga 1/2</td><td>Nasi Putih + Ikan Asin Kecil + Sayur Kelor</td><td>Pisang Ambon</td><td>Ayam Bumbu Kuning + Sambal + Lalap</td></tr>
-                                    <tr><td>9</td><td>2 Telur Rebus + Bubur Sumsum</td><td>Mangga Lokal</td><td>Nasi Putih + Tumis Kerang + Daun Singkong</td><td>Bakwan Sayur (1)</td><td>Ikan Nila Bakar + Tumis Terong + Nasi Putih</td></tr>
-                                    <tr><td>10</td><td>2 Telur Rebus + Pisang Kukus</td><td>Kurma 3 butir</td><td>Nasi Putih + Kentang Balado + Sayur Sop</td><td>Ketan Putih (Sedikit)</td><td>Ayam Ungkep + Sayur Gambas + Nasi Putih</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Menu Standar -->
-                        <div id="menu-standar" class="menu-table-container" style="display: none;">
-                            <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">KATEGORI 2: MENU STANDARD (BUDGET MENENGAH)</h5>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Fokus: Bahan supermarket, praktis, tinggi protein fillet.</p>
-                            <table class="menu-table">
-                                <thead><tr><th>Hari</th><th>Sarapan (07:00)</th><th>Snack Pagi (10:00)</th><th>Makan Siang (12:00)</th><th>Snack Sore (15:00)</th><th>Makan Malam (18:00)</th></tr></thead>
-                                <tbody>
-                                    <tr><td>1</td><td>2 Telur Rebus + Pisang Cavendish</td><td>Apel Merah + Almond</td><td>Nasi Merah + Dada Ayam Grill + Buncis</td><td>Yogurt Plain + Granola</td><td>Ikan Kakap Kukus + Salad + Kentang</td></tr>
-                                    <tr><td>2</td><td>2 Telur Rebus + Oatmeal</td><td>Pear + Kacang Mete</td><td>Nasi Merah + Sapi Lada Hitam + Pakcoy</td><td>Smoothie Pisang</td><td>Steak Ayam + Mix Veggies + Mashed Potato</td></tr>
-                                    <tr><td>3</td><td>2 Telur Rebus + Roti Gandum</td><td>Kiwi + Pistachio</td><td>Pasta Gandum + Udang + Brokoli</td><td>Protein Bar</td><td>Ikan Dory Panggang + Asparagus + Jagung</td></tr>
-                                    <tr><td>4</td><td>2 Telur Rebus + Buah Naga</td><td>Anggur + Keju Slice</td><td>Nasi Merah + Ayam Teriyaki + Stir Fry Sayur</td><td>Salad Buah Low Fat</td><td>Sup Ikan Batam + Sawi + Nasi Merah</td></tr>
-                                    <tr><td>5</td><td>2 Telur Rebus + Sereal Gandum</td><td>Jeruk Sunkist + Edamame</td><td>Nasi Merah + Ikan Gurame Bakar + Kangkung</td><td>Dark Chocolate</td><td>Beef Patty (Homemade) + Salad + Ubi</td></tr>
-                                    <tr><td>6</td><td>2 Telur Rebus + Pancake Protein</td><td>Blueberry + Almond</td><td>Nasi Merah + Opor Ayam (Low Fat) + Labu</td><td>Greek Yogurt</td><td>Ayam Bakar Taliwang + Plecing + Nasi Merah</td></tr>
-                                    <tr><td>7</td><td>2 Telur Rebus + Smoothie Bowl</td><td>Strawberry + Kuaci</td><td>Sandwich Gandum + Tuna + Selada</td><td>Jus Alpukat (No Sugar)</td><td>Ikan Bawal Bakar + Tumis Jamur + Nasi Merah</td></tr>
-                                    <tr><td>8</td><td>2 Telur Rebus + Muesli</td><td>Apel Hijau + Peanut Butter</td><td>Nasi Merah + Ayam Rosemary + Wortel</td><td>Puding Chia Seed</td><td>Salad Caesar + Ayam Grill + Telur Rebus</td></tr>
-                                    <tr><td>9</td><td>2 Telur Rebus + Alpukat Kocok</td><td>Melon + Granola Bar</td><td>Nasi Merah + Semur Daging + Sawi</td><td>Smoothie Nanas/Sawi</td><td>Ikan Nila Asam Manis + Brokoli + Nasi Merah</td></tr>
-                                    <tr><td>10</td><td>2 Telur Rebus + Granola</td><td>Pisang + Selai Kacang</td><td>Nasi Merah + Udang Saus Tiram + Capcay</td><td>Yogurt Drink</td><td>Steak Tempe & Daging + Salad + Kentang</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Menu Premium -->
-                        <div id="menu-premium" class="menu-table-container" style="display: none;">
-                            <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">KATEGORI 3: MENU PREMIUM (BUDGET ATAS)</h5>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Fokus: Superfood, bahan organik, seafood laut dalam.</p>
-                            <table class="menu-table">
-                                <thead><tr><th>Hari</th><th>Sarapan (07:00)</th><th>Snack Pagi (10:00)</th><th>Makan Siang (12:00)</th><th>Snack Sore (15:00)</th><th>Makan Malam (18:00)</th></tr></thead>
-                                <tbody>
-                                    <tr><td>1</td><td>2 Telur Rebus + Alpukat Mentega</td><td>Mix Berries + Walnut</td><td>Quinoa + Salmon Steak + Asparagus</td><td>Greek Yogurt + Chia Seed</td><td>Tuna Seared + Edamame Salad + Ubi Ungu</td></tr>
-                                    <tr><td>2</td><td>2 Telur Rebus + Smoked Salmon</td><td>Cherry + Macadamia</td><td>Shirataki Rice + Wagyu Beef + Kale</td><td>Smoothie Kale & Whey</td><td>Lobster Grilled + Salad Organik + Baby Potato</td></tr>
-                                    <tr><td>3</td><td>2 Telur Rebus + Almond Butter Toast</td><td>Buah Tin (Fig) + Pecans</td><td>Brown Rice + Gindara Grill + Baby Corn</td><td>Cold Pressed Juice</td><td>Scallops + Puree Kembang Kol + Edamame</td></tr>
-                                    <tr><td>4</td><td>2 Telur Rebus + Dragon Fruit Bowl</td><td>Raspberry + Almonds</td><td>Quinoa + Bebek Panggang + Bok Choy</td><td>Sorbet Buah Asli</td><td>Sirloin Steak + Truffle Veggies + Sweet Potato</td></tr>
-                                    <tr><td>5</td><td>2 Telur Rebus + Sourdough Toast</td><td>Delima (Pomegranate)</td><td>Shirataki Rice + Kepiting Soka + Wakame</td><td>Matcha Latte (Almond)</td><td>Grilled Cod Fish + Zucchini Noodles + Quinoa</td></tr>
-                                    <tr><td>6</td><td>2 Telur Rebus + Acai Bowl</td><td>Blackberry + Pistachio</td><td>Quinoa + Lamb Chop + Paprika</td><td>Greek Yogurt + Honey</td><td>Salmon Sashimi + Salad Wakame + Sup Miso</td></tr>
-                                    <tr><td>7</td><td>2 Telur Rebus + Chia Pudding</td><td>Peach + Brazil Nuts</td><td>Shirataki Rice + Udang Galah + Asparagus</td><td>Keto Cake Slice</td><td>Roasted Turkey + Brussel Sprouts + Pumpkin</td></tr>
-                                    <tr><td>8</td><td>2 Telur Rebus + Guacamole</td><td>Apricot + Hazelnuts</td><td>Brown Rice + Barramundi + Salad Organik</td><td>Smoothie Avocado</td><td>Tenderloin Steak + Mushroom + Baby Carrot</td></tr>
-                                    <tr><td>9</td><td>2 Telur Rebus + Quinoa Porridge</td><td>Blueberries + Pine Nuts</td><td>Shirataki Rice + Venison (Rusa) + Kale</td><td>Almond Milk Pudding</td><td>Grilled Octopus + Salad Mediterania + Hummus</td></tr>
-                                    <tr><td>10</td><td>2 Telur Rebus + Protein Muffin</td><td>Goji Berries + Walnut</td><td>Quinoa + Chicken Sous Vide + Brokoli</td><td>Coconut Water</td><td>Sea Bass Grile + Salad Quinoa + Mashed Potato</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div style="margin-top: 16px; padding: 16px; background: #FEF3C7; border-radius: 8px; border: 1px solid #FCD34D;">
-                            <p style="font-size: 12px; color: #92400E;"><i class="fas fa-info-circle" style="margin-right: 8px;"></i><strong>Tips Telur:</strong> Sarankan telur dimasak Matang Sempurna agar proteinnya terserap 100% oleh tubuh.</p>
-                            <p style="font-size: 12px; color: #92400E; margin-top: 8px;"><i class="fas fa-lightbulb" style="margin-right: 8px;"></i><strong>Budget bukan halangan untuk langsing, yang terpenting adalah Defisit Kalori dan Konsistensi minum Herbal Kemoenik!</strong></p>
+            <!-- STEP 3b: Panduan Menu Lengkap (10 Hari) - PISAH -->
+            <div class="glass-card section-hidden" id="fullMenuSection">
+                <div class="card-header" onclick="toggleCard('fullMenuBody')">
+                    <div class="card-title"><div class="card-icon"><i class="fas fa-book-open"></i></div>Panduan Menu Lengkap (10 Hari)</div>
+                    <i class="fas fa-chevron-down chevron-icon" id="fullMenuBody-chevron"></i>
+                </div>
+                <div class="card-body active" id="fullMenuBody">
+                    <div style="background: linear-gradient(to right, #ECFDF5, #FEF3C7); padding: 16px; border-radius: 12px; border: 1px solid #A7F3D0; margin-bottom: 16px;">
+                        <p style="font-size: 14px; color: #065F46; margin-bottom: 8px;"><strong>Program Transformasi Tubuh KEMOENIK</strong></p>
+                        <p style="font-size: 12px; color: #047857;">Target: <span id="targetKcalDisplay">1715</span> kcal/hari</p>
+                        <div style="margin-top: 12px; padding: 12px; background: white; border-radius: 8px; font-size: 12px; color: #065F46;">
+                            <p style="margin-bottom: 4px;"><strong>Catatan Penyesuaian:</strong></p>
+                            <p>Target 1300-1500 kkal: Kurangi porsi nasi/karbohidrat setengahnya.</p>
+                            <p>Target 1800-2000 kkal: Tambah telur rebus atau sayuran/protein 1,5x lipat.</p>
                         </div>
                     </div>
 
-                    <!-- Weekly Evaluation Section -->
-                    <div style="margin-top: 32px;" id="weeklyEvalSection">
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-                            <div style="font-weight: 600;"><i class="fas fa-clipboard-check" style="margin-right: 8px; color: var(--primary);"></i>Evaluasi Mingguan</div>
-                            <div style="font-size: 13px; color: var(--text-muted);" id="evalWeekDisplay">Minggu ke-1</div>
-                        </div>
-                        <div class="weekly-eval-form">
-                            <div id="editModeIndicator" class="edit-mode-indicator" style="display: none;"><i class="fas fa-edit" style="margin-right: 4px;"></i> Mode Edit: Minggu <span id="editWeekNumber">1</span></div>
-                            <div class="weekly-eval-grid">
-                                <div class="form-group">
-                                    <label class="form-label">Berat Awal Minggu (kg)</label>
-                                    <input type="number" id="weekStartWeight" class="form-input" step="0.1" placeholder="0.0">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Berat Akhir Minggu (kg)</label>
-                                    <input type="number" id="weekEndWeight" class="form-input" step="0.1" placeholder="0.0" onchange="calculateWeeklyLoss()">
-                                </div>
-                            </div>
-                            <div class="weekly-result" id="weeklyResult" style="display: none;">
-                                <div class="weekly-result-title">Hasil Minggu Ini</div>
-                                <div class="weekly-result-item"><span>Penurunan Berat:</span><span id="weightLossValue">0 kg</span></div>
-                            </div>
-                            <div style="margin-top: 16px;">
-                                <label class="form-label">Kondisi Tubuh (Centang yang sesuai)</label>
-                                <div class="condition-grid">
-                                    <div class="condition-item" onclick="toggleCondition(this, 'energi')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Energi Stabil</span></div>
-                                    <div class="condition-item" onclick="toggleCondition(this, 'nafsu')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Nafsu Makan Terkontrol</span></div>
-                                    <div class="condition-item" onclick="toggleCondition(this, 'efek')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Tidak Ada Efek Samping</span></div>
-                                    <div class="condition-item" onclick="toggleCondition(this, 'tidur')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Tidur Cukup (7-8 jam)</span></div>
-                                </div>
-                            </div>
-                            <div class="obstacle-section">
-                                <label class="form-label">Ada kendala minggu ini?</label>
-                                <textarea id="weeklyObstacle" class="obstacle-textarea" placeholder="Ceritakan kendala atau tantangan yang Anda hadapi minggu ini..."></textarea>
-                            </div>
-                            <div style="display: flex; gap: 12px; margin-top: 16px;" class="no-print">
-                                <button class="btn btn-primary" id="btnSaveEval" onclick="saveWeeklyEval()"><i class="fas fa-save"></i>Simpan Evaluasi</button>
-                                <button class="btn btn-outline" id="btnCancelEdit" onclick="cancelEdit()" style="display: none;"><i class="fas fa-times"></i>Batal Edit</button>
-                                <button class="btn btn-outline" onclick="printWeeklyEval()"><i class="fas fa-print"></i>Cetak PDF</button>
-                            </div>
-                            <div style="margin-top: 16px; padding: 16px; background: #ECFDF5; border-radius: 8px; border: 1px solid #A7F3D0; text-align: center;" class="no-print">
-                                <p style="font-size: 13px; color: #065F46; margin-bottom: 8px;">Butuh bantuan atau konsultasi?</p>
-                                <a href="https://wa.me/6281546450547" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #059669; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: background 0.3s;"><i class="fab fa-whatsapp"></i>Hubungi Konsultan</a>
-                            </div>
-                        </div>
-                        <div id="weeklyHistory" style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;"></div>
+                    <!-- Menu Tabs -->
+                    <div class="menu-tabs">
+                        <button class="menu-tab active" onclick="switchMenuTab('ekonomis')">Ekonomis</button>
+                        <button class="menu-tab" onclick="switchMenuTab('standar')">Standar</button>
+                        <button class="menu-tab" onclick="switchMenuTab('premium')">Premium</button>
                     </div>
 
-                    <!-- Tips -->
-                    <div style="margin-top: 24px;">
-                        <h4 style="font-weight: 600; margin-bottom: 16px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Tips Sukses Diet</h4>
-                        <div class="tips-grid">
-                            <div class="tip-card"><div class="tip-icon" style="color: #3B82F6;"><i class="fas fa-tint"></i></div><div class="tip-title">Hidrasi</div><div class="tip-desc">Minum 8 gelas air putih sepanjang hari</div></div>
-                            <div class="tip-card"><div class="tip-icon" style="color: #22C55E;"><i class="fas fa-bed"></i></div><div class="tip-title">Tidur</div><div class="tip-desc">Istirahat 7-8 jam untuk metabolisme optimal</div></div>
-                            <div class="tip-card"><div class="tip-icon" style="color: #F59E0B;"><i class="fas fa-walking"></i></div><div class="tip-title">Aktivitas</div><div class="tip-desc">Minimal 30 menit aktivitas fisik</div></div>
-                            <div class="tip-card"><div class="tip-icon" style="color: #EF4444;"><i class="fas fa-ban"></i></div><div class="tip-title">Hindari</div><div class="tip-desc">Gula, gorengan, & minuman bersoda</div></div>
-                        </div>
+                    <!-- Menu Tables -->
+                    <div id="menu-ekonomis" class="menu-table-container">
+                        <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">Menu Ekonomis (Budget Rendah)</h5>
+                        <table class="menu-table">
+                            <thead><tr><th>Hari</th><th>Sarapan</th><th>Snack Pagi</th><th>Makan Siang</th><th>Snack Sore</th><th>Malam</th></tr></thead>
+                            <tbody>
+                                <tr><td>1</td><td>2 Telur + Pisang</td><td>Jeruk + Kacang</td><td>Nasi + Tahu Tempe + Bayam</td><td>Pepaya</td><td>Ikan Bakar + Kentang</td></tr>
+                                <tr><td>2</td><td>2 Telur + Ubi</td><td>Pisang Goreng</td><td>Nasi + Orek Tempe</td><td>Singkong</td><td>Ayam Bakar + Lalap</td></tr>
+                                <tr><td>3</td><td>2 Telur + Jagung</td><td>Semangka</td><td>Bihun + Telur + Kangkung</td><td>Kacang Hijau</td><td>Ikan Lele + Nasi</td></tr>
+                                <tr><td>4</td><td>2 Telur + Singkong</td><td>Melon</td><td>Nasi + Pepes Tahu</td><td>Jagung</td><td>Telur + Sawi + Kentang</td></tr>
+                                <tr><td>5</td><td>2 Telur + Roti</td><td>Salak</td><td>Nasi + Pindang Tongkol</td><td>Pisang Rebus</td><td>Pepes Jamur + Sambal</td></tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                    <!-- Tombol Beli Lagi -->
-                    <div style="margin-top: 32px; padding: 24px; background: linear-gradient(to right, #FFF7ED, #FEF2F2); border-radius: 12px; border: 1px solid #FED7AA;" class="no-print">
+                    <div id="menu-standar" class="menu-table-container" style="display: none;">
+                        <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">Menu Standar (Budget Menengah)</h5>
+                        <table class="menu-table">
+                            <thead><tr><th>Hari</th><th>Sarapan</th><th>Snack Pagi</th><th>Makan Siang</th><th>Snack Sore</th><th>Malam</th></tr></thead>
+                            <tbody>
+                                <tr><td>1</td><td>2 Telur + Pisang</td><td>Apel + Almond</td><td>Nasi Merah + Ayam Grill</td><td>Yogurt + Granola</td><td>Ikan Kakap + Salad</td></tr>
+                                <tr><td>2</td><td>2 Telur + Oatmeal</td><td>Pear + Mete</td><td>Nasi Merah + Sapi Lada Hitam</td><td>Smoothie Pisang</td><td>Steak Ayam + Kentang</td></tr>
+                                <tr><td>3</td><td>2 Telur + Roti Gandum</td><td>Kiwi + Pistachio</td><td>Pasta Gandum + Udang</td><td>Protein Bar</td><td>Ikan Dory + Jagung</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="menu-premium" class="menu-table-container" style="display: none;">
+                        <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">Menu Premium (Budget Atas)</h5>
+                        <table class="menu-table">
+                            <thead><tr><th>Hari</th><th>Sarapan</th><th>Snack Pagi</th><th>Makan Siang</th><th>Snack Sore</th><th>Malam</th></tr></thead>
+                            <tbody>
+                                <tr><td>1</td><td>2 Telur + Alpukat</td><td>Mix Berries</td><td>Quinoa + Salmon</td><td>Greek Yogurt</td><td>Tuna + Ubi Ungu</td></tr>
+                                <tr><td>2</td><td>2 Telur + Smoked Salmon</td><td>Cherry + Macadamia</td><td>Shirataki + Wagyu</td><td>Smoothie Kale</td><td>Lobster + Potato</td></tr>
+                                <tr><td>3</td><td>2 Telur + Acai Bowl</td><td>Buah Tin</td><td>Quinoa + Lamb Chop</td><td>Keto Cake</td><td>Salmon Sashimi</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-top: 16px; padding: 16px; background: #FEF3C7; border-radius: 8px; border: 1px solid #FCD34D;">
+                        <p style="font-size: 12px; color: #92400E;"><i class="fas fa-info-circle" style="margin-right: 8px;"></i><strong>Tips:</strong> Telur dimasak matang sempurna agar protein terserap 100%.</p>
+                        <p style="font-size: 12px; color: #92400E; margin-top: 8px;"><strong>Budget bukan halangan untuk langsing, yang terpenting adalah Defisit Kalori dan Konsistensi!</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4: Evaluasi Mingguan - PISAH -->
+            <div class="glass-card section-hidden" id="evalSection">
+                <div class="card-header" onclick="toggleCard('evalBody')">
+                    <div class="card-title"><div class="card-icon"><i class="fas fa-clipboard-check"></i></div>Evaluasi Mingguan</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 12px; color: var(--text-muted);" id="evalWeekDisplay">Minggu ke-1</span>
+                        <i class="fas fa-chevron-down chevron-icon" id="evalBody-chevron"></i>
+                    </div>
+                </div>
+                <div class="card-body active" id="evalBody">
+                    <div class="weekly-eval-form" style="margin-bottom: 0;">
+                        <div id="editModeIndicator" class="edit-mode-indicator" style="display: none;"><i class="fas fa-edit" style="margin-right: 4px;"></i> Mode Edit: Minggu <span id="editWeekNumber">1</span></div>
+                        <div class="weekly-eval-grid">
+                            <div class="form-group">
+                                <label class="form-label">Berat Awal Minggu (kg)</label>
+                                <input type="number" id="weekStartWeight" class="form-input" step="0.1" placeholder="0.0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Berat Akhir Minggu (kg)</label>
+                                <input type="number" id="weekEndWeight" class="form-input" step="0.1" placeholder="0.0" onchange="calculateWeeklyLoss()">
+                            </div>
+                        </div>
+                        <div class="weekly-result" id="weeklyResult" style="display: none;">
+                            <div class="weekly-result-title">Hasil Minggu Ini</div>
+                            <div class="weekly-result-item"><span>Penurunan Berat:</span><span id="weightLossValue">0 kg</span></div>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <label class="form-label">Kondisi Tubuh (Centang yang sesuai)</label>
+                            <div class="condition-grid">
+                                <div class="condition-item" onclick="toggleCondition(this, 'energi')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Energi Stabil</span></div>
+                                <div class="condition-item" onclick="toggleCondition(this, 'nafsu')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Nafsu Makan Terkontrol</span></div>
+                                <div class="condition-item" onclick="toggleCondition(this, 'efek')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Tidak Ada Efek Samping</span></div>
+                                <div class="condition-item" onclick="toggleCondition(this, 'tidur')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Tidur Cukup (7-8 jam)</span></div>
+                            </div>
+                        </div>
+                        <div class="obstacle-section">
+                            <label class="form-label">Ada kendala minggu ini?</label>
+                            <textarea id="weeklyObstacle" class="obstacle-textarea" placeholder="Ceritakan kendala atau tantangan yang Anda hadapi..."></textarea>
+                        </div>
+                        <div style="display: flex; gap: 12px; margin-top: 16px;" class="no-print">
+                            <button class="btn btn-primary" id="btnSaveEval" onclick="saveWeeklyEval()"><i class="fas fa-save"></i>Simpan Evaluasi</button>
+                            <button class="btn btn-outline" id="btnCancelEdit" onclick="cancelEdit()" style="display: none;"><i class="fas fa-times"></i>Batal</button>
+                        </div>
+                    </div>
+                    <div id="weeklyHistory" style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;"></div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="glass-card section-hidden" id="tipsSection">
+                <div class="card-header" onclick="toggleCard('tipsBody')">
+                    <div class="card-title"><div class="card-icon"><i class="fas fa-lightbulb"></i></div>Tips Sukses Diet</div>
+                    <i class="fas fa-chevron-down chevron-icon" id="tipsBody-chevron"></i>
+                </div>
+                <div class="card-body active" id="tipsBody">
+                    <div class="tips-grid">
+                        <div class="tip-card"><div class="tip-icon" style="color: #3B82F6;"><i class="fas fa-tint"></i></div><div class="tip-title">Hidrasi</div><div class="tip-desc">Minum 8 gelas air putih sepanjang hari</div></div>
+                        <div class="tip-card"><div class="tip-icon" style="color: #22C55E;"><i class="fas fa-bed"></i></div><div class="tip-title">Tidur</div><div class="tip-desc">Istirahat 7-8 jam untuk metabolisme optimal</div></div>
+                        <div class="tip-card"><div class="tip-icon" style="color: #F59E0B;"><i class="fas fa-walking"></i></div><div class="tip-title">Aktivitas</div><div class="tip-desc">Minimal 30 menit aktivitas fisik</div></div>
+                        <div class="tip-card"><div class="tip-icon" style="color: #EF4444;"><i class="fas fa-ban"></i></div><div class="tip-title">Hindari</div><div class="tip-desc">Gula, gorengan, & minuman bersoda</div></div>
+                    </div>
+                    
+                    <!-- Tombol Beli -->
+                    <div style="margin-top: 24px; padding: 24px; background: linear-gradient(to right, #FFF7ED, #FEF2F2); border-radius: 12px; border: 1px solid #FED7AA;" class="no-print">
                         <h4 style="font-weight: 600; color: #9A3412; margin-bottom: 16px; text-align: center;"><i class="fas fa-shopping-cart" style="margin-right: 8px;"></i>Stok Kapsul Menipis?</h4>
                         <div class="shop-buttons">
                             <a href="https://s.shopee.co.id/4VXlRpSx3t" target="_blank" class="shop-btn shopee"><i class="fas fa-shopping-bag"></i>Beli di Shopee</a>
@@ -790,13 +720,13 @@
                 <div class="consultation-badge">Gratis Konsultasi</div>
                 <h3 class="consultation-title font-display">Butuh Pendampingan?</h3>
                 <p class="consultation-desc">Dapatkan konsultasi gratis dengan ahli gizi kami untuk memaksimalkan hasil program diet herbal Anda.</p>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <a href="https://wa.me/6281546450547" target="_blank" class="btn btn-gold"><i class="fab fa-whatsapp"></i>Hubungi Konsultan Sekarang</a>
+                <div style="display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 10;">
+                    <a href="https://wa.me/6281546450547" target="_blank" class="btn btn-gold" style="pointer-events: auto;"><i class="fab fa-whatsapp"></i>Hubungi Konsultan Sekarang</a>
                     <p style="font-size: 12px; opacity: 0.8;">Klik tombol di atas untuk terhubung via WhatsApp</p>
                 </div>
                 
                 <!-- Social Links -->
-                <div class="social-links">
+                <div class="social-links" style="pointer-events: auto;">
                     <a href="https://www.instagram.com/kemoenik26?igsh=aTU3ODg3Yzg3Nmkx" target="_blank" class="social-link instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.tiktok.com/@kemoenik" target="_blank" class="social-link tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
                     <a href="https://t.me/+88Z09gVb4zowYjll" target="_blank" class="social-link telegram" title="Grup Pejuang Diet"><i class="fab fa-telegram-plane"></i></a>
@@ -827,48 +757,47 @@
             document.getElementById('guideNotification').style.display = 'none';
         }
 
-        // Toggle Functions
+        // Toggle Card (Accordion utama)
         function toggleCard(bodyId) {
             const body = document.getElementById(bodyId);
             const chevron = document.getElementById(bodyId + '-chevron');
-            body.classList.toggle('active');
+            if (body) body.classList.toggle('active');
             if (chevron) chevron.classList.toggle('rotated');
         }
 
+        // Toggle Accordion (Sub-accordion dalam card)
         function toggleAccordion(id) {
             const content = document.getElementById(id);
+            if (!content) return;
             const header = content.previousElementSibling;
             content.classList.toggle('active');
-            header.classList.toggle('active');
+            if (header) header.classList.toggle('active');
         }
 
-        function toggleHerbalDetail(id) {
-            // Hide all details first
-            document.querySelectorAll('.herbal-detail').forEach(d => d.classList.remove('active'));
-            document.querySelectorAll('.herbal-item').forEach(i => i.classList.remove('active'));
+        // Herbal Detail Functions
+        function showHerbalDetail(id) {
+            // Hide all first
+            document.querySelectorAll('.herbal-detail').forEach(function(d) { d.classList.remove('active'); });
+            document.querySelectorAll('.herbal-item').forEach(function(i) { i.classList.remove('active'); });
             
             // Show selected
             const detail = document.getElementById('detail-' + id);
-            const item = event.currentTarget;
-            if (detail) {
-                detail.classList.add('active');
-                item.classList.add('active');
-            }
+            if (event.currentTarget) event.currentTarget.classList.add('active');
+            if (detail) detail.classList.add('active');
         }
 
+        function closeHerbalDetail() {
+            document.querySelectorAll('.herbal-detail').forEach(function(d) { d.classList.remove('active'); });
+            document.querySelectorAll('.herbal-item').forEach(function(i) { i.classList.remove('active'); });
+        }
+
+        // Menu Tab Switch
         function switchMenuTab(tab) {
-            document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            document.querySelectorAll('.menu-table-container').forEach(c => c.style.display = 'none');
-            document.getElementById('menu-' + tab).style.display = 'block';
-        }
-
-        function showActivityDesc() {
-            // Auto open accordion when activity selected
-            const accordion = document.getElementById('activityAccordion');
-            if (!accordion.classList.contains('active')) {
-                toggleAccordion('activityAccordion');
-            }
+            document.querySelectorAll('.menu-tab').forEach(function(t) { t.classList.remove('active'); });
+            if (event.target) event.target.classList.add('active');
+            document.querySelectorAll('.menu-table-container').forEach(function(c) { c.style.display = 'none'; });
+            const targetMenu = document.getElementById('menu-' + tab);
+            if (targetMenu) targetMenu.style.display = 'block';
         }
 
         // Access Control
@@ -977,8 +906,14 @@
             generateTimeline();
             generateMealPlan();
             
-            document.getElementById('programSection').classList.remove('section-hidden');
-            document.getElementById('programSection').classList.add('section-visible');
+            // Show all sections
+            ['programSection', 'herbalSection', 'mealSection', 'fullMenuSection', 'evalSection', 'tipsSection'].forEach(function(id) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('section-hidden');
+                    el.classList.add('section-visible');
+                }
+            });
             
             if (shouldScroll) setTimeout(function() { document.getElementById('programSection').scrollIntoView({ behavior: 'smooth' }); }, 100);
         }
@@ -999,10 +934,10 @@
             timeline.innerHTML = '';
             const phases = [
                 { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Mulai konsumsi 2x3 kapsul herbal sesudah makan (pagi & malam). Fokus pengurangan gula.' },
-                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari. Aktivitas: jalan kaki + latihan lymphatic.' },
-                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal. Rutin latihan lymphatic untuk drainase optimal.' },
-                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Gunakan lembar evaluasi mingguan. Jika stagnan, konsultasi gratis tersedia.' },
-                { week: userData.weeks, title: 'Target Tercapai!', desc: 'Selamat ' + userData.nama + '! Capai target ' + userData.target + 'kg pada ' + userData.targetDate + '. Lanjutkan ke FASE MAINTENANCE: Turun dosis herbal jadi 2x2 kapsul/hari.' }
+                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari.' },
+                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal.' },
+                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Gunakan lembar evaluasi mingguan.' },
+                { week: userData.weeks, title: 'Target Tercapai!', desc: 'Selamat ' + userData.nama + '! Capai target ' + userData.target + 'kg. Lanjutkan ke FASE MAINTENANCE: Turun dosis herbal jadi 2x2 kapsul/hari.' }
             ];
 
             phases.forEach(function(phase, index) {
@@ -1029,19 +964,23 @@
                 { time: '10:00', title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), menu: 'Buah segar (apel/jeruk) + kacang almond 10 butir' },
                 { time: '12:00', title: 'Makan Siang (30%)', cal: Math.round(userData.dietCal * 0.30), menu: 'Nasi merah 100g + dada ayam 150g + sayur tumis' },
                 { time: '15:00', title: 'Snack Sore (10%)', cal: Math.round(userData.dietCal * 0.10), menu: 'Yogurt plain + granola atau smoothie green' },
-                { time: '18:00', title: 'Makan Malam (25%)', cal: Math.round(userData.dietCal * 0.25), menu: 'Ikan kukus 150g + salad sayur + kentang rebus + 3 kapsul herbal sesudah makan' }
+                { time: '18:00', title: 'Makan Malam (25%)', cal: Math.round(userData.dietCal * 0.25), menu: 'Ikan kukus 150g + salad sayur + kentang rebus + 3 kapsul herbal' }
             ];
             container.innerHTML = meals.map(function(meal) {
                 return '<div class="meal-card"><div class="meal-time-box"><div class="meal-time-label">JAM</div><div class="meal-time-value">' + meal.time + '</div></div><div class="meal-content"><div class="meal-title">' + meal.title + '</div><div class="meal-desc">' + meal.menu + '</div></div><div class="meal-cal">~' + meal.cal + '<br><small>kcal</small></div></div>';
             }).join('');
         }
 
-        function showMealPlan() {
-            document.getElementById('mealSection').classList.remove('section-hidden');
-            document.getElementById('mealSection').classList.add('section-visible');
-            const currentWeek = weeklyHistory.length + 1;
-            document.getElementById('evalWeekDisplay').textContent = 'Minggu ke-' + currentWeek;
-            setTimeout(function() { document.getElementById('mealSection').scrollIntoView({ behavior: 'smooth' }); }, 100);
+        function showFullMenuGuide() {
+            const el = document.getElementById('fullMenuSection');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+                // Auto open if closed
+                const body = document.getElementById('fullMenuBody');
+                if (body && !body.classList.contains('active')) {
+                    toggleCard('fullMenuBody');
+                }
+            }
         }
 
         // Weekly Evaluation
@@ -1101,9 +1040,9 @@
             calculateWeeklyLoss();
             document.getElementById('editModeIndicator').style.display = 'inline-block';
             document.getElementById('editWeekNumber').textContent = weekData.week;
-            document.getElementById('btnSaveEval').innerHTML = '<i class="fas fa-save"></i> Update Evaluasi';
+            document.getElementById('btnSaveEval').innerHTML = '<i class="fas fa-save"></i> Update';
             document.getElementById('btnCancelEdit').style.display = 'flex';
-            document.getElementById('weeklyEvalSection').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('evalSection').scrollIntoView({ behavior: 'smooth' });
         }
 
         function deleteWeeklyEval(index) {
@@ -1120,7 +1059,7 @@
         function cancelEdit() {
             editingIndex = -1; resetForm();
             document.getElementById('editModeIndicator').style.display = 'none';
-            document.getElementById('btnSaveEval').innerHTML = '<i class="fas fa-save"></i> Simpan Evaluasi';
+            document.getElementById('btnSaveEval').innerHTML = '<i class="fas fa-save"></i>Simpan Evaluasi';
             document.getElementById('btnCancelEdit').style.display = 'none';
         }
 
@@ -1143,9 +1082,7 @@
             }).join('');
         }
 
-        function printWeeklyEval() { window.print(); }
-
-        // Auto-save
+        // Auto-save inputs
         ['inputNama', 'inputGender', 'inputUsia', 'inputBerat', 'inputTinggi', 'inputAktivitas', 'inputTarget', 'inputMetode'].forEach(function(id) {
             const el = document.getElementById(id);
             if (el) {
