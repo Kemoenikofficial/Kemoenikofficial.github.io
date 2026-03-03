@@ -1,12 +1,10 @@
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Verifikasi Kode Konsultasi - Kemoenik</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -106,12 +104,11 @@
             font-weight: 600;
             margin-top: 10px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.2s;
         }
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+        button:active {
+            transform: scale(0.98);
         }
 
         button.loading .btn-text {
@@ -138,7 +135,8 @@
             padding: 20px;
             border-radius: 12px;
             color: white;
-            animation: fadeIn 0.5s ease;
+            text-align: left;
+            line-height: 1.5;
         }
 
         .success {
@@ -153,11 +151,6 @@
             background: linear-gradient(135deg, #eb3349, #f45c43);
         }
 
-        .date-info {
-            margin-top: 15px;
-            font-size: 13px;
-        }
-
         .btn-lanjut {
             display: none;
             margin-top: 15px;
@@ -168,40 +161,125 @@
             color: #16a34a;
             text-decoration: none;
             font-weight: 600;
-            background: white;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 16px;
-            width: 100%;
+            background: white;
         }
 
         .btn-lanjut:hover {
             background: #16a34a;
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(22, 163, 74, 0.3);
         }
 
-        .btn-lanjut.show {
-            display: block;
-            animation: slideUp 0.5s ease;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 13px;
+        /* Privacy Text Style */
+        .privacy-text {
+            font-size: 11px;
             color: #888;
+            margin-top: 6px;
+            line-height: 1.4;
+            font-style: italic;
         }
 
-        .link-bantuan {
-            color: #16a34a;
+        /* FAQ Accordion Styles */
+        .faq-section {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .faq-title {
+            font-size: 15px;
             font-weight: 600;
-            text-decoration: none;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
-        .link-bantuan:hover {
-            text-decoration: underline;
+        .accordion {
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 14px;
+            background: #f9f9f9;
+            border: none;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: #f1f1f1;
+        }
+
+        .accordion-header i {
+            transition: transform 0.3s;
+            color: #16a34a;
+        }
+
+        .accordion-header.active i {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            background: white;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .accordion-body.show {
+            max-height: 200px;
+            padding: 15px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            color: #555;
+            background: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+
+        .social-links a:hover {
+            background: #e0e0e0;
+        }
+
+        .social-links i {
+            font-size: 16px;
         }
 
         /* Modal Styles */
@@ -212,12 +290,11 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            backdrop-filter: blur(4px);
         }
 
         .modal-content {
@@ -227,62 +304,48 @@
             max-width: 400px;
             width: 100%;
             text-align: center;
-            animation: zoomIn 0.3s ease;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.3s ease;
         }
 
         .modal-icon {
-            font-size: 56px;
+            font-size: 48px;
             color: #16a34a;
             margin-bottom: 15px;
-            animation: bounce 1s infinite;
-        }
-
-        .modal-icon.new-user {
-            color: #f59e0b;
         }
 
         .modal-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #111827;
-            line-height: 1.3;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
         }
 
         .modal-desc {
-            font-size: 15px;
-            color: #6b7280;
-            margin-bottom: 25px;
-            line-height: 1.6;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
         .modal-buttons {
             display: flex;
-            gap: 12px;
-            flex-direction: column;
+            gap: 10px;
         }
 
         .modal-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
             border: none;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .modal-btn-primary {
-            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            background: #16a34a;
             color: white;
-            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
-        }
-
-        .modal-btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
         }
 
         .modal-btn-secondary {
@@ -290,337 +353,141 @@
             color: #374151;
         }
 
-        .modal-btn-secondary:hover {
-            background: #e5e7eb;
-        }
-
-        /* Privacy Notice */
-        .privacy-notice {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border-left: 4px solid #16a34a;
-            padding: 14px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            font-size: 12px;
-            color: #166534;
-            line-height: 1.5;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .privacy-notice i {
-            color: #16a34a;
-            font-size: 16px;
-            margin-top: 2px;
-            flex-shrink: 0;
-        }
-
-        /* Accordion Styles */
-        .accordion-container {
-            margin-top: 25px;
-            border-top: 1px solid #e5e7eb;
-            padding-top: 20px;
-        }
-
-        .accordion-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #374151;
-            margin-bottom: 15px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .accordion-item {
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            background: #fafafa;
-            transition: all 0.3s;
-        }
-
-        .accordion-item:hover {
-            border-color: #16a34a;
-            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.1);
-        }
-
-        .accordion-item.active {
-            border-color: #16a34a;
-            background: white;
-        }
-
-        .accordion-header {
-            padding: 16px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            transition: all 0.3s;
-            border: none;
-            width: 100%;
-            text-align: left;
-        }
-
-        .accordion-header:hover {
-            background: #f0fdf4;
-            color: #16a34a;
-        }
-
-        .accordion-header i {
-            color: #16a34a;
-            transition: transform 0.3s;
-            font-size: 14px;
-        }
-
-        .accordion-item.active .accordion-header i {
-            transform: rotate(180deg);
-        }
-
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-            background: white;
-        }
-
-        .accordion-item.active .accordion-content {
-            max-height: 300px;
-        }
-
-        .accordion-body {
-            padding: 0 16px 16px;
-            font-size: 13px;
-            color: #6b7280;
-            line-height: 1.7;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .social-links a {
-            color: #16a34a;
-            font-size: 24px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #f0fdf4;
-        }
-
-        .social-links a:hover {
-            transform: scale(1.1) rotate(5deg);
-            background: #16a34a;
-            color: white;
-            box-shadow: 0 5px 15px rgba(22, 163, 74, 0.3);
-        }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        @keyframes zoomIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .hidden {
-            display: none !important;
+        
+        .date-highlight {
+            font-weight: bold;
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">
-            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg " alt="Logo Kemoenik" loading="lazy">
+            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo Kemoenik">
             <h2>Kemoenik</h2>
             <p>Verifikasi Kode Konsultasi</p>
         </div>
 
-        <!-- Privacy Notice -->
-        <div class="privacy-notice">
-            <i class="fas fa-shield-alt"></i>
-            <div>
-                Kami menjamin privasi data Anda sesuai kebijakan Kebijakan Privasi. Nomor WhatsApp hanya digunakan untuk sinkronisasi data diet Anda.
+        <div class="form-group">
+            <label>Nama Lengkap</label>
+            <div class="input-wrapper">
+                <i class="fas fa-user"></i>
+                <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
             </div>
         </div>
 
-        <!-- Form Section -->
-        <div id="formSection">
-            <div class="form-group">
-                <label>Nama Lengkap</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="nama" placeholder="Masukkan nama lengkap" required autocomplete="name">
-                </div>
+        <div class="form-group">
+            <label>Nomor WhatsApp</label>
+            <div class="input-wrapper">
+                <i class="fab fa-whatsapp"></i>
+                <input type="tel" id="wa" placeholder="Contoh: 08123456789" required>
             </div>
-
-            <div class="form-group">
-                <label>Nomor WhatsApp</label>
-                <div class="input-wrapper">
-                    <i class="fab fa-whatsapp"></i>
-                    <input type="tel" id="wa" placeholder="Contoh: 08123456789" required autocomplete="tel">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Kode Konsultasi</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-ticket-alt"></i>
-                    <input type="text" id="kode" placeholder="Masukkan kode unik" required autocomplete="off">
-                </div>
-            </div>
-
-            <button id="btnCek" onclick="cekKode()">
-                <span class="btn-text">Cek Kode</span>
-                <div class="spinner"></div>
-            </button>
+            <!-- Tambahan Teks Privasi (Poin 2) -->
+            <p class="privacy-text">
+                <i class="fas fa-shield-alt"></i> 
+                "Kami menjamin privasi data Anda sesuai kebijakan Kebijakan Privasi. Nomor WhatsApp hanya digunakan untuk sinkronisasi data diet Anda."
+            </p>
         </div>
 
-        <!-- Success Actions (Muncul setelah verifikasi) -->
-        <div id="successActions" style="display: none;">
-            <div id="result"></div>
-            
-            <button id="btnLanjutManual" class="btn-lanjut" onclick="bukaPanduan()">
-                📖 Buka Panduan
-            </button>
-            
-            <button onclick="resetForm()" style="margin-top: 10px; background: #f3f4f6; color: #374151;">
-                <i class="fas fa-redo"></i> Cek Kode Lain
-            </button>
+        <div class="form-group">
+            <label>Kode Konsultasi</label>
+            <div class="input-wrapper">
+                <i class="fas fa-ticket-alt"></i>
+                <input type="text" id="kode" placeholder="Masukkan kode unik" required>
+            </div>
         </div>
 
-        <!-- FAQ Accordion -->
-        <div class="accordion-container">
-            <div class="accordion-title">Masa Aktif & Data (Sistem Voucher)</div>
+        <button id="btnCek" onclick="cekKode()">
+            <span class="btn-text">Cek Kode</span>
+            <div class="spinner"></div>
+        </button>
+
+        <!-- Tombol Buka Panduan (Poin 1) -->
+        <a id="btnLanjutManual" class="btn-lanjut" style="display: none;">
+            <i class="fas fa-book-open"></i> Buka Panduan
+        </a>
+
+        <div id="result"></div>
+
+        <!-- Bagian FAQ Accordion (Poin 4) -->
+        <div class="faq-section">
+            <div class="faq-title">Masa Aktif & Data (Sistem Voucher)</div>
             
-            <div class="accordion-item">
-                <button class="accordion-header" onclick="toggleAccordion(this)">
-                    <span>Kenapa saya tidak bisa login/terkunci/tidak bisa diakses?</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="accordion-content">
+            <div class="accordion">
+                <!-- Pertanyaan 1 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        1. Kenapa saya tidak bisa login/terkunci?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                     <div class="accordion-body">
-                        Voucher Anda sudah melewati batas 7 hari. Untuk melanjutkan progres dan melihat menu minggu berikutnya, silakan masukkan kode voucher baru dari kemasan KEMOENIK Anda.
+                        "Voucher Anda sudah melewati batas 7 hari. Untuk melanjutkan progres dan melihat menu minggu berikutnya, silakan masukkan kode voucher baru dari kemasan KEMOENIK Anda."
+                    </div>
+                </div>
+
+                <!-- Pertanyaan 2 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        2. Apakah data berat badan hilang kalau voucher habis?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">
+                        "Tenang Kak! Masukkan Nomor WA yang sama saat aktivasi voucher baru, maka semua riwayat timbangan dan grafik progres Anda akan otomatis muncul kembali."
+                    </div>
+                </div>
+
+                <!-- Pertanyaan 3 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        3. Boleh pakai No WA berbeda untuk voucher baru?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">
+                        "Disarankan pakai No WA yang sama ya Kak, supaya sistem bisa menarik data lama Kakak dan grafik transformasinya tidak terputus."
+                    </div>
+                </div>
+
+                <!-- Pertanyaan 4 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        4. Halaman web putih/blank saat scan QR?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">
+                        "Coba bersihkan cache browser atau buka link langsung di Google Chrome. Pastikan izin kamera aktif saat scan QR."
                     </div>
                 </div>
             </div>
 
-            <div class="accordion-item">
-                <button class="accordion-header" onclick="toggleAccordion(this)">
-                    <span>Apakah data berat badan saya minggu lalu/ini akan hilang kalau voucher habis?</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="accordion-content">
-                    <div class="accordion-body">
-                        Tenang Kak! Masukkan Nomor WA yang sama saat aktivasi voucher baru, maka semua riwayat timbangan dan grafik progres Anda akan otomatis muncul kembali.
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <button class="accordion-header" onclick="toggleAccordion(this)">
-                    <span>Boleh tidak saya pakai No WA berbeda untuk voucher baru?</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="accordion-content">
-                    <div class="accordion-body">
-                        Disarankan pakai No WA yang sama ya Kak, supaya sistem bisa menarik data lama Kakak dan grafik transformasinya tidak terputus.
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <button class="accordion-header" onclick="toggleAccordion(this)">
-                    <span>Halaman webnya putih/blank saat saya scan QR.</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="accordion-content">
-                    <div class="accordion-body">
-                        Coba bersihkan cache browser atau buka link [Alamat Web Anda] langsung di Google Chrome. Pastikan izin kamera aktif saat scan QR.
-                    </div>
-                </div>
-            </div>
-
+            <!-- Link Sosmed -->
             <div class="social-links">
-                <a href="https://www.instagram.com/kemoenik26?igsh=aTU3ODg3Yzg3Nmkx " target="_blank" title="Instagram Kemoenik" rel="noopener">
-                    <i class="fab fa-instagram"></i>
+                <a href="https://www.instagram.com/kemoenik26?igsh=aTU3ODg3Yzg3Nmkx" target="_blank">
+                    <i class="fab fa-instagram"></i> Instagram
                 </a>
-                <a href="https://tiktok.com/@kemoenik " target="_blank" title="TikTok Kemoenik" rel="noopener">
-                    <i class="fab fa-tiktok"></i>
+                <a href="https://www.tiktok.com/@kemoenik" target="_blank">
+                    <i class="fab fa-tiktok"></i> TikTok
                 </a>
             </div>
         </div>
+        <!-- Akhir FAQ -->
 
-        <div class="footer">
+        <div class="footer" style="margin-top: 20px;">
             Butuh bantuan? 
-            <a href="https://wa.me/6281546450547?text=Halo%20admin ,%20saya%20butuh%20bantuan%20kode%20konsultasi" target="_blank" class="link-bantuan" rel="noopener">
+            <a href="https://wa.me/6281546450547?text=Halo%20admin,%20saya%20butuh%20bantuan%20kode%20konsultasi" target="_blank" class="link-bantuan">
                 Hubungi kami
             </a>
         </div>
     </div>
 
-    <!-- Welcome Modal -->
-    <div id="welcomeModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-icon" id="welcomeIcon">
-                <i class="fas fa-star"></i>
-            </div>
-            <div class="modal-title" id="welcomeTitle">Selamat Datang!</div>
-            <div class="modal-desc" id="welcomeDesc">
-                Voucher Anda berhasil diaktifkan.
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-btn modal-btn-primary" onclick="lanjutKePanduan()">
-                    Mulai Sekarang <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Program Choice Modal (Untuk user lama) -->
+    <!-- Modal untuk Pilihan Program -->
     <div id="programChoiceModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-icon">
@@ -632,276 +499,176 @@
             </div>
             <div class="modal-buttons">
                 <button class="modal-btn modal-btn-secondary" onclick="continueOldProgram()">
-                    <i class="fas fa-history"></i> Lanjutkan Lama
+                    Lanjutkan Lama
                 </button>
                 <button class="modal-btn modal-btn-primary" onclick="startNewProgram()">
-                    <i class="fas fa-plus"></i> Mulai Baru
+                    Mulai Baru
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // State management
-        let currentUserData = {
-            nama: '',
-            wa: '',
-            voucher: '',
-            expiredDate: '',
-            isExistingUser: false
-        };
-
-        let tempData = {};
-
         // Normalisasi nomor WA ke format 628
         function normalizeWA(wa) {
             wa = wa.replace(/\D/g, '');
-            
-            if (wa.startsWith('08')) {
-                return '62' + wa.substring(1);
-            } else if (wa.startsWith('+62')) {
-                return wa.substring(1);
-            } else if (wa.startsWith('62')) {
-                return wa;
-            } else if (wa.startsWith('0')) {
-                return '62' + wa.substring(1);
-            }
-            
+            if (wa.startsWith('08')) return '62' + wa.substring(1);
+            if (wa.startsWith('+62')) return wa.substring(1);
+            if (wa.startsWith('62')) return wa;
+            if (wa.startsWith('0')) return '62' + wa.substring(1);
             return wa;
         }
 
-        // Toggle accordion
-        function toggleAccordion(header) {
-            const item = header.parentElement;
-            const isActive = item.classList.contains('active');
-            
-            // Close all accordions
-            document.querySelectorAll('.accordion-item').forEach(acc => {
-                acc.classList.remove('active');
-            });
-            
-            // Open clicked if wasn't active
-            if (!isActive) {
-                item.classList.add('active');
-            }
-        }
+        let tempData = {}; 
 
-        // Cek kode voucher
+        // Fungsi untuk menangani Accordion
+        document.querySelectorAll('.accordion-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const accordionBody = button.nextElementSibling;
+                const isActive = button.classList.contains('active');
+
+                // Tutup semua body lain
+                document.querySelectorAll('.accordion-body').forEach(body => body.classList.remove('show'));
+                document.querySelectorAll('.accordion-header').forEach(head => head.classList.remove('active'));
+
+                // Toggle body yang diklik
+                if (!isActive) {
+                    button.classList.add('active');
+                    accordionBody.classList.add('show');
+                }
+            });
+        });
+
         function cekKode() {
             const nama = document.getElementById("nama").value.trim();
             const wa = document.getElementById("wa").value.trim();
             const kode = document.getElementById("kode").value.trim();
             const btn = document.getElementById("btnCek");
+            const result = document.getElementById("result");
+            const btnLanjut = document.getElementById("btnLanjutManual");
 
-            // Validasi input
-            if (nama.length < 3) {
-                showResult("error", "Nama tidak valid (minimal 3 karakter)");
-                return;
-            }
-            if (wa.replace(/\D/g, '').length < 10) {
-                showResult("error", "Nomor WhatsApp tidak valid (minimal 10 digit)");
-                return;
-            }
-            if (kode.length < 6) {
-                showResult("error", "Kode voucher tidak valid (minimal 6 karakter)");
-                return;
-            }
+            // Reset tampilan
+            result.innerHTML = "";
+            btnLanjut.style.display = "none";
+            btnLanjut.onclick = null; // Hapus event lama
+
+            if (nama.length < 3) return show("error", "Nama minimal 3 karakter");
+            if (wa.replace(/\D/g, '').length < 10) return show("error", "Nomor WA tidak valid");
+            if (kode.length < 6) return show("error", "Kode tidak valid");
 
             const normalizedWA = normalizeWA(wa);
+
             btn.classList.add("loading");
-            btn.disabled = true;
 
-            // === REVISI: Hapus simulasi, gunakan Fetch ke Apps Script ===
-            // Pastikan URL dibawah ini adalah URL Web App Anda
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec'; 
-
-            fetch(`${scriptURL}?action=verify&kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(normalizedWA)}&_=${Date.now()}`)
+            // Fetch ke Apps Script
+            fetch(`https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec?action=verify&kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(normalizedWA)}&_=${Date.now()}`)
                 .then(res => res.json())
                 .then(data => {
                     btn.classList.remove("loading");
-                    btn.disabled = false;
                     
+                    // Cek apakah user punya data lama di local storage (untuk teks sambutan)
+                    const existingUserData = localStorage.getItem(`calfatloss_data_${normalizedWA}`);
+                    const isReturningUser = existingUserData !== null;
+
                     if (data.status === "SUCCESS") {
-                        // Ambil tanggal langsung dari Google Sheet (data.tanggal_expired)
-                        handleSuccessResponse(nama, normalizedWA, kode, data.tanggal_expired);
+                        // === LOGIAN KALIMAT SAMBUTAN (POIN 3) ===
+                        let welcomeMsg = "";
+                        const expDate = formatDate(data.tanggal_expired);
+                        
+                        // Gunakan Nama User dari input
+                        const userName = nama; 
+
+                        if (isReturningUser) {
+                            // User Lama (ada data di localstorage)
+                            welcomeMsg = `Selamat datang kembali, ${userName}! 🌟 Voucher Kakak berhasil diaktifkan (Berlaku hingga: ${expDate}). Kami sudah menarik data diet Kakak sebelumnya. Mari lanjut ke target minggu ini.`;
+                        } else {
+                            // User Baru
+                            welcomeMsg = `Selamat datang, ${userName}! 🌟 Voucher Kakak berhasil diaktifkan (Berlaku hingga: ${expDate}). Mari buat program diet bertarget mingguan.`;
+                        }
+
+                        show("success", welcomeMsg);
+                        
+                        // Tampilkan tombol panduan, JANGAN redirect otomatis (POIN 1)
+                        setupPanduanButton(normalizedWA, kode, isReturningUser);
+                        
                     } else if (data.status === "ACTIVE_SAME_WA") {
-                        handleExistingVoucher(nama, normalizedWA, kode, data.tanggal_expired);
+                        // Sudah aktif, pastikan user lama
+                        const expDate = formatDate(data.tanggal_expired);
+                        const userName = nama;
+                        const msg = `Selamat datang kembali, ${userName}! 🌟 Kode Kakak masih aktif (Berlaku hingga: ${expDate}). Silakan lanjutkan program Anda.`;
+                        
+                        show("success", msg);
+                        setupPanduanButton(normalizedWA, kode, true);
+                        
                     } else if (data.status === "ACTIVE_DIFFERENT_WA") {
-                        showResult("error", "Kode ini sudah digunakan oleh nomor WA lain.");
+                        show("error", "Kode ini sudah digunakan oleh nomor WA lain.");
                     } else if (data.status === "EXPIRED") {
-                        showResult("warning", "Kode sudah expired.");
+                        show("warning", "Kode sudah expired. Silakan gunakan kode baru.");
                     } else if (data.status === "INVALID") {
-                        showResult("error", "Kode tidak ditemukan.");
+                        show("error", "Kode tidak ditemukan di sistem.");
                     } else {
-                        showResult("error", "Terjadi kesalahan. Silakan coba lagi.");
+                        show("error", "Terjadi kesalahan. Silakan coba lagi.");
                     }
                 })
-                .catch(err => {
+                .catch(() => {
                     btn.classList.remove("loading");
-                    btn.disabled = false;
-                    showResult("error", "Gagal terhubung ke server. Cek koneksi internet Anda.");
-                    console.error("Error:", err);
+                    show("error", "Gagal terhubung ke server. Cek koneksi internet.");
                 });
         }
 
-        // Handle sukses response
-        function handleSuccessResponse(nama, wa, kode, expiredDate) {
-            // Cek apakah user lama atau baru
-            const existingData = localStorage.getItem(`calfatloss_data_${wa}`);
-            const isExistingUser = !!existingData;
+        function setupPanduanButton(wa, kode, isReturningUser) {
+            const btnLanjut = document.getElementById("btnLanjutManual");
+            btnLanjut.style.display = "block";
             
-            currentUserData = {
-                nama: nama,
-                wa: wa,
-                voucher: kode,
-                expiredDate: expiredDate, // Tanggal dari Google Sheet
-                isExistingUser: isExistingUser
-            };
+            // Jika user baru sama sekali, cek apakah perlu konfirmasi (melalui modal) jika user nyatakan 'baru' tapi ada datanya?
+            // Sesuai logika awali, jika user lama (isReturningUser true), langsung setting link biasa.
+            // Jika user baru, tapi di server nanti terdeteksi data lama (melalui WA yang sudah terdaftar di sheet), 
+            // maka logika 'start new program' akan dihandle oleh modal di halaman panduan atau di sini.
+            // Untuk simplify revisi ini, kita set onclick langsung.
 
-            // Simpan data ke localStorage
-            localStorage.setItem('calfatloss_wa', wa);
-            localStorage.setItem('calfatloss_voucher', kode);
-            localStorage.setItem(`calfatloss_data_${wa}`, JSON.stringify({
-                nama: nama,
-                lastLogin: new Date().toISOString()
-            }));
+            btnLanjut.onclick = function() {
+                // Cek jika user baru (berdasarkan local storage) tapi ingin mulai, langsung redirect.
+                // Namun, jika skenarionya user lama (isReturningUser) memakai voucher baru, 
+                // kita bisa langsung redirect karena data sudah aman.
+                
+                // Simpan sementara untuk modal handler jika diperlukan
+                tempData = { wa, kode };
 
-            // Sembunyikan form, tampilkan hasil dan tombol
-            document.getElementById("formSection").style.display = "none";
-            document.getElementById("successActions").style.display = "block";
-            
-            const greeting = isExistingUser ? "Selamat datang kembali" : "Selamat datang";
-            showResult("success", `
-                <strong>${greeting}!</strong><br>
-                Kode berhasil diaktifkan 🎉<br>
-                <small>Voucher aktif sampai: ${formatDate(expiredDate)}</small>
-            `);
-
-            // Tampilkan tombol dengan animasi
-            setTimeout(() => {
-                document.getElementById("btnLanjutManual").classList.add("show");
-            }, 300);
-        }
-
-        // Handle voucher yang sudah aktif
-        function handleExistingVoucher(nama, wa, kode, expiredDate) {
-            currentUserData = {
-                nama: nama,
-                wa: wa,
-                voucher: kode,
-                expiredDate: expiredDate, // Tanggal dari Google Sheet
-                isExistingUser: true
-            };
-
-            localStorage.setItem('calfatloss_wa', wa);
-            localStorage.setItem('calfatloss_voucher', kode);
-
-            document.getElementById("formSection").style.display = "none";
-            document.getElementById("successActions").style.display = "block";
-            
-            showResult("success", `
-                <strong>Selamat datang kembali!</strong><br>
-                Kode masih aktif ✅<br>
-                <small>Voucher aktif sampai: ${formatDate(expiredDate)}</small>
-            `);
-
-            setTimeout(() => {
-                document.getElementById("btnLanjutManual").classList.add("show");
-            }, 300);
-        }
-
-        // Buka modal sambutan (dipanggil dari tombol Buka Panduan)
-        function bukaPanduan() {
-            const modal = document.getElementById("welcomeModal");
-            const icon = document.getElementById("welcomeIcon");
-            const title = document.getElementById("welcomeTitle");
-            const desc = document.getElementById("welcomeDesc");
-            
-            const { nama, expiredDate, isExistingUser } = currentUserData;
-            
-            if (isExistingUser) {
-                icon.innerHTML = '<i class="fas fa-user-check"></i>';
-                icon.classList.remove("new-user");
-                title.innerHTML = `Selamat datang kembali,<br>${nama}! 🌟`;
-                desc.innerHTML = `
-                    <strong>Voucher Kakak berhasil diaktifkan</strong><br>
-                    <small>(Berlaku hingga: ${formatDate(expiredDate)})</small><br><br>
-                    Kami sudah menarik data diet Kakak sebelumnya. Mari lanjut ke target minggu ini.
-                `;
-            } else {
-                icon.innerHTML = '<i class="fas fa-sparkles"></i>';
-                icon.classList.add("new-user");
-                title.innerHTML = `Selamat datang,<br>${nama}! 🌟`;
-                desc.innerHTML = `
-                    <strong>Voucher Kakak berhasil diaktifkan</strong><br>
-                    <small>(Berlaku hingga: ${formatDate(expiredDate)})</small><br><br>
-                    Mari buat program diet bertarget mingguan pertama Kakak.
-                `;
-            }
-            
-            modal.style.display = "flex";
-        }
-
-        // Lanjut ke halaman panduan setelah modal
-        function lanjutKePanduan() {
-            document.getElementById("welcomeModal").style.display = "none";
-            
-            const { wa, voucher, isExistingUser } = currentUserData;
-            
-            // Cek apakah user lama punya program yang berjalan
-            if (isExistingUser) {
-                const hasExistingProgram = localStorage.getItem(`calfatloss_weekly_${wa}`);
-                if (hasExistingProgram) {
-                    // Tampilkan pilihan lanjutkan atau baru
-                    tempData = { wa, voucher };
-                    document.getElementById("programChoiceModal").style.display = "flex";
-                    return;
+                if (isReturningUser) {
+                    // Jika user lama terdeteksi di local storage, arahkan ke panduan langsung
+                    // (Opsional: Bisa juga memunculkan pilihan Lanjut/Reset di sini jika dikehendaki, 
+                    // tapi di permintaan hanya disuruh ganti teks sambutan dan tombol panduan).
+                    // Mari kita biarkan sederhana: Langsung redirect.
+                     redirectToPanduan(wa, kode);
+                } else {
+                    // User baru, langsung redirect
+                    redirectToPanduan(wa, kode);
                 }
-            }
-            
-            // Langsung redirect untuk user baru atau yang tidak punya program aktif
-            redirectToPanduan(wa, voucher);
+            };
         }
 
-        // Pilihan program lama
         function continueOldProgram() {
             document.getElementById("programChoiceModal").style.display = "none";
             redirectToPanduan(tempData.wa, tempData.voucher);
         }
 
-        // Pilihan program baru
         function startNewProgram() {
             localStorage.removeItem(`calfatloss_weekly_${tempData.wa}`);
             localStorage.setItem(`calfatloss_newprogram_${tempData.wa}`, 'true');
-            
             document.getElementById("programChoiceModal").style.display = "none";
             redirectToPanduan(tempData.wa, tempData.voucher);
         }
 
-        // Redirect ke halaman panduan
         function redirectToPanduan(wa, voucher) {
-            // Tambahkan parameter untuk menghindari cache
-            const timestamp = Date.now();
-            window.location.href = `/panduan/?wa=${encodeURIComponent(wa)}&voucher=${encodeURIComponent(voucher)}&t=${timestamp}`;
+            localStorage.setItem('calfatloss_wa', wa);
+            localStorage.setItem('calfatloss_voucher', voucher);
+            // Redirect manual saat klik tombol
+            window.location.href = `/panduan/?wa=${encodeURIComponent(wa)}&voucher=${encodeURIComponent(voucher)}`;
         }
 
-        // Reset form untuk cek kode lain
-        function resetForm() {
-            document.getElementById("formSection").style.display = "block";
-            document.getElementById("successActions").style.display = "none";
-            document.getElementById("btnLanjutManual").classList.remove("show");
-            document.getElementById("result").innerHTML = "";
-            
-            // Optional: clear inputs
-            // document.getElementById("kode").value = "";
-        }
-
-        // Format tanggal
         function formatDate(dateStr) {
             if (!dateStr) return '-';
             const date = new Date(dateStr);
-            if (isNaN(date.getTime())) return dateStr;
-            
             return date.toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
@@ -909,28 +676,9 @@
             });
         }
 
-        // Tampilkan hasil
-        function showResult(type, msg) {
+        function show(type, msg) {
             document.getElementById("result").innerHTML = `<div class="result-box ${type}">${msg}</div>`;
         }
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                event.target.style.display = "none";
-            }
-        }
-
-        // Cek session saat load page
-        window.onload = function() {
-            const savedWA = localStorage.getItem('calfatloss_wa');
-            const savedVoucher = localStorage.getItem('calfatloss_voucher');
-            
-            if (savedWA && savedVoucher) {
-                // Auto-fill jika ada data tersimpan (opsional)
-                // document.getElementById("wa").value = savedWA;
-            }
-        };
     </script>
 </body>
 </html>
