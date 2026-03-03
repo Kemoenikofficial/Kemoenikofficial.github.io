@@ -52,13 +52,15 @@
         .hero-stat-value { font-size: 28px; font-weight: 700; color: var(--accent-gold); }
         .hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; }
         .main-container { max-width: 800px; margin: -40px auto 0; padding: 0 20px 60px; position: relative; z-index: 10; }
+        
         .glass-card { background: white; border-radius: var(--radius); box-shadow: 0 12px 32px rgba(0,0,0,0.12); overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.04); }
         .card-header { padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.3s ease; }
         .card-header:hover { background: var(--bg-light); }
         .card-title { font-size: 16px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 12px; }
-        .card-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+        .card-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
         .card-body { padding: 24px; display: none; }
         .card-body.active { display: block; animation: slideDown 0.3s ease; }
+        
         .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 640px) { .calc-grid { grid-template-columns: 1fr; } }
         .form-group { margin-bottom: 20px; }
@@ -67,7 +69,6 @@
         .form-input:focus { outline: none; background: white; border-color: var(--primary-light); box-shadow: 0 0 0 4px rgba(45, 90, 61, 0.1); }
         select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
         
-        /* Accordion */
         .accordion-item { border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius-sm); margin-bottom: 12px; overflow: hidden; background: white; }
         .accordion-header { padding: 16px 20px; background: var(--bg-light); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 14px; transition: all 0.3s ease; }
         .accordion-header:hover { background: #e8e4dc; }
@@ -76,7 +77,6 @@
         .accordion-content.active { max-height: 2000px; }
         .accordion-body { padding: 20px; font-size: 13px; line-height: 1.8; color: var(--text-muted); }
         
-        /* Notification */
         .notification-banner { background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-left: 4px solid var(--accent-gold); padding: 16px 20px; margin-bottom: 20px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; gap: 12px; animation: slideDown 0.5s ease; }
         .notification-content { display: flex; align-items: center; gap: 12px; flex: 1; }
         .notification-icon { font-size: 20px; color: var(--accent-gold); }
@@ -97,6 +97,7 @@
         .timeline-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .timeline-dot { position: absolute; left: -32px; top: 4px; width: 24px; height: 24px; background: white; border: 3px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--primary); }
         .timeline-dot.active { background: var(--primary); color: white; animation: pulse-gold 2s infinite; }
+        .timeline-dot.completed { background: var(--success); border-color: var(--success); color: white; }
         
         .herbal-card { background: linear-gradient(135deg, #F0F7F2 0%, #E8F5E9 100%); border: 1px solid #C8E6C9; border-radius: var(--radius-sm); padding: 20px; margin-top: 16px; }
         .herbal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
@@ -110,7 +111,7 @@
         .herbal-item-icon { width: 40px; height: 40px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
         .herbal-item-name { font-size: 12px; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
         .herbal-item-role { font-size: 10px; color: var(--accent-gold); font-weight: 600; }
-        .herbal-item-close { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; background: #EF4444; color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; z-index: 10; }
+        .herbal-item-close { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: #EF4444; border-radius: 50%; display: none; align-items: center; justify-content: center; color: white; font-size: 10px; cursor: pointer; }
         .herbal-item.active .herbal-item-close { display: flex; }
         .herbal-detail { display: none; margin-top: 12px; padding: 16px; background: white; border-radius: 10px; border-left: 4px solid var(--accent-gold); animation: slideDown 0.3s ease; }
         .herbal-detail.active { display: block; }
@@ -202,8 +203,8 @@
         .date-estimate-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 4px; }
         .date-estimate-value { font-size: 18px; font-weight: 700; }
         
-        .social-links { display: flex; justify-content: center; gap: 16px; margin-top: 20px; position: relative; z-index: 10; }
-        .social-link { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; transition: transform 0.3s ease; text-decoration: none; position: relative; z-index: 10; }
+        .social-links { display: flex; justify-content: center; gap: 16px; margin-top: 20px; }
+        .social-link { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; transition: transform 0.3s ease; text-decoration: none; }
         .social-link:hover { transform: translateY(-3px); }
         .social-link.instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
         .social-link.tiktok { background: #000000; }
@@ -325,7 +326,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Aktivitas Harian</label>
-                            <select id="inputAktivitas" class="form-input" onchange="showActivityDesc()">
+                            <select id="inputAktivitas" class="form-input">
                                 <option value="">Pilih Level</option>
                                 <option value="1.2">Tidak Aktif</option>
                                 <option value="1.375">Ringan (1-2x Olahraga)</option>
@@ -364,7 +365,7 @@
                         </div>
                     </div>
                     <button class="btn btn-primary" style="margin-top: 24px;" onclick="calculateAndShowProgram()"><i class="fas fa-magic"></i>Generate Program Diet Saya</button>
-                    <a href="https://kemoenikofficial.github.io/calculator/" target="_blank" class="btn btn-outline" style="margin-top: 16px; text-decoration: none;"><i class="fas fa-calculator"></i>Kalkulator Lengkap</a>
+                    <a href="https://kemoenikofficial.github.io/calculator/" target="_blank" class="btn btn-outline" style="margin-top: 16px;"><i class="fas fa-calculator"></i>Kalkulator Lengkap</a>
                 </div>
             </div>
             
@@ -462,7 +463,7 @@
                 </div>
             </div>
             
-            <!-- STEP 2: Program Timeline -->
+            <!-- STEP 2: Program Timeline (Pisah) -->
             <div class="glass-card section-hidden" id="programSection">
                 <div class="card-header" onclick="toggleCard('programBody')">
                     <div class="card-title"><div class="card-icon"><i class="fas fa-route"></i></div>Timeline Program Anda</div>
@@ -511,31 +512,29 @@
                                     <span style="font-weight: 600; font-size: 13px; color: #1E3A8A;">Direkomendasikan:</span>
                                 </div>
                                 <ul style="font-size: 13px; color: #1E40AF; list-style: none; padding: 0; margin: 0;">
-                                    <li style="margin-bottom: 4px;"><i class="fas fa-check" style="color: #22C55E; margin-right: 8px;"></i><strong>Latihan Lymphatic</strong> - Pernapasan diafragma, shoulder rolls, neck rolls (lihat tutorial di YouTube: "lymphatic drainage exercise")</li>
+                                    <li style="margin-bottom: 4px;"><i class="fas fa-check" style="color: #22C55E; margin-right: 8px;"></i><strong>Latihan Lymphatic</strong> - Pernapasan diafragma, shoulder rolls, neck rolls</li>
                                     <li><i class="fas fa-check" style="color: #22C55E; margin-right: 8px;"></i><strong>Jalan Kaki Cepat</strong> (Brisk Walking) - 30-45 menit</li>
                                 </ul>
                             </div>
                             <div style="font-size: 13px; color: #1E40AF;"><strong>Alternatif:</strong> Lompat tali, jumping jack, atau berenang. Hindari olahraga berat tanpa pemanasan.</div>
                         </div>
                     </div>
-
-                    <button class="btn btn-outline" style="margin-top: 24px;" onclick="showMealPlan()">Lihat Jadwal Makan Detail<i class="fas fa-chevron-right" style="margin-left: 8px;"></i></button>
                 </div>
             </div>
             
-            <!-- STEP 2B: Suplemen Herbal KEMOENIK (PISAHAN) -->
+            <!-- STEP 2b: Suplemen Herbal KEMOENIK (Pisah) -->
             <div class="glass-card section-hidden" id="herbalSection">
                 <div class="card-header" onclick="toggleCard('herbalBody')">
                     <div class="card-title"><div class="card-icon"><i class="fas fa-capsules"></i></div>Suplemen Herbal KEMOENIK</div>
                     <i class="fas fa-chevron-down chevron-icon" id="herbalBody-chevron"></i>
                 </div>
                 <div class="card-body active" id="herbalBody">
-                    <div class="herbal-card" style="margin-top: 0;">
+                    <div class="herbal-card">
                         <div class="herbal-header">
                             <div class="herbal-icon-box"><i class="fas fa-leaf"></i></div>
                             <div>
                                 <div class="herbal-title">Formula 5 Herba Aktif Premium</div>
-                                <div style="font-size: 12px; color: var(--text-muted);">500mg/kapsul - Klik bahan untuk melihat detail</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">500mg/kapsul - Klik bahan untuk lihat detail</div>
                             </div>
                         </div>
                         <div class="herbal-grid">
@@ -620,16 +619,16 @@
                 </div>
             </div>
             
-            <!-- STEP 3A: Panduan Menu Harian (PISAHAN) -->
-            <div class="glass-card section-hidden" id="mealSection">
-                <div class="card-header" onclick="toggleCard('mealBody')">
+            <!-- STEP 3a: Panduan Menu Harian (Pisah) -->
+            <div class="glass-card section-hidden" id="mealSimpleSection">
+                <div class="card-header" onclick="toggleCard('mealSimpleBody')">
                     <div class="card-title"><div class="card-icon"><i class="fas fa-utensils"></i></div>Panduan Menu Harian</div>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="text-align: right;"><div style="font-size: 11px; color: var(--text-muted);">Target Kalori</div><div style="font-size: 18px; font-weight: 700; color: var(--primary);" id="mealTargetCal">0 kcal</div></div>
-                        <i class="fas fa-chevron-down chevron-icon" id="mealBody-chevron"></i>
+                        <div style="text-align: right;"><div style="font-size: 11px; color: var(--text-muted);">Target Kalori</div><div style="font-size: 18px; font-weight: 700; color: var(--primary);" id="mealTargetCalSimple">0 kcal</div></div>
+                        <i class="fas fa-chevron-down chevron-icon" id="mealSimpleBody-chevron"></i>
                     </div>
                 </div>
-                <div class="card-body active" id="mealBody">
+                <div class="card-body active" id="mealSimpleBody">
                     <div class="meal-grid" id="mealContainer"></div>
 
                     <!-- Alternative Menu Note -->
@@ -640,16 +639,16 @@
                 </div>
             </div>
             
-            <!-- STEP 3B: Panduan Menu Harian Lengkap (PISAHAN) -->
-            <div class="glass-card section-hidden" id="menuLengkapSection">
-                <div class="card-header" onclick="toggleCard('menuLengkapBody')">
+            <!-- STEP 3b: Panduan Menu Harian Lengkap (Pisah) -->
+            <div class="glass-card section-hidden" id="mealDetailSection">
+                <div class="card-header" onclick="toggleCard('mealDetailBody')">
                     <div class="card-title"><div class="card-icon"><i class="fas fa-book-open"></i></div>Panduan Menu Harian Lengkap</div>
-                    <i class="fas fa-chevron-down chevron-icon" id="menuLengkapBody-chevron"></i>
+                    <i class="fas fa-chevron-down chevron-icon" id="mealDetailBody-chevron"></i>
                 </div>
-                <div class="card-body" id="menuLengkapBody">
+                <div class="card-body" id="mealDetailBody">
                     <div style="background: linear-gradient(to right, #ECFDF5, #FEF3C7); padding: 16px; border-radius: 12px; border: 1px solid #A7F3D0; margin-bottom: 16px;">
                         <p style="font-size: 14px; color: #065F46; margin-bottom: 8px;"><strong>Program Transformasi Tubuh Bersama KEMOENIK</strong></p>
-                        <p style="font-size: 12px; color: #047857;">Target: <span id="targetKcalDisplay2">1715</span> kcal/hari | Durasi: 10 Varian Menu</p>
+                        <p style="font-size: 12px; color: #047857;">Target: <span id="targetKcalDisplay">1715</span> kcal/hari | Durasi: 10 Varian Menu</p>
                         <div style="margin-top: 12px; padding: 12px; background: white; border-radius: 8px; font-size: 12px; color: #065F46;">
                             <p style="margin-bottom: 4px;"><strong>Catatan:</strong></p>
                             <p>Jika target Anda 1300-1500 kkal: "Kurangi porsi nasi/karbohidrat menjadi setengah dari yang tertulis di tabel."</p>
@@ -734,16 +733,16 @@
                 </div>
             </div>
             
-            <!-- STEP 3C: Evaluasi Mingguan (PISAHAN) -->
+            <!-- STEP 3c: Evaluasi Mingguan (Pisah) -->
             <div class="glass-card section-hidden" id="evalSection">
                 <div class="card-header" onclick="toggleCard('evalBody')">
                     <div class="card-title"><div class="card-icon"><i class="fas fa-clipboard-check"></i></div>Evaluasi Mingguan</div>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span id="evalWeekDisplay2" style="font-size: 13px; color: var(--text-muted);">Minggu ke-1</span>
+                        <span style="font-size: 13px; color: var(--text-muted);" id="evalWeekDisplay">Minggu ke-1</span>
                         <i class="fas fa-chevron-down chevron-icon" id="evalBody-chevron"></i>
                     </div>
                 </div>
-                <div class="card-body" id="evalBody">
+                <div class="card-body active" id="evalBody">
                     <div class="weekly-eval-form">
                         <div id="editModeIndicator" class="edit-mode-indicator" style="display: none;"><i class="fas fa-edit" style="margin-right: 4px;"></i> Mode Edit: Minggu <span id="editWeekNumber">1</span></div>
                         <div class="weekly-eval-grid">
@@ -784,21 +783,16 @@
                         </div>
                     </div>
                     <div id="weeklyHistory" style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;"></div>
-                </div>
-            </div>
-            
-            <!-- Tips Section -->
-            <div class="glass-card section-hidden" id="tipsSection">
-                <div class="card-header" onclick="toggleCard('tipsBody')">
-                    <div class="card-title"><div class="card-icon"><i class="fas fa-lightbulb"></i></div>Tips Sukses Diet</div>
-                    <i class="fas fa-chevron-down chevron-icon" id="tipsBody-chevron"></i>
-                </div>
-                <div class="card-body active" id="tipsBody">
-                    <div class="tips-grid">
-                        <div class="tip-card"><div class="tip-icon" style="color: #3B82F6;"><i class="fas fa-tint"></i></div><div class="tip-title">Hidrasi</div><div class="tip-desc">Minum 8 gelas air putih sepanjang hari</div></div>
-                        <div class="tip-card"><div class="tip-icon" style="color: #22C55E;"><i class="fas fa-bed"></i></div><div class="tip-title">Tidur</div><div class="tip-desc">Istirahat 7-8 jam untuk metabolisme optimal</div></div>
-                        <div class="tip-card"><div class="tip-icon" style="color: #F59E0B;"><i class="fas fa-walking"></i></div><div class="tip-title">Aktivitas</div><div class="tip-desc">Minimal 30 menit aktivitas fisik</div></div>
-                        <div class="tip-card"><div class="tip-icon" style="color: #EF4444;"><i class="fas fa-ban"></i></div><div class="tip-title">Hindari</div><div class="tip-desc">Gula, gorengan, & minuman bersoda</div></div>
+
+                    <!-- Tips -->
+                    <div style="margin-top: 24px;">
+                        <h4 style="font-weight: 600; margin-bottom: 16px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Tips Sukses Diet</h4>
+                        <div class="tips-grid">
+                            <div class="tip-card"><div class="tip-icon" style="color: #3B82F6;"><i class="fas fa-tint"></i></div><div class="tip-title">Hidrasi</div><div class="tip-desc">Minum 8 gelas air putih sepanjang hari</div></div>
+                            <div class="tip-card"><div class="tip-icon" style="color: #22C55E;"><i class="fas fa-bed"></i></div><div class="tip-title">Tidur</div><div class="tip-desc">Istirahat 7-8 jam untuk metabolisme optimal</div></div>
+                            <div class="tip-card"><div class="tip-icon" style="color: #F59E0B;"><i class="fas fa-walking"></i></div><div class="tip-title">Aktivitas</div><div class="tip-desc">Minimal 30 menit aktivitas fisik</div></div>
+                            <div class="tip-card"><div class="tip-icon" style="color: #EF4444;"><i class="fas fa-ban"></i></div><div class="tip-title">Hindari</div><div class="tip-desc">Gula, gorengan, & minuman bersoda</div></div>
+                        </div>
                     </div>
 
                     <!-- Tombol Beli Lagi -->
@@ -819,15 +813,15 @@
                 <h3 class="consultation-title font-display">Butuh Pendampingan?</h3>
                 <p class="consultation-desc">Dapatkan konsultasi gratis dengan ahli gizi kami untuk memaksimalkan hasil program diet herbal Anda.</p>
                 <div style="display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 10;">
-                    <a href="https://wa.me/6281546450547" target="_blank" class="btn btn-gold" style="position: relative; z-index: 10; text-decoration: none;"><i class="fab fa-whatsapp"></i>Hubungi Konsultan Sekarang</a>
+                    <a href="https://wa.me/6281546450547" target="_blank" class="btn btn-gold" style="pointer-events: auto;"><i class="fab fa-whatsapp"></i>Hubungi Konsultan Sekarang</a>
                     <p style="font-size: 12px; opacity: 0.8;">Klik tombol di atas untuk terhubung via WhatsApp</p>
                 </div>
                 
                 <!-- Social Links -->
-                <div class="social-links">
-                    <a href="https://www.instagram.com/kemoenik26?igsh=aTU3ODg3Yzg3Nmkx" target="_blank" class="social-link instagram" title="Instagram" style="position: relative; z-index: 10;"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.tiktok.com/@kemoenik" target="_blank" class="social-link tiktok" title="TikTok" style="position: relative; z-index: 10;"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://t.me/+88Z09gVb4zowYjll" target="_blank" class="social-link telegram" title="Grup Pejuang Diet" style="position: relative; z-index: 10;"><i class="fab fa-telegram-plane"></i></a>
+                <div class="social-links" style="position: relative; z-index: 10;">
+                    <a href="https://www.instagram.com/kemoenik26?igsh=aTU3ODg3Yzg3Nmkx" target="_blank" class="social-link instagram" title="Instagram" style="pointer-events: auto;"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@kemoenik" target="_blank" class="social-link tiktok" title="TikTok" style="pointer-events: auto;"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://t.me/+88Z09gVb4zowYjll" target="_blank" class="social-link telegram" title="Grup Pejuang Diet" style="pointer-events: auto;"><i class="fab fa-telegram-plane"></i></a>
                 </div>
             </div>
 
@@ -844,7 +838,7 @@
         // Global Variables
         let currentWA = '';
         let currentVoucher = '';
-        let userData = { nama: '', gender: '', usia: 0, berat: 0, tinggi: 0, aktivitas: 0, target: 0, metode: 'standar', bmr: 0, tdee: 0, dietCal: 0, weeks: 0, targetDate: '', protein: 0, lemak: 0, karbo: 0 };
+        let userData = { nama: '', gender: '', usia: 0, berat: 0, tinggi: 0, aktivitas: 0, target: 0, metode: 'standar', bmr: 0, tdee: 0, dietCal: 0, weeks: 0, targetDate: '', protein: 0, lemak: 0, karbo: 0, startDate: null };
         let weeklyConditions = { energi: false, nafsu: false, efek: false, tidur: false };
         let weeklyHistory = [];
         let editingIndex = -1;
@@ -859,12 +853,8 @@
         function toggleCard(bodyId) {
             const body = document.getElementById(bodyId);
             const chevron = document.getElementById(bodyId + '-chevron');
-            if (body) {
-                body.classList.toggle('active');
-            }
-            if (chevron) {
-                chevron.classList.toggle('rotated');
-            }
+            body.classList.toggle('active');
+            if (chevron) chevron.classList.toggle('rotated');
         }
 
         function toggleAccordion(id) {
@@ -878,28 +868,22 @@
             const detail = document.getElementById('detail-' + id);
             const item = event.currentTarget;
             
-            // Toggle current
-            if (detail && item) {
-                const isActive = detail.classList.contains('active');
-                
-                // Hide all details first
+            if (detail.classList.contains('active')) {
+                detail.classList.remove('active');
+                item.classList.remove('active');
+            } else {
                 document.querySelectorAll('.herbal-detail').forEach(function(d) { d.classList.remove('active'); });
                 document.querySelectorAll('.herbal-item').forEach(function(i) { i.classList.remove('active'); });
-                
-                // Show selected if wasn't active
-                if (!isActive) {
-                    detail.classList.add('active');
-                    item.classList.add('active');
-                }
+                detail.classList.add('active');
+                item.classList.add('active');
             }
         }
 
         function closeHerbalDetail(id) {
             const detail = document.getElementById('detail-' + id);
-            const item = event.currentTarget.closest('.herbal-item');
-            if (detail) detail.classList.remove('active');
-            if (item) item.classList.remove('active');
-            event.stopPropagation();
+            const item = event.currentTarget.parentElement;
+            detail.classList.remove('active');
+            item.classList.remove('active');
         }
 
         function switchMenuTab(tab) {
@@ -907,14 +891,6 @@
             event.target.classList.add('active');
             document.querySelectorAll('.menu-table-container').forEach(function(c) { c.style.display = 'none'; });
             document.getElementById('menu-' + tab).style.display = 'block';
-        }
-
-        function showActivityDesc() {
-            // Auto open accordion when activity selected
-            const accordion = document.getElementById('activityAccordion');
-            if (accordion && !accordion.classList.contains('active')) {
-                toggleAccordion('activityAccordion');
-            }
         }
 
         // Access Control
@@ -972,7 +948,10 @@
                 if (data.aktivitas) document.getElementById('inputAktivitas').value = data.aktivitas;
                 if (data.target) document.getElementById('inputTarget').value = data.target;
                 if (data.metode) document.getElementById('inputMetode').value = data.metode;
-                if (data.nama && data.gender) calculateAndShowProgram(false);
+                if (data.nama && data.gender && data.berat) {
+                    calculateAndShowProgram(false);
+                    showProgramSections();
+                }
             }
             if (savedWeekly) { weeklyHistory = JSON.parse(savedWeekly); renderWeeklyHistory(); }
         }
@@ -982,6 +961,19 @@
 
         function calculateBMR(gender, weight, height, age) {
             return gender === 'pria' ? (10 * weight) + (6.25 * height) - (5 * age) + 5 : (10 * weight) + (6.25 * height) - (5 * age) - 161;
+        }
+
+        function showProgramSections() {
+            document.getElementById('programSection').classList.remove('section-hidden');
+            document.getElementById('programSection').classList.add('section-visible');
+            document.getElementById('herbalSection').classList.remove('section-hidden');
+            document.getElementById('herbalSection').classList.add('section-visible');
+            document.getElementById('mealSimpleSection').classList.remove('section-hidden');
+            document.getElementById('mealSimpleSection').classList.add('section-visible');
+            document.getElementById('mealDetailSection').classList.remove('section-hidden');
+            document.getElementById('mealDetailSection').classList.add('section-visible');
+            document.getElementById('evalSection').classList.remove('section-hidden');
+            document.getElementById('evalSection').classList.add('section-visible');
         }
 
         function calculateAndShowProgram(shouldScroll) {
@@ -1008,6 +1000,11 @@
             const weeklyLoss = (deficit * 7) / 7700;
             userData.weeks = Math.ceil((userData.berat - userData.target) / weeklyLoss);
             
+            // Set start date if not exists
+            if (!userData.startDate) {
+                userData.startDate = new Date().toISOString();
+            }
+            
             const today = new Date();
             const targetDate = new Date(today);
             targetDate.setDate(today.getDate() + (userData.weeks * 7));
@@ -1022,20 +1019,9 @@
             updateCalculatorUI();
             generateTimeline();
             generateMealPlan();
-            showAllSections();
+            showProgramSections();
             
             if (shouldScroll) setTimeout(function() { document.getElementById('programSection').scrollIntoView({ behavior: 'smooth' }); }, 100);
-        }
-
-        function showAllSections() {
-            // Show all program sections
-            ['programSection', 'herbalSection', 'mealSection', 'menuLengkapSection', 'evalSection', 'tipsSection'].forEach(function(id) {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.classList.remove('section-hidden');
-                    el.classList.add('section-visible');
-                }
-            });
         }
 
         function updateCalculatorUI() {
@@ -1046,44 +1032,69 @@
             document.getElementById('heroLoss').textContent = userData.metode === 'agresif' ? '0.7-1' : (userData.metode === 'ringan' ? '0.3-0.5' : '0.5-0.7');
             document.getElementById('dateEstimate').style.display = 'block';
             document.getElementById('targetDateDisplay').textContent = userData.targetDate;
+            document.getElementById('targetKcalDisplay').textContent = Math.round(userData.dietCal);
+            document.getElementById('mealTargetCalSimple').textContent = Math.round(userData.dietCal) + ' kcal';
+        }
+
+        function calculateProgress() {
+            if (!userData.startDate || !userData.weeks) return 0;
             
-            const targetKcalDisplay = document.getElementById('targetKcalDisplay');
-            if (targetKcalDisplay) targetKcalDisplay.textContent = Math.round(userData.dietCal);
+            const startDate = new Date(userData.startDate);
+            const today = new Date();
+            const totalDays = userData.weeks * 7;
+            const elapsedDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
             
-            const targetKcalDisplay2 = document.getElementById('targetKcalDisplay2');
-            if (targetKcalDisplay2) targetKcalDisplay2.textContent = Math.round(userData.dietCal);
+            let progress = Math.min(100, Math.max(0, (elapsedDays / totalDays) * 100));
+            return Math.round(progress);
         }
 
         function generateTimeline() {
             const timeline = document.getElementById('dietTimeline');
             timeline.innerHTML = '';
-            const phases = [
-                { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Mulai konsumsi 2x3 kapsul herbal sesudah makan (pagi & malam). Fokus pengurangan gula.' },
-                { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari. Aktivitas: jalan kaki + latihan lymphatic.' },
-                { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal. Rutin latihan lymphatic untuk drainase optimal.' },
-                { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Gunakan lembar evaluasi mingguan. Jika stagnan, konsultasi gratis tersedia.' },
-                { week: userData.weeks, title: 'Target Tercapai!', desc: 'Selamat ' + userData.nama + '! Capai target ' + userData.target + 'kg pada ' + userData.targetDate + '. Lanjutkan ke FASE MAINTENANCE: Turun dosis herbal jadi 2x2 kapsul/hari.' }
-            ];
+            
+            const progressPercent = calculateProgress();
+            
+            // Generate phases based on total weeks
+            const phases = [];
+            phases.push({ week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Mulai konsumsi 2x3 kapsul herbal sesudah makan (pagi & malam). Fokus pengurangan gula.' });
+            phases.push({ week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari. Aktivitas: jalan kaki + latihan lymphatic.' });
+            phases.push({ week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal. Rutin latihan lymphatic untuk drainase optimal.' });
+            
+            if (userData.weeks > 6) {
+                phases.push({ week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Gunakan lembar evaluasi mingguan. Jika stagnan, konsultasi gratis tersedia.' });
+            }
+            
+            if (userData.weeks > 10) {
+                phases.push({ week: Math.round(userData.weeks / 2), title: 'Evaluasi Tengah (Minggu ' + Math.round(userData.weeks / 2) + ')', desc: 'Cek progress. Gunakan lembar evaluasi mingguan. Jika stagnan, konsultasi gratis tersedia.' });
+            }
+            
+            phases.push({ week: userData.weeks, title: 'Target Tercapai!', desc: 'Selamat ' + userData.nama + '! Capai target ' + userData.target + 'kg pada ' + userData.targetDate + '. Lanjutkan ke FASE MAINTENANCE: Turun dosis herbal jadi 2x2 kapsul/hari.', isLast: true });
 
             phases.forEach(function(phase, index) {
-                const isLast = index === phases.length - 1;
-                const dotClass = isLast ? 'active' : '';
+                const isLast = phase.isLast;
+                const isCompleted = phase.week < (progressPercent / 100 * userData.weeks);
+                const isCurrent = !isCompleted && (index === 0 || phases[index - 1].week < (progressPercent / 100 * userData.weeks));
+                
+                let dotClass = '';
+                if (isLast) dotClass = 'active';
+                else if (isCompleted) dotClass = 'completed';
+                
                 timeline.innerHTML += '<div class="timeline-item"><div class="timeline-dot ' + dotClass + '">' + (isLast ? '<i class="fas fa-flag"></i>' : phase.week) + '</div><div class="timeline-content"><h4>' + phase.title + '</h4><p>' + phase.desc + '</p></div></div>';
             });
 
+            // Update progress ring with real percentage
             setTimeout(function() {
                 const circle = document.getElementById('progressCircle');
                 const radius = circle.r.baseVal.value;
                 const circumference = radius * 2 * Math.PI;
-                const offset = circumference - (10/100) * circumference;
+                const offset = circumference - (progressPercent / 100) * circumference;
                 circle.style.strokeDashoffset = offset;
-                document.getElementById('progressPercent').textContent = '10%';
+                document.getElementById('progressPercent').textContent = progressPercent + '%';
             }, 500);
         }
 
         function generateMealPlan() {
             const container = document.getElementById('mealContainer');
-            document.getElementById('mealTargetCal').textContent = Math.round(userData.dietCal) + ' kcal';
             const meals = [
                 { time: '07:00', title: 'Sarapan (25%)', cal: Math.round(userData.dietCal * 0.25), menu: '2 Telur rebus + 1 Pisang + 3 kapsul herbal sesudah makan' },
                 { time: '10:00', title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), menu: 'Buah segar (apel/jeruk) + kacang almond 10 butir' },
@@ -1094,14 +1105,6 @@
             container.innerHTML = meals.map(function(meal) {
                 return '<div class="meal-card"><div class="meal-time-box"><div class="meal-time-label">JAM</div><div class="meal-time-value">' + meal.time + '</div></div><div class="meal-content"><div class="meal-title">' + meal.title + '</div><div class="meal-desc">' + meal.menu + '</div></div><div class="meal-cal">~' + meal.cal + '<br><small>kcal</small></div></div>';
             }).join('');
-        }
-
-        function showMealPlan() {
-            document.getElementById('mealSection').classList.remove('section-hidden');
-            document.getElementById('mealSection').classList.add('section-visible');
-            const currentWeek = weeklyHistory.length + 1;
-            document.getElementById('evalWeekDisplay2').textContent = 'Minggu ke-' + currentWeek;
-            setTimeout(function() { document.getElementById('mealSection').scrollIntoView({ behavior: 'smooth' }); }, 100);
         }
 
         // Weekly Evaluation
@@ -1134,7 +1137,7 @@
                 resetForm(); alert('Evaluasi mingguan berhasil disimpan!');
             }
             saveWeeklyData(); renderWeeklyHistory();
-            document.getElementById('evalWeekDisplay2').textContent = 'Minggu ke-' + (weeklyHistory.length + 1);
+            document.getElementById('evalWeekDisplay').textContent = 'Minggu ke-' + (weeklyHistory.length + 1);
         }
 
         function resetForm() {
@@ -1173,7 +1176,7 @@
             saveWeeklyData(); renderWeeklyHistory();
             if (editingIndex === index) cancelEdit();
             else if (editingIndex > index) editingIndex--;
-            document.getElementById('evalWeekDisplay2').textContent = 'Minggu ke-' + (weeklyHistory.length + 1);
+            document.getElementById('evalWeekDisplay').textContent = 'Minggu ke-' + (weeklyHistory.length + 1);
             alert('Evaluasi mingguan berhasil dihapus!');
         }
 
