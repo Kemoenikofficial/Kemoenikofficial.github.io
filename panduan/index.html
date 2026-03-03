@@ -13,7 +13,7 @@
       gtag('js', new Date());
       gtag('config', 'G-R7JZQXBQ57');
     </script>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,163 +25,94 @@
             --primary-light: #3F7A52;
             --primary-dark: #1E3D28;
             --accent-gold: #D4AF37;
-            --accent-gold-light: #F4E4C1;
             --bg-cream: #FAF8F3;
             --bg-light: #F5F2EC;
             --text-dark: #1A1A1A;
             --text-muted: #6B6B6B;
             --success: #22C55E;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
-            --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
             --radius: 20px;
             --radius-sm: 12px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        html { scroll-behavior: smooth; }
         body { font-family: 'Poppins', sans-serif; background: var(--bg-cream); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
         .font-display { font-family: 'Playfair Display', serif; }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-light); }
-        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
-
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); } }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        @keyframes slideDown { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 2000px; } }
-
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeInUp 0.6s ease forwards; }
         .delay-100 { animation-delay: 0.1s; opacity: 0; }
-        .delay-200 { animation-delay: 0.2s; opacity: 0; }
-        .delay-300 { animation-delay: 0.3s; opacity: 0; }
-
-        /* Notification Banner */
-        .notification-banner {
-            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
-            border-bottom: 2px solid var(--accent-gold);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .notification-banner.hidden { display: none; }
-        .notification-text { font-size: 13px; color: #92400E; font-weight: 500; text-align: center; flex: 1; }
-        .notification-close { background: none; border: none; cursor: pointer; color: #92400E; font-size: 18px; padding: 4px; }
-
-        /* Accordion Styles */
-        .accordion-header {
-            display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: white; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(0,0,0,0.06); margin-bottom: 8px;
-        }
-        .accordion-header:hover { background: var(--bg-light); }
-        .accordion-header.active { border-radius: var(--radius-sm) var(--radius-sm) 0 0; border-bottom: 1px solid rgba(0,0,0,0.06); margin-bottom: 0; }
-        .accordion-title { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; }
-        .accordion-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; }
-        .accordion-arrow { transition: transform 0.3s ease; color: var(--text-muted); }
-        .accordion-header.active .accordion-arrow { transform: rotate(180deg); }
-        .accordion-content { display: none; background: var(--bg-light); border-radius: 0 0 var(--radius-sm) var(--radius-sm); padding: 20px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.06); border-top: none; }
-        .accordion-content.show { display: block; animation: slideDown 0.3s ease; }
-
-        /* Tab Navigation */
-        .tab-nav { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        .tab-btn { padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; background: white; border: 2px solid var(--primary); color: var(--primary); }
-        .tab-btn.active { background: var(--primary); color: white; }
-        .tab-btn:hover:not(.active) { background: var(--bg-light); }
-
-        /* Herbal Card */
-        .herbal-detail-card { background: white; border-radius: var(--radius-sm); padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
-        .herbal-detail-card:hover { border-color: var(--primary-light); transform: translateX(4px); }
-        .herbal-detail-card.expanded { border-color: var(--primary); }
-        .herbal-detail-header { display: flex; align-items: center; gap: 12px; }
-        .herbal-detail-icon { font-size: 24px; }
-        .herbal-detail-name { font-weight: 600; font-size: 14px; color: var(--primary-dark); }
-        .herbal-detail-tagline { font-size: 12px; color: var(--text-muted); }
-        .herbal-detail-body { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(0,0,0,0.1); }
-        .herbal-detail-card.expanded .herbal-detail-body { display: block; animation: fadeInUp 0.3s ease; }
-
-        /* FAQ Styles */
-        .faq-category { margin-bottom: 24px; }
-        .faq-category-title { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: flex; align-items: center; gap: 8px; }
-        .faq-item { background: white; border-radius: var(--radius-sm); margin-bottom: 8px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); }
-        .faq-question { padding: 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-weight: 500; font-size: 13px; transition: all 0.3s ease; }
-        .faq-question:hover { background: var(--bg-light); }
-        .faq-question.active { background: var(--primary); color: white; }
-        .faq-answer { display: none; padding: 16px; background: var(--bg-light); font-size: 13px; color: var(--text-muted); line-height: 1.7; }
-        .faq-answer.show { display: block; animation: slideDown 0.3s ease; }
-
-        /* Menu Table */
-        .menu-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .menu-table th { background: var(--primary); color: white; padding: 12px 8px; text-align: left; font-weight: 600; }
-        .menu-table td { padding: 10px 8px; border-bottom: 1px solid rgba(0,0,0,0.06); vertical-align: top; }
-        .menu-table tr:hover { background: var(--bg-light); }
-        .menu-table-container { overflow-x: auto; border-radius: var(--radius-sm); }
-
         .hero-section { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); position: relative; overflow: hidden; padding: 60px 24px 80px; }
         .hero-pattern { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
         .hero-content { position: relative; z-index: 2; max-width: 600px; margin: 0 auto; text-align: center; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 50px; color: var(--accent-gold-light); font-size: 12px; font-weight: 500; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2); }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 50px; color: #F4E4C1; font-size: 12px; font-weight: 500; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.2); }
         .hero-title { font-size: 36px; font-weight: 700; color: white; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px; }
         .hero-subtitle { font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 300; margin-bottom: 32px; }
         .hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 32px; }
         .hero-stat { text-align: center; }
         .hero-stat-value { font-size: 28px; font-weight: 700; color: var(--accent-gold); }
         .hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; }
-
         .main-container { max-width: 800px; margin: -40px auto 0; padding: 0 20px 60px; position: relative; z-index: 10; }
-        .glass-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.04); }
-        .card-header { padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; }
+        .glass-card { background: white; border-radius: var(--radius); box-shadow: 0 12px 32px rgba(0,0,0,0.12); overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.04); }
+        .card-header { padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.3s ease; }
+        .card-header:hover { background: var(--bg-light); }
         .card-title { font-size: 16px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 12px; }
         .card-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
-        .card-body { padding: 24px; }
+        .card-body { padding: 24px; display: none; }
+        .card-body.active { display: block; animation: slideDown 0.3s ease; }
         .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 640px) { .calc-grid { grid-template-columns: 1fr; } }
-
         .form-group { margin-bottom: 20px; }
         .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
         .form-input { width: 100%; padding: 14px 16px; font-size: 15px; font-family: 'Poppins', sans-serif; background: var(--bg-light); border: 2px solid transparent; border-radius: var(--radius-sm); color: var(--text-dark); transition: all 0.3s ease; }
         .form-input:focus { outline: none; background: white; border-color: var(--primary-light); box-shadow: 0 0 0 4px rgba(45, 90, 61, 0.1); }
         select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
-        .activity-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
-
+        
+        /* Accordion */
+        .accordion-item { border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius-sm); margin-bottom: 12px; overflow: hidden; background: white; }
+        .accordion-header { padding: 16px 20px; background: var(--bg-light); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 14px; transition: all 0.3s ease; }
+        .accordion-header:hover { background: #e8e4dc; }
+        .accordion-header.active { background: var(--primary); color: white; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: white; }
+        .accordion-content.active { max-height: 2000px; }
+        .accordion-body { padding: 20px; font-size: 13px; line-height: 1.8; color: var(--text-muted); }
+        
+        /* Notification */
+        .notification-banner { background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-left: 4px solid var(--accent-gold); padding: 16px 20px; margin-bottom: 20px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; gap: 12px; animation: slideDown 0.5s ease; }
+        .notification-content { display: flex; align-items: center; gap: 12px; flex: 1; }
+        .notification-icon { font-size: 20px; color: var(--accent-gold); }
+        .notification-text { font-size: 13px; color: #92400E; font-weight: 500; }
+        .notification-close { background: none; border: none; color: #92400E; cursor: pointer; font-size: 18px; padding: 4px; opacity: 0.6; transition: opacity 0.3s; }
+        .notification-close:hover { opacity: 1; }
+        
         .results-dashboard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
         .result-card { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: var(--radius-sm); padding: 20px; color: white; text-align: center; position: relative; overflow: hidden; }
-        .result-card::before { content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); }
         .result-card.accent { background: linear-gradient(135deg, var(--accent-gold) 0%, #B8941F 100%); }
         .result-label { font-size: 11px; font-weight: 500; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
         .result-value { font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
         .result-unit { font-size: 12px; opacity: 0.8; }
-
+        
         .timeline { position: relative; padding-left: 32px; }
         .timeline::before { content: ''; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--primary), var(--accent-gold)); }
         .timeline-item { position: relative; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px dashed rgba(0,0,0,0.1); }
         .timeline-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .timeline-dot { position: absolute; left: -32px; top: 4px; width: 24px; height: 24px; background: white; border: 3px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--primary); }
         .timeline-dot.active { background: var(--primary); color: white; animation: pulse-gold 2s infinite; }
-        .timeline-dot.completed { background: var(--success); border-color: var(--success); color: white; }
-        .timeline-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
-        .timeline-content p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-        .maintenance-note { background: #FEF3C7; border-radius: 8px; padding: 12px; margin-top: 8px; border-left: 4px solid var(--accent-gold); font-size: 12px; color: #92400E; }
-
+        
         .herbal-card { background: linear-gradient(135deg, #F0F7F2 0%, #E8F5E9 100%); border: 1px solid #C8E6C9; border-radius: var(--radius-sm); padding: 20px; margin-top: 16px; }
         .herbal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .herbal-icon-box { width: 48px; height: 48px; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); font-size: 20px; color: var(--primary); }
+        .herbal-icon-box { width: 48px; height: 48px; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); font-size: 20px; color: var(--primary); }
         .herbal-title { font-size: 16px; font-weight: 600; color: var(--primary-dark); }
-        .herbal-subtitle { font-size: 12px; color: var(--text-muted); }
         .herbal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
         @media (min-width: 768px) { .herbal-grid { grid-template-columns: repeat(5, 1fr); } }
-        .herbal-item { background: white; padding: 12px; border-radius: 10px; text-align: center; box-shadow: var(--shadow-sm); transition: transform 0.3s ease; }
-        .herbal-item:hover { transform: translateY(-2px); }
-        .herbal-item-icon { width: 32px; height: 32px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .herbal-item { background: white; padding: 16px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .herbal-item:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: var(--primary-light); }
+        .herbal-item.active { border-color: var(--primary); background: #F0F7F2; }
+        .herbal-item-icon { width: 40px; height: 40px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
         .herbal-item-name { font-size: 12px; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
-        .herbal-item-dose { font-size: 11px; color: var(--text-muted); }
-
+        .herbal-item-role { font-size: 10px; color: var(--accent-gold); font-weight: 600; }
+        .herbal-detail { display: none; margin-top: 12px; padding: 16px; background: white; border-radius: 10px; border-left: 4px solid var(--accent-gold); animation: slideDown 0.3s ease; }
+        .herbal-detail.active { display: block; }
+        
         .dosage-box { background: white; border-radius: 10px; padding: 16px; border-left: 4px solid var(--accent-gold); }
         .dosage-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); }
         .dosage-schedule { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
@@ -189,11 +120,21 @@
         .dosage-time { font-size: 13px; font-weight: 600; color: var(--primary); }
         .dosage-amount { font-size: 12px; color: var(--text-muted); text-align: right; }
         .dosage-note { margin-top: 12px; padding: 10px; background: var(--bg-light); border-radius: 8px; font-size: 11px; color: var(--text-muted); font-style: italic; }
-
+        
+        .menu-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 8px; }
+        .menu-tab { padding: 10px 20px; background: white; border: 2px solid var(--primary); border-radius: 25px; font-size: 13px; font-weight: 600; color: var(--primary); cursor: pointer; white-space: nowrap; transition: all 0.3s ease; }
+        .menu-tab:hover, .menu-tab.active { background: var(--primary); color: white; }
+        .menu-table-container { overflow-x: auto; margin-bottom: 20px; }
+        .menu-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
+        .menu-table th { background: var(--primary); color: white; padding: 12px 8px; text-align: left; font-weight: 600; }
+        .menu-table td { padding: 10px 8px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .menu-table tr:nth-child(even) { background: var(--bg-light); }
+        .menu-table tr:hover { background: #E8F5E9; }
+        
         .meal-grid { display: grid; gap: 16px; }
         .meal-card { background: var(--bg-light); border-radius: var(--radius-sm); padding: 16px; display: flex; gap: 16px; align-items: center; transition: all 0.3s ease; }
-        .meal-card:hover { transform: translateX(4px); background: white; box-shadow: var(--shadow-md); }
-        .meal-time-box { width: 70px; height: 70px; background: white; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); flex-shrink: 0; border: 2px solid var(--primary); }
+        .meal-card:hover { transform: translateX(4px); background: white; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .meal-time-box { width: 70px; height: 70px; background: white; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex-shrink: 0; border: 2px solid var(--primary); }
         .meal-time-label { font-size: 11px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
         .meal-time-value { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-top: 2px; }
         .meal-content { flex: 1; }
@@ -203,7 +144,7 @@
         .meal-alternative { margin-top: 16px; padding: 16px; background: #FEF3C7; border-radius: var(--radius-sm); border-left: 4px solid var(--accent-gold); }
         .meal-alternative-title { font-size: 13px; font-weight: 600; color: #92400E; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         .meal-alternative-text { font-size: 12px; color: #78350F; line-height: 1.6; }
-
+        
         .progress-ring { position: relative; width: 200px; height: 200px; margin: 0 auto 24px; }
         .progress-ring svg { transform: rotate(-90deg); }
         .progress-ring-bg { fill: none; stroke: var(--bg-light); stroke-width: 12; }
@@ -211,41 +152,35 @@
         .progress-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
         .progress-percent { font-size: 48px; font-weight: 700; color: var(--primary); line-height: 1; }
         .progress-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-
+        
         .btn { width: 100%; padding: 16px 24px; border: none; border-radius: var(--radius-sm); font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
         .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; box-shadow: 0 4px 16px rgba(45, 90, 61, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45, 90, 61, 0.4); }
         .btn-gold { background: linear-gradient(135deg, var(--accent-gold) 0%, #B8941F 100%); color: white; box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3); animation: pulse-gold 2s infinite; }
         .btn-outline { background: white; border: 2px solid var(--primary); color: var(--primary); }
-        .btn-danger { background: linear-gradient(135deg, var(--danger) 0%, #DC2626 100%); color: white; box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3); }
-        .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4); }
+        .btn-danger { background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3); }
         .btn-sm { padding: 8px 16px; font-size: 13px; }
-        .btn-warning { background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%); color: white; }
-
+        
         .tips-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         @media (min-width: 768px) { .tips-grid { grid-template-columns: repeat(4, 1fr); } }
-        .tip-card { background: white; border-radius: var(--radius-sm); padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.04); }
+        .tip-card { background: white; border-radius: var(--radius-sm); padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04); }
         .tip-icon { width: 36px; height: 36px; background: var(--bg-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 16px; }
         .tip-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
         .tip-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
-
+        
         .consultation-card { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); border-radius: var(--radius); padding: 32px 24px; text-align: center; color: white; position: relative; overflow: hidden; }
         .consultation-card::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%); animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
         .consultation-badge { display: inline-block; padding: 6px 16px; background: var(--accent-gold); color: white; border-radius: 50px; font-size: 11px; font-weight: 600; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
         .consultation-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; position: relative; }
         .consultation-desc { font-size: 14px; opacity: 0.9; margin-bottom: 24px; position: relative; }
-
-        .social-section { display: flex; justify-content: center; gap: 16px; margin-top: 20px; flex-wrap: wrap; }
-        .social-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255,255,255,0.15); border-radius: 8px; color: white; text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.3s ease; }
-        .social-link:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
-
+        
         .section-hidden { display: none; }
         .section-visible { display: block; animation: fadeInUp 0.5s ease; }
-
+        
         .weekly-eval-form { background: var(--bg-light); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 20px; }
         .weekly-eval-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
         @media (max-width: 640px) { .weekly-eval-grid { grid-template-columns: 1fr; } }
-
         .condition-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
         @media (max-width: 640px) { .condition-grid { grid-template-columns: 1fr; } }
         .condition-item { background: white; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
@@ -254,37 +189,47 @@
         .condition-checkbox { width: 20px; height: 20px; border: 2px solid var(--primary); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .condition-item.checked .condition-checkbox { background: var(--primary); color: white; }
         .condition-text { font-size: 13px; font-weight: 500; }
-
         .obstacle-section { margin-top: 20px; }
         .obstacle-textarea { width: 100%; padding: 12px; border: 2px solid transparent; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 13px; resize: vertical; min-height: 80px; }
         .obstacle-textarea:focus { outline: none; border-color: var(--primary-light); }
-
         .weekly-result { background: white; border-radius: var(--radius-sm); padding: 20px; margin-top: 20px; border-left: 4px solid var(--accent-gold); }
         .weekly-result-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); }
         .weekly-result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 13px; }
         .weekly-result-item:last-child { border-bottom: none; font-weight: 600; color: var(--primary); }
-
         .date-estimate { background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%); color: white; padding: 16px; border-radius: var(--radius-sm); margin-top: 16px; text-align: center; }
         .date-estimate-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 4px; }
         .date-estimate-value { font-size: 18px; font-weight: 700; }
-
+        
+        .social-links { display: flex; justify-content: center; gap: 16px; margin-top: 20px; }
+        .social-link { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; transition: transform 0.3s ease; text-decoration: none; }
+        .social-link:hover { transform: translateY(-3px); }
+        .social-link.instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
+        .social-link.tiktok { background: #000000; }
+        .social-link.telegram { background: #0088cc; }
+        
+        .shop-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+        @media (max-width: 480px) { .shop-buttons { grid-template-columns: 1fr; } }
+        .shop-btn { padding: 12px 20px; border-radius: var(--radius-sm); font-weight: 600; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: white; transition: all 0.3s ease; }
+        .shop-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .shop-btn.shopee { background: #EE4D2D; }
+        .shop-btn.tiktok-shop { background: #000000; }
+        .stock-warning { background: #FEE2E2; border: 1px solid #FECACA; color: #991B1B; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .chevron-icon { transition: transform 0.3s ease; }
+        .chevron-icon.rotated { transform: rotate(180deg); }
+        
         .access-message { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-cream); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
         .access-content { text-align: center; max-width: 400px; }
         .access-icon { font-size: 64px; color: var(--primary); margin-bottom: 20px; }
         .access-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); }
         .access-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
-
         .history-actions { display: flex; gap: 8px; margin-top: 12px; }
-        .history-item { position: relative; }
         .edit-mode-indicator { background: var(--accent-gold); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; margin-bottom: 12px; }
-
-        @media print { .no-print { display: none !important; } .print-only { display: block !important; } body { background: white; } .glass-card { box-shadow: none; border: 1px solid #ddd; } }
+        
+        @media print { .no-print { display: none !important; } body { background: white; } .glass-card { box-shadow: none; border: 1px solid #ddd; } .card-body { display: block !important; } }
         @media (min-width: 768px) { .hero-title { font-size: 48px; } .main-container { padding: 0 40px 60px; } }
-        @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; } }
     </style>
 </head>
 <body>
-
     <!-- Access Check Layer -->
     <div id="accessCheck" style="display: none;">
         <div class="access-message">
@@ -292,7 +237,8 @@
                 <div class="access-icon"><i class="fas fa-lock"></i></div>
                 <h2 class="access-title">Memeriksa Akses...</h2>
                 <p class="access-desc">Mohon tunggu sebentar</p>
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-700 mx-auto"></div>
+                <div style="width: 32px; height: 32px; border: 3px solid #2D5A3D; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
             </div>
         </div>
     </div>
@@ -304,45 +250,25 @@
                 <div class="access-icon"><i class="fas fa-exclamation-circle"></i></div>
                 <h2 class="access-title">Akses Ditolak</h2>
                 <p class="access-desc">Anda perlu verifikasi kode konsultasi terlebih dahulu di halaman Log Aktivitas.</p>
-                <button onclick="goToLogin()" class="btn btn-primary mt-4" style="width: auto; padding: 12px 24px;">Ke Halaman Verifikasi</button>
+                <button onclick="goToLogin()" class="btn btn-primary" style="width: auto; padding: 12px 24px; margin: 0 auto;">Ke Halaman Verifikasi</button>
             </div>
         </div>
     </div>
 
-    <!-- Main App (Hidden until code verified) -->
+    <!-- Main App -->
     <div id="mainApp" class="section-hidden">
         
-        <!-- Notification Banner -->
-        <div id="notificationBanner" class="notification-banner">
-            <i class="fas fa-exclamation-triangle text-yellow-600"></i>
-            <span class="notification-text"><strong>PENTING:</strong> Baca seluruh panduan dengan seksama agar program diet Anda terarah dengan sempurna!</span>
-            <button class="notification-close" onclick="closeNotification()"><i class="fas fa-times"></i></button>
-        </div>
-
         <!-- Hero Section -->
         <section class="hero-section">
             <div class="hero-pattern"></div>
             <div class="hero-content">
-                <div class="hero-badge">
-                    <i class="fas fa-leaf"></i>
-                    Program Diet Herbal Premium
-                </div>
+                <div class="hero-badge"><i class="fas fa-leaf"></i>Program Diet Herbal Premium</div>
                 <h1 class="hero-title font-display">Transformasi Tubuh Alami</h1>
                 <p class="hero-subtitle">Gabungan sains nutrisi modern & kearifan lokal herbal untuk penurunan berat badan optimal</p>
-                
                 <div class="hero-stats">
-                    <div class="hero-stat">
-                        <div class="hero-stat-value" id="heroWeeks">12</div>
-                        <div class="hero-stat-label">Minggu Program</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value" id="heroLoss">0.5-1</div>
-                        <div class="hero-stat-label">Kg/Minggu</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value">5</div>
-                        <div class="hero-stat-label">Herba Aktif</div>
-                    </div>
+                    <div class="hero-stat"><div class="hero-stat-value" id="heroWeeks">12</div><div class="hero-stat-label">Minggu Program</div></div>
+                    <div class="hero-stat"><div class="hero-stat-value" id="heroLoss">0.5-1</div><div class="hero-stat-label">Kg/Minggu</div></div>
+                    <div class="hero-stat"><div class="hero-stat-value">5</div><div class="hero-stat-label">Herba Aktif</div></div>
                 </div>
             </div>
         </section>
@@ -350,34 +276,30 @@
         <!-- Main Container -->
         <div class="main-container">
 
+            <!-- Notification Banner -->
+            <div class="notification-banner no-print" id="guideNotification">
+                <div class="notification-content">
+                    <i class="fas fa-exclamation-triangle notification-icon"></i>
+                    <span class="notification-text">Penting: Baca seluruh panduan di bawah ini agar program diet Anda terarahkan sempurna!</span>
+                </div>
+                <button class="notification-close" onclick="closeNotification()"><i class="fas fa-times"></i></button>
+            </div>
+
             <!-- STEP 1: Kalkulator -->
             <div class="glass-card animate-fade-in delay-100" id="calculatorSection">
-                <div class="card-header">
-                    <div class="card-title">
-                        <div class="card-icon"><i class="fas fa-calculator"></i></div>
-                        Kalkulator Diet Cerdas
-                    </div>
-                    <span class="text-xs text-gray-500" id="userWADisplay">WA: -</span>
+                <div class="card-header" onclick="toggleCard('calcBody')">
+                    <div class="card-title"><div class="card-icon"><i class="fas fa-calculator"></i></div>Kalkulator Diet Cerdas</div>
+                    <i class="fas fa-chevron-down chevron-icon" id="calcBody-chevron"></i>
                 </div>
-                <div class="card-body">
+                <div class="card-body active" id="calcBody">
                     <div class="results-dashboard" id="quickResults" style="display: none;">
-                        <div class="result-card">
-                            <div class="result-label">Kalori Harian</div>
-                            <div class="result-value" id="previewCalories">0</div>
-                            <div class="result-unit">kcal</div>
-                        </div>
-                        <div class="result-card accent">
-                            <div class="result-label">Target Turun</div>
-                            <div class="result-value" id="previewWeeks">0</div>
-                            <div class="result-unit">minggu</div>
-                        </div>
+                        <div class="result-card"><div class="result-label">Kalori Harian</div><div class="result-value" id="previewCalories">0</div><div class="result-unit">kcal</div></div>
+                        <div class="result-card accent"><div class="result-label">Target Turun</div><div class="result-value" id="previewWeeks">0</div><div class="result-unit">minggu</div></div>
                     </div>
-
                     <div class="date-estimate" id="dateEstimate" style="display: none;">
                         <div class="date-estimate-label">Estimasi Tercapai</div>
                         <div class="date-estimate-value" id="targetDateDisplay">-</div>
                     </div>
-
                     <div class="calc-grid">
                         <div class="form-group">
                             <label class="form-label">Nama Lengkap</label>
@@ -385,11 +307,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Jenis Kelamin</label>
-                            <select id="inputGender" class="form-input">
-                                <option value="">Pilih Gender</option>
-                                <option value="pria">Laki-laki</option>
-                                <option value="wanita">Perempuan</option>
-                            </select>
+                            <select id="inputGender" class="form-input"><option value="">Pilih Gender</option><option value="pria">Laki-laki</option><option value="wanita">Perempuan</option></select>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Usia (tahun)</label>
@@ -405,46 +323,31 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Aktivitas Harian</label>
-                            <select id="inputAktivitas" class="form-input" onchange="updateActivityDesc()">
+                            <select id="inputAktivitas" class="form-input" onchange="showActivityDesc()">
                                 <option value="">Pilih Level</option>
                                 <option value="1.2">Tidak Aktif</option>
                                 <option value="1.375">Ringan (1-2x Olahraga)</option>
                                 <option value="1.55">Sedang (3-5x Olahraga)</option>
                                 <option value="1.725">Berat (6-7x Olahraga)</option>
+                                <option value="1.9">Sangat Berat (Atlet)</option>
                             </select>
                         </div>
-                        
                         <!-- Activity Accordion -->
-                        <div style="grid-column: 1 / -1;">
-                            <div class="accordion-header" onclick="toggleAccordion(this)">
-                                <div class="accordion-title">
-                                    <i class="fas fa-info-circle text-blue-500"></i>
-                                    <span class="text-sm">Keterangan Level Aktivitas</span>
-                                </div>
-                                <i class="fas fa-chevron-down accordion-arrow"></i>
+                        <div class="accordion-item" style="grid-column: 1 / -1;">
+                            <div class="accordion-header" onclick="toggleAccordion('activityAccordion')">
+                                <span><i class="fas fa-info-circle" style="margin-right: 8px;"></i>Keterangan Level Aktivitas</span>
+                                <i class="fas fa-chevron-down"></i>
                             </div>
-                            <div class="accordion-content">
-                                <div class="space-y-3 text-sm">
-                                    <div class="p-3 bg-white rounded-lg">
-                                        <strong class="text-primary">Tidak Aktif:</strong>
-                                        <p class="text-muted text-xs mt-1">Kerja duduk, hampir tidak olahraga, aktivitas minim</p>
-                                    </div>
-                                    <div class="p-3 bg-white rounded-lg">
-                                        <strong class="text-primary">Ringan (1-2x Olahraga):</strong>
-                                        <p class="text-muted text-xs mt-1">Jalan 30 menit, yoga ringan, gym santai, kardio ringan</p>
-                                    </div>
-                                    <div class="p-3 bg-white rounded-lg">
-                                        <strong class="text-primary">Sedang (3-5x Olahraga):</strong>
-                                        <p class="text-muted text-xs mt-1">Angkat beban rutin, lari 30-45 menit, kombinasi cardio + strength</p>
-                                    </div>
-                                    <div class="p-3 bg-white rounded-lg">
-                                        <strong class="text-primary">Berat (6-7x Olahraga):</strong>
-                                        <p class="text-muted text-xs mt-1">Latihan intens tiap hari, pekerja fisik berat + gym</p>
-                                    </div>
+                            <div class="accordion-content" id="activityAccordion">
+                                <div class="accordion-body">
+                                    <div style="margin-bottom: 12px;"><strong style="color: var(--primary);">Tidak Aktif:</strong> Kerja Duduk, Hampir tidak Olahraga, Aktivitas Minim</div>
+                                    <div style="margin-bottom: 12px;"><strong style="color: var(--primary);">Ringan (1-2x Olahraga):</strong> Jalan 30 menit, Yoga Ringan, GYM santai, Kardio ringan</div>
+                                    <div style="margin-bottom: 12px;"><strong style="color: var(--primary);">Sedang (3-5x Olahraga):</strong> Angkat Beban Rutin, Lari 30-45 Menit, kombinasi cardio + Strength</div>
+                                    <div style="margin-bottom: 12px;"><strong style="color: var(--primary);">Berat (6-7x Olahraga):</strong> Latihan intens Tiap Hari, Pekerja Fisik Berat + Gym</div>
+                                    <div><strong style="color: var(--primary);">Sangat Berat:</strong> Atlet profesional, pekerja fisik ekstrem</div>
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="form-group">
                             <label class="form-label">Target Berat (kg)</label>
                             <input type="number" id="inputTarget" class="form-input" placeholder="60" min="30" max="200" step="0.1">
@@ -458,43 +361,115 @@
                             </select>
                         </div>
                     </div>
-
-                    <button class="btn btn-primary mt-6" onclick="calculateAndShowProgram()">
-                        <i class="fas fa-magic"></i>
-                        Generate Program Diet Saya
-                    </button>
-                    
-                    <a href="https://kemoenikofficial.github.io/calculator/" target="_blank" class="btn btn-outline mt-3" style="text-decoration: none;">
-                        <i class="fas fa-calculator"></i>
-                        Kalkulator Lengkap
-                    </a>
+                    <button class="btn btn-primary" style="margin-top: 24px;" onclick="calculateAndShowProgram()"><i class="fas fa-magic"></i>Generate Program Diet Saya</button>
+                    <a href="https://kemoenikofficial.github.io/calculator/" target="_blank" class="btn btn-outline" style="margin-top: 16px;"><i class="fas fa-calculator"></i>Kalkulator Lengkap</a>
                 </div>
             </div>
-
-            <!-- FAQ Section (Before Program) -->
-            <div class="glass-card animate-fade-in delay-200" id="faqBeforeSection">
-                <div class="card-header">
-                    <div class="card-title">
-                        <div class="card-icon"><i class="fas fa-question-circle"></i></div>
-                        Pertanyaan Umum (FAQ)
+            
+            <!-- FAQ Section -->
+            <div class="glass-card no-print" id="faqSection">
+                <div class="card-header" onclick="toggleCard('faqBody')">
+                    <div class="card-title"><div class="card-icon"><i class="fas fa-question-circle"></i></div>Pertanyaan Umum (FAQ)</div>
+                    <i class="fas fa-chevron-down chevron-icon" id="faqBody-chevron"></i>
+                </div>
+                <div class="card-body" id="faqBody">
+                    <!-- Input & Evaluasi Progres -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion('faq1')"><span>Input & Evaluasi Progres</span><i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content" id="faq1">
+                            <div class="accordion-body">
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kapan saya harus input berat badan terbaru?</strong><br>Untuk melakukan pengukuran, saya sarankan untuk Setiap minggu akhir setelah kapsul habis ya kak, lebih tepatnya pagi setelah bangun tidur & buang air kecil (jangan lupa untuk mengisi evaluasi mingguanya).</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kok berat badan saya belum turun di grafik?</strong><br>Baik kak saya tegaskan bahwa lemak turun bisa jadi massa otot naik, tetap konsisten untuk menjalankan programnya, jangan lupa untuk dibaca semua panduanya.</div>
+                                <div><strong style="color: var(--primary);">Saya salah masukkan angka timbangan, gimana cara ubahnya?</strong><br>Jangan khawatir kak semua data bisa di edit dan dapat dihapus, semangat kak.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Konsumsi Kapsul & Reaksi Tubuh -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion('faq2')"><span>Konsumsi Kapsul & Reaksi Tubuh</span><i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content" id="faq2">
+                            <div class="accordion-body">
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kok belum turun di hari ke-5-7?</strong><br>Baik kak tenang dulu ya kak, untuk Proses detoks tiap orang itu beda-beda yaa, ada yang cepet ada yang lambat, yang terpenting kakak ikuti program ini supaya dapat hasil maksimal, semangat kak.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kapan waktu terbaik minum kapsul Kemoenik?</strong><br>Waktu terbaik untuk meminum kapsul KEMOENIK dianjurkan sesudah makan ya kak.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kenapa saya jadi sering buang air kecil (pipis)?</strong><br>Itu adalah reaksi normal dari kandungan Tempuyung yang bersifat diuretik alami untuk membuang kelebihan cairan dan toksin (detoks) dalam tubuh. Pastikan minum air putih 2-3 liter sehari.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">BAB jadi lebih lunak, apakah ini diare?</strong><br>Itu Bukan diare ya kak, itu merupakan efek peluruhan lemak dari kandungan Jati Belanda, maka jangan khawatir yaa tetap semangat dan konsisten.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Lagi haid/menstruasi, boleh tetap minum?</strong><br>Sarankan jeda di hari 1-3 ya kak.</div>
+                                <div><strong style="color: var(--primary);">Apakah bikin diare atau bolak-balik ke kamar mandi (BAB)?</strong><br>Kandungan Jati Belanda membantu melancarkan pencernaan, namun tidak menyebabkan diare hebat jika dosis diikuti sesuai panduan. Tekstur BAB mungkin akan lebih lunak karena lemak yang terbuang.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Teknis Pelaksanaan Diet -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion('faq3')"><span>Teknis Pelaksanaan Diet (Menu Harian)</span><i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content" id="faq3">
+                            <div class="accordion-body">
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Saya alergi/tidak suka menu hari ini, boleh diganti apa?</strong><br>Boleh banget kak, kami sudah siapkan plan pengantinya silahkan di cek aja ya kak, kalau tidak suka semua menu boleh diganti asal defisit kalori yaa, semangat kak.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Boleh sarapan jam 9 pagi atau makan malam jam 8 malam?</strong><br>Boleh, asal defisit kalori terjaga, tapi kami sarankan untuk maksimal makan malam itu di jam 7 yaa, kalau ga keburu saya sarankan makan sore aja biar malam ga makan, semangat ya kak.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Bagaimana kalau hari ini saya ada acara makan-makan (kondangan)?</strong><br>Gapapah kak untuk sekali kali asal dibarengi olahraga dan defisit kalori yaa dan jangan lupa minum kapsul KEMOENIK sebelum makan pesta agar lemak tidak langsung terserap, lalu kembali ke menu normal besoknya, semangat kak.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kalau saya 'Cheating' (makan sembarangan) sehari, apakah programnya gagal?</strong><br>Jangan menyerah! Lanjutkan saja program di hari berikutnya. Kapsul KEMOENIK akan membantu mengikat lemak dari makanan 'cheating' tersebut, tapi jangan sering-sering ya Kak!</div>
+                                <div><strong style="color: var(--primary);">Kenapa saya disuruh minum air putih terus?</strong><br>Untuk menidari haus berlebih, dikarnakan ada Efek detoksifikasi herbal Kemoenik kak, makanya biar menjaga tidak dehidrasi disarankan minum 2 liter/hari disesuaikan dengan aktivitas ya.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Aturan Pakai & Kondisi Khusus -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion('faq4')"><span>Aturan Pakai & Kondisi Khusus (Dasar)</span><i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content" id="faq4">
+                            <div class="accordion-body">
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Boleh minum lebih dari 6 kapsul/hari sekaligus agar cepat turun?</strong><br>Saya Sarankan tetap mengikuti anjuran 6 kapsul/hari dan ikuti pemakainya sesuai panduan.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Boleh saat haid? Aman untuk Busui?</strong><br>Untuk haid lakukan Jeda saat haid H1-3 dulu ya kak, untuk Busui kami anjurkan jangan dulu ya, dikarnakan KEMOENIK ini peluntur lemak.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Boleh minum bersama obat dokter/kopi?</strong><br>Boleh kak saya sarankan untuk memberi jeda sekitar 30 menitan ya kak.</div>
+                                <div><strong style="color: var(--primary);">Apakah bikin ketergantungan atau efek samping jantung berdebar?</strong><br>KEMOENIK 100% herbal tanpa BKO (Bahan Kimia Obat). Tidak membuat jantung berdebar karena fokus pada metabolisme alami, bukan stimulan kimia.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Detail Kandungan & Efek Samping -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion('faq5')"><span>Detail Kandungan & Efek Samping (Kritis)</span><i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content" id="faq5">
+                            <div class="accordion-body">
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kenapa setelah minum ini dan ikut menu diet, pipis saya jadi kuning pekat?</strong><br>Itu efek alami dari Temulawak dan Teh Hijau yang sedang bekerja mendetoksifikasi tubuh. Pastikan minum air putih sesuai anjuran secara bertahap, semangat kak.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Ada komunitas atau grup WA buat pejuang diet KEMOENIK?</strong><br>Ada Kak! Klik tombol 'Gabung Komunitas' di bawah menu. Di sana Kakak bisa berbagi foto menu makan dan saling menyemangati dengan pengguna lain.</div>
+                                <div><strong style="color: var(--primary);">Kalau voucher saya habis (Hari ke-8) tapi saya belum beli botol baru, data saya hilang?</strong><br>Data Kakak tetap aman di server kami selamanya! jika kakak sudah menyimpan data di evaluasi mingguan, Kakak bisa mengaksesnya kembali kapan saja setelah memasukkan kode voucher baru dari pembelian berikutnya.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Masalah Sinkronisasi Data & Gejala -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion('faq6')"><span>Masalah Sinkronisasi Data & Gejala</span><i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content" id="faq6">
+                            <div class="accordion-body">
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kenapa berat badan saya di grafik tidak berubah padahal sudah saya update?</strong><br>Pastikan Kakak klik tombol 'Simpan Progres' di bawah tabel evaluasi. Coba refresh halaman browser Kakak agar data terbaru ditarik dari server kami.</div>
+                                <div><strong style="color: var(--primary);">Aman tidak kalau saya olahraga berat sambil minum kapsul ini?</strong><br>Sangat aman kak! Justru olahraga akan mempercepat pembakaran lemak. Jika merasa pusing, kurangi intensitasnya dan pastikan porsi karbohidrat di menu harian Anda sudah habis dikonsumsi.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pertanyaan Khusus Fitur & Gaya Hidup -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion('faq7')"><span>Pertanyaan Khusus Fitur & Gaya Hidup</span><i class="fas fa-chevron-down"></i></div>
+                        <div class="accordion-content" id="faq7">
+                            <div class="accordion-body">
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Data saya di website CALCULATOR FAT LOSS aman tidak?</strong><br>Data berat badan dan progres Anda hanya digunakan untuk sistem kalkulator diet personal Anda dan tidak akan disebarluaskan.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Kenapa perhitungan kalori saya berbeda dengan teman saya?</strong><br>Sistem CALCULATOR FAT LOSS menghitung secara personal berdasarkan usia, tinggi, dan aktivitas Anda agar diet tidak membuat lemas namun tetap efektif membakar lemak.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Apakah harus olahraga ketat supaya turun?</strong><br>Produk kami membantu metabolisme dan peluruhan lemak dari dalam, namun untuk hasil 'body goals' yang kencang, aktivitas fisik ringan 15-30 menit sangat disarankan seperti yang ada di Menu Panduan CALCULATOR FAT LOSS.</div>
+                                <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Apakah setelah berhenti minum BB akan naik drastis (Yoyo Effect)?</strong><br>Tidak, asalkan Anda tetap menjaga pola makan sesuai 'Edukasi Menu' di web kami. KEMOENIK membantu mengecilkan lambung secara alami sehingga nafsu makan lebih terkontrol.</div>
+                                <div><strong style="color: var(--primary);">Berapa hari bisa kelihatan hasilnya?</strong><br>Setiap metabolisme berbeda-beda, namun rata-rata pengguna mulai merasakan badan lebih ringan dan lingkar perut berkurang dalam 7-14 hari jika mengikuti Menu Diet di CALCULATOR FAT LOSS.</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="card-body" id="faqBeforeContent">
-                    <!-- FAQ content generated by JS -->
-                </div>
             </div>
-
+            
             <!-- STEP 2: Program Timeline -->
             <div class="glass-card section-hidden" id="programSection">
-                <div class="card-header">
-                    <div class="card-title">
-                        <div class="card-icon"><i class="fas fa-route"></i></div>
-                        Timeline Program Anda
+                <div class="card-header" onclick="toggleCard('programBody')">
+                    <div class="card-title"><div class="card-icon"><i class="fas fa-route"></i></div>Timeline Program Anda</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 12px; font-weight: 600; color: #22C55E; background: #DCFCE7; padding: 4px 12px; border-radius: 50px;">Aktif</span>
+                        <i class="fas fa-chevron-down chevron-icon" id="programBody-chevron"></i>
                     </div>
-                    <span class="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Aktif</span>
                 </div>
-                <div class="card-body">
-                    
+                <div class="card-body active" id="programBody">
                     <div class="progress-ring">
                         <svg width="200" height="200">
                             <defs>
@@ -511,8 +486,18 @@
                             <div class="progress-label">Menuju Target</div>
                         </div>
                     </div>
-
                     <div class="timeline" id="dietTimeline"></div>
+
+                    <!-- Maintenance Info -->
+                    <div style="margin-top: 24px; padding: 16px; background: #EFF6FF; border-radius: 12px; border-left: 4px solid #3B82F6;">
+                        <h4 style="font-weight: 600; color: #1E40AF; margin-bottom: 8px; font-size: 14px;"><i class="fas fa-info-circle" style="margin-right: 8px;"></i>Apa itu Fase Maintenance?</h4>
+                        <p style="font-size: 13px; color: #1E3A8A; line-height: 1.6;">
+                            <strong>Maintenance (Pemeliharaan)</strong> adalah fase setelah Anda mencapai target berat badan ideal. 
+                            Pada fase ini, dosis herbal dikurangi menjadi <strong>2x2 kapsul/hari</strong> (pagi dan malam) untuk 
+                            menjaga metabolisme tetap optimal dan mencegah kenaikan berat badan kembali (yoyo effect). 
+                            Tetap jaga pola makan sehat dan aktivitas fisik rutin.
+                        </p>
+                    </div>
 
                     <!-- Herbal Product -->
                     <div class="herbal-card">
@@ -520,231 +505,223 @@
                             <div class="herbal-icon-box"><i class="fas fa-capsules"></i></div>
                             <div>
                                 <div class="herbal-title">Suplemen Herbal KEMOENIK</div>
-                                <div class="herbal-subtitle">Formula 5 Herba Aktif Premium (500mg/kapsul)</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">Formula 5 Herba Aktif Premium (500mg/kapsul)</div>
                             </div>
                         </div>
-                        
-                        <!-- Herbal Detail Cards -->
-                        <div class="mt-4">
-                            <div class="herbal-detail-card" onclick="toggleHerbalDetail(this)">
-                                <div class="herbal-detail-header">
-                                    <span class="herbal-detail-icon">🍃</span>
-                                    <div>
-                                        <div class="herbal-detail-name">Teh Hijau (Camellia sinensis)</div>
-                                        <div class="herbal-detail-tagline">The Metabolism Booster</div>
-                                    </div>
-                                    <i class="fas fa-chevron-down ml-auto text-gray-400"></i>
-                                </div>
-                                <div class="herbal-detail-body">
-                                    <p class="text-sm text-gray-600 mb-2">Mengandung antioksidan polifenol (EGCG) yang memicu hormon pembakar lemak, yang dapat membantu membakar kalori lebih cepat bahkan saat kamu sedang beristirahat.</p>
-                                    <p class="text-xs text-green-700 font-medium">Cocok untuk: Pendamping olahraga agar lemak yang terbakar saat latihan menjadi lebih maksimal.</p>
-                                </div>
+                        <div class="herbal-grid">
+                            <div class="herbal-item" onclick="toggleHerbalDetail('teh-hijau')">
+                                <div class="herbal-item-icon">🍃</div>
+                                <div class="herbal-item-name">Teh Hijau</div>
+                                <div class="herbal-item-role">Metabolism Booster</div>
                             </div>
-                            
-                            <div class="herbal-detail-card" onclick="toggleHerbalDetail(this)">
-                                <div class="herbal-detail-header">
-                                    <span class="herbal-detail-icon">🌳</span>
-                                    <div>
-                                        <div class="herbal-detail-name">Jati Belanda (Guazuma ulmifolia)</div>
-                                        <div class="herbal-detail-tagline">The Fat Blocker</div>
-                                    </div>
-                                    <i class="fas fa-chevron-down ml-auto text-gray-400"></i>
-                                </div>
-                                <div class="herbal-detail-body">
-                                    <p class="text-sm text-gray-600 mb-2">Mengandung tanin dan musilago yang bekerja di saluran pencernaan. Yang dapat membantu menghambat penyerapan lemak dari makanan yang Kamu konsumsi dan memberikan efek rasa kenyang lebih lama.</p>
-                                    <p class="text-xs text-green-700 font-medium">Cocok untuk: Membantu kamu yang sulit menahan nafsu makan.</p>
-                                </div>
+                            <div class="herbal-item" onclick="toggleHerbalDetail('jati-belanda')">
+                                <div class="herbal-item-icon">🌳</div>
+                                <div class="herbal-item-name">Jati Belanda</div>
+                                <div class="herbal-item-role">Fat Blocker</div>
                             </div>
-                            
-                            <div class="herbal-detail-card" onclick="toggleHerbalDetail(this)">
-                                <div class="herbal-detail-header">
-                                    <span class="herbal-detail-icon">🌿</span>
-                                    <div>
-                                        <div class="herbal-detail-name">Kemuning (Murraya paniculata)</div>
-                                        <div class="herbal-detail-tagline">The Body Shaping</div>
-                                    </div>
-                                    <i class="fas fa-chevron-down ml-auto text-gray-400"></i>
-                                </div>
-                                <div class="herbal-detail-body">
-                                    <p class="text-sm text-gray-600 mb-2">Membantu meluruhkan timbunan lemak yang sudah lama mengendap di bawah jaringan kulit. Yang dapat membantu menjaga tekstur kulit agar tetap kencang dan tidak kendor saat berat badan mulai turun.</p>
-                                    <p class="text-xs text-green-700 font-medium">Cocok untuk: Pembentukan tubuh (body shaping) agar terlihat lebih proporsional.</p>
-                                </div>
+                            <div class="herbal-item" onclick="toggleHerbalDetail('kemuning')">
+                                <div class="herbal-item-icon">🌿</div>
+                                <div class="herbal-item-name">Kemuning</div>
+                                <div class="herbal-item-role">Body Shaping</div>
                             </div>
-                            
-                            <div class="herbal-detail-card" onclick="toggleHerbalDetail(this)">
-                                <div class="herbal-detail-header">
-                                    <span class="herbal-detail-icon">🫚</span>
-                                    <div>
-                                        <div class="herbal-detail-name">Temulawak (Curcuma xanthorrhiza)</div>
-                                        <div class="herbal-detail-tagline">The Stomach Protector</div>
-                                    </div>
-                                    <i class="fas fa-chevron-down ml-auto text-gray-400"></i>
-                                </div>
-                                <div class="herbal-detail-body">
-                                    <p class="text-sm text-gray-600 mb-2">Bersifat kurkuminoid yang menenangkan dinding lambung dan melancarkan empedu. Menjaga lambung agar tidak perih saat Kakak melakukan defisit kalori (diet).</p>
-                                    <p class="text-xs text-green-700 font-medium">Cocok untuk: Segmen Ramah Lambung (Maag-Friendly). Diet tetap aman, lambung tetap nyaman.</p>
-                                </div>
+                            <div class="herbal-item" onclick="toggleHerbalDetail('temulawak')">
+                                <div class="herbal-item-icon">🫚</div>
+                                <div class="herbal-item-name">Temulawak</div>
+                                <div class="herbal-item-role">Stomach Protector</div>
                             </div>
-                            
-                            <div class="herbal-detail-card" onclick="toggleHerbalDetail(this)">
-                                <div class="herbal-detail-header">
-                                    <span class="herbal-detail-icon">🌱</span>
-                                    <div>
-                                        <div class="herbal-detail-name">Tempuyung (Sonchus arvensis)</div>
-                                        <div class="herbal-detail-tagline">The Anti-Bloating (Detox)</div>
-                                    </div>
-                                    <i class="fas fa-chevron-down ml-auto text-gray-400"></i>
-                                </div>
-                                <div class="herbal-detail-body">
-                                    <p class="text-sm text-gray-600 mb-2">Bersifat diuretik alami yang membantu pengeluaran kelebihan cairan tubuh. Yang dapat membuang sisa-sisa toksin dan air berlebih yang terjebak di area perut dan paha.</p>
-                                    <p class="text-xs text-green-700 font-medium">Cocok untuk: Anti-Begah & Perut Buncit. Perut terasa enteng dan rata (flat belly) sejak hari pertama.</p>
-                                </div>
+                            <div class="herbal-item" onclick="toggleHerbalDetail('tempuyung')">
+                                <div class="herbal-item-icon">🌱</div>
+                                <div class="herbal-item-name">Tempuyung</div>
+                                <div class="herbal-item-role">Anti-Bloating</div>
                             </div>
                         </div>
 
-                        <!-- FAQ about ingredients -->
-                        <div class="mt-4 p-4 bg-white rounded-lg">
-                            <div class="accordion-header" onclick="toggleAccordion(this)" style="margin-bottom: 0;">
-                                <div class="accordion-title text-sm">
-                                    <i class="fas fa-question-circle text-yellow-500"></i>
-                                    Kenapa bahannya banyak sekali? Apa tidak bahaya?
-                                </div>
-                                <i class="fas fa-chevron-down accordion-arrow"></i>
+                        <!-- Herbal Details -->
+                        <div class="herbal-detail" id="detail-teh-hijau">
+                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-bolt" style="margin-right: 8px; color: var(--accent-gold);"></i>Teh Hijau (Camellia sinensis) – The Metabolism Booster</h4>
+                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Teh Hijau Mengandung antioksidan polifenol (EGCG) yang memicu hormon pembakar lemak, yang dapat Membantu membakar kalori lebih cepat bahkan saat kamu sedang beristirahat. Kandungan ini cocok untuk untuk Pendamping Olahraga agar lemak yang terbakar saat latihan menjadi lebih maksimal.</p>
+                        </div>
+                        <div class="herbal-detail" id="detail-jati-belanda">
+                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-shield-alt" style="margin-right: 8px; color: var(--accent-gold);"></i>Jati Belanda (Guazuma ulmifolia) – The Fat Blocker</h4>
+                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Jati Belanda Mengandung tanin dan musilago yang bekerja di saluran pencernaan. Yang dapat Membantu menghambat penyerapan lemak dari makanan yang Kamu konsumsi dan memberikan efek rasa kenyang lebih lama. Kandungan ini cocok untuk Membantu Kamu yang sulit menahan nafsu makan.</p>
+                        </div>
+                        <div class="herbal-detail" id="detail-kemuning">
+                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-star" style="margin-right: 8px; color: var(--accent-gold);"></i>Kemuning (Murraya paniculata) – The Body Shaping</h4>
+                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Kemuning Membantu meluruhkan timbunan lemak yang sudah lama mengendap di bawah jaringan kulit. Yang dapat Membantu menjaga tekstur kulit agar tetap kencang dan tidak kendor saat berat badan mulai turun. Kandungan ini cocok untuk Pembentukan tubuh (body shaping) agar terlihat lebih proporsional.</p>
+                        </div>
+                        <div class="herbal-detail" id="detail-temulawak">
+                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-heart" style="margin-right: 8px; color: var(--accent-gold);"></i>Temulawak (Curcuma xanthorrhiza) – The Stomach Protector</h4>
+                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Bersifat kurkuminoid yang menenangkan dinding lambung dan melancarkan empedu. Manfaat Pelangsing: Menjaga lambung agar tidak perih saat Kakak melakukan defisit kalori (diet). Cocok Untuk: Segmen Ramah Lambung (Maag-Friendly). Diet tetap aman, lambung tetap nyaman.</p>
+                        </div>
+                        <div class="herbal-detail" id="detail-tempuyung">
+                            <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 14px;"><i class="fas fa-tint" style="margin-right: 8px; color: var(--accent-gold);"></i>Tempuyung (Sonchus arvensis) – The Anti-Bloating (Detox)</h4>
+                            <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">Tempuyung Bersifat diuretik alami yang membantu pengeluaran kelebihan cairan tubuh. Yang dapat Membuang sisa-sisa toksin dan air berlebih yang terjebak di area perut dan paha. Kandungan ini cocok untuk Anti-Begah & Perut Buncit. Perut terasa enteng dan rata (flat belly) sejak hari pertama.</p>
+                        </div>
+
+                        <!-- FAQ Sebelum Jadwal -->
+                        <div class="accordion-item" style="margin-top: 16px;">
+                            <div class="accordion-header" onclick="toggleAccordion('herbal-faq')">
+                                <span><i class="fas fa-question-circle" style="margin-right: 8px;"></i>Kenapa bahannya banyak sekali? Apa tidak bahaya?</span>
+                                <i class="fas fa-chevron-down"></i>
                             </div>
-                            <div class="accordion-content" style="margin-bottom: 0; border: none; padding: 16px; background: transparent;">
-                                <p class="text-sm text-gray-600"><strong>Jawaban:</strong> "Justru kombinasi ini diciptakan agar saling melengkapi (Sinergi Herbal). Ada yang membakar lemak, ada yang membuang air, dan ada yang menjaga lambung agar Kakak tetap sehat selama program."</p>
+                            <div class="accordion-content" id="herbal-faq">
+                                <div class="accordion-body">"Justru kombinasi ini diciptakan agar saling melengkapi (Sinergi Herbal). Ada yang membakar lemak, ada yang membuang air, dan ada yang menjaga lambung agar Kakak tetap sehat selama program."</div>
                             </div>
                         </div>
 
-                        <div class="dosage-box mt-4">
-                            <div class="dosage-title"><i class="fas fa-clock text-yellow-600 mr-2"></i>Jadwal Konsumsi Optimal (2x3 Kapsul)</div>
+                        <div class="dosage-box" style="margin-top: 16px;">
+                            <div class="dosage-title"><i class="fas fa-clock" style="color: var(--accent-gold); margin-right: 8px;"></i>Jadwal Konsumsi Optimal (2x3 Kapsul)</div>
                             <div class="dosage-schedule">
-                                <span class="dosage-time"><i class="fas fa-sun text-yellow-500 mr-2"></i>Pagi (07:00 - 08:00)</span>
+                                <span class="dosage-time"><i class="fas fa-sun" style="color: #F59E0B; margin-right: 8px;"></i>Pagi (07:00 - 08:00)</span>
                                 <span class="dosage-amount">3 Kapsul<br><small>Sesudah Sarapan + Air Hangat</small></span>
                             </div>
                             <div class="dosage-schedule">
-                                <span class="dosage-time"><i class="fas fa-moon text-blue-500 mr-2"></i>Malam (18:00 - 19:00)</span>
+                                <span class="dosage-time"><i class="fas fa-moon" style="color: #3B82F6; margin-right: 8px;"></i>Malam (18:00 - 19:00)</span>
                                 <span class="dosage-amount">3 Kapsul<br><small>Sesudah Makan Malam + Air Putih</small></span>
                             </div>
-                            <div class="dosage-note"><i class="fas fa-info-circle mr-1"></i><strong>Alternatif:</strong> Bisa juga dikonsumsi 3x2 kapsul (Pagi, Siang, Malam) sesudah makan. Total 6 kapsul/hari untuk hasil optimal.</div>
+                            <div class="dosage-note"><i class="fas fa-info-circle" style="margin-right: 4px;"></i><strong>Alternatif:</strong> Bisa juga dikonsumsi 3x2 kapsul (Pagi, Siang, Malam) sesudah makan. Total 6 kapsul/hari untuk hasil optimal.</div>
                         </div>
                     </div>
 
-                    <button class="btn btn-outline mt-6" onclick="showMealPlan()">
-                        Lihat Jadwal Makan Detail
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- STEP 3: Meal Plan -->
-            <div class="glass-card section-hidden" id="mealSection">
-                <div class="card-header">
-                    <div class="card-title">
-                        <div class="card-icon"><i class="fas fa-utensils"></i></div>
-                        Panduan Menu Harian
-                    </div>
-                    <div class="text-right">
-                        <div class="text-xs text-gray-500">Target Kalori</div>
-                        <div class="text-lg font-bold text-green-700" id="mealTargetCal">0 kcal</div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <!-- Menu Accordion -->
-                    <div id="menuAccordion">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-title">
-                                <div class="accordion-icon"><i class="fas fa-calendar-alt"></i></div>
-                                Lihat Jadwal Makan Detail
-                            </div>
-                            <i class="fas fa-chevron-down accordion-arrow"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="meal-grid" id="mealContainer"></div>
-                            <div class="meal-alternative mt-4">
-                                <div class="meal-alternative-title"><i class="fas fa-lightbulb"></i> Catatan Alternatif Menu</div>
-                                <div class="meal-alternative-text">Tidak harus mengikuti menu di atas persis! Yang penting <strong>asupan kalori tetap terjaga</strong> sesuai target. Anda bisa mengganti dengan makanan lain yang setara kalori dan nutrisinya.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Alternative Menu Tables -->
-                    <div id="alternativeMenuSection" class="mt-6">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-title">
-                                <div class="accordion-icon"><i class="fas fa-book-open"></i></div>
-                                Menu Alternatif Lengkap (10 Hari)
-                            </div>
-                            <i class="fas fa-chevron-down accordion-arrow"></i>
-                        </div>
-                        <div class="accordion-content" id="alternativeMenuContent">
-                            <!-- Tab Navigation -->
-                            <div class="tab-nav">
-                                <button class="tab-btn active" onclick="showMenuTab('ekonomis')">Ekonomis</button>
-                                <button class="tab-btn" onclick="showMenuTab('standard')">Standard</button>
-                                <button class="tab-btn" onclick="showMenuTab('premium')">Premium</button>
-                            </div>
-                            
-                            <!-- Menu Tables Container -->
-                            <div id="menuEkonomis" class="menu-tab-content">
-                                <div class="p-3 bg-blue-50 rounded-lg mb-3">
-                                    <p class="text-xs text-blue-800"><strong>Target:</strong> 1715 kcal/hari | <strong>Fokus:</strong> Bahan lokal pasar, harga terjangkau, nutrisi maksimal</p>
+                    <!-- Activity Section - PERBAIKAN DI SINI -->
+                    <div style="margin-top: 24px; padding: 16px; background: #EFF6FF; border-radius: 12px; border-left: 4px solid #3B82F6;">
+                        <h4 style="font-weight: 600; color: #1E40AF; margin-bottom: 12px; font-size: 14px;"><i class="fas fa-running" style="margin-right: 8px;"></i>Aktivitas Fisik Harian (Minimal 30 Menit)</h4>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="background: white; padding: 12px; border-radius: 8px;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                    <i class="fas fa-star" style="color: #F59E0B;"></i>
+                                    <span style="font-weight: 600; font-size: 13px; color: #1E3A8A;">Direkomendasikan:</span>
                                 </div>
-                                <div class="menu-table-container">
-                                    <table class="menu-table" id="menuEkonomisTable"></table>
-                                </div>
-                            </div>
-                            
-                            <div id="menuStandard" class="menu-tab-content" style="display: none;">
-                                <div class="p-3 bg-green-50 rounded-lg mb-3">
-                                    <p class="text-xs text-green-800"><strong>Target:</strong> 1715 kcal/hari | <strong>Fokus:</strong> Bahan supermarket, praktis, tinggi protein fillet</p>
-                                </div>
-                                <div class="menu-table-container">
-                                    <table class="menu-table" id="menuStandardTable"></table>
-                                </div>
-                            </div>
-                            
-                            <div id="menuPremium" class="menu-tab-content" style="display: none;">
-                                <div class="p-3 bg-purple-50 rounded-lg mb-3">
-                                    <p class="text-xs text-purple-800"><strong>Target:</strong> 1715 kcal/hari | <strong>Fokus:</strong> Superfood, bahan organik, seafood laut dalam</p>
-                                </div>
-                                <div class="menu-table-container">
-                                    <table class="menu-table" id="menuPremiumTable"></table>
-                                </div>
-                            </div>
-                            
-                            <!-- Notes -->
-                            <div class="mt-4 p-4 bg-yellow-50 rounded-lg">
-                                <p class="text-xs text-yellow-800 mb-2"><strong>Catatan Penting:</strong></p>
-                                <ul class="text-xs text-yellow-700 space-y-1">
-                                    <li>• Minum 3 Kapsul Herbal KEMOENIK sesudah sarapan dan sesudah makan malam</li>
-                                    <li>• Tetap jaga hidrasi minimal 2-3 liter air putih per hari</li>
-                                    <li>• Lakukan update berat badan di web Calfatloss setiap pagi</li>
-                                    <li>• Budget bukan halangan untuk langsing, yang terpenting adalah Defisit Kalori dan Konsistensi!</li>
-                                    <li>• Sarankan telur dimasak Matang Sempurna agar proteinnya terserap 100%</li>
+                                <ul style="font-size: 13px; color: #1E40AF; list-style: none; padding: 0; margin: 0;">
+                                    <li style="margin-bottom: 4px;"><i class="fas fa-check" style="color: #22C55E; margin-right: 8px;"></i><strong>Latihan Lymphatic</strong> - Pernapasan diafragma, shoulder rolls, neck rolls (lihat tutorial di YouTube: "lymphatic drainage exercise")</li>
+                                    <li><i class="fas fa-check" style="color: #22C55E; margin-right: 8px;"></i><strong>Jalan Kaki Cepat</strong> (Brisk Walking) - 30-45 menit</li>
                                 </ul>
                             </div>
-                            
-                            <div class="mt-3 p-3 bg-gray-100 rounded-lg text-xs text-gray-600">
-                                <strong>Penyesuaian Kalori:</strong><br>
-                                • Target 1300-1500 kkal: Kurangi porsi nasi/karbohidrat menjadi setengah<br>
-                                • Target 1800-2000 kkal: Tambahkan 1 butir telur rebus atau tambah porsi sayuran/protein 1,5x lipat
+                            <div style="font-size: 13px; color: #1E40AF;"><strong>Alternatif:</strong> Lompat tali, jumping jack, atau berenang. Hindari olahraga berat tanpa pemanasan.</div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-outline" style="margin-top: 24px;" onclick="showMealPlan()">Lihat Jadwal Makan Detail<i class="fas fa-chevron-right" style="margin-left: 8px;"></i></button>
+                </div>
+            </div>
+            
+            <!-- STEP 3: Meal Plan -->
+            <div class="glass-card section-hidden" id="mealSection">
+                <div class="card-header" onclick="toggleCard('mealBody')">
+                    <div class="card-title"><div class="card-icon"><i class="fas fa-utensils"></i></div>Panduan Menu Harian</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="text-align: right;"><div style="font-size: 11px; color: var(--text-muted);">Target Kalori</div><div style="font-size: 18px; font-weight: 700; color: var(--primary);" id="mealTargetCal">0 kcal</div></div>
+                        <i class="fas fa-chevron-down chevron-icon" id="mealBody-chevron"></i>
+                    </div>
+                </div>
+                <div class="card-body active" id="mealBody">
+                    <div class="meal-grid" id="mealContainer"></div>
+
+                    <!-- Alternative Menu Note -->
+                    <div class="meal-alternative">
+                        <div class="meal-alternative-title"><i class="fas fa-lightbulb"></i>Catatan Alternatif Menu</div>
+                        <div class="meal-alternative-text">Tidak harus mengikuti menu di atas persis! Yang penting <strong>asupan kalori tetap terjaga</strong> sesuai target. Anda bisa mengganti dengan makanan lain yang setara kalori dan nutrisinya. Contoh: Nasi bisa diganti roti gandum, ayam bisa diganti ikan atau tahu/tempe. Yang terpenting adalah <strong>defisit kalori dan konsistensi minum herbal</strong>.</div>
+                    </div>
+
+                    <!-- Detailed Menu Guide -->
+                    <div style="margin-top: 32px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                            <h4 style="font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);"><i class="fas fa-book-open" style="margin-right: 8px;"></i>PANDUAN MENU HARIAN LENGKAP</h4>
+                        </div>
+                        <div style="background: linear-gradient(to right, #ECFDF5, #FEF3C7); padding: 16px; border-radius: 12px; border: 1px solid #A7F3D0; margin-bottom: 16px;">
+                            <p style="font-size: 14px; color: #065F46; margin-bottom: 8px;"><strong>Program Transformasi Tubuh Bersama KEMOENIK</strong></p>
+                            <p style="font-size: 12px; color: #047857;">Target: <span id="targetKcalDisplay">1715</span> kcal/hari | Durasi: 10 Varian Menu</p>
+                            <div style="margin-top: 12px; padding: 12px; background: white; border-radius: 8px; font-size: 12px; color: #065F46;">
+                                <p style="margin-bottom: 4px;"><strong>Catatan:</strong></p>
+                                <p>Jika target Anda 1300-1500 kkal: "Kurangi porsi nasi/karbohidrat menjadi setengah dari yang tertulis di tabel."</p>
+                                <p>Jika target Anda 1800-2000 kkal: "Tambahkan 1 butir telur rebus atau tambah porsi sayuran/protein 1,5x lipat dari tabel."</p>
                             </div>
+                        </div>
+
+                        <!-- Menu Tabs -->
+                        <div class="menu-tabs">
+                            <button class="menu-tab active" onclick="switchMenuTab('ekonomis')">Ekonomis</button>
+                            <button class="menu-tab" onclick="switchMenuTab('standar')">Standar</button>
+                            <button class="menu-tab" onclick="switchMenuTab('premium')">Premium</button>
+                        </div>
+
+                        <!-- Menu Ekonomis -->
+                        <div id="menu-ekonomis" class="menu-table-container">
+                            <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">KATEGORI 1: MENU EKONOMIS (BUDGET RENDAH)</h5>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Fokus: Bahan lokal pasar, harga terjangkau, nutrisi maksimal.</p>
+                            <table class="menu-table">
+                                <thead><tr><th>Hari</th><th>Sarapan (07:00)</th><th>Snack Pagi (10:00)</th><th>Makan Siang (12:00)</th><th>Snack Sore (15:00)</th><th>Makan Malam (18:00)</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1</td><td>2 Telur Rebus + 1 Pisang</td><td>Jeruk Lokal + Kacang Tanah</td><td>Nasi Putih + Tahu/Tempe Bacem + Sayur Bayam</td><td>Pepaya Potong</td><td>Ikan Kembung Bakar + Labu Siam + Kentang</td></tr>
+                                    <tr><td>2</td><td>2 Telur Rebus + 1 Ubi Cilembu</td><td>Pisang Goreng (Air Fryer)</td><td>Nasi Putih + Orek Tempe + Sayur Asem</td><td>Singkong Rebus</td><td>Ayam Bakar (Tanpa Kulit) + Lalapan + Sambal</td></tr>
+                                    <tr><td>3</td><td>2 Telur Rebus + Jagung Rebus</td><td>Buah Semangka</td><td>Bihun Jagung + Telur Dadar + Tumis Kangkung</td><td>Kacang Hijau (No Santan)</td><td>Ikan Lele Bakar + Cah Genjer + Nasi Putih</td></tr>
+                                    <tr><td>4</td><td>2 Telur Rebus + Singkong Rebus</td><td>Buah Melon</td><td>Nasi Putih + Pepes Tahu + Sayur Lodeh (Bening)</td><td>Jagung Manis Pipil</td><td>Telur Ceplok Air + Tumis Sawi Putih + Kentang</td></tr>
+                                    <tr><td>5</td><td>2 Telur Rebus + Roti Tawar</td><td>Salak 2 butir</td><td>Nasi Putih + Pindang Tongkol + Sayur Sop</td><td>Pisang Rebus</td><td>Pepes Jamur + Tahu Kuning + Sambal</td></tr>
+                                    <tr><td>6</td><td>2 Telur Rebus + Pepaya</td><td>Bengkoang</td><td>Nasi Putih + Ayam Suwir + Tumis Kacang Panjang</td><td>Edamame Rebus</td><td>Ikan Mujair Goreng + Wortel & Buncis Rebus</td></tr>
+                                    <tr><td>7</td><td>2 Telur Rebus + 1/2 Alpukat</td><td>Jambu Air</td><td>Gado-Gado (Bumbu Sedikit) + Lontong</td><td>Kerupuk Putih (1)</td><td>Sup Ceker Ayam + Sayuran + Nasi Putih</td></tr>
+                                    <tr><td>8</td><td>2 Telur Rebus + Ubi Ungu</td><td>Buah Naga 1/2</td><td>Nasi Putih + Ikan Asin Kecil + Sayur Kelor</td><td>Pisang Ambon</td><td>Ayam Bumbu Kuning + Sambal + Lalap</td></tr>
+                                    <tr><td>9</td><td>2 Telur Rebus + Bubur Sumsum</td><td>Mangga Lokal</td><td>Nasi Putih + Tumis Kerang + Daun Singkong</td><td>Bakwan Sayur (1)</td><td>Ikan Nila Bakar + Tumis Terong + Nasi Putih</td></tr>
+                                    <tr><td>10</td><td>2 Telur Rebus + Pisang Kukus</td><td>Kurma 3 butir</td><td>Nasi Putih + Kentang Balado + Sayur Sop</td><td>Ketan Putih (Sedikit)</td><td>Ayam Ungkep + Sayur Gambas + Nasi Putih</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Menu Standar -->
+                        <div id="menu-standar" class="menu-table-container" style="display: none;">
+                            <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">KATEGORI 2: MENU STANDARD (BUDGET MENENGAH)</h5>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Fokus: Bahan supermarket, praktis, tinggi protein fillet.</p>
+                            <table class="menu-table">
+                                <thead><tr><th>Hari</th><th>Sarapan (07:00)</th><th>Snack Pagi (10:00)</th><th>Makan Siang (12:00)</th><th>Snack Sore (15:00)</th><th>Makan Malam (18:00)</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1</td><td>2 Telur Rebus + Pisang Cavendish</td><td>Apel Merah + Almond</td><td>Nasi Merah + Dada Ayam Grill + Buncis</td><td>Yogurt Plain + Granola</td><td>Ikan Kakap Kukus + Salad + Kentang</td></tr>
+                                    <tr><td>2</td><td>2 Telur Rebus + Oatmeal</td><td>Pear + Kacang Mete</td><td>Nasi Merah + Sapi Lada Hitam + Pakcoy</td><td>Smoothie Pisang</td><td>Steak Ayam + Mix Veggies + Mashed Potato</td></tr>
+                                    <tr><td>3</td><td>2 Telur Rebus + Roti Gandum</td><td>Kiwi + Pistachio</td><td>Pasta Gandum + Udang + Brokoli</td><td>Protein Bar</td><td>Ikan Dory Panggang + Asparagus + Jagung</td></tr>
+                                    <tr><td>4</td><td>2 Telur Rebus + Buah Naga</td><td>Anggur + Keju Slice</td><td>Nasi Merah + Ayam Teriyaki + Stir Fry Sayur</td><td>Salad Buah Low Fat</td><td>Sup Ikan Batam + Sawi + Nasi Merah</td></tr>
+                                    <tr><td>5</td><td>2 Telur Rebus + Sereal Gandum</td><td>Jeruk Sunkist + Edamame</td><td>Nasi Merah + Ikan Gurame Bakar + Kangkung</td><td>Dark Chocolate</td><td>Beef Patty (Homemade) + Salad + Ubi</td></tr>
+                                    <tr><td>6</td><td>2 Telur Rebus + Pancake Protein</td><td>Blueberry + Almond</td><td>Nasi Merah + Opor Ayam (Low Fat) + Labu</td><td>Greek Yogurt</td><td>Ayam Bakar Taliwang + Plecing + Nasi Merah</td></tr>
+                                    <tr><td>7</td><td>2 Telur Rebus + Smoothie Bowl</td><td>Strawberry + Kuaci</td><td>Sandwich Gandum + Tuna + Selada</td><td>Jus Alpukat (No Sugar)</td><td>Ikan Bawal Bakar + Tumis Jamur + Nasi Merah</td></tr>
+                                    <tr><td>8</td><td>2 Telur Rebus + Muesli</td><td>Apel Hijau + Peanut Butter</td><td>Nasi Merah + Ayam Rosemary + Wortel</td><td>Puding Chia Seed</td><td>Salad Caesar + Ayam Grill + Telur Rebus</td></tr>
+                                    <tr><td>9</td><td>2 Telur Rebus + Alpukat Kocok</td><td>Melon + Granola Bar</td><td>Nasi Merah + Semur Daging + Sawi</td><td>Smoothie Nanas/Sawi</td><td>Ikan Nila Asam Manis + Brokoli + Nasi Merah</td></tr>
+                                    <tr><td>10</td><td>2 Telur Rebus + Granola</td><td>Pisang + Selai Kacang</td><td>Nasi Merah + Udang Saus Tiram + Capcay</td><td>Yogurt Drink</td><td>Steak Tempe & Daging + Salad + Kentang</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Menu Premium -->
+                        <div id="menu-premium" class="menu-table-container" style="display: none;">
+                            <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">KATEGORI 3: MENU PREMIUM (BUDGET ATAS)</h5>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Fokus: Superfood, bahan organik, seafood laut dalam.</p>
+                            <table class="menu-table">
+                                <thead><tr><th>Hari</th><th>Sarapan (07:00)</th><th>Snack Pagi (10:00)</th><th>Makan Siang (12:00)</th><th>Snack Sore (15:00)</th><th>Makan Malam (18:00)</th></tr></thead>
+                                <tbody>
+                                    <tr><td>1</td><td>2 Telur Rebus + Alpukat Mentega</td><td>Mix Berries + Walnut</td><td>Quinoa + Salmon Steak + Asparagus</td><td>Greek Yogurt + Chia Seed</td><td>Tuna Seared + Edamame Salad + Ubi Ungu</td></tr>
+                                    <tr><td>2</td><td>2 Telur Rebus + Smoked Salmon</td><td>Cherry + Macadamia</td><td>Shirataki Rice + Wagyu Beef + Kale</td><td>Smoothie Kale & Whey</td><td>Lobster Grilled + Salad Organik + Baby Potato</td></tr>
+                                    <tr><td>3</td><td>2 Telur Rebus + Almond Butter Toast</td><td>Buah Tin (Fig) + Pecans</td><td>Brown Rice + Gindara Grill + Baby Corn</td><td>Cold Pressed Juice</td><td>Scallops + Puree Kembang Kol + Edamame</td></tr>
+                                    <tr><td>4</td><td>2 Telur Rebus + Dragon Fruit Bowl</td><td>Raspberry + Almonds</td><td>Quinoa + Bebek Panggang + Bok Choy</td><td>Sorbet Buah Asli</td><td>Sirloin Steak + Truffle Veggies + Sweet Potato</td></tr>
+                                    <tr><td>5</td><td>2 Telur Rebus + Sourdough Toast</td><td>Delima (Pomegranate)</td><td>Shirataki Rice + Kepiting Soka + Wakame</td><td>Matcha Latte (Almond)</td><td>Grilled Cod Fish + Zucchini Noodles + Quinoa</td></tr>
+                                    <tr><td>6</td><td>2 Telur Rebus + Acai Bowl</td><td>Blackberry + Pistachio</td><td>Quinoa + Lamb Chop + Paprika</td><td>Greek Yogurt + Honey</td><td>Salmon Sashimi + Salad Wakame + Sup Miso</td></tr>
+                                    <tr><td>7</td><td>2 Telur Rebus + Chia Pudding</td><td>Peach + Brazil Nuts</td><td>Shirataki Rice + Udang Galah + Asparagus</td><td>Keto Cake Slice</td><td>Roasted Turkey + Brussel Sprouts + Pumpkin</td></tr>
+                                    <tr><td>8</td><td>2 Telur Rebus + Guacamole</td><td>Apricot + Hazelnuts</td><td>Brown Rice + Barramundi + Salad Organik</td><td>Smoothie Avocado</td><td>Tenderloin Steak + Mushroom + Baby Carrot</td></tr>
+                                    <tr><td>9</td><td>2 Telur Rebus + Quinoa Porridge</td><td>Blueberries + Pine Nuts</td><td>Shirataki Rice + Venison (Rusa) + Kale</td><td>Almond Milk Pudding</td><td>Grilled Octopus + Salad Mediterania + Hummus</td></tr>
+                                    <tr><td>10</td><td>2 Telur Rebus + Protein Muffin</td><td>Goji Berries + Walnut</td><td>Quinoa + Chicken Sous Vide + Brokoli</td><td>Coconut Water</td><td>Sea Bass Grile + Salad Quinoa + Mashed Potato</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="margin-top: 16px; padding: 16px; background: #FEF3C7; border-radius: 8px; border: 1px solid #FCD34D;">
+                            <p style="font-size: 12px; color: #92400E;"><i class="fas fa-info-circle" style="margin-right: 8px;"></i><strong>Tips Telur:</strong> Sarankan telur dimasak Matang Sempurna agar proteinnya terserap 100% oleh tubuh.</p>
+                            <p style="font-size: 12px; color: #92400E; margin-top: 8px;"><i class="fas fa-lightbulb" style="margin-right: 8px;"></i><strong>Budget bukan halangan untuk langsing, yang terpenting adalah Defisit Kalori dan Konsistensi minum Herbal Kemoenik!</strong></p>
                         </div>
                     </div>
 
                     <!-- Weekly Evaluation Section -->
-                    <div class="eval-section mt-6" id="weeklyEvalSection">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="font-semibold"><i class="fas fa-clipboard-check mr-2 text-green-600"></i>Evaluasi Mingguan</div>
-                            <div class="text-sm text-gray-500" id="evalWeekDisplay">Minggu ke-1</div>
+                    <div style="margin-top: 32px;" id="weeklyEvalSection">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                            <div style="font-weight: 600;"><i class="fas fa-clipboard-check" style="margin-right: 8px; color: var(--primary);"></i>Evaluasi Mingguan</div>
+                            <div style="font-size: 13px; color: var(--text-muted);" id="evalWeekDisplay">Minggu ke-1</div>
                         </div>
-
                         <div class="weekly-eval-form">
-                            <div id="editModeIndicator" class="edit-mode-indicator" style="display: none;">
-                                <i class="fas fa-edit mr-1"></i> Mode Edit: Minggu <span id="editWeekNumber">1</span>
-                            </div>
-
+                            <div id="editModeIndicator" class="edit-mode-indicator" style="display: none;"><i class="fas fa-edit" style="margin-right: 4px;"></i> Mode Edit: Minggu <span id="editWeekNumber">1</span></div>
                             <div class="weekly-eval-grid">
                                 <div class="form-group">
                                     <label class="form-label">Berat Awal Minggu (kg)</label>
@@ -755,135 +732,80 @@
                                     <input type="number" id="weekEndWeight" class="form-input" step="0.1" placeholder="0.0" onchange="calculateWeeklyLoss()">
                                 </div>
                             </div>
-
                             <div class="weekly-result" id="weeklyResult" style="display: none;">
                                 <div class="weekly-result-title">Hasil Minggu Ini</div>
-                                <div class="weekly-result-item">
-                                    <span>Penurunan Berat:</span>
-                                    <span id="weightLossValue">0 kg</span>
-                                </div>
+                                <div class="weekly-result-item"><span>Penurunan Berat:</span><span id="weightLossValue">0 kg</span></div>
                             </div>
-
-                            <div class="mt-4">
+                            <div style="margin-top: 16px;">
                                 <label class="form-label">Kondisi Tubuh (Centang yang sesuai)</label>
                                 <div class="condition-grid">
-                                    <div class="condition-item" onclick="toggleCondition(this, 'energi')">
-                                        <div class="condition-checkbox"><i class="fas fa-check text-xs"></i></div>
-                                        <span class="condition-text">Energi Stabil</span>
-                                    </div>
-                                    <div class="condition-item" onclick="toggleCondition(this, 'nafsu')">
-                                        <div class="condition-checkbox"><i class="fas fa-check text-xs"></i></div>
-                                        <span class="condition-text">Nafsu Makan Terkontrol</span>
-                                    </div>
-                                    <div class="condition-item" onclick="toggleCondition(this, 'efek')">
-                                        <div class="condition-checkbox"><i class="fas fa-check text-xs"></i></div>
-                                        <span class="condition-text">Tidak Ada Efek Samping</span>
-                                    </div>
-                                    <div class="condition-item" onclick="toggleCondition(this, 'tidur')">
-                                        <div class="condition-checkbox"><i class="fas fa-check text-xs"></i></div>
-                                        <span class="condition-text">Tidur Cukup (7-8 jam)</span>
-                                    </div>
+                                    <div class="condition-item" onclick="toggleCondition(this, 'energi')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Energi Stabil</span></div>
+                                    <div class="condition-item" onclick="toggleCondition(this, 'nafsu')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Nafsu Makan Terkontrol</span></div>
+                                    <div class="condition-item" onclick="toggleCondition(this, 'efek')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Tidak Ada Efek Samping</span></div>
+                                    <div class="condition-item" onclick="toggleCondition(this, 'tidur')"><div class="condition-checkbox"><i class="fas fa-check" style="font-size: 10px;"></i></div><span class="condition-text">Tidur Cukup (7-8 jam)</span></div>
                                 </div>
                             </div>
-
                             <div class="obstacle-section">
                                 <label class="form-label">Ada kendala minggu ini?</label>
                                 <textarea id="weeklyObstacle" class="obstacle-textarea" placeholder="Ceritakan kendala atau tantangan yang Anda hadapi minggu ini..."></textarea>
                             </div>
-
-                            <div class="flex gap-3 mt-4 no-print">
-                                <button class="btn btn-primary" id="btnSaveEval" onclick="saveWeeklyEval()">
-                                    <i class="fas fa-save"></i> Simpan Evaluasi
-                                </button>
-                                <button class="btn btn-outline" id="btnCancelEdit" onclick="cancelEdit()" style="display: none;">
-                                    <i class="fas fa-times"></i> Batal Edit
-                                </button>
+                            <div style="display: flex; gap: 12px; margin-top: 16px;" class="no-print">
+                                <button class="btn btn-primary" id="btnSaveEval" onclick="saveWeeklyEval()"><i class="fas fa-save"></i>Simpan Evaluasi</button>
+                                <button class="btn btn-outline" id="btnCancelEdit" onclick="cancelEdit()" style="display: none;"><i class="fas fa-times"></i>Batal Edit</button>
+                                <button class="btn btn-outline" onclick="printWeeklyEval()"><i class="fas fa-print"></i>Cetak PDF</button>
+                            </div>
+                            <div style="margin-top: 16px; padding: 16px; background: #ECFDF5; border-radius: 8px; border: 1px solid #A7F3D0; text-align: center;" class="no-print">
+                                <p style="font-size: 13px; color: #065F46; margin-bottom: 8px;">Butuh bantuan atau konsultasi?</p>
+                                <a href="https://wa.me/6281546450547" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #059669; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: background 0.3s;"><i class="fab fa-whatsapp"></i>Hubungi Konsultan</a>
                             </div>
                         </div>
-
-                        <div id="weeklyHistory" class="mt-6 space-y-3"></div>
+                        <div id="weeklyHistory" style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;"></div>
                     </div>
 
-                    <!-- Tips Accordion -->
-                    <div class="mt-6">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-title">
-                                <div class="accordion-icon"><i class="fas fa-lightbulb"></i></div>
-                                Tips Sukses Diet
-                            </div>
-                            <i class="fas fa-chevron-down accordion-arrow"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="tips-grid">
-                                <div class="tip-card">
-                                    <div class="tip-icon text-blue-500"><i class="fas fa-tint"></i></div>
-                                    <div class="tip-title">Hidrasi</div>
-                                    <div class="tip-desc">Minum 8 gelas air putih sepanjang hari</div>
-                                </div>
-                                <div class="tip-card">
-                                    <div class="tip-icon text-green-500"><i class="fas fa-bed"></i></div>
-                                    <div class="tip-title">Tidur</div>
-                                    <div class="tip-desc">Istirahat 7-8 jam untuk metabolisme optimal</div>
-                                </div>
-                                <div class="tip-card">
-                                    <div class="tip-icon text-yellow-500"><i class="fas fa-walking"></i></div>
-                                    <div class="tip-title">Aktivitas</div>
-                                    <div class="tip-desc">Minimal 30 menit aktivitas fisik</div>
-                                </div>
-                                <div class="tip-card">
-                                    <div class="tip-icon text-red-500"><i class="fas fa-ban"></i></div>
-                                    <div class="tip-title">Hindari</div>
-                                    <div class="tip-desc">Gula, gorengan, & minuman bersoda</div>
-                                </div>
-                            </div>
+                    <!-- Tips -->
+                    <div style="margin-top: 24px;">
+                        <h4 style="font-weight: 600; margin-bottom: 16px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Tips Sukses Diet</h4>
+                        <div class="tips-grid">
+                            <div class="tip-card"><div class="tip-icon" style="color: #3B82F6;"><i class="fas fa-tint"></i></div><div class="tip-title">Hidrasi</div><div class="tip-desc">Minum 8 gelas air putih sepanjang hari</div></div>
+                            <div class="tip-card"><div class="tip-icon" style="color: #22C55E;"><i class="fas fa-bed"></i></div><div class="tip-title">Tidur</div><div class="tip-desc">Istirahat 7-8 jam untuk metabolisme optimal</div></div>
+                            <div class="tip-card"><div class="tip-icon" style="color: #F59E0B;"><i class="fas fa-walking"></i></div><div class="tip-title">Aktivitas</div><div class="tip-desc">Minimal 30 menit aktivitas fisik</div></div>
+                            <div class="tip-card"><div class="tip-icon" style="color: #EF4444;"><i class="fas fa-ban"></i></div><div class="tip-title">Hindari</div><div class="tip-desc">Gula, gorengan, & minuman bersoda</div></div>
                         </div>
                     </div>
-                    
-                    <!-- Buy Button -->
-                    <div class="mt-6 p-4 bg-red-50 rounded-lg border-2 border-red-200">
-                        <div class="flex items-center gap-2 mb-3">
-                            <i class="fas fa-exclamation-circle text-red-500"></i>
-                            <span class="text-sm font-semibold text-red-700">STOK MENIPIS!</span>
+
+                    <!-- Tombol Beli Lagi -->
+                    <div style="margin-top: 32px; padding: 24px; background: linear-gradient(to right, #FFF7ED, #FEF2F2); border-radius: 12px; border: 1px solid #FED7AA;" class="no-print">
+                        <h4 style="font-weight: 600; color: #9A3412; margin-bottom: 16px; text-align: center;"><i class="fas fa-shopping-cart" style="margin-right: 8px;"></i>Stok Kapsul Menipis?</h4>
+                        <div class="shop-buttons">
+                            <a href="https://s.shopee.co.id/4VXlRpSx3t" target="_blank" class="shop-btn shopee"><i class="fas fa-shopping-bag"></i>Beli di Shopee</a>
+                            <a href="https://vt.tiktok.com/ZS9deV3a9Mxea-W7dhT/" target="_blank" class="shop-btn tiktok-shop"><i class="fab fa-tiktok"></i>Beli di TikTok</a>
                         </div>
-                        <p class="text-sm text-gray-600 mb-3">Dapatkan herbal KEMOENIK original sekarang:</p>
-                        <div class="flex flex-col gap-2">
-                            <a href="https://s.shopee.co.id/4VXlRpSx3t" target="_blank" class="btn btn-primary" style="text-decoration: none;">
-                                <i class="fas fa-shopping-cart"></i> Beli di Shopee
-                            </a>
-                            <a href="https://vt.tiktok.com/ZS9deV3a9Mxea-W7dhT/" target="_blank" class="btn btn-outline" style="text-decoration: none;">
-                                <i class="fab fa-tiktok"></i> Beli di TikTok Shop
-                            </a>
-                        </div>
+                        <div class="stock-warning"><i class="fas fa-exclamation-circle"></i>Stok menipis! Jangan sampai kehabisan kapsul KEMOENIK</div>
                     </div>
                 </div>
             </div>
-
+            
             <!-- Consultation Info -->
             <div class="consultation-card animate-fade-in delay-300 no-print">
                 <div class="consultation-badge">Gratis Konsultasi</div>
                 <h3 class="consultation-title font-display">Butuh Pendampingan?</h3>
                 <p class="consultation-desc">Dapatkan konsultasi gratis dengan ahli gizi kami untuk memaksimalkan hasil program diet herbal Anda.</p>
-                <a href="https://wa.me/6281546450547" target="_blank" class="btn btn-gold" style="text-decoration: none; width: auto; display: inline-flex;">
-                    <i class="fab fa-whatsapp"></i> Hubungi Konsultan Sekarang
-                </a>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <a href="https://wa.me/6281546450547" target="_blank" class="btn btn-gold"><i class="fab fa-whatsapp"></i>Hubungi Konsultan Sekarang</a>
+                    <p style="font-size: 12px; opacity: 0.8;">Klik tombol di atas untuk terhubung via WhatsApp</p>
+                </div>
                 
-                <!-- Social Media Links -->
-                <div class="social-section mt-6">
-                    <a href="https://www.instagram.com/kemoenik26?igsh=aTU3ODg3Yzg3Nmkx" target="_blank" class="social-link">
-                        <i class="fab fa-instagram"></i> Instagram
-                    </a>
-                    <a href="https://www.tiktok.com/@kemoenik" target="_blank" class="social-link">
-                        <i class="fab fa-tiktok"></i> TikTok
-                    </a>
-                    <a href="https://t.me/+88Z09gVb4zowYjll" target="_blank" class="social-link">
-                        <i class="fab fa-telegram"></i> Grup Pejuang Diet
-                    </a>
+                <!-- Social Links -->
+                <div class="social-links">
+                    <a href="https://www.instagram.com/kemoenik26?igsh=aTU3ODg3Yzg3Nmkx" target="_blank" class="social-link instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@kemoenik" target="_blank" class="social-link tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://t.me/+88Z09gVb4zowYjll" target="_blank" class="social-link telegram" title="Grup Pejuang Diet"><i class="fab fa-telegram-plane"></i></a>
                 </div>
             </div>
 
             <!-- Footer -->
-            <footer class="text-center text-gray-400 text-xs mt-8 pb-8">
-                <p class="mb-2">CALFATLOSS - Smart Nutrition System</p>
+            <footer style="text-align: center; color: #9CA3AF; font-size: 12px; margin-top: 32px; padding-bottom: 32px;">
+                <p style="margin-bottom: 8px;">CALFATLOSS - Smart Nutrition System</p>
                 <p>Hasil estimasi, konsultasikan dengan ahli gizi untuk kondisi khusus</p>
             </footer>
 
@@ -899,109 +821,58 @@
         let weeklyHistory = [];
         let editingIndex = -1;
         const deficitMap = { 'ringan': 300, 'standar': 500, 'agresif': 700 };
-        const activityDescriptions = {
-            '1.2': 'Kerja duduk, hampir tidak olahraga, aktivitas minim',
-            '1.375': 'Jalan 30 menit, yoga ringan, gym santai',
-            '1.55': 'Angkat beban rutin, lari 30-45 menit',
-            '1.725': 'Latihan intens tiap hari, pekerja fisik berat'
-        };
 
-        // FAQ Data
-        const faqData = {
-            'Input & Evaluasi Progres': [
-                { q: 'Kapan saya harus input berat badan terbaru?', a: 'Untuk melakukan pengukuran, saya sarankan setiap minggu akhir setelah kapsul habis ya kak, lebih tepatnya pagi setelah bangun tidur & buang air kecil (jangan lupa untuk mengisi evaluasi mingguannya).' },
-                { q: 'Kok berat badan saya belum turun di grafik?', a: 'Baik kak saya tegaskan bahwa lemak turun bisa jadi massa otot naik, tetap konsisten untuk menjalankan programnya, jangan lupa untuk dibaca semua panduannya.' },
-                { q: 'Saya salah masukkan angka timbangan, gimana cara ubahnya?', a: 'Jangan khawatir kak semua data bisa di edit dan dapat dihapus, semangat kak!' }
-            ],
-            'Konsumsi Kapsul & Reaksi Tubuh': [
-                { q: 'Kok belum turun di hari ke-5-7?', a: 'Baik kak tenang dulu ya kak, untuk Proses detoks tiap orang itu beda-beda yaa, ada yang cepet ada yang lambat, yang terpenting kakak ikuti program ini supaya dapat hasil maksimal, semangat kak.' },
-                { q: 'Kapan waktu terbaik minum kapsul Kemoenik?', a: 'Waktu terbaik untuk meminum kapsul KEMOENIK dianjurkan sesudah makan ya kak.' },
-                { q: 'Kenapa saya jadi sering buang air kecil (pipis)?', a: 'Itu adalah reaksi normal dari kandungan Tempuyung yang bersifat diuretik alami untuk membuang kelebihan cairan dan toksin (detoks) dalam tubuh. Pastikan minum air putih 2-3 liter sehari.' },
-                { q: 'BAB jadi lebih lunak, apakah ini diare?', a: 'Bukan diare ya kak, itu merupakan efek peluruhan lemak dari kandungan Jati Belanda, maka jangan khawatir yaa tetap semangat dan konsisten.' },
-                { q: 'Lagi haid/menstruasi, boleh tetap minum?', a: 'Sarankan jeda di hari 1-3.' },
-                { q: 'Apakah bikin diare atau bolak-balik ke kamar mandi (BAB)?', a: 'Kandungan Jati Belanda membantu melancarkan pencernaan, namun tidak menyebabkan diare hebat jika dosis diikuti sesuai panduan. Tekstur BAB mungkin akan lebih lunak karena lemak yang terbuang.' }
-            ],
-            'Teknis Pelaksanaan Diet': [
-                { q: 'Saya alergi/tidak suka menu hari ini, boleh diganti apa?', a: 'Boleh banget kak, kami sudah siapkan plan pengantenyasih di ek aja ya kak, kalau tidak suka semua menu boleh diganti asal defisit kalori yaa, semangat kak.' },
-                { q: 'Boleh sarapan jam 9 pagi atau makan malam jam 8 malam?', a: 'Boleh, asal defisit kalori terjaga, tapi kami sarankan untuk maksimal makan malam itu di jam 7 yaa, kalau ga keburu saya sarankan makan sore aja biar malam ga makan, semangat ya kak.' },
-                { q: 'Bagaimana kalau hari ini saya ada acara makan-makan (kondangan)?', a: 'Gapapa kak untuk sekali kali asal dibarengi olahraga dan defisit kalori yaa dan jangan lupa minum kapsul KEMOENIK sebelum makan pesta agar lemak tidak langsung terserap, lalu kembali ke menu normal besoknya, semangat kak.' },
-                { q: 'Kalau saya Cheating (makan sembarangan) sehari, apakah programnya gagal?', a: 'Jangan menyerah! Lanjutkan saja program di hari berikutnya. Kapsul KEMOENIK akan membantu mengikat lemak dari makanan cheating tersebut, tapi jangan sering-sering ya Kak!' },
-                { q: 'Kenapa saya disuruh minum air putih terus?', a: 'Untuk menghindari haus berlebih, dikarenakan ada efek detoksifikasi herbal Kemoenik kak, makanya biar menjaga tidak dehidrasi disarankan minum 2 liter/hari disesuaikan dengan aktivitas ya.' }
-            ],
-            'Aturan Pakai & Kondisi Khusus': [
-                { q: 'Boleh minum lebih dari 6 kapsul/hari sekaligus agar cepat turun?', a: 'Saya sarankan tetap mengikuti anjuran 6 kapsul/hari dan ikuti pemakaianya sesuai panduan.' },
-                { q: 'Boleh saat haid? Aman untuk Busui?', a: 'Untuk haid lakukan jeda saat haid H1-3 dulu ya kak, untuk Busui kami anjurkan jangan dulu ya, dikarenakan KEMOENIK ini peluntur lemak.' },
-                { q: 'Boleh minum bersama obat dokter/kopi?', a: 'Boleh kak saya sarankan untuk memberi jeda sekitar 30 menitan ya kak.' },
-                { q: 'Apakah bikin ketergantungan atau efek samping jantung berdebar?', a: 'KEMOENIK 100% herbal tanpa BKO (Bahan Kimia Obat). Tidak membuat jantung berdebar karena fokus pada metabolisme alami, bukan stimulan kimia.' }
-            ],
-            'Detail Kandungan & Efek Samping': [
-                { q: 'Kenapa setelah minum ini dan ikut menu diet, pipis saya jadi kuning pekat?', a: 'Itu efek alami dari Temulawak dan Teh Hijau yang sedang bekerja mendetoksifikasi tubuh. Pastikan minum air putih sesuai anjuran secara bertahap, semangat kak.' },
-                { q: 'Ada komunitas atau grup WA buat pejuang diet KEMOENIK?', a: 'Ada Kak! Klik tombol Gabung Komunitas di bawah menu. Di sana Kakak bisa berbagi foto menu makan dan saling menyemangati dengan pengguna lain.' }
-            ],
-            'Masalah Durasi & Konsistensi': [
-                { q: 'Kalau voucher saya habis (Hari ke-8) tapi saya belum beli botol baru, data saya hilang?', a: 'Data Kakak tetap aman di server kami selamanya! Jika kakak sudah menyimpan data di evaluasi mingguan, Kakak bisa mengaksesnya kembali kapan saja setelah memasukkan kode voucher baru dari pembelian berikutnya.' }
-            ],
-            'Masalah Sinkronisasi Data': [
-                { q: 'Kenapa berat badan saya di grafik tidak berubah padahal sudah saya update?', a: 'Pastikan Kakak klik tombol Simpan Progres di bawah tabel evaluasi. Coba refresh halaman browser Kakak agar data terbaru ditarik dari server kami.' }
-            ],
-            'Seputar Gejala Selama Program': [
-                { q: 'Aman tidak kalau saya olahraga berat sambil minum kapsul ini?', a: 'Sangat aman kak! Justru olahraga akan mempercepat pembakaran lemak. Jika merasa pusing, kurangi intensitasnya dan pastikan porsi karbohidrat di menu harian Anda sudah habis dikonsumsi.' }
-            ],
-            'Pertanyaan Khusus Fitur CALCULATOR FAT LOSS': [
-                { q: 'Data saya di website CALCULATOR FAT LOSS aman tidak?', a: 'Data berat badan dan progres Anda hanya digunakan untuk sistem kalkulator diet personal Anda dan tidak akan disebarluaskan.' },
-                { q: 'Kenapa perhitungan kalori saya berbeda dengan teman saya?', a: 'Sistem CALCULATOR FAT LOSS menghitung secara personal berdasarkan usia, tinggi, dan aktivitas Anda agar diet tidak membuat lemas namun tetap efektif membakar lemak.' }
-            ],
-            'Pertanyaan Gaya Hidup (Lifestyle)': [
-                { q: 'Apakah harus olahraga ketat supaya turun?', a: 'Produk kami membantu metabolisme dan peluruhan lemak dari dalam, namun untuk hasil body goals yang kencang, aktivitas fisik ringan 15-30 menit sangat disarankan seperti yang ada di Menu Panduan CALCULATOR FAT LOSS.' },
-                { q: 'Apakah setelah berhenti minum BB akan naik drastis (Yoyo Effect)?', a: 'Tidak, asalkan Anda tetap menjaga pola makan sesuai Edukasi Menu di web kami. KEMOENIK membantu mengecilkan lambung secara alami sehingga nafsu makan lebih terkontrol.' }
-            ],
-            'Pertanyaan Seputar Hasil (Ekspektasi)': [
-                { q: 'Berapa hari bisa kelihatan hasilnya?', a: 'Setiap metabolisme berbeda-beda, namun rata-rata pengguna mulai merasakan badan lebih ringan dan lingkar perut berkurang dalam 7-14 hari jika mengikuti Menu Diet di CALCULATOR FAT LOSS.' }
-            ]
-        };
+        // Notification
+        function closeNotification() {
+            document.getElementById('guideNotification').style.display = 'none';
+        }
 
-        // Menu Data
-        const menuEkonomisData = [
-            { hari: 1, sarapan: '2 Telur Rebus + 1 Pisang', snackPagi: 'Jeruk Lokal + Kacang Tanah', siang: 'Nasi Putih + Tahu/Tempe Bacem + Sayur Bayam', snackSore: 'Pepaya Potong', malam: 'Ikan Kembung Bakar + Labu Siam + Kentang' },
-            { hari: 2, sarapan: '2 Telur Rebus + 1 Ubi Cilembu', snackPagi: 'Pisang Goreng (Air Fryer)', siang: 'Nasi Putih + Orek Tempe + Sayur Asem', snackSore: 'Singkong Rebus', malam: 'Ayam Bakar (Tanpa Kulit) + Lalapan + Sambal' },
-            { hari: 3, sarapan: '2 Telur Rebus + Jagung Rebus', snackPagi: 'Buah Semangka', siang: 'Bihun Jagung + Telur Dadar + Tumis Kangkung', snackSore: 'Kacang Hijau (No Santan)', malam: 'Ikan Lele Bakar + Cah Genjer + Nasi Putih' },
-            { hari: 4, sarapan: '2 Telur Rebus + Singkong Rebus', snackPagi: 'Buah Melon', siang: 'Nasi Putih + Pepes Tahu + Sayur Lodeh (Bening)', snackSore: 'Jagung Manis Pipil', malam: 'Telur Ceplok Air + Tumis Sawi Putih + Kentang' },
-            { hari: 5, sarapan: '2 Telur Rebus + Roti Tawar', snackPagi: 'Salak 2 butir', siang: 'Nasi Putih + Pindang Tongkol + Sayur Sop', snackSore: 'Pisang Rebus', malam: 'Pepes Jamur + Tahu Kuning + Sambal' },
-            { hari: 6, sarapan: '2 Telur Rebus + Pepaya', snackPagi: 'Bengkoang', siang: 'Nasi Putih + Ayam Suwir + Tumis Kacang Panjang', snackSore: 'Edamame Rebus', malam: 'Ikan Mujair Goreng + Wortel & Buncis Rebus' },
-            { hari: 7, sarapan: '2 Telur Rebus + 1/2 Alpukat', snackPagi: 'Jambu Air', siang: 'Gado-Gado (Bumbu Sedikit) + Lontong', snackSore: 'Kerupuk Putih (1)', malam: 'Sup Ceker Ayam + Sayuran + Nasi Putih' },
-            { hari: 8, sarapan: '2 Telur Rebus + Ubi Ungu', snackPagi: 'Buah Naga 1/2', siang: 'Nasi Putih + Ikan Asin Kecil + Sayur Kelor', snackSore: 'Pisang Ambon', malam: 'Ayam Bumbu Kuning + Sambal + Lalap' },
-            { hari: 9, sarapan: '2 Telur Rebus + Bubur Sumsum', snackPagi: 'Mangga Lokal', siang: 'Nasi Putih + Tumis Kerang + Daun Singkong', snackSore: 'Bakwan Sayur (1)', malam: 'Ikan Nila Bakar + Tumis Terong + Nasi Putih' },
-            { hari: 10, sarapan: '2 Telur Rebus + Pisang Kukus', snackPagi: 'Kurma 3 butir', siang: 'Nasi Putih + Kentang Balado + Sayur Sop', snackSore: 'Ketan Putih (Sedikit)', malam: 'Ayam Ungkep + Sayur Gambas + Nasi Putih' }
-        ];
+        // Toggle Functions
+        function toggleCard(bodyId) {
+            const body = document.getElementById(bodyId);
+            const chevron = document.getElementById(bodyId + '-chevron');
+            body.classList.toggle('active');
+            if (chevron) chevron.classList.toggle('rotated');
+        }
 
-        const menuStandardData = [
-            { hari: 1, sarapan: '2 Telur Rebus + Pisang Cavendish', snackPagi: 'Apel Merah + Almond', siang: 'Nasi Merah + Dada Ayam Grill + Buncis', snackSore: 'Yogurt Plain + Granola', malam: 'Ikan Kakap Kukus + Salad + Kentang' },
-            { hari: 2, sarapan: '2 Telur Rebus + Oatmeal', snackPagi: 'Pear + Kacang Mete', siang: 'Nasi Merah + Sapi Lada Hitam + Pakcoy', snackSore: 'Smoothie Pisang', malam: 'Steak Ayam + Mix Veggies + Mashed Potato' },
-            { hari: 3, sarapan: '2 Telur Rebus + Roti Gandum', snackPagi: 'Kiwi + Pistachio', siang: 'Pasta Gandum + Udang + Brokoli', snackSore: 'Protein Bar', malam: 'Ikan Dory Panggang + Asparagus + Jagung' },
-            { hari: 4, sarapan: '2 Telur Rebus + Buah Naga', snackPagi: 'Anggur + Keju Slice', siang: 'Nasi Merah + Ayam Teriyaki + Stir Fry Sayur', snackSore: 'Salad Buah Low Fat', malam: 'Sup Ikan Batam + Sawi + Nasi Merah' },
-            { hari: 5, sarapan: '2 Telur Rebus + Sereal Gandum', snackPagi: 'Jeruk Sunkist + Edamame', siang: 'Nasi Merah + Ikan Gurame Bakar + Kangkung', snackSore: 'Dark Chocolate', malam: 'Beef Patty (Homemade) + Salad + Ubi' },
-            { hari: 6, sarapan: '2 Telur Rebus + Pancake Protein', snackPagi: 'Blueberry + Almond', siang: 'Nasi Merah + Opor Ayam (Low Fat) + Labu', snackSore: 'Greek Yogurt', malam: 'Ayam Bakar Taliwang + Plecing + Nasi Merah' },
-            { hari: 7, sarapan: '2 Telur Rebus + Smoothie Bowl', snackPagi: 'Strawberry + Kuaci', siang: 'Sandwich Gandum + Tuna + Selada', snackSore: 'Jus Alpukat (No Sugar)', malam: 'Ikan Bawal Bakar + Tumis Jamur + Nasi Merah' },
-            { hari: 8, sarapan: '2 Telur Rebus + Muesli', snackPagi: 'Apel Hijau + Peanut Butter', siang: 'Nasi Merah + Ayam Rosemary + Wortel', snackSore: 'Puding Chia Seed', malam: 'Salad Caesar + Ayam Grill + Telur Rebus' },
-            { hari: 9, sarapan: '2 Telur Rebus + Alpukat Kocok', snackPagi: 'Melon + Granola Bar', siang: 'Nasi Merah + Semur Daging + Sawi', snackSore: 'Smoothie Nanas', malam: 'Ikan Nila Asam Manis + Brokoli + Nasi Merah' },
-            { hari: 10, sarapan: '2 Telur Rebus + Granola', snackPagi: 'Pisang + Selai Kacang', siang: 'Nasi Merah + Udang Saus Tiram + Capcay', snackSore: 'Yogurt Drink', malam: 'Steak Tempe & Daging + Salad + Kentang' }
-        ];
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const header = content.previousElementSibling;
+            content.classList.toggle('active');
+            header.classList.toggle('active');
+        }
 
-        const menuPremiumData = [
-            { hari: 1, sarapan: '2 Telur Rebus + Alpukat Mentega', snackPagi: 'Mix Berries + Walnut', siang: 'Quinoa + Salmon Steak + Asparagus', snackSore: 'Greek Yogurt + Chia Seed', malam: 'Tuna Seared + Edamame Salad + Ubi Ungu' },
-            { hari: 2, sarapan: '2 Telur Rebus + Smoked Salmon', snackPagi: 'Cherry + Macadamia', siang: 'Shirataki Rice + Wagyu Beef + Kale', snackSore: 'Smoothie Kale & Whey', malam: 'Lobster Grilled + Salad Organik + Baby Potato' },
-            { hari: 3, sarapan: '2 Telur Rebus + Almond Butter Toast', snackPagi: 'Buah Tin (Fig) + Pecans', siang: 'Brown Rice + Gindara Grill + Baby Corn', snackSore: 'Cold Pressed Juice', malam: 'Scallops + Puree Kembang Kol + Edamame' },
-            { hari: 4, sarapan: '2 Telur Rebus + Dragon Fruit Bowl', snackPagi: 'Raspberry + Almonds', siang: 'Quinoa + Bebek Panggang + Bok Choy', snackSore: 'Sorbet Buah Asli', malam: 'Sirloin Steak + Truffle Veggies + Sweet Potato' },
-            { hari: 5, sarapan: '2 Telur Rebus + Sourdough Toast', snackPagi: 'Delima (Pomegranate)', siang: 'Shirataki Rice + Kepiting Soka + Wakame', snackSore: 'Matcha Latte (Almond)', malam: 'Grilled Cod Fish + Zucchini Noodles + Quinoa' },
-            { hari: 6, sarapan: '2 Telur Rebus + Acai Bowl', snackPagi: 'Blackberry + Pistachio', siang: 'Quinoa + Lamb Chop + Paprika', snackSore: 'Greek Yogurt + Honey', malam: 'Salmon Sashimi + Salad Wakame + Sup Miso' },
-            { hari: 7, sarapan: '2 Telur Rebus + Chia Pudding', snackPagi: 'Peach + Brazil Nuts', siang: 'Shirataki Rice + Udang Galah + Asparagus', snackSore: 'Keto Cake Slice', malam: 'Roasted Turkey + Brussel Sprouts + Pumpkin' },
-            { hari: 8, sarapan: '2 Telur Rebus + Guacamole', snackPagi: 'Apricot + Hazelnuts', siang: 'Brown Rice + Barramundi + Salad Organik', snackSore: 'Smoothie Avocado', malam: 'Tenderloin Steak + Mushroom + Baby Carrot' },
-            { hari: 9, sarapan: '2 Telur Rebus + Quinoa Porridge', snackPagi: 'Blueberries + Pine Nuts', siang: 'Shirataki Rice + Venison (Rusa) + Kale', snackSore: 'Almond Milk Pudding', malam: 'Grilled Octopus + Salad Mediterania + Hummus' },
-            { hari: 10, sarapan: '2 Telur Rebus + Protein Muffin', snackPagi: 'Goji Berries + Walnut', siang: 'Quinoa + Chicken Sous Vide + Brokoli', snackSore: 'Coconut Water', malam: 'Sea Bass Grill + Salad Quinoa + Mashed Potato' }
-        ];
+        function toggleHerbalDetail(id) {
+            // Hide all details first
+            document.querySelectorAll('.herbal-detail').forEach(d => d.classList.remove('active'));
+            document.querySelectorAll('.herbal-item').forEach(i => i.classList.remove('active'));
+            
+            // Show selected
+            const detail = document.getElementById('detail-' + id);
+            const item = event.currentTarget;
+            if (detail) {
+                detail.classList.add('active');
+                item.classList.add('active');
+            }
+        }
 
-        // ACCESS CONTROL
-        window.addEventListener('load', () => {
+        function switchMenuTab(tab) {
+            document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.menu-table-container').forEach(c => c.style.display = 'none');
+            document.getElementById('menu-' + tab).style.display = 'block';
+        }
+
+        function showActivityDesc() {
+            // Auto open accordion when activity selected
+            const accordion = document.getElementById('activityAccordion');
+            if (!accordion.classList.contains('active')) {
+                toggleAccordion('activityAccordion');
+            }
+        }
+
+        // Access Control
+        window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const waFromUrl = urlParams.get('wa');
             const voucherFromUrl = urlParams.get('voucher');
@@ -1010,21 +881,18 @@
                 const savedWA = localStorage.getItem('calfatloss_wa');
                 const savedVoucher = localStorage.getItem('calfatloss_voucher');
                 if (!savedWA) { showAccessDenied(); return; }
-                currentWA = savedWA;
-                currentVoucher = savedVoucher || '';
+                currentWA = savedWA; currentVoucher = savedVoucher || '';
             } else {
-                currentWA = waFromUrl;
-                currentVoucher = voucherFromUrl || '';
+                currentWA = waFromUrl; currentVoucher = voucherFromUrl || '';
                 localStorage.setItem('calfatloss_wa', currentWA);
                 localStorage.setItem('calfatloss_voucher', currentVoucher);
             }
             
-            const isNewProgram = localStorage.getItem(`calfatloss_newprogram_${currentWA}`);
+            const isNewProgram = localStorage.getItem('calfatloss_newprogram_' + currentWA);
             if (isNewProgram === 'true') {
-                localStorage.removeItem(`calfatloss_weekly_${currentWA}`);
-                localStorage.removeItem(`calfatloss_newprogram_${currentWA}`);
+                localStorage.removeItem('calfatloss_weekly_' + currentWA);
+                localStorage.removeItem('calfatloss_newprogram_' + currentWA);
             }
-            
             initializeApp();
         });
 
@@ -1041,17 +909,12 @@
             document.getElementById('accessDenied').style.display = 'none';
             document.getElementById('mainApp').classList.remove('section-hidden');
             document.getElementById('mainApp').classList.add('section-visible');
-            document.getElementById('userWADisplay').textContent = `WA: ${currentWA}`;
-            
             loadUserData();
-            generateFAQ();
-            generateMenuTables();
         }
 
         function loadUserData() {
-            const saved = localStorage.getItem(`calfatloss_data_${currentWA}`);
-            const savedWeekly = localStorage.getItem(`calfatloss_weekly_${currentWA}`);
-            
+            const saved = localStorage.getItem('calfatloss_data_' + currentWA);
+            const savedWeekly = localStorage.getItem('calfatloss_weekly_' + currentWA);
             if (saved) {
                 const data = JSON.parse(saved);
                 userData = data;
@@ -1060,30 +923,24 @@
                 if (data.usia) document.getElementById('inputUsia').value = data.usia;
                 if (data.berat) document.getElementById('inputBerat').value = data.berat;
                 if (data.tinggi) document.getElementById('inputTinggi').value = data.tinggi;
-                if (data.aktivitas) {
-                    document.getElementById('inputAktivitas').value = data.aktivitas;
-                    updateActivityDesc();
-                }
+                if (data.aktivitas) document.getElementById('inputAktivitas').value = data.aktivitas;
                 if (data.target) document.getElementById('inputTarget').value = data.target;
                 if (data.metode) document.getElementById('inputMetode').value = data.metode;
-                if (data.nama && data.gender) { calculateAndShowProgram(false); }
+                if (data.nama && data.gender) calculateAndShowProgram(false);
             }
-            
-            if (savedWeekly) {
-                weeklyHistory = JSON.parse(savedWeekly);
-                renderWeeklyHistory();
-            }
+            if (savedWeekly) { weeklyHistory = JSON.parse(savedWeekly); renderWeeklyHistory(); }
         }
 
-        function saveUserData() { localStorage.setItem(`calfatloss_data_${currentWA}`, JSON.stringify(userData)); }
-        function saveWeeklyData() { localStorage.setItem(`calfatloss_weekly_${currentWA}`, JSON.stringify(weeklyHistory)); }
+        function saveUserData() { localStorage.setItem('calfatloss_data_' + currentWA, JSON.stringify(userData)); }
+        function saveWeeklyData() { localStorage.setItem('calfatloss_weekly_' + currentWA, JSON.stringify(weeklyHistory)); }
 
         function calculateBMR(gender, weight, height, age) {
-            if (gender === 'pria') { return (10 * weight) + (6.25 * height) - (5 * age) + 5; }
-            else { return (10 * weight) + (6.25 * height) - (5 * age) - 161; }
+            return gender === 'pria' ? (10 * weight) + (6.25 * height) - (5 * age) + 5 : (10 * weight) + (6.25 * height) - (5 * age) - 161;
         }
 
-        function calculateAndShowProgram(shouldScroll = true) {
+        function calculateAndShowProgram(shouldScroll) {
+            if (shouldScroll === undefined) shouldScroll = true;
+            
             userData.nama = document.getElementById('inputNama').value;
             userData.gender = document.getElementById('inputGender').value;
             userData.usia = parseFloat(document.getElementById('inputUsia').value);
@@ -1104,7 +961,7 @@
             userData.dietCal = Math.max(1200, userData.tdee - deficit);
             const weeklyLoss = (deficit * 7) / 7700;
             userData.weeks = Math.ceil((userData.berat - userData.target) / weeklyLoss);
-
+            
             const today = new Date();
             const targetDate = new Date(today);
             targetDate.setDate(today.getDate() + (userData.weeks * 7));
@@ -1122,7 +979,8 @@
             
             document.getElementById('programSection').classList.remove('section-hidden');
             document.getElementById('programSection').classList.add('section-visible');
-            if (shouldScroll) { setTimeout(() => { document.getElementById('programSection').scrollIntoView({ behavior: 'smooth' }); }, 100); }
+            
+            if (shouldScroll) setTimeout(function() { document.getElementById('programSection').scrollIntoView({ behavior: 'smooth' }); }, 100);
         }
 
         function updateCalculatorUI() {
@@ -1133,45 +991,27 @@
             document.getElementById('heroLoss').textContent = userData.metode === 'agresif' ? '0.7-1' : (userData.metode === 'ringan' ? '0.3-0.5' : '0.5-0.7');
             document.getElementById('dateEstimate').style.display = 'block';
             document.getElementById('targetDateDisplay').textContent = userData.targetDate;
+            document.getElementById('targetKcalDisplay').textContent = Math.round(userData.dietCal);
         }
 
         function generateTimeline() {
             const timeline = document.getElementById('dietTimeline');
             timeline.innerHTML = '';
-
             const phases = [
                 { week: 1, title: 'Fase Detox (Minggu 1)', desc: 'Adaptasi metabolisme. Mulai konsumsi 2x3 kapsul herbal sesudah makan (pagi & malam). Fokus pengurangan gula.' },
                 { week: 2, title: 'Fase Aktivasi (Minggu 2)', desc: 'Metabolisme meningkat. Berat turun 0.5-1kg. Konsisten minum 6 kapsul/hari. Aktivitas: jalan kaki + latihan lymphatic.' },
                 { week: 3, title: 'Fase Pembakaran (Minggu 3-4)', desc: 'Lemak terbakar efektif. Sinergi diet + herbal optimal. Rutin latihan lymphatic untuk drainase optimal.' },
                 { week: 6, title: 'Evaluasi Tengah (Minggu 6)', desc: 'Cek progress. Gunakan lembar evaluasi mingguan. Jika stagnan, konsultasi gratis tersedia.' },
-                { week: userData.weeks, title: 'Target Tercapai!', desc: `Selamat ${userData.nama}! Capai target ${userData.target}kg pada ${userData.targetDate}.`, isLast: true }
+                { week: userData.weeks, title: 'Target Tercapai!', desc: 'Selamat ' + userData.nama + '! Capai target ' + userData.target + 'kg pada ' + userData.targetDate + '. Lanjutkan ke FASE MAINTENANCE: Turun dosis herbal jadi 2x2 kapsul/hari.' }
             ];
 
-            phases.forEach((phase) => {
-                const dotClass = phase.isLast ? 'active' : '';
-                let maintenanceNote = '';
-                if (phase.isLast) {
-                    maintenanceNote = `
-                        <div class="maintenance-note">
-                            <strong>FASE MAINTENANCE:</strong> Setelah mencapai target, turunkan dosis herbal menjadi 2x2 kapsul/hari. 
-                            Maintenance adalah fase menjaga berat badan agar tidak naik kembali (yoyo effect). 
-                            Tetap pertahankan pola makan sehat dan aktivitas fisik ringan.
-                        </div>`;
-                }
-                
-                const html = `
-                    <div class="timeline-item">
-                        <div class="timeline-dot ${dotClass}">${phase.isLast ? '<i class="fas fa-flag"></i>' : phase.week}</div>
-                        <div class="timeline-content">
-                            <h4>${phase.title}</h4>
-                            <p>${phase.desc}</p>
-                            ${maintenanceNote}
-                        </div>
-                    </div>`;
-                timeline.innerHTML += html;
+            phases.forEach(function(phase, index) {
+                const isLast = index === phases.length - 1;
+                const dotClass = isLast ? 'active' : '';
+                timeline.innerHTML += '<div class="timeline-item"><div class="timeline-dot ' + dotClass + '">' + (isLast ? '<i class="fas fa-flag"></i>' : phase.week) + '</div><div class="timeline-content"><h4>' + phase.title + '</h4><p>' + phase.desc + '</p></div></div>';
             });
 
-            setTimeout(() => {
+            setTimeout(function() {
                 const circle = document.getElementById('progressCircle');
                 const radius = circle.r.baseVal.value;
                 const circumference = radius * 2 * Math.PI;
@@ -1184,129 +1024,27 @@
         function generateMealPlan() {
             const container = document.getElementById('mealContainer');
             document.getElementById('mealTargetCal').textContent = Math.round(userData.dietCal) + ' kcal';
-            
             const meals = [
-                { time: '07:00', title: 'Sarapan (25%)', cal: Math.round(userData.dietCal * 0.25), menu: `2 Telur rebus + 1 Pisang + 3 kapsul herbal sesudah makan` },
-                { time: '10:00', title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), menu: `Buah segar (apel/jeruk) + kacang almond 10 butir` },
-                { time: '12:00', title: 'Makan Siang (30%)', cal: Math.round(userData.dietCal * 0.30), menu: `Nasi merah 100g + dada ayam 150g + sayur tumis` },
-                { time: '15:00', title: 'Snack Sore (10%)', cal: Math.round(userData.dietCal * 0.10), menu: `Yogurt plain + granola atau smoothie green` },
-                { time: '18:00', title: 'Makan Malam (25%)', cal: Math.round(userData.dietCal * 0.25), menu: `Ikan kukus 150g + salad sayur + kentang rebus + 3 kapsul herbal sesudah makan` }
+                { time: '07:00', title: 'Sarapan (25%)', cal: Math.round(userData.dietCal * 0.25), menu: '2 Telur rebus + 1 Pisang + 3 kapsul herbal sesudah makan' },
+                { time: '10:00', title: 'Snack Pagi (10%)', cal: Math.round(userData.dietCal * 0.10), menu: 'Buah segar (apel/jeruk) + kacang almond 10 butir' },
+                { time: '12:00', title: 'Makan Siang (30%)', cal: Math.round(userData.dietCal * 0.30), menu: 'Nasi merah 100g + dada ayam 150g + sayur tumis' },
+                { time: '15:00', title: 'Snack Sore (10%)', cal: Math.round(userData.dietCal * 0.10), menu: 'Yogurt plain + granola atau smoothie green' },
+                { time: '18:00', title: 'Makan Malam (25%)', cal: Math.round(userData.dietCal * 0.25), menu: 'Ikan kukus 150g + salad sayur + kentang rebus + 3 kapsul herbal sesudah makan' }
             ];
-
-            container.innerHTML = meals.map(meal => `
-                <div class="meal-card">
-                    <div class="meal-time-box">
-                        <div class="meal-time-label">JAM</div>
-                        <div class="meal-time-value">${meal.time}</div>
-                    </div>
-                    <div class="meal-content">
-                        <div class="meal-title">${meal.title}</div>
-                        <div class="meal-desc">${meal.menu}</div>
-                    </div>
-                    <div class="meal-cal">~${meal.cal}<br><small>kcal</small></div>
-                </div>
-            `).join('');
-        }
-
-        function generateFAQ() {
-            const container = document.getElementById('faqBeforeContent');
-            let html = '';
-            
-            for (const [category, questions] of Object.entries(faqData)) {
-                html += `<div class="faq-category">`;
-                html += `<div class="faq-category-title"><i class="fas fa-folder"></i> ${category}</div>`;
-                
-                questions.forEach((item, index) => {
-                    html += `
-                        <div class="faq-item">
-                            <div class="faq-question" onclick="toggleFAQ(this)">
-                                <span>${item.q}</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="faq-answer">${item.a}</div>
-                        </div>`;
-                });
-                
-                html += `</div>`;
-            }
-            
-            container.innerHTML = html;
-        }
-
-        function generateMenuTables() {
-            // Ekonomis
-            let htmlEkonomis = '<thead><tr><th>Hari</th><th>Sarapan</th><th>Snack Pagi</th><th>Makan Siang</th><th>Snack Sore</th><th>Makan Malam</th></tr></thead><tbody>';
-            menuEkonomisData.forEach(row => {
-                htmlEkonomis += `<tr><td><strong>${row.hari}</strong></td><td>${row.sarapan}</td><td>${row.snackPagi}</td><td>${row.siang}</td><td>${row.snackSore}</td><td>${row.malam}</td></tr>`;
-            });
-            htmlEkonomis += '</tbody>';
-            document.getElementById('menuEkonomisTable').innerHTML = htmlEkonomis;
-
-            // Standard
-            let htmlStandard = '<thead><tr><th>Hari</th><th>Sarapan</th><th>Snack Pagi</th><th>Makan Siang</th><th>Snack Sore</th><th>Makan Malam</th></tr></thead><tbody>';
-            menuStandardData.forEach(row => {
-                htmlStandard += `<tr><td><strong>${row.hari}</strong></td><td>${row.sarapan}</td><td>${row.snackPagi}</td><td>${row.siang}</td><td>${row.snackSore}</td><td>${row.malam}</td></tr>`;
-            });
-            htmlStandard += '</tbody>';
-            document.getElementById('menuStandardTable').innerHTML = htmlStandard;
-
-            // Premium
-            let htmlPremium = '<thead><tr><th>Hari</th><th>Sarapan</th><th>Snack Pagi</th><th>Makan Siang</th><th>Snack Sore</th><th>Makan Malam</th></tr></thead><tbody>';
-            menuPremiumData.forEach(row => {
-                htmlPremium += `<tr><td><strong>${row.hari}</strong></td><td>${row.sarapan}</td><td>${row.snackPagi}</td><td>${row.siang}</td><td>${row.snackSore}</td><td>${row.malam}</td></tr>`;
-            });
-            htmlPremium += '</tbody>';
-            document.getElementById('menuPremiumTable').innerHTML = htmlPremium;
-        }
-
-        // UI Functions
-        function closeNotification() {
-            document.getElementById('notificationBanner').classList.add('hidden');
-        }
-
-        function toggleAccordion(header) {
-            header.classList.toggle('active');
-            const content = header.nextElementSibling;
-            if (content && content.classList.contains('accordion-content')) {
-                content.classList.toggle('show');
-            }
-        }
-
-        function toggleFAQ(element) {
-            element.classList.toggle('active');
-            const answer = element.nextElementSibling;
-            if (answer && answer.classList.contains('faq-answer')) {
-                answer.classList.toggle('show');
-            }
-        }
-
-        function toggleHerbalDetail(card) {
-            card.classList.toggle('expanded');
-        }
-
-        function showMenuTab(tabName) {
-            document.querySelectorAll('.menu-tab-content').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById('menu' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).style.display = 'block';
-            event.target.classList.add('active');
-        }
-
-        function updateActivityDesc() {
-            const value = document.getElementById('inputAktivitas').value;
-            const desc = activityDescriptions[value] || 'Pilih level aktivitas untuk melihat keterangan';
-            // This is now in accordion, so we don't need the description below select
+            container.innerHTML = meals.map(function(meal) {
+                return '<div class="meal-card"><div class="meal-time-box"><div class="meal-time-label">JAM</div><div class="meal-time-value">' + meal.time + '</div></div><div class="meal-content"><div class="meal-title">' + meal.title + '</div><div class="meal-desc">' + meal.menu + '</div></div><div class="meal-cal">~' + meal.cal + '<br><small>kcal</small></div></div>';
+            }).join('');
         }
 
         function showMealPlan() {
             document.getElementById('mealSection').classList.remove('section-hidden');
             document.getElementById('mealSection').classList.add('section-visible');
             const currentWeek = weeklyHistory.length + 1;
-            document.getElementById('evalWeekDisplay').textContent = `Minggu ke-${currentWeek}`;
-            setTimeout(() => { document.getElementById('mealSection').scrollIntoView({ behavior: 'smooth' }); }, 100);
+            document.getElementById('evalWeekDisplay').textContent = 'Minggu ke-' + currentWeek;
+            setTimeout(function() { document.getElementById('mealSection').scrollIntoView({ behavior: 'smooth' }); }, 100);
         }
 
-        // Weekly Evaluation Functions
+        // Weekly Evaluation
         function toggleCondition(element, type) {
             element.classList.toggle('checked');
             weeklyConditions[type] = element.classList.contains('checked');
@@ -1318,7 +1056,7 @@
             if (start > 0 && end > 0) {
                 const loss = (start - end).toFixed(1);
                 document.getElementById('weeklyResult').style.display = 'block';
-                document.getElementById('weightLossValue').textContent = `${loss} kg`;
+                document.getElementById('weightLossValue').textContent = loss + ' kg';
             }
         }
 
@@ -1326,46 +1064,24 @@
             const startWeight = parseFloat(document.getElementById('weekStartWeight').value);
             const endWeight = parseFloat(document.getElementById('weekEndWeight').value);
             const obstacle = document.getElementById('weeklyObstacle').value;
-            
             if (!startWeight || !endWeight) { alert('Mohon isi berat awal dan akhir minggu'); return; }
 
             if (editingIndex >= 0) {
-                weeklyHistory[editingIndex] = {
-                    week: weeklyHistory[editingIndex].week,
-                    date: new Date().toLocaleDateString('id-ID'),
-                    startWeight: startWeight,
-                    endWeight: endWeight,
-                    loss: (startWeight - endWeight).toFixed(1),
-                    conditions: {...weeklyConditions},
-                    obstacle: obstacle
-                };
-                cancelEdit();
-                alert('Evaluasi mingguan berhasil diperbarui!');
+                weeklyHistory[editingIndex] = { week: weeklyHistory[editingIndex].week, date: new Date().toLocaleDateString('id-ID'), startWeight: startWeight, endWeight: endWeight, loss: (startWeight - endWeight).toFixed(1), conditions: Object.assign({}, weeklyConditions), obstacle: obstacle };
+                cancelEdit(); alert('Evaluasi mingguan berhasil diperbarui!');
             } else {
-                const weekData = {
-                    week: weeklyHistory.length + 1,
-                    date: new Date().toLocaleDateString('id-ID'),
-                    startWeight: startWeight,
-                    endWeight: endWeight,
-                    loss: (startWeight - endWeight).toFixed(1),
-                    conditions: {...weeklyConditions},
-                    obstacle: obstacle
-                };
-                weeklyHistory.push(weekData);
-                resetForm();
-                alert('Evaluasi mingguan berhasil disimpan!');
+                weeklyHistory.push({ week: weeklyHistory.length + 1, date: new Date().toLocaleDateString('id-ID'), startWeight: startWeight, endWeight: endWeight, loss: (startWeight - endWeight).toFixed(1), conditions: Object.assign({}, weeklyConditions), obstacle: obstacle });
+                resetForm(); alert('Evaluasi mingguan berhasil disimpan!');
             }
-
-            saveWeeklyData();
-            renderWeeklyHistory();
-            document.getElementById('evalWeekDisplay').textContent = `Minggu ke-${weeklyHistory.length + 1}`;
+            saveWeeklyData(); renderWeeklyHistory();
+            document.getElementById('evalWeekDisplay').textContent = 'Minggu ke-' + (weeklyHistory.length + 1);
         }
 
         function resetForm() {
             document.getElementById('weekStartWeight').value = '';
             document.getElementById('weekEndWeight').value = '';
             document.getElementById('weeklyObstacle').value = '';
-            document.querySelectorAll('.condition-item').forEach(el => el.classList.remove('checked'));
+            document.querySelectorAll('.condition-item').forEach(function(el) { el.classList.remove('checked'); });
             weeklyConditions = { energi: false, nafsu: false, efek: false, tidur: false };
             document.getElementById('weeklyResult').style.display = 'none';
         }
@@ -1373,19 +1089,15 @@
         function editWeeklyEval(index) {
             const weekData = weeklyHistory[index];
             if (!weekData) return;
-
             editingIndex = index;
             document.getElementById('weekStartWeight').value = weekData.startWeight;
             document.getElementById('weekEndWeight').value = weekData.endWeight;
             document.getElementById('weeklyObstacle').value = weekData.obstacle || '';
-            
-            weeklyConditions = {...weekData.conditions};
-            document.querySelectorAll('.condition-item').forEach(el => {
+            weeklyConditions = Object.assign({}, weekData.conditions);
+            document.querySelectorAll('.condition-item').forEach(function(el) {
                 const type = el.getAttribute('onclick').match(/'(\w+)'/)[1];
-                if (weekData.conditions[type]) { el.classList.add('checked'); }
-                else { el.classList.remove('checked'); }
+                weekData.conditions[type] ? el.classList.add('checked') : el.classList.remove('checked');
             });
-
             calculateWeeklyLoss();
             document.getElementById('editModeIndicator').style.display = 'inline-block';
             document.getElementById('editWeekNumber').textContent = weekData.week;
@@ -1397,18 +1109,16 @@
         function deleteWeeklyEval(index) {
             if (!confirm('Apakah Anda yakin ingin menghapus evaluasi minggu ini?')) return;
             weeklyHistory.splice(index, 1);
-            weeklyHistory.forEach((item, idx) => { item.week = idx + 1; });
-            saveWeeklyData();
-            renderWeeklyHistory();
-            if (editingIndex === index) { cancelEdit(); }
-            else if (editingIndex > index) { editingIndex--; }
-            document.getElementById('evalWeekDisplay').textContent = `Minggu ke-${weeklyHistory.length + 1}`;
+            weeklyHistory.forEach(function(item, idx) { item.week = idx + 1; });
+            saveWeeklyData(); renderWeeklyHistory();
+            if (editingIndex === index) cancelEdit();
+            else if (editingIndex > index) editingIndex--;
+            document.getElementById('evalWeekDisplay').textContent = 'Minggu ke-' + (weeklyHistory.length + 1);
             alert('Evaluasi mingguan berhasil dihapus!');
         }
 
         function cancelEdit() {
-            editingIndex = -1;
-            resetForm();
+            editingIndex = -1; resetForm();
             document.getElementById('editModeIndicator').style.display = 'none';
             document.getElementById('btnSaveEval').innerHTML = '<i class="fas fa-save"></i> Simpan Evaluasi';
             document.getElementById('btnCancelEdit').style.display = 'none';
@@ -1416,46 +1126,43 @@
 
         function renderWeeklyHistory() {
             const container = document.getElementById('weeklyHistory');
-            if (weeklyHistory.length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-500 text-sm">Belum ada data evaluasi mingguan</p>';
-                return;
-            }
-
-            container.innerHTML = weeklyHistory.map((week, index) => `
-                <div class="bg-white p-4 rounded-lg border border-gray-200 history-item">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="font-semibold text-sm">Minggu ${week.week}</span>
-                        <span class="text-xs text-gray-500">${week.date}</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 text-center mb-3">
-                        <div><div class="text-xs text-gray-500">Awal</div><div class="font-semibold">${week.startWeight} kg</div></div>
-                        <div><div class="text-xs text-gray-500">Akhir</div><div class="font-semibold">${week.endWeight} kg</div></div>
-                        <div><div class="text-xs text-gray-500">Turun</div><div class="font-semibold text-green-600">${week.loss} kg</div></div>
-                    </div>
-                    ${week.obstacle ? `<div class="text-xs text-gray-600 mb-3"><strong>Kendala:</strong> ${week.obstacle}</div>` : ''}
-                    <div class="history-actions no-print">
-                        <button onclick="editWeeklyEval(${index})" class="btn btn-outline btn-sm" style="flex: 1;"><i class="fas fa-edit"></i> Edit</button>
-                        <button onclick="deleteWeeklyEval(${index})" class="btn btn-danger btn-sm" style="flex: 1;"><i class="fas fa-trash"></i> Hapus</button>
-                    </div>
-                </div>
-            `).join('');
+            if (weeklyHistory.length === 0) { container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 13px;">Belum ada data evaluasi mingguan</p>'; return; }
+            container.innerHTML = weeklyHistory.map(function(week, index) {
+                return '<div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #E5E7EB;">' +
+                    '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><span style="font-weight: 600; font-size: 13px;">Minggu ' + week.week + '</span><span style="font-size: 11px; color: var(--text-muted);">' + week.date + '</span></div>' +
+                    '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; margin-bottom: 12px;">' +
+                    '<div><div style="font-size: 11px; color: var(--text-muted);">Awal</div><div style="font-weight: 600;">' + week.startWeight + ' kg</div></div>' +
+                    '<div><div style="font-size: 11px; color: var(--text-muted);">Akhir</div><div style="font-weight: 600;">' + week.endWeight + ' kg</div></div>' +
+                    '<div><div style="font-size: 11px; color: var(--text-muted);">Turun</div><div style="font-weight: 600; color: var(--primary);">' + week.loss + ' kg</div></div>' +
+                    '</div>' +
+                    (week.obstacle ? '<div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;"><strong>Kendala:</strong> ' + week.obstacle + '</div>' : '') +
+                    '<div class="history-actions no-print">' +
+                    '<button onclick="editWeeklyEval(' + index + ')" class="btn btn-outline btn-sm" style="flex: 1;"><i class="fas fa-edit"></i> Edit</button>' +
+                    '<button onclick="deleteWeeklyEval(' + index + ')" class="btn btn-danger btn-sm" style="flex: 1;"><i class="fas fa-trash"></i> Hapus</button>' +
+                    '</div></div>';
+            }).join('');
         }
 
-        // Auto-save inputs on change
-        ['inputNama', 'inputGender', 'inputUsia', 'inputBerat', 'inputTinggi', 'inputAktivitas', 'inputTarget', 'inputMetode'].forEach(id => {
-            document.getElementById(id)?.addEventListener('change', () => {
-                if (currentWA) {
-                    userData.nama = document.getElementById('inputNama').value;
-                    userData.gender = document.getElementById('inputGender').value;
-                    userData.usia = parseFloat(document.getElementById('inputUsia').value) || 0;
-                    userData.berat = parseFloat(document.getElementById('inputBerat').value) || 0;
-                    userData.tinggi = parseFloat(document.getElementById('inputTinggi').value) || 0;
-                    userData.aktivitas = parseFloat(document.getElementById('inputAktivitas').value) || 0;
-                    userData.target = parseFloat(document.getElementById('inputTarget').value) || 0;
-                    userData.metode = document.getElementById('inputMetode').value;
-                    saveUserData();
-                }
-            });
+        function printWeeklyEval() { window.print(); }
+
+        // Auto-save
+        ['inputNama', 'inputGender', 'inputUsia', 'inputBerat', 'inputTinggi', 'inputAktivitas', 'inputTarget', 'inputMetode'].forEach(function(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', function() {
+                    if (currentWA) {
+                        userData.nama = document.getElementById('inputNama').value;
+                        userData.gender = document.getElementById('inputGender').value;
+                        userData.usia = parseFloat(document.getElementById('inputUsia').value) || 0;
+                        userData.berat = parseFloat(document.getElementById('inputBerat').value) || 0;
+                        userData.tinggi = parseFloat(document.getElementById('inputTinggi').value) || 0;
+                        userData.aktivitas = parseFloat(document.getElementById('inputAktivitas').value) || 0;
+                        userData.target = parseFloat(document.getElementById('inputTarget').value) || 0;
+                        userData.metode = document.getElementById('inputMetode').value;
+                        saveUserData();
+                    }
+                });
+            }
         });
     </script>
 </body>
