@@ -1,5 +1,3 @@
-panduan
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -663,6 +661,7 @@ panduan
                         <button class="menu-tab active" onclick="switchMenuTab('ekonomis')">Ekonomis</button>
                         <button class="menu-tab" onclick="switchMenuTab('standar')">Standar</button>
                         <button class="menu-tab" onclick="switchMenuTab('premium')">Premium</button>
+                        <button class="menu-tab" onclick="switchMenuTab('custom')">Custom Menu</button>
                     </div>
 
                     <!-- Menu Ekonomis -->
@@ -726,6 +725,105 @@ panduan
                                 <tr><td>10</td><td>2 Telur Rebus + Protein Muffin</td><td>Goji Berries + Walnut</td><td>Quinoa + Chicken Sous Vide + Brokoli</td><td>Coconut Water</td><td>Sea Bass Grile + Salad Quinoa + Mashed Potato</td></tr>
                             </tbody>
                         </table>
+                    </div>
+
+
+                    <!-- Menu Custom (Interaktif) -->
+                    <div id="menu-custom" style="display: none;">
+                        <h5 style="font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 14px;">KATEGORI 4: CUSTOM MENU (PILIH SENDIRI)</h5>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Pilih bahan makanan sendiri dan hitung total kalori secara otomatis sesuai target kalori harianmu.</p>
+
+                        <!-- Target Kalori Custom -->
+                        <div style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                            <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px;"><i class="fas fa-bullseye" style="margin-right: 8px;"></i>Target Kalori Harian</div>
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                <input type="number" id="cmTargetCal" placeholder="Target kalori (contoh: 1450)" style="flex: 1; min-width: 150px; padding: 10px 14px; border: none; border-radius: 8px; font-size: 14px; font-family: Poppins, sans-serif; text-align: center; font-weight: 600; color: var(--text-dark);">
+                                <button onclick="cmSetTarget()" style="padding: 10px 20px; background: white; color: var(--primary); border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: Poppins, sans-serif;"><i class="fas fa-check"></i> Set</button>
+                                <button onclick="cmAutoTarget()" style="padding: 10px 20px; background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.5); border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; font-family: Poppins, sans-serif;"><i class="fas fa-magic"></i> Pakai Target Diet</button>
+                            </div>
+                            <p style="margin-top: 8px; font-size: 12px; opacity: 0.9;"><i class="fas fa-info-circle"></i> Target saat ini: <strong id="cmCurrentTarget">1450 kcal</strong></p>
+                        </div>
+
+                        <!-- Search & Filter -->
+                        <div style="position: relative; margin-bottom: 12px;">
+                            <i class="fas fa-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #95a5a6;"></i>
+                            <input type="text" id="cmSearch" placeholder="Cari bahan makanan..." onkeyup="cmRenderGrid()" style="width: 100%; padding: 12px 14px 12px 42px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 13px; font-family: Poppins, sans-serif; background: var(--bg-light);">
+                        </div>
+
+                        <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px;" id="cmCategoryTabs">
+                            <button class="menu-tab active" onclick="cmFilterCat('all', this)">Semua</button>
+                            <button class="menu-tab" onclick="cmFilterCat('protein-hewani', this)">Protein Hewani</button>
+                            <button class="menu-tab" onclick="cmFilterCat('protein-nabati', this)">Protein Nabati</button>
+                            <button class="menu-tab" onclick="cmFilterCat('karbohidrat', this)">Karbohidrat</button>
+                            <button class="menu-tab" onclick="cmFilterCat('lemak', this)">Lemak</button>
+                            <button class="menu-tab" onclick="cmFilterCat('sayuran', this)">Sayuran</button>
+                            <button class="menu-tab" onclick="cmFilterCat('buah', this)">Buah</button>
+                            <button class="menu-tab" onclick="cmFilterCat('kacang-biji', this)">Kacang & Biji</button>
+                            <button class="menu-tab" onclick="cmFilterCat('susu', this)">Produk Susu</button>
+                            <button class="menu-tab" onclick="cmFilterCat('diet', this)">Bahan Diet</button>
+                        </div>
+
+                        <!-- Layout: grid makanan + panel pilihan -->
+                        <div style="display: grid; grid-template-columns: 1fr 300px; gap: 16px;">
+
+                            <!-- Grid Makanan -->
+                            <div>
+                                <div id="cmFoodGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; max-height: 440px; overflow-y: auto; padding-right: 4px;"></div>
+                            </div>
+
+                            <!-- Panel Pilihan + Ringkasan -->
+                            <div>
+                                <div style="background: var(--bg-light); border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+                                    <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-dark);"><i class="fas fa-shopping-basket" style="color: var(--primary); margin-right: 6px;"></i>Menu Dipilih (<span id="cmItemCount">0</span>)</div>
+                                    <div id="cmSelectedList" style="max-height: 260px; overflow-y: auto;">
+                                        <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;"><i class="fas fa-utensils" style="font-size: 24px; display: block; margin-bottom: 8px; opacity: 0.4;"></i>Belum ada bahan dipilih</div>
+                                    </div>
+                                </div>
+
+                                <!-- Ringkasan -->
+                                <div style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; border-radius: 12px; padding: 14px;">
+                                    <div style="font-size: 12px; font-weight: 600; margin-bottom: 10px;"><i class="fas fa-chart-pie" style="margin-right: 6px;"></i>Ringkasan Kalori</div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                                        <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; text-align: center;">
+                                            <div style="font-size: 10px; opacity: 0.9; margin-bottom: 4px;">Target</div>
+                                            <div style="font-size: 20px; font-weight: 700;" id="cmDisplayTarget">1450</div>
+                                        </div>
+                                        <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; text-align: center;">
+                                            <div style="font-size: 10px; opacity: 0.9; margin-bottom: 4px;">Terpakai</div>
+                                            <div style="font-size: 20px; font-weight: 700;" id="cmDisplayUsed">0</div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;">
+                                        <span>Sisa:</span><strong id="cmRemaining">1450 kcal</strong>
+                                    </div>
+                                    <div style="background: rgba(255,255,255,0.3); height: 14px; border-radius: 7px; overflow: hidden; margin-bottom: 8px;">
+                                        <div id="cmProgressBar" style="height: 100%; background: white; border-radius: 7px; width: 0%; transition: width 0.4s ease; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #2980b9;">0%</div>
+                                    </div>
+                                    <div id="cmStatus" style="background: rgba(46,204,113,0.3); padding: 8px; border-radius: 8px; text-align: center; font-size: 11px; font-weight: 600; margin-bottom: 10px;"><i class="fas fa-check-circle"></i> Dalam batas aman</div>
+                                    <button onclick="cmReset()" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4); color: white; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: Poppins, sans-serif;"><i class="fas fa-trash" style="margin-right: 6px;"></i>Reset Menu</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <style>
+                            @media (max-width: 640px) {
+                                #menu-custom > div:last-of-type { grid-template-columns: 1fr !important; }
+                                #menu-custom > div:last-of-type > div:last-child { position: static !important; }
+                            }
+                            .cm-food-item { background: var(--bg-light); border-radius: 10px; padding: 12px; cursor: pointer; transition: all 0.25s ease; border: 2px solid transparent; position: relative; }
+                            .cm-food-item:hover { border-color: var(--primary-light); }
+                            .cm-food-item.cm-selected { background: var(--primary); color: white; border-color: var(--primary); }
+                            .cm-food-item .cm-check { position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; background: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 9px; color: var(--primary); }
+                            .cm-food-item.cm-selected .cm-check { display: flex; }
+                            .cm-food-item .cm-name { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+                            .cm-food-item .cm-cal { font-size: 11px; opacity: 0.75; }
+                            .cm-selected-item { background: white; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+                            .cm-selected-item h4 { font-size: 11px; font-weight: 600; margin-bottom: 4px; color: var(--text-dark); }
+                            .cm-selected-item p { font-size: 10px; color: var(--text-muted); }
+                            .cm-qty-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+                            .cm-qty-input { width: 52px; padding: 4px 6px; border: 1px solid #ddd; border-radius: 6px; text-align: center; font-size: 12px; font-family: Poppins, sans-serif; }
+                            .cm-remove-btn { width: 24px; height: 24px; border-radius: 50%; background: #EF4444; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 9px; margin-left: auto; }
+                        </style>
                     </div>
 
                     <div style="margin-top: 16px; padding: 16px; background: #FEF3C7; border-radius: 8px; border: 1px solid #FCD34D;">
@@ -840,7 +938,7 @@ panduan
         // Global Variables
         let currentWA = '';
         let currentVoucher = '';
-        let userData = { nama: '', gender: '', usia: 0, berat: 0, tinggi: 0, aktivitas: 0, target: 0, metode: 'standar', bmr: 0, tdee: 0, dietCal: 0, weeks: 0, targetDate: '', protein: 0, lemak: 0, karbo: 0, startDate: null };
+        let userData = { nama: '', gender: '', usia: 0, berat: 0, tinggi: 0, aktivitas: 0, target: 0, metode: 'standar', bmr: 0, tdee: 0, dietCal: 0, weeks: 0, targetDate: '', protein: 0, lemak: 0, karbo: 0, startDate: null, targetDateISO: null };
         let weeklyConditions = { energi: false, nafsu: false, efek: false, tidur: false };
         let weeklyHistory = [];
         let editingIndex = -1;
@@ -889,10 +987,16 @@ panduan
         }
 
         function switchMenuTab(tab) {
-            document.querySelectorAll('.menu-tab').forEach(function(t) { t.classList.remove('active'); });
+            // Handle tabs inside mealDetailBody only
+            var bodyEl = document.getElementById('mealDetailBody');
+            bodyEl.querySelectorAll('.menu-tab').forEach(function(t) { t.classList.remove('active'); });
             event.target.classList.add('active');
-            document.querySelectorAll('.menu-table-container').forEach(function(c) { c.style.display = 'none'; });
-            document.getElementById('menu-' + tab).style.display = 'block';
+            bodyEl.querySelectorAll('.menu-table-container').forEach(function(c) { c.style.display = 'none'; });
+            var customEl = document.getElementById('menu-custom');
+            if (customEl) customEl.style.display = 'none';
+            var target = document.getElementById('menu-' + tab);
+            if (target) target.style.display = 'block';
+            if (tab === 'custom') { cmRenderGrid(); }
         }
 
         // Access Control
@@ -915,6 +1019,8 @@ panduan
             const isNewProgram = localStorage.getItem('calfatloss_newprogram_' + currentWA);
             if (isNewProgram === 'true') {
                 localStorage.removeItem('calfatloss_weekly_' + currentWA);
+                localStorage.removeItem('calfatloss_data_' + currentWA);
+                localStorage.removeItem('calfatloss_startdate_' + currentWA);
                 localStorage.removeItem('calfatloss_newprogram_' + currentWA);
             }
             initializeApp();
@@ -1002,15 +1108,23 @@ panduan
             const weeklyLoss = (deficit * 7) / 7700;
             userData.weeks = Math.ceil((userData.berat - userData.target) / weeklyLoss);
             
-            // Set start date if not exists
-            if (!userData.startDate) {
+            // startDate: ambil dari localStorage khusus (tidak ikut reset userData biasa)
+            // Ini agar walau user ganti voucher, startDate tetap dari aktivasi pertama
+            const savedStartDate = localStorage.getItem('calfatloss_startdate_' + currentWA);
+            if (savedStartDate) {
+                userData.startDate = savedStartDate;
+            } else if (!userData.startDate) {
                 userData.startDate = new Date().toISOString();
+                localStorage.setItem('calfatloss_startdate_' + currentWA, userData.startDate);
             }
             
-            const today = new Date();
-            const targetDate = new Date(today);
-            targetDate.setDate(today.getDate() + (userData.weeks * 7));
+            // targetDate dihitung dari startDate + durasi program (bukan dari hari ini)
+            // Ini agar target tetap 18 Nov walau user ganti voucher di tengah jalan
+            const startDateObj = new Date(userData.startDate);
+            const targetDate = new Date(startDateObj);
+            targetDate.setDate(startDateObj.getDate() + (userData.weeks * 7));
             userData.targetDate = targetDate.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            userData.targetDateISO = targetDate.toISOString();
 
             const proteinMult = userData.metode === 'agresif' ? 2.2 : (userData.metode === 'ringan' ? 1.8 : 2.0);
             userData.protein = userData.berat * proteinMult;
@@ -1229,6 +1343,218 @@ panduan
                 });
             }
         });
+
+        // ==================== CUSTOM MENU LOGIC ====================
+        var cmFoodDatabase = [
+            { id: 1, name: "Telur Ayam", category: "protein-hewani", unit: "butir", baseCal: 78, baseAmount: 1 },
+            { id: 2, name: "Dada Ayam (Rebus)", category: "protein-hewani", unit: "gram", baseCal: 165, baseAmount: 100 },
+            { id: 3, name: "Dada Ayam (Goreng)", category: "protein-hewani", unit: "gram", baseCal: 220, baseAmount: 100 },
+            { id: 4, name: "Ikan Kembung (Rebus)", category: "protein-hewani", unit: "gram", baseCal: 167, baseAmount: 100 },
+            { id: 5, name: "Ikan Salmon (Rebus)", category: "protein-hewani", unit: "gram", baseCal: 208, baseAmount: 100 },
+            { id: 6, name: "Ikan Tuna (Kaleng Air)", category: "protein-hewani", unit: "gram", baseCal: 116, baseAmount: 100 },
+            { id: 7, name: "Udang (Rebus)", category: "protein-hewani", unit: "gram", baseCal: 106, baseAmount: 100 },
+            { id: 8, name: "Daging Sapi (Rebus)", category: "protein-hewani", unit: "gram", baseCal: 250, baseAmount: 100 },
+            { id: 9, name: "Ayam Kampung", category: "protein-hewani", unit: "gram", baseCal: 239, baseAmount: 100 },
+            { id: 10, name: "Telur Puyuh", category: "protein-hewani", unit: "butir", baseCal: 16, baseAmount: 1 },
+            { id: 11, name: "Tempe (Rebus)", category: "protein-nabati", unit: "gram", baseCal: 192, baseAmount: 100 },
+            { id: 12, name: "Tempe (Goreng)", category: "protein-nabati", unit: "gram", baseCal: 280, baseAmount: 100 },
+            { id: 13, name: "Tahu Putih", category: "protein-nabati", unit: "gram", baseCal: 68, baseAmount: 100 },
+            { id: 14, name: "Tahu Goreng", category: "protein-nabati", unit: "gram", baseCal: 200, baseAmount: 100 },
+            { id: 15, name: "Edamame", category: "protein-nabati", unit: "gram", baseCal: 121, baseAmount: 100 },
+            { id: 16, name: "Kacang Hijau (matang)", category: "protein-nabati", unit: "gram", baseCal: 105, baseAmount: 100 },
+            { id: 17, name: "Kacang Merah (matang)", category: "protein-nabati", unit: "gram", baseCal: 127, baseAmount: 100 },
+            { id: 18, name: "Quinoa (matang)", category: "protein-nabati", unit: "gram", baseCal: 120, baseAmount: 100 },
+            { id: 19, name: "Chickpeas (matang)", category: "protein-nabati", unit: "gram", baseCal: 164, baseAmount: 100 },
+            { id: 20, name: "Lentil (matang)", category: "protein-nabati", unit: "gram", baseCal: 116, baseAmount: 100 },
+            { id: 21, name: "Nasi Putih", category: "karbohidrat", unit: "gram", baseCal: 130, baseAmount: 100 },
+            { id: 22, name: "Nasi Merah", category: "karbohidrat", unit: "gram", baseCal: 111, baseAmount: 100 },
+            { id: 23, name: "Kentang (Rebus)", category: "karbohidrat", unit: "gram", baseCal: 87, baseAmount: 100 },
+            { id: 24, name: "Kentang Goreng", category: "karbohidrat", unit: "gram", baseCal: 312, baseAmount: 100 },
+            { id: 25, name: "Ubi Jalar (Rebus)", category: "karbohidrat", unit: "gram", baseCal: 90, baseAmount: 100 },
+            { id: 26, name: "Singkong (Rebus)", category: "karbohidrat", unit: "gram", baseCal: 160, baseAmount: 100 },
+            { id: 27, name: "Oatmeal (matang)", category: "karbohidrat", unit: "gram", baseCal: 68, baseAmount: 100 },
+            { id: 28, name: "Roti Tawar Putih", category: "karbohidrat", unit: "iris", baseCal: 79, baseAmount: 1 },
+            { id: 29, name: "Roti Gandum", category: "karbohidrat", unit: "iris", baseCal: 74, baseAmount: 1 },
+            { id: 30, name: "Pasta (matang)", category: "karbohidrat", unit: "gram", baseCal: 131, baseAmount: 100 },
+            { id: 31, name: "Jagung Manis (Rebus)", category: "karbohidrat", unit: "gram", baseCal: 106, baseAmount: 100 },
+            { id: 32, name: "Alpukat", category: "lemak", unit: "gram", baseCal: 160, baseAmount: 100 },
+            { id: 33, name: "Minyak Zaitun", category: "lemak", unit: "sdm", baseCal: 119, baseAmount: 1 },
+            { id: 34, name: "Minyak Kelapa", category: "lemak", unit: "sdm", baseCal: 117, baseAmount: 1 },
+            { id: 35, name: "Mentega", category: "lemak", unit: "sdm", baseCal: 102, baseAmount: 1 },
+            { id: 36, name: "Keju Cheddar", category: "lemak", unit: "gram", baseCal: 402, baseAmount: 100 },
+            { id: 37, name: "Bayam (Rebus)", category: "sayuran", unit: "gram", baseCal: 23, baseAmount: 100 },
+            { id: 38, name: "Brokoli (Rebus)", category: "sayuran", unit: "gram", baseCal: 35, baseAmount: 100 },
+            { id: 39, name: "Wortel (Rebus)", category: "sayuran", unit: "gram", baseCal: 35, baseAmount: 100 },
+            { id: 40, name: "Kangkung (Tumis)", category: "sayuran", unit: "gram", baseCal: 50, baseAmount: 100 },
+            { id: 41, name: "Sawi (Tumis)", category: "sayuran", unit: "gram", baseCal: 45, baseAmount: 100 },
+            { id: 42, name: "Buncis (Rebus)", category: "sayuran", unit: "gram", baseCal: 31, baseAmount: 100 },
+            { id: 43, name: "Tomat", category: "sayuran", unit: "gram", baseCal: 18, baseAmount: 100 },
+            { id: 44, name: "Mentimun", category: "sayuran", unit: "gram", baseCal: 15, baseAmount: 100 },
+            { id: 45, name: "Selada", category: "sayuran", unit: "gram", baseCal: 15, baseAmount: 100 },
+            { id: 46, name: "Jamur (Tumis)", category: "sayuran", unit: "gram", baseCal: 40, baseAmount: 100 },
+            { id: 47, name: "Pisang", category: "buah", unit: "buah", baseCal: 105, baseAmount: 1 },
+            { id: 48, name: "Apel", category: "buah", unit: "buah", baseCal: 95, baseAmount: 1 },
+            { id: 49, name: "Jeruk", category: "buah", unit: "buah", baseCal: 62, baseAmount: 1 },
+            { id: 50, name: "Mangga", category: "buah", unit: "gram", baseCal: 60, baseAmount: 100 },
+            { id: 51, name: "Semangka", category: "buah", unit: "gram", baseCal: 30, baseAmount: 100 },
+            { id: 52, name: "Pepaya", category: "buah", unit: "gram", baseCal: 43, baseAmount: 100 },
+            { id: 53, name: "Strawberry", category: "buah", unit: "gram", baseCal: 32, baseAmount: 100 },
+            { id: 54, name: "Blueberry", category: "buah", unit: "gram", baseCal: 57, baseAmount: 100 },
+            { id: 55, name: "Almond", category: "kacang-biji", unit: "gram", baseCal: 579, baseAmount: 100 },
+            { id: 56, name: "Walnut", category: "kacang-biji", unit: "gram", baseCal: 654, baseAmount: 100 },
+            { id: 57, name: "Kacang Tanah", category: "kacang-biji", unit: "gram", baseCal: 567, baseAmount: 100 },
+            { id: 58, name: "Chia Seed", category: "kacang-biji", unit: "sdm", baseCal: 60, baseAmount: 1 },
+            { id: 59, name: "Cashew", category: "kacang-biji", unit: "gram", baseCal: 553, baseAmount: 100 },
+            { id: 60, name: "Susu Full Cream", category: "susu", unit: "ml", baseCal: 61, baseAmount: 100 },
+            { id: 61, name: "Susu Low Fat", category: "susu", unit: "ml", baseCal: 42, baseAmount: 100 },
+            { id: 62, name: "Yogurt Plain", category: "susu", unit: "gram", baseCal: 59, baseAmount: 100 },
+            { id: 63, name: "Yogurt Greek", category: "susu", unit: "gram", baseCal: 59, baseAmount: 100 },
+            { id: 64, name: "Keju Cottage", category: "susu", unit: "gram", baseCal: 98, baseAmount: 100 },
+            { id: 65, name: "Protein Whey", category: "diet", unit: "sendok", baseCal: 120, baseAmount: 1 },
+            { id: 66, name: "Psyllium Husk", category: "diet", unit: "sdm", baseCal: 20, baseAmount: 1 },
+            { id: 67, name: "Stevia", category: "diet", unit: "sachet", baseCal: 0, baseAmount: 1 },
+            { id: 68, name: "Cocoa Powder", category: "diet", unit: "sdm", baseCal: 12, baseAmount: 1 },
+            { id: 69, name: "Matcha Powder", category: "diet", unit: "sdt", baseCal: 5, baseAmount: 1 },
+            { id: 70, name: "Spirulina", category: "diet", unit: "sdt", baseCal: 20, baseAmount: 1 }
+        ];
+
+        var cmSelectedItems = [];
+        var cmTargetCalories = 1450;
+        var cmCurrentCategory = 'all';
+
+        function cmAutoTarget() {
+            if (userData.dietCal && userData.dietCal > 0) {
+                cmTargetCalories = Math.round(userData.dietCal);
+                document.getElementById('cmTargetCal').value = cmTargetCalories;
+                document.getElementById('cmCurrentTarget').textContent = cmTargetCalories + ' kcal';
+                document.getElementById('cmDisplayTarget').textContent = cmTargetCalories;
+                cmUpdateSummary();
+            } else {
+                alert('Generate program diet Anda terlebih dahulu menggunakan kalkulator di atas.');
+            }
+        }
+
+        function cmSetTarget() {
+            var val = parseInt(document.getElementById('cmTargetCal').value);
+            if (val && val > 0) {
+                cmTargetCalories = val;
+                document.getElementById('cmCurrentTarget').textContent = val + ' kcal';
+                document.getElementById('cmDisplayTarget').textContent = val;
+                cmUpdateSummary();
+            } else {
+                alert('Masukkan nilai target yang valid!');
+            }
+        }
+
+        function cmFilterCat(cat, el) {
+            cmCurrentCategory = cat;
+            document.querySelectorAll('#cmCategoryTabs .menu-tab').forEach(function(t) { t.classList.remove('active'); });
+            el.classList.add('active');
+            cmRenderGrid();
+        }
+
+        function cmRenderGrid() {
+            var grid = document.getElementById('cmFoodGrid');
+            if (!grid) return;
+            var search = (document.getElementById('cmSearch') ? document.getElementById('cmSearch').value : '').toLowerCase();
+            var filtered = cmFoodDatabase.filter(function(item) {
+                var catOk = cmCurrentCategory === 'all' || item.category === cmCurrentCategory;
+                var searchOk = !search || item.name.toLowerCase().includes(search);
+                return catOk && searchOk;
+            });
+            grid.innerHTML = filtered.map(function(item) {
+                var sel = cmSelectedItems.find(function(s) { return s.id === item.id; });
+                return '<div class="cm-food-item ' + (sel ? 'cm-selected' : '') + '" onclick="cmToggle(' + item.id + ')">' +
+                    '<div class="cm-check"><i class="fas fa-check"></i></div>' +
+                    '<div class="cm-name">' + item.name + '</div>' +
+                    '<div class="cm-cal"><i class="fas fa-fire" style="color:#e74c3c;margin-right:3px;"></i>' + item.baseCal + ' kcal / ' + item.baseAmount + ' ' + item.unit + '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function cmToggle(id) {
+            var idx = cmSelectedItems.findIndex(function(s) { return s.id === id; });
+            if (idx > -1) {
+                cmSelectedItems.splice(idx, 1);
+            } else {
+                var food = cmFoodDatabase.find(function(f) { return f.id === id; });
+                if (food) cmSelectedItems.push(Object.assign({}, food, { quantity: food.baseAmount }));
+            }
+            cmRenderGrid();
+            cmRenderSelected();
+            cmUpdateSummary();
+        }
+
+        function cmRenderSelected() {
+            var list = document.getElementById('cmSelectedList');
+            var count = document.getElementById('cmItemCount');
+            count.textContent = cmSelectedItems.length;
+            if (cmSelectedItems.length === 0) {
+                list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;"><i class="fas fa-utensils" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.4;"></i>Belum ada bahan dipilih</div>';
+                return;
+            }
+            list.innerHTML = cmSelectedItems.map(function(item, idx) {
+                var cal = Math.round((item.quantity / item.baseAmount) * item.baseCal);
+                return '<div class="cm-selected-item">' +
+                    '<h4>' + item.name + '</h4>' +
+                    '<p>' + cal + ' kcal</p>' +
+                    '<div class="cm-qty-row">' +
+                    '<input class="cm-qty-input" type="number" value="' + item.quantity + '" min="0" step="' + item.baseAmount + '" onchange="cmUpdateQty(' + idx + ', this.value)">' +
+                    '<span style="font-size:10px;color:var(--text-muted);">' + item.unit + '</span>' +
+                    '<button class="cm-remove-btn" onclick="cmRemove(' + idx + ')"><i class="fas fa-times"></i></button>' +
+                    '</div></div>';
+            }).join('');
+        }
+
+        function cmUpdateQty(idx, val) {
+            var qty = parseFloat(val);
+            if (qty >= 0) { cmSelectedItems[idx].quantity = qty; cmRenderSelected(); cmUpdateSummary(); }
+        }
+
+        function cmRemove(idx) {
+            cmSelectedItems.splice(idx, 1);
+            cmRenderGrid();
+            cmRenderSelected();
+            cmUpdateSummary();
+        }
+
+        function cmUpdateSummary() {
+            var total = cmSelectedItems.reduce(function(sum, item) {
+                return sum + (item.quantity / item.baseAmount) * item.baseCal;
+            }, 0);
+            var remaining = cmTargetCalories - total;
+            var pct = Math.min((total / cmTargetCalories) * 100, 100);
+
+            document.getElementById('cmDisplayUsed').textContent = Math.round(total);
+            document.getElementById('cmRemaining').textContent = Math.round(remaining) + ' kcal';
+            var bar = document.getElementById('cmProgressBar');
+            bar.style.width = pct + '%';
+            bar.textContent = Math.round(pct) + '%';
+
+            var status = document.getElementById('cmStatus');
+            if (total > cmTargetCalories) {
+                status.style.background = 'rgba(231,76,60,0.3)';
+                status.innerHTML = '<i class="fas fa-exclamation-circle"></i> Kalori melebihi target!';
+            } else if (total > cmTargetCalories * 0.9) {
+                status.style.background = 'rgba(243,156,18,0.3)';
+                status.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Mendekati batas target';
+            } else {
+                status.style.background = 'rgba(46,204,113,0.3)';
+                status.innerHTML = '<i class="fas fa-check-circle"></i> Dalam batas aman';
+            }
+        }
+
+        function cmReset() {
+            if (cmSelectedItems.length === 0) return;
+            if (confirm('Reset semua pilihan menu?')) {
+                cmSelectedItems = [];
+                cmRenderGrid();
+                cmRenderSelected();
+                cmUpdateSummary();
+            }
+        }
+        // ==================== END CUSTOM MENU LOGIC ====================
+
     </script>
 </body>
 </html>
