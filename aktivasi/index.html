@@ -619,27 +619,13 @@
         function setupPanduanButton(wa, kode, isReturningUser) {
             const btnLanjut = document.getElementById("btnLanjutManual");
             btnLanjut.style.display = "block";
-            
-            // Jika user baru sama sekali, cek apakah perlu konfirmasi (melalui modal) jika user nyatakan 'baru' tapi ada datanya?
-            // Sesuai logika awali, jika user lama (isReturningUser true), langsung setting link biasa.
-            // Jika user baru, tapi di server nanti terdeteksi data lama (melalui WA yang sudah terdaftar di sheet), 
-            // maka logika 'start new program' akan dihandle oleh modal di halaman panduan atau di sini.
-            // Untuk simplify revisi ini, kita set onclick langsung.
 
             btnLanjut.onclick = function() {
-                // Cek jika user baru (berdasarkan local storage) tapi ingin mulai, langsung redirect.
-                // Namun, jika skenarionya user lama (isReturningUser) memakai voucher baru, 
-                // kita bisa langsung redirect karena data sudah aman.
-                
-                // Simpan sementara untuk modal handler jika diperlukan
                 tempData = { wa, kode };
 
                 if (isReturningUser) {
-                    // Jika user lama terdeteksi di local storage, arahkan ke panduan langsung
-                    // (Opsional: Bisa juga memunculkan pilihan Lanjut/Reset di sini jika dikehendaki, 
-                    // tapi di permintaan hanya disuruh ganti teks sambutan dan tombol panduan).
-                    // Mari kita biarkan sederhana: Langsung redirect.
-                     redirectToPanduan(wa, kode);
+                    // Tampilkan modal pilihan Lanjut / Baru untuk user lama
+                    document.getElementById("programChoiceModal").style.display = "flex";
                 } else {
                     // User baru, langsung redirect
                     redirectToPanduan(wa, kode);
@@ -649,14 +635,20 @@
 
         function continueOldProgram() {
             document.getElementById("programChoiceModal").style.display = "none";
-            redirectToPanduan(tempData.wa, tempData.voucher);
+            // Lanjutkan: jangan reset apapun, data lama tetap utuh
+            redirectToPanduan(tempData.wa, tempData.kode);
         }
 
         function startNewProgram() {
-            localStorage.removeItem(`calfatloss_weekly_${tempData.wa}`);
-            localStorage.setItem(`calfatloss_newprogram_${tempData.wa}`, 'true');
+            const wa = tempData.wa;
+            // Reset SEMUA data: startDate, weeklyHistory, data kalkulator
+            localStorage.removeItem(`calfatloss_weekly_${wa}`);
+            localStorage.removeItem(`calfatloss_data_${wa}`);
+            localStorage.removeItem(`calfatloss_startdate_${wa}`);
+            // Flag agar panduan_1 tahu ini program baru
+            localStorage.setItem(`calfatloss_newprogram_${wa}`, 'true');
             document.getElementById("programChoiceModal").style.display = "none";
-            redirectToPanduan(tempData.wa, tempData.voucher);
+            redirectToPanduan(tempData.wa, tempData.kode);
         }
 
         function redirectToPanduan(wa, voucher) {
