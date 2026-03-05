@@ -367,6 +367,42 @@
             text-decoration: underline;
         }
     </style>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
+            authDomain: "project-panduan-dani.firebaseapp.com",
+            projectId: "project-panduan-dani",
+            storageBucket: "project-panduan-dani.firebasestorage.app",
+            messagingSenderId: "113559517545",
+            appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Reset data Firebase saat user pilih Mulai Baru
+        window.fbResetUserData = async function(wa) {
+            try {
+                await setDoc(doc(db, "users", wa), {
+                    startDate: null,
+                    weeklyHistory: [],
+                    dietCal: 0,
+                    weeks: 0,
+                    targetDate: '',
+                    resetAt: new Date().toISOString()
+                });
+                console.log("✅ Firebase data direset untuk:", wa);
+            } catch(e) {
+                console.warn("⚠️ Firebase reset gagal:", e);
+            }
+        };
+
+        console.log("🔥 Firebase aktivitas initialized");
+    </script>
 </head>
 <body>
     <div class="container">
@@ -416,6 +452,28 @@
         </a>
 
         <div id="result"></div>
+
+        <!-- Peringatan Penyimpanan Data -->
+        <div style="margin-top: 20px; background: #FEF3C7; border: 1.5px solid #F59E0B; border-radius: 12px; padding: 16px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <i class="fas fa-exclamation-triangle" style="color: #D97706; font-size: 18px; margin-top: 2px; flex-shrink: 0;"></i>
+                <div>
+                    <p style="font-size: 13px; font-weight: 700; color: #92400E; margin-bottom: 6px;">⚠️ Penting! Tentang Data Anda</p>
+                    <p style="font-size: 12px; color: #78350F; line-height: 1.6; margin-bottom: 8px;">
+                        Data progres diet Anda (berat badan, evaluasi mingguan, timeline) disimpan di <strong>browser HP ini</strong>, bukan di aplikasi WhatsApp.
+                    </p>
+                    <p style="font-size: 12px; color: #78350F; line-height: 1.6; margin-bottom: 4px;"><strong>Data bisa hilang jika:</strong></p>
+                    <ul style="font-size: 12px; color: #78350F; line-height: 1.8; padding-left: 16px; margin-bottom: 8px;">
+                        <li>Menghapus cache / history browser</li>
+                        <li>Ganti HP atau ganti browser</li>
+                        <li>Uninstall browser</li>
+                    </ul>
+                    <p style="font-size: 12px; color: #92400E; font-weight: 600;">
+                        <i class="fas fa-lightbulb" style="margin-right: 4px;"></i>Tips: Selalu gunakan browser & HP yang sama, dan gunakan nomor WA yang sama setiap aktivasi voucher baru.
+                    </p>
+                </div>
+            </div>
+        </div>
 
         <!-- Bagian FAQ Accordion (Poin 4) -->
         <div class="faq-section">
@@ -641,10 +699,15 @@
 
         function startNewProgram() {
             const wa = tempData.wa;
-            // Reset SEMUA data: startDate, weeklyHistory, data kalkulator
+            // Reset SEMUA data localStorage
             localStorage.removeItem(`calfatloss_weekly_${wa}`);
             localStorage.removeItem(`calfatloss_data_${wa}`);
             localStorage.removeItem(`calfatloss_startdate_${wa}`);
+            localStorage.removeItem(`calfatloss_custommenu_${wa}`);
+            // Reset Firebase juga
+            if (typeof window.fbResetUserData === 'function') {
+                window.fbResetUserData(wa);
+            }
             // Flag agar panduan_1 tahu ini program baru
             localStorage.setItem(`calfatloss_newprogram_${wa}`, 'true');
             document.getElementById("programChoiceModal").style.display = "none";
