@@ -829,6 +829,34 @@
     </script>
 </head>
 <body>
+    <!-- DEBUG ERROR CATCHER - hapus setelah fix -->
+    <div id="debugBox" style="position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#ff4444;font-size:11px;padding:8px;z-index:99999;max-height:200px;overflow-y:auto;display:none;"></div>
+    <script>
+        window.onerror = function(msg, src, line, col, err) {
+            var box = document.getElementById('debugBox');
+            if (box) {
+                box.style.display = 'block';
+                box.innerHTML += '<div>❌ ' + msg + '<br>Line: ' + line + ' | ' + (src||'').split('/').pop() + '</div>';
+            }
+            return false;
+        };
+        window.addEventListener('unhandledrejection', function(e) {
+            var box = document.getElementById('debugBox');
+            if (box) {
+                box.style.display = 'block';
+                box.innerHTML += '<div>🔥 Promise Error: ' + e.reason + '</div>';
+            }
+        });
+        // Log setiap tahap loading
+        function dbg(msg) {
+            var box = document.getElementById('debugBox');
+            if (box) {
+                box.style.display = 'block';
+                box.innerHTML += '<div style="color:#44ff44;">✓ ' + msg + '</div>';
+            }
+        }
+        dbg('Script loaded');
+    </script>
 
 
     <!-- Access Check Layer -->
@@ -1774,7 +1802,7 @@
         }
 
         // Access Control
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function() { dbg('Load event fired');
             const urlParams = new URLSearchParams(window.location.search);
             const waFromUrl = urlParams.get('wa');
             const voucherFromUrl = urlParams.get('voucher');
@@ -1832,7 +1860,7 @@
             })();
         });
 
-        function showAccessDenied() {
+        function showAccessDenied() { dbg('ACCESS DENIED triggered');
             document.getElementById('accessCheck').style.display = 'none';
             document.getElementById('accessDenied').style.display = 'block';
             document.getElementById('mainApp').style.display = 'none';
@@ -1840,7 +1868,7 @@
 
         function goToLogin() { window.location.href = 'index.html'; }
 
-        function initializeApp() {
+        function initializeApp() { dbg('initializeApp called');
             // Tampilkan banner hasil quiz kalau sudah pernah quiz
             setTimeout(function() {
                 const wa = currentWA || localStorage.getItem('calfatloss_wa') || '';
@@ -2148,7 +2176,7 @@
             if (catatanEl) catatanEl.value = obstacle;
             const startWeight = parseFloat(document.getElementById('weekStartWeight').value);
             const endWeight = parseFloat(document.getElementById('weekEndWeight').value);
-            const obstacle = document.getElementById('weeklyObstacle').value;
+            obstacle = document.getElementById('weeklyObstacle').value;
             if (!startWeight || !endWeight) { alert('Mohon isi berat awal dan akhir minggu'); return; }
 
             if (editingIndex >= 0) {
