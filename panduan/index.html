@@ -297,7 +297,6 @@
         }
 
         /* ===================== OVERLAY MODAL ===================== */
-        .quiz-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.7);
@@ -310,7 +309,6 @@
             animation: fadeIn 0.3s ease;
         }
 
-        .quiz-overlay.hidden { display: none; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -869,45 +867,7 @@
     </script>
 </head>
 <body>
-<!-- QUIZ OVERLAY MODAL -->
-<div class="quiz-overlay" id="quizOverlay">
-    <div class="quiz-modal" id="quizModal">
 
-        <!-- Header -->
-        <div class="quiz-header">
-            <div class="quiz-badge"><i class="fas fa-dna"></i> KEMOENIK PROFILING</div>
-            <div class="quiz-title">Kenali Tipe<br>Metabolismemu</div>
-            <div class="quiz-subtitle">15 pertanyaan singkat untuk menemukan program diet yang paling cocok untukmu</div>
-        </div>
-
-        <!-- Progress -->
-        <div class="quiz-progress-wrap" id="quizProgressWrap">
-            <div class="quiz-progress-info">
-                <span class="quiz-progress-label">Pertanyaan <span id="qCurrent">1</span> dari <span id="qTotal">15</span></span>
-                <span class="quiz-progress-num" id="qPct">0%</span>
-            </div>
-            <div class="quiz-progress-bar">
-                <div class="quiz-progress-fill" id="qProgressFill" style="width:0%"></div>
-            </div>
-        </div>
-
-        <!-- Body: Pertanyaan -->
-        <div class="quiz-body" id="quizBody">
-            <div class="quiz-question-wrap" id="quizQuestionWrap">
-                <div class="quiz-question-num" id="qNum">Pertanyaan 01</div>
-                <div class="quiz-question-text" id="qText">Loading...</div>
-                <div class="quiz-options" id="qOptions"></div>
-                <div class="quiz-nav">
-                    <button class="btn-quiz-back" id="btnBack" onclick="quizBack()" style="display:none"><i class="fas fa-arrow-left"></i></button>
-                    <button class="btn-quiz-next" id="btnNext" onclick="quizNext()" disabled>
-                        Lanjut <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
 
     <!-- Access Check Layer -->
     <div id="accessCheck" style="display: none;">
@@ -1913,24 +1873,19 @@
         function goToLogin() { window.location.href = 'index.html'; }
 
         function initializeApp() {
-            // Cek apakah user sudah pernah quiz, kalau belum tampilkan modal
+            // Tampilkan banner hasil quiz kalau sudah pernah quiz
             setTimeout(function() {
-                const wa = localStorage.getItem('calfatloss_wa') || currentWA;
-                const done = wa ? localStorage.getItem('calfatloss_quizdone_' + wa) : null;
-                if (!done) {
-                    if (typeof window.initQuiz === 'function') window.initQuiz();
-                } else {
-                    // User sudah quiz, tampilkan banner hasil
-                    const saved = wa ? localStorage.getItem('calfatloss_quiz_' + wa) : null;
-                    if (saved) {
-                        try {
-                            const qData = JSON.parse(saved);
-                            const result = quizTypes.find(t => t.id === qData.tipe);
-                            if (result) showQuizResultBanner(result);
-                        } catch(e) {}
-                    }
+                const wa = currentWA || localStorage.getItem('calfatloss_wa') || '';
+                if (!wa) return;
+                const saved = localStorage.getItem('calfatloss_quiz_' + wa);
+                if (saved) {
+                    try {
+                        const qData = JSON.parse(saved);
+                        const result = quizTypes.find(function(t) { return t.id === qData.tipe; });
+                        if (result) showQuizResultBanner(result);
+                    } catch(e) {}
                 }
-            }, 800);
+            }, 500);
             document.getElementById('accessCheck').style.display = 'none';
             document.getElementById('accessDenied').style.display = 'none';
             document.getElementById('mainApp').classList.remove('section-hidden');
@@ -2716,147 +2671,6 @@
 // t1=Nasi Warrior, t2=Lemak Fighter, t3=Otot Aktif
 // t4=Hemat Energi, t5=Mood & Lifestyle, t6=Perut Sensitif, t7=Seimbang
 // ============================================================
-const quizQuestions = [
-    {
-        text: "Bagaimana tubuhmu bereaksi setelah makan nasi atau roti dalam porsi banyak?",
-        options: [
-            { icon: "😴", text: "Langsung ngantuk dan lemas", scores: [3,1,0,1,0,0,0] },
-            { icon: "⚖️", text: "Berat badan naik dengan cepat", scores: [3,1,0,1,0,0,0] },
-            { icon: "⚡", text: "Tetap berenergi, tidak ada masalah", scores: [0,0,1,0,0,0,3] },
-            { icon: "🤷", text: "Biasa saja, tidak terlalu terasa", scores: [0,0,0,0,0,0,2] }
-        ]
-    },
-    {
-        text: "Ketika kamu diet dan olahraga rutin, hasilnya seperti apa?",
-        options: [
-            { icon: "📉", text: "Berat badan sangat susah turun", scores: [1,3,0,2,0,0,0] },
-            { icon: "🐢", text: "Turun tapi sangat lambat", scores: [1,1,0,3,0,0,0] },
-            { icon: "📊", text: "Turun normal sesuai ekspektasi", scores: [0,0,1,0,0,0,3] },
-            { icon: "🎯", text: "Belum pernah mencoba konsisten", scores: [0,0,0,0,2,0,1] }
-        ]
-    },
-    {
-        text: "Seberapa sering kamu merasa lapar dalam sehari?",
-        options: [
-            { icon: "🍽️", text: "Sangat sering, selalu ingin makan", scores: [2,1,2,0,1,0,0] },
-            { icon: "⏰", text: "Lapar setiap 2-3 jam sekali", scores: [1,0,3,0,0,0,0] },
-            { icon: "😐", text: "Normal, lapar saat jam makan", scores: [0,0,0,0,0,0,3] },
-            { icon: "🙅", text: "Jarang lapar, sering lupa makan", scores: [0,1,0,3,0,0,0] }
-        ]
-    },
-    {
-        text: "Bagaimana kondisi perutmu setelah minum susu atau makan produk susu?",
-        options: [
-            { icon: "🤢", text: "Kembung, mual, atau diare", scores: [0,0,0,0,0,3,0] },
-            { icon: "😣", text: "Sedikit tidak nyaman", scores: [0,0,0,0,0,2,1] },
-            { icon: "✅", text: "Tidak ada masalah sama sekali", scores: [0,0,1,0,0,0,3] },
-            { icon: "🚫", text: "Tidak pernah konsumsi susu", scores: [0,0,0,0,1,1,0] }
-        ]
-    },
-    {
-        text: "Bagaimana pola tidurmu dan pengaruhnya terhadap berat badan?",
-        options: [
-            { icon: "😰", text: "Kurang tidur, berat badan naik", scores: [0,0,0,0,3,0,0] },
-            { icon: "😴", text: "Tidur cukup tapi tetap gemuk", scores: [0,2,0,2,0,0,0] },
-            { icon: "💤", text: "Tidur baik, berat badan stabil", scores: [0,0,0,0,0,0,3] },
-            { icon: "🌙", text: "Sering begadang tapi berat normal", scores: [0,0,0,0,1,0,2] }
-        ]
-    },
-    {
-        text: "Bagaimana reaksi tubuhmu saat sedang stres atau tertekan?",
-        options: [
-            { icon: "🍫", text: "Nafsu makan meningkat drastis", scores: [0,0,0,0,3,0,0] },
-            { icon: "🚫", text: "Nafsu makan hilang sama sekali", scores: [0,0,0,1,2,0,0] },
-            { icon: "⚖️", text: "Tidak terlalu berpengaruh", scores: [0,0,0,0,0,0,3] },
-            { icon: "😤", text: "Makin semangat olahraga", scores: [0,0,2,0,0,0,1] }
-        ]
-    },
-    {
-        text: "Bagaimana kondisi perutmu sehari-hari?",
-        options: [
-            { icon: "🎈", text: "Sering kembung walau tidak makan banyak", scores: [0,0,0,0,0,3,0] },
-            { icon: "😖", text: "Sering sembelit atau susah BAB", scores: [0,0,0,0,0,3,0] },
-            { icon: "✅", text: "Pencernaan lancar dan normal", scores: [0,0,0,0,0,0,3] },
-            { icon: "🔄", text: "Kadang bermasalah, kadang tidak", scores: [0,0,0,0,1,1,1] }
-        ]
-    },
-    {
-        text: "Bagaimana tubuhmu merespons olahraga kardio (lari, jalan cepat, sepeda)?",
-        options: [
-            { icon: "🔥", text: "Berkeringat banyak tapi BB tidak turun", scores: [1,3,0,0,0,0,0] },
-            { icon: "💪", text: "Berkeringat dan BB turun", scores: [0,0,0,0,0,0,3] },
-            { icon: "😓", text: "Cepat lelah, sulit kardio lama", scores: [0,0,0,3,0,0,0] },
-            { icon: "🏃", text: "Lebih suka olahraga kekuatan/gym", scores: [0,0,3,0,0,0,0] }
-        ]
-    },
-    {
-        text: "Bagaimana distribusi lemak di tubuhmu?",
-        options: [
-            { icon: "🍎", text: "Banyak di perut (bentuk apel)", scores: [2,2,0,1,0,0,0] },
-            { icon: "🍐", text: "Banyak di pinggul/paha (bentuk pir)", scores: [1,1,0,1,1,0,0] },
-            { icon: "📏", text: "Merata di seluruh tubuh", scores: [0,1,0,2,0,0,1] },
-            { icon: "💪", text: "Lemak sedikit, tapi susah berotot", scores: [0,0,3,0,0,0,0] }
-        ]
-    },
-    {
-        text: "Setelah makan makanan berlemak (gorengan, santan), kamu merasakan?",
-        options: [
-            { icon: "🤢", text: "Mual atau tidak nyaman di perut", scores: [0,0,0,0,0,3,0] },
-            { icon: "😴", text: "Langsung mengantuk dan lemas", scores: [1,2,0,1,0,0,0] },
-            { icon: "✅", text: "Tidak ada masalah", scores: [0,0,1,0,0,0,3] },
-            { icon: "⚡", text: "Justru merasa lebih berenergi", scores: [0,1,1,0,0,0,1] }
-        ]
-    },
-    {
-        text: "Bagaimana kondisi kulitmu sehari-hari?",
-        options: [
-            { icon: "🔴", text: "Mudah berjerawat atau kemerahan", scores: [1,0,0,0,1,2,0] },
-            { icon: "💧", text: "Kering dan kusam", scores: [0,1,0,2,0,1,0] },
-            { icon: "✨", text: "Normal dan sehat", scores: [0,0,0,0,0,0,3] },
-            { icon: "🌊", text: "Berminyak terutama di T-zone", scores: [1,0,0,0,2,1,0] }
-        ]
-    },
-    {
-        text: "Apa yang terjadi saat kamu skip makan (puasa sebentar)?",
-        options: [
-            { icon: "😡", text: "Langsung pusing, lemas, dan marah", scores: [2,0,1,0,1,0,0] },
-            { icon: "💪", text: "Tidak masalah, masih berenergi", scores: [0,2,0,0,0,0,2] },
-            { icon: "🎯", text: "Justru merasa lebih fokus", scores: [0,3,0,0,0,0,1] },
-            { icon: "😐", text: "Biasa saja, tidak terlalu terasa", scores: [0,1,0,1,0,0,2] }
-        ]
-    },
-    {
-        text: "Bagaimana pola makan idealmu sehari-hari?",
-        options: [
-            { icon: "🥩", text: "Lebih suka daging & protein, kurang suka karbo", scores: [0,0,3,0,0,0,0] },
-            { icon: "🥗", text: "Lebih suka sayur & buah, hindari lemak", scores: [0,0,0,0,0,2,1] },
-            { icon: "🍱", text: "Makan apa saja tapi porsi kecil", scores: [0,0,0,3,0,0,1] },
-            { icon: "⚖️", text: "Seimbang, semua dimakan secukupnya", scores: [0,0,0,0,0,0,3] }
-        ]
-    },
-    {
-        text: "Bagaimana tingkat aktivitas fisikmu sehari-hari?",
-        options: [
-            { icon: "🪑", text: "Sangat jarang gerak, kerja duduk", scores: [1,2,0,2,0,0,0] },
-            { icon: "🚶", text: "Kadang jalan kaki, tidak rutin olahraga", scores: [1,1,0,1,1,0,0] },
-            { icon: "🏃", text: "Olahraga ringan 2-3x seminggu", scores: [0,0,1,0,0,0,2] },
-            { icon: "💪", text: "Olahraga intens hampir setiap hari", scores: [0,0,3,0,0,0,1] }
-        ]
-    },
-    {
-        text: "Apa pengalamanmu dengan program diet sebelumnya?",
-        options: [
-            { icon: "😤", text: "Sudah coba banyak diet tapi tidak berhasil", scores: [1,2,0,1,1,0,0] },
-            { icon: "🔄", text: "Berhasil tapi berat balik lagi (yo-yo)", scores: [2,1,0,0,1,0,0] },
-            { icon: "📈", text: "Belum pernah coba diet serius", scores: [0,0,0,0,2,0,1] },
-            { icon: "✅", text: "Cukup berhasil kalau konsisten", scores: [0,0,0,0,0,0,3] }
-        ]
-    }
-];
-
-// ============================================================
-// ✏️ EDIT: Definisi 7 Tipe Metabolisme
-// ============================================================
 const quizTypes = [
     {
         id: 1,
@@ -2994,213 +2808,6 @@ const quizTypes = [
 ];
 
 // ============================================================
-// STATE QUIZ
-// ============================================================
-let currentQ = 0;
-let answers = new Array(quizQuestions.length).fill(null);
-let quizResult = null;
-
-function renderQuestion() {
-    const q = quizQuestions[currentQ];
-    const total = quizQuestions.length;
-    const pct = Math.round((currentQ / total) * 100);
-
-    document.getElementById('qCurrent').textContent = currentQ + 1;
-    document.getElementById('qTotal').textContent = total;
-    document.getElementById('qPct').textContent = pct + '%';
-    document.getElementById('qProgressFill').style.width = pct + '%';
-    document.getElementById('qNum').textContent = 'Pertanyaan ' + String(currentQ + 1).padStart(2, '0');
-    document.getElementById('qText').textContent = q.text;
-
-    // Render pilihan
-    const optionsEl = document.getElementById('qOptions');
-    optionsEl.innerHTML = q.options.map((opt, idx) => `
-        <div class="quiz-option ${answers[currentQ] === idx ? 'selected' : ''}" onclick="selectOption(${idx})">
-            <div class="quiz-option-icon">${opt.icon}</div>
-            <div class="quiz-option-text">${opt.text}</div>
-            <div class="quiz-option-check">${answers[currentQ] === idx ? '<i class="fas fa-check"></i>' : ''}</div>
-        </div>
-    `).join('');
-
-    // Tombol back
-    document.getElementById('btnBack').style.display = currentQ > 0 ? 'block' : 'none';
-
-    // Tombol next
-    const btnNext = document.getElementById('btnNext');
-    btnNext.disabled = answers[currentQ] === null;
-    btnNext.innerHTML = currentQ === total - 1
-        ? '<i class="fas fa-chart-bar"></i> Lihat Hasil'
-        : 'Lanjut <i class="fas fa-arrow-right"></i>';
-
-    // Animate
-    const wrap = document.getElementById('quizQuestionWrap');
-    wrap.style.animation = 'none';
-    wrap.offsetHeight;
-    wrap.style.animation = 'slideUp 0.35s ease';
-}
-
-function selectOption(idx) {
-    answers[currentQ] = idx;
-    renderQuestion();
-}
-
-function quizNext() {
-    if (answers[currentQ] === null) return;
-    if (currentQ < quizQuestions.length - 1) {
-        currentQ++;
-        renderQuestion();
-    } else {
-        showResult();
-    }
-}
-
-function quizBack() {
-    if (currentQ > 0) {
-        currentQ--;
-        renderQuestion();
-    }
-}
-
-function calculateResult() {
-    const scores = new Array(7).fill(0);
-    answers.forEach((ansIdx, qIdx) => {
-        if (ansIdx === null) return;
-        const s = quizQuestions[qIdx].options[ansIdx].scores;
-        s.forEach((val, tIdx) => { scores[tIdx] += val; });
-    });
-    const maxIdx = scores.indexOf(Math.max(...scores));
-    return quizTypes[maxIdx];
-}
-
-function showResult() {
-    quizResult = calculateResult();
-
-    // Simpan ke localStorage & Firebase
-    const wa = localStorage.getItem('calfatloss_wa') || '';
-    if (wa) {
-        localStorage.setItem('calfatloss_quiz_' + wa, JSON.stringify({
-            tipe: quizResult.id,
-            tipeName: quizResult.name,
-            metode: quizResult.metode,
-            savedAt: new Date().toISOString()
-        }));
-        // Simpan ke Firebase kalau tersedia
-        if (typeof window.fbSaveQuizResult === 'function') {
-            window.fbSaveQuizResult(wa, quizResult);
-        }
-    }
-
-    // Hide progress
-    document.getElementById('quizProgressWrap').style.display = 'none';
-
-    // Render hasil
-    const body = document.getElementById('quizBody');
-    body.innerHTML = `
-        <div class="quiz-result">
-            <div class="result-dna-icon" style="background:${quizResult.bg};">
-                <span style="font-size:36px;">${quizResult.icon}</span>
-            </div>
-            <div class="result-label">Tipe Metabolismemu</div>
-            <div class="result-type-name" style="color:${quizResult.color};">${quizResult.name}</div>
-            <div class="result-tagline">"${quizResult.tagline}"</div>
-
-            <div class="result-cards">
-                <div class="result-card">
-                    <div class="result-card-label">Metode Diet</div>
-                    <div class="result-card-value" style="color:${quizResult.color};">${quizResult.metodeName}</div>
-                </div>
-                <div class="result-card">
-                    <div class="result-card-label">Prioritas Utama</div>
-                    <div class="result-card-value">${quizResult.anjuran}</div>
-                </div>
-            </div>
-
-            <div class="result-tips">
-                <div class="result-tips-title"><i class="fas fa-lightbulb" style="color:var(--accent-gold);margin-right:6px;"></i>Tips untuk Tipe Kamu:</div>
-                <ul>
-                    ${quizResult.tips.map(t => `<li>${t}</li>`).join('')}
-                </ul>
-            </div>
-
-            <div class="result-disclaimer">
-                <i class="fas fa-info-circle" style="color:var(--accent-gold);margin-right:4px;"></i>
-                <strong>Disclaimer:</strong> Hasil ini bukan diagnosis medis. Ini adalah panduan pola makan berdasarkan respons tubuh. Konsultasikan dengan dokter untuk kondisi kesehatan khusus.
-            </div>
-
-            <button class="btn-result-lanjut" onclick="quizFinish()">
-                <i class="fas fa-rocket"></i> Mulai Program Diet Saya!
-            </button>
-            <button class="btn-result-ulang" onclick="quizReset()">
-                <i class="fas fa-redo"></i> Ulangi Quiz
-            </button>
-        </div>
-    `;
-}
-
-function quizFinish() {
-    // Set metode diet di localStorage agar kalkulator otomatis pakai metode yang tepat
-    const wa = localStorage.getItem('calfatloss_wa') || '';
-    if (wa && quizResult) {
-        localStorage.setItem('calfatloss_quizmetode_' + wa, quizResult.metode);
-        localStorage.setItem('calfatloss_quizdone_' + wa, 'true');
-    }
-    // Tutup overlay
-    document.getElementById('quizOverlay').classList.add('hidden');
-    // Kalau ada callback dari parent (panduan_1)
-    if (typeof window.onQuizFinished === 'function') {
-        window.onQuizFinished(quizResult);
-    }
-}
-
-function quizReset() {
-    currentQ = 0;
-    answers = new Array(quizQuestions.length).fill(null);
-    quizResult = null;
-    document.getElementById('quizProgressWrap').style.display = 'block';
-    document.getElementById('quizBody').innerHTML = `
-        <div class="quiz-question-wrap" id="quizQuestionWrap">
-            <div class="quiz-question-num" id="qNum">Pertanyaan 01</div>
-            <div class="quiz-question-text" id="qText">Loading...</div>
-            <div class="quiz-options" id="qOptions"></div>
-            <div class="quiz-nav">
-                <button class="btn-quiz-back" id="btnBack" onclick="quizBack()" style="display:none"><i class="fas fa-arrow-left"></i></button>
-                <button class="btn-quiz-next" id="btnNext" onclick="quizNext()" disabled>
-                    Lanjut <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-        </div>
-    `;
-    renderQuestion();
-}
-
-// ============================================================
-// FUNGSI UNTUK DIPANGGIL DARI PANDUAN_1
-// Cek apakah user sudah pernah quiz, kalau belum tampilkan
-// ============================================================
-window.initQuiz = function() {
-    const wa = localStorage.getItem('calfatloss_wa') || currentWA || '';
-    const done = wa ? localStorage.getItem('calfatloss_quizdone_' + wa) : null;
-    if (!done) {
-        // Reset state dulu
-        currentQ = 0;
-        answers = new Array(quizQuestions.length).fill(null);
-        quizResult = null;
-        document.getElementById('quizProgressWrap').style.display = 'block';
-        document.getElementById('quizOverlay').classList.remove('hidden');
-        renderQuestion();
-    }
-};
-
-window.showQuiz = function() {
-    document.getElementById('quizOverlay').classList.remove('hidden');
-    quizReset();
-};
-
-// Auto-init kalau dipanggil langsung
-// renderQuestion dipanggil via initQuiz() / showQuiz() dari panduan_1
-// tidak perlu DOMContentLoaded karena quiz terintegrasi sebagai modal
-
-
         // Override quizFinish untuk integrasi dengan panduan_1
         window.onQuizFinished = function(result) {
             // Set metode diet di kalkulator sesuai hasil quiz
