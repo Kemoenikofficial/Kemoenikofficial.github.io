@@ -738,21 +738,23 @@
         @media (min-width: 768px) { .hero-title { font-size: 48px; } .main-container { padding: 0 40px 60px; } }
     </style>
     <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
-            authDomain: "project-panduan-dani.firebaseapp.com",
-            projectId: "project-panduan-dani",
-            storageBucket: "project-panduan-dani.firebasestorage.app",
-            messagingSenderId: "113559517545",
-            appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    <!-- Firebase Compat SDK - lebih stabil di GitHub Pages -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script>
+        var db;
+        try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
+                authDomain: "project-panduan-dani.firebaseapp.com",
+                projectId: "project-panduan-dani",
+                storageBucket: "project-panduan-dani.firebasestorage.app",
+                messagingSenderId: "113559517545",
+                appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
+            };
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+        } catch(e) { console.warn("Firebase init gagal:", e); }
 
         // ============================================================
         // FIREBASE FUNCTIONS - Simpan & Ambil data user
@@ -761,7 +763,7 @@
         // Simpan data ke Firebase (dipanggil saat Generate & Simpan Evaluasi)
         window.fbSaveUserData = async function(wa, data) {
             try {
-                await setDoc(doc(db, "users", wa), {
+                await db.collection("users").doc(wa).set({
                     startDate: data.startDate || null,
                     dietCal: data.dietCal || 0,
                     weeks: data.weeks || 0,
@@ -780,7 +782,7 @@
         // Simpan riwayat evaluasi mingguan ke Firebase
         window.fbSaveWeekly = async function(wa, weeklyHistory) {
             try {
-                await setDoc(doc(db, "users", wa), {
+                await db.collection("users").doc(wa).set({
                     weeklyHistory: weeklyHistory,
                     updatedAt: new Date().toISOString()
                 }, { merge: true });
@@ -793,11 +795,10 @@
         // Simpan startDate ke Firebase (sekali, tidak berubah)
         window.fbSaveStartDate = async function(wa, startDate) {
             try {
-                const ref = doc(db, "users", wa);
-                const snap = await getDoc(ref);
-                // Hanya simpan kalau belum ada (tidak mau overwrite)
-                if (!snap.exists() || !snap.data().startDate) {
-                    await setDoc(ref, {
+                const ref = db.collection("users").doc(wa);
+                const snap = await ref.get();
+                if (!snap.exists || !snap.data().startDate) {
+                    await ref.set({
                         startDate: startDate,
                         createdAt: new Date().toISOString()
                     }, { merge: true });
@@ -811,8 +812,8 @@
         // Ambil data user dari Firebase (dipanggil saat load)
         window.fbLoadUserData = async function(wa) {
             try {
-                const snap = await getDoc(doc(db, "users", wa));
-                if (snap.exists()) {
+                const snap = await db.collection("users").doc(wa).get();
+                if (snap.exists) {
                     console.log("✅ Data ditemukan di Firebase");
                     return snap.data();
                 }
@@ -826,7 +827,7 @@
         // Hapus data user dari Firebase (saat Mulai Baru)
         window.fbDeleteUserData = async function(wa) {
             try {
-                await setDoc(doc(db, "users", wa), {
+                await db.collection("users").doc(wa).set({
                     startDate: null,
                     weeklyHistory: [],
                     dietCal: 0,
@@ -843,7 +844,7 @@
         // Simpan kendala ke Firebase
         window.fbSaveKendala = async function(wa, weekNum, kendalaList, saranList) {
             try {
-                await setDoc(doc(db, "kendala", wa + '_week' + weekNum), {
+                await db.collection("kendala").doc(wa + '_week' + weekNum).set({
                     wa: wa,
                     week: weekNum,
                     kendala: kendalaList,
@@ -851,12 +852,12 @@
                     savedAt: new Date().toISOString()
                 });
                 // Update agregat kendala (untuk analisa)
-                const agg = await getDoc(doc(db, "kendala_agregat", "summary"));
-                const aggData = agg.exists() ? agg.data() : {};
+                const agg = await db.collection("kendala_agregat").doc("summary").get();
+                const aggData = agg.exists ? agg.data() : {};
                 kendalaList.forEach(function(k) {
                     aggData[k] = (aggData[k] || 0) + 1;
                 });
-                await setDoc(doc(db, "kendala_agregat", "summary"), aggData, { merge: true });
+                await db.collection("kendala_agregat").doc("summary").set(aggData, { merge: true });
                 console.log("✅ Kendala tersimpan ke Firebase");
             } catch(e) {
                 console.warn("⚠️ Firebase kendala gagal:", e);
@@ -2843,10 +2844,8 @@ const quizTypes = [
         // Tambah fbSaveQuizResult ke Firebase module
         window.fbSaveQuizResult = async function(wa, result) {
             try {
-                if (typeof window.fbSaveUserData === 'function') {
-                    await window.fbSaveUserData(wa, { quizTipe: result.id, quizTipeName: result.name, quizMetode: result.metode });
-                }
-            } catch(e) { console.warn('Firebase quiz save gagal:', e); }
+                await db.collection("users").doc(wa).set({ quizTipe: result.id, quizTipeName: result.name, quizMetode: result.metode }, { merge: true });
+            } catch(e) { console.warn("Firebase quiz save gagal:", e); }
         };
 
 
