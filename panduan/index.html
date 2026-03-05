@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -1293,6 +1295,7 @@
             const elapsedDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
             
             let progress = Math.min(100, Math.max(0, (elapsedDays / totalDays) * 100));
+            if (progress > 0 && progress < 1) return 1; // minimal 1% kalau sudah mulai
             return Math.round(progress);
         }
 
