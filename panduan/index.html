@@ -1824,8 +1824,10 @@
                 localStorage.removeItem('calfatloss_data_' + currentWA);
                 localStorage.removeItem('calfatloss_startdate_' + currentWA);
                 localStorage.removeItem('calfatloss_custommenu_' + currentWA);
+                localStorage.removeItem('calfatloss_quiz_' + currentWA);
+                localStorage.removeItem('calfatloss_quizdone_' + currentWA);
+                localStorage.removeItem('calfatloss_quizmetode_' + currentWA);
                 localStorage.removeItem('calfatloss_newprogram_' + currentWA);
-                // Reset Firebase juga
                 if (typeof window.fbDeleteUserData === 'function') {
                     window.fbDeleteUserData(currentWA);
                 }
@@ -2846,7 +2848,6 @@ const quizTypes = [
         };
 
 
-    </script>
     <!-- ============================================================ -->
     <!-- QUIZ MODAL - Muncul saat klik Generate pertama kali         -->
     <!-- ============================================================ -->
@@ -2909,7 +2910,6 @@ const quizTypes = [
         .qz-option.qz-selected .qz-radio::after { content:'';width:6px;height:6px;background:white;border-radius:50%;display:block; }
     </style>
 
-    <script>
         // ============================================================
         // QUIZ LOGIC - Muncul saat klik Generate pertama kali
         // ============================================================
