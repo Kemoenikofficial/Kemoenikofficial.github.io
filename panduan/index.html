@@ -761,107 +761,68 @@
         // ============================================================
 
         // Simpan data ke Firebase (dipanggil saat Generate & Simpan Evaluasi)
-        window.fbSaveUserData = async function(wa, data) {
-            try {
-                await db.collection("users").doc(wa).set({
-                    startDate: data.startDate || null,
-                    dietCal: data.dietCal || 0,
-                    weeks: data.weeks || 0,
-                    targetDate: data.targetDate || '',
-                    targetDateISO: data.targetDateISO || null,
-                    metode: data.metode || 'standar',
-                    nama: data.nama || '',
-                    updatedAt: new Date().toISOString()
-                }, { merge: true });
-                console.log("✅ Data profil tersimpan ke Firebase");
-            } catch(e) {
-                console.warn("⚠️ Firebase save gagal, pakai localStorage:", e);
-            }
+        window.fbSaveUserData = function(wa, data) {
+            if (!db) return;
+            db.collection("users").doc(wa).set({
+                startDate: data.startDate || null,
+                dietCal: data.dietCal || 0,
+                weeks: data.weeks || 0,
+                targetDate: data.targetDate || '',
+                targetDateISO: data.targetDateISO || null,
+                metode: data.metode || 'standar',
+                nama: data.nama || '',
+                updatedAt: new Date().toISOString()
+            }, { merge: true }).catch(function(){});
         };
 
         // Simpan riwayat evaluasi mingguan ke Firebase
-        window.fbSaveWeekly = async function(wa, weeklyHistory) {
-            try {
-                await db.collection("users").doc(wa).set({
-                    weeklyHistory: weeklyHistory,
-                    updatedAt: new Date().toISOString()
-                }, { merge: true });
-                console.log("✅ Evaluasi mingguan tersimpan ke Firebase");
-            } catch(e) {
-                console.warn("⚠️ Firebase save weekly gagal:", e);
-            }
+        window.fbSaveWeekly = function(wa, weeklyHistory) {
+            if (!db) return;
+            db.collection("users").doc(wa).set({
+                weeklyHistory: weeklyHistory,
+                updatedAt: new Date().toISOString()
+            }, { merge: true }).catch(function(){});
         };
 
         // Simpan startDate ke Firebase (sekali, tidak berubah)
-        window.fbSaveStartDate = async function(wa, startDate) {
-            try {
-                const ref = db.collection("users").doc(wa);
-                const snap = await ref.get();
+        window.fbSaveStartDate = function(wa, startDate) {
+            if (!db) return;
+            db.collection("users").doc(wa).get().then(function(snap) {
                 if (!snap.exists || !snap.data().startDate) {
-                    await ref.set({
-                        startDate: startDate,
-                        createdAt: new Date().toISOString()
-                    }, { merge: true });
-                    console.log("✅ StartDate tersimpan ke Firebase");
+                    db.collection("users").doc(wa).set(
+                        { startDate: startDate, createdAt: new Date().toISOString() },
+                        { merge: true }
+                    ).catch(function(){});
                 }
-            } catch(e) {
-                console.warn("⚠️ Firebase save startDate gagal:", e);
-            }
+            }).catch(function(){});
         };
 
         // Ambil data user dari Firebase (dipanggil saat load)
-        window.fbLoadUserData = async function(wa) {
-            try {
-                const snap = await db.collection("users").doc(wa).get();
-                if (snap.exists) {
-                    console.log("✅ Data ditemukan di Firebase");
-                    return snap.data();
-                }
-                return null;
-            } catch(e) {
-                console.warn("⚠️ Firebase load gagal:", e);
-                return null;
-            }
+        window.fbLoadUserData = function(wa) {
+            return Promise.resolve(null);
         };
 
         // Hapus data user dari Firebase (saat Mulai Baru)
-        window.fbDeleteUserData = async function(wa) {
-            try {
-                await db.collection("users").doc(wa).set({
-                    startDate: null,
-                    weeklyHistory: [],
-                    dietCal: 0,
-                    weeks: 0,
-                    targetDate: '',
-                    deletedAt: new Date().toISOString()
-                });
-                console.log("✅ Data Firebase direset");
-            } catch(e) {
-                console.warn("⚠️ Firebase delete gagal:", e);
-            }
+        window.fbDeleteUserData = function(wa) {
+            if (!db) return;
+            db.collection("users").doc(wa).set({
+                startDate: null, weeklyHistory: [], dietCal: 0,
+                weeks: 0, targetDate: '', deletedAt: new Date().toISOString()
+            }).catch(function(){});
         };
 
         // Simpan kendala ke Firebase
-        window.fbSaveKendala = async function(wa, weekNum, kendalaList, saranList) {
-            try {
-                await db.collection("kendala").doc(wa + '_week' + weekNum).set({
-                    wa: wa,
-                    week: weekNum,
-                    kendala: kendalaList,
-                    saran: saranList,
-                    savedAt: new Date().toISOString()
-                });
-                // Update agregat kendala (untuk analisa)
-                const agg = await db.collection("kendala_agregat").doc("summary").get();
-                const aggData = agg.exists ? agg.data() : {};
-                kendalaList.forEach(function(k) {
-                    aggData[k] = (aggData[k] || 0) + 1;
-                });
-                await db.collection("kendala_agregat").doc("summary").set(aggData, { merge: true });
-                console.log("✅ Kendala tersimpan ke Firebase");
-            } catch(e) {
-                console.warn("⚠️ Firebase kendala gagal:", e);
-            }
+        window.fbSaveKendala = function(wa, weekNum, kendalaList, saranList) {
+            if (!db) return;
+            db.collection("kendala").doc(wa + '_week' + weekNum).set({
+                wa: wa, week: weekNum, kendala: kendalaList,
+                saran: saranList, savedAt: new Date().toISOString()
+            }).catch(function(){});
+            db.collection("kendala_agregat").doc("summary").get().then(function(agg) {
+                var aggData = agg.exists ? agg.data() : {};
+                kendalaList.forEach(function(k) { aggData[k] = (aggData[k]||0)+1; });
+                db.collection("kendala_agregat").doc("summary").set(aggData, {merge:true});
+            }).catch(function(){});
         };
 
         console.log("🔥 Firebase initialized");
@@ -1842,26 +1803,32 @@
                 }
             }
 
-            // Coba load dari Firebase dulu, fallback ke localStorage
-            (async () => {
-                if (typeof window.fbLoadUserData === 'function') {
-                    const fbData = await window.fbLoadUserData(currentWA);
-                    if (fbData) {
-                        // Sinkronkan startDate dari Firebase ke localStorage
-                        if (fbData.startDate && !localStorage.getItem('calfatloss_startdate_' + currentWA)) {
-                            localStorage.setItem('calfatloss_startdate_' + currentWA, fbData.startDate);
-                        }
-                        // Sinkronkan weeklyHistory dari Firebase ke localStorage
-                        if (fbData.weeklyHistory && fbData.weeklyHistory.length > 0) {
-                            const localWeekly = localStorage.getItem('calfatloss_weekly_' + currentWA);
-                            const localData = localWeekly ? JSON.parse(localWeekly) : [];
-                            if (fbData.weeklyHistory.length >= localData.length) {
-                                localStorage.setItem('calfatloss_weekly_' + currentWA, JSON.stringify(fbData.weeklyHistory));
+            // Load dari Firebase pakai .then()
+            (function() {
+                try {
+                    if (db && currentWA) {
+                        db.collection("users").doc(currentWA).get()
+                        .then(function(snap) {
+                            if (snap.exists) {
+                                var d = snap.data();
+                                if (d.startDate && !localStorage.getItem('calfatloss_startdate_' + currentWA)) {
+                                    localStorage.setItem('calfatloss_startdate_' + currentWA, d.startDate);
+                                }
+                                if (d.weeklyHistory && d.weeklyHistory.length > 0) {
+                                    var lw = localStorage.getItem('calfatloss_weekly_' + currentWA);
+                                    var ld = lw ? JSON.parse(lw) : [];
+                                    if (d.weeklyHistory.length >= ld.length) {
+                                        localStorage.setItem('calfatloss_weekly_' + currentWA, JSON.stringify(d.weeklyHistory));
+                                    }
+                                }
                             }
-                        }
+                            initializeApp();
+                        })
+                        .catch(function() { initializeApp(); });
+                    } else {
+                        initializeApp();
                     }
-                }
-                initializeApp();
+                } catch(e) { initializeApp(); }
             })();
         });
 
@@ -2842,10 +2809,12 @@ const quizTypes = [
         }
 
         // Tambah fbSaveQuizResult ke Firebase module
-        window.fbSaveQuizResult = async function(wa, result) {
-            try {
-                await db.collection("users").doc(wa).set({ quizTipe: result.id, quizTipeName: result.name, quizMetode: result.metode }, { merge: true });
-            } catch(e) { console.warn("Firebase quiz save gagal:", e); }
+        window.fbSaveQuizResult = function(wa, result) {
+            if (!db) return;
+            db.collection("users").doc(wa).set(
+                { quizTipe: result.id, quizTipeName: result.name, quizMetode: result.metode },
+                { merge: true }
+            ).catch(function(){});
         };
 
 
