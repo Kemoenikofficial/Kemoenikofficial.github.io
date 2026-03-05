@@ -228,6 +228,29 @@
         .history-actions { display: flex; gap: 8px; margin-top: 12px; }
         .edit-mode-indicator { background: var(--accent-gold); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; margin-bottom: 12px; }
         
+        /* ===================== KENDALA CEKLIS ===================== */
+        .kendala-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 12px; background: var(--bg-light);
+            border: 2px solid transparent; border-radius: 10px;
+            cursor: pointer; transition: all 0.2s ease; position: relative;
+        }
+        .kendala-item:hover { border-color: var(--primary-light); background: white; }
+        .kendala-item.active { border-color: var(--primary); background: white; }
+        .kendala-icon { font-size: 18px; flex-shrink: 0; }
+        .kendala-text { font-size: 11px; font-weight: 500; color: var(--text-dark); flex: 1; line-height: 1.3; }
+        .kendala-item.active .kendala-text { color: var(--primary); font-weight: 600; }
+        .kendala-check {
+            width: 18px; height: 18px; border-radius: 50%;
+            border: 2px solid #ddd; display: flex; align-items: center;
+            justify-content: center; font-size: 8px; color: white;
+            flex-shrink: 0; transition: all 0.2s ease;
+        }
+        .kendala-item.active .kendala-check { background: var(--primary); border-color: var(--primary); }
+        .kendala-answer-item { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 12px; }
+        .kendala-answer-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+        .kendala-answer-text { font-size: 11px; opacity: 0.9; line-height: 1.6; }
+
         /* Progress Bar Halaman Utama */
         .main-progress-card { background: white; border-radius: var(--radius); box-shadow: 0 12px 32px rgba(0,0,0,0.12); padding: 20px 24px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.04); display: none; }
         .main-progress-card.visible { display: block; animation: fadeInUp 0.5s ease; }
@@ -248,11 +271,644 @@
         .date-estimate-box .de-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 4px; }
         .date-estimate-box .de-value { font-size: 14px; font-weight: 700; line-height: 1.3; }
 
+        /* ===================== QUIZ MODAL ===================== */
+
+        :root {
+            --primary: #2D5A3D;
+            --primary-light: #3F7A52;
+            --primary-dark: #1E3D28;
+            --accent-gold: #D4AF37;
+            --bg-cream: #F8F6F0;
+            --bg-light: #F0EDE6;
+            --text-dark: #1A1A1A;
+            --text-muted: #6B7280;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===================== OVERLAY MODAL ===================== */
+        .quiz-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz-overlay.hidden { display: none; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes shimmer { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+        .quiz-modal {
+            background: white;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s cubic-bezier(.4,0,.2,1);
+            position: relative;
+        }
+
+        /* ===================== HEADER QUIZ ===================== */
+        .quiz-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 28px 24px 20px;
+            border-radius: 24px 24px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-header::before {
+            content: '';
+            position: absolute;
+            top: -30px; right: -30px;
+            width: 120px; height: 120px;
+            background: rgba(212,175,55,0.15);
+            border-radius: 50%;
+        }
+
+        .quiz-header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px; left: -20px;
+            width: 80px; height: 80px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .quiz-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(212,175,55,0.2);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+        }
+
+        .quiz-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: white;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .quiz-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.5;
+        }
+
+        /* ===================== PROGRESS BAR ===================== */
+        .quiz-progress-wrap {
+            padding: 16px 24px 0;
+        }
+
+        .quiz-progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .quiz-progress-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .quiz-progress-num {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .quiz-progress-bar {
+            background: var(--bg-light);
+            height: 6px;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent-gold));
+            border-radius: 50px;
+            transition: width 0.5s cubic-bezier(.4,0,.2,1);
+        }
+
+        /* ===================== PERTANYAAN ===================== */
+        .quiz-body {
+            padding: 20px 24px 24px;
+        }
+
+        .quiz-question-wrap {
+            animation: slideUp 0.35s ease;
+        }
+
+        .quiz-question-num {
+            font-size: 11px;
+            color: var(--accent-gold);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .quiz-question-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* ===================== PILIHAN JAWABAN ===================== */
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-option::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .quiz-option:hover { border-color: var(--primary-light); transform: translateX(4px); }
+
+        .quiz-option.selected {
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .quiz-option.selected::before { opacity: 0.06; }
+
+        .quiz-option-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .quiz-option.selected .quiz-option-icon {
+            background: var(--primary);
+        }
+
+        .quiz-option-text {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
+        }
+
+        .quiz-option.selected .quiz-option-text { color: var(--primary); font-weight: 600; }
+
+        .quiz-option-check {
+            margin-left: auto;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            transition: all 0.25s ease;
+        }
+
+        .quiz-option.selected .quiz-option-check {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* ===================== TOMBOL NAVIGASI ===================== */
+        .quiz-nav {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .btn-quiz-back {
+            padding: 12px 20px;
+            background: var(--bg-light);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.25s ease;
+        }
+
+        .btn-quiz-back:hover { background: #e0ddd6; }
+
+        .btn-quiz-next {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-quiz-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(45,90,61,0.3); }
+        .btn-quiz-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* ===================== HASIL QUIZ ===================== */
+        .quiz-result {
+            padding: 24px;
+            text-align: center;
+            animation: popIn 0.5s cubic-bezier(.4,0,.2,1);
+        }
+
+        .result-dna-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 16px;
+            animation: shimmer 2s infinite;
+        }
+
+        .result-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .result-type-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .result-tagline {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .result-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .result-card {
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+        }
+
+        .result-card-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .result-card-value {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .result-tips {
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .result-tips-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .result-tips ul {
+            padding-left: 16px;
+        }
+
+        .result-tips li {
+            font-size: 12px;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        .result-disclaimer {
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #FEF3C7;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-gold);
+            text-align: left;
+        }
+
+        .btn-result-lanjut {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .btn-result-lanjut:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(45,90,61,0.3); }
+
+        .btn-result-ulang {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid var(--bg-light);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.25s ease;
+        }
+
+        .btn-result-ulang:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Scrollbar */
+        .quiz-modal::-webkit-scrollbar { width: 4px; }
+        .quiz-modal::-webkit-scrollbar-track { background: transparent; }
+        .quiz-modal::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+    
+
         @media print { .no-print { display: none !important; } body { background: white; } .glass-card { box-shadow: none; border: 1px solid #ddd; } .card-body { display: block !important; } }
         @media (min-width: 768px) { .hero-title { font-size: 48px; } .main-container { padding: 0 40px 60px; } }
     </style>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
+            authDomain: "project-panduan-dani.firebaseapp.com",
+            projectId: "project-panduan-dani",
+            storageBucket: "project-panduan-dani.firebasestorage.app",
+            messagingSenderId: "113559517545",
+            appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ============================================================
+        // FIREBASE FUNCTIONS - Simpan & Ambil data user
+        // ============================================================
+
+        // Simpan data ke Firebase (dipanggil saat Generate & Simpan Evaluasi)
+        window.fbSaveUserData = async function(wa, data) {
+            try {
+                await setDoc(doc(db, "users", wa), {
+                    startDate: data.startDate || null,
+                    dietCal: data.dietCal || 0,
+                    weeks: data.weeks || 0,
+                    targetDate: data.targetDate || '',
+                    targetDateISO: data.targetDateISO || null,
+                    metode: data.metode || 'standar',
+                    nama: data.nama || '',
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+                console.log("✅ Data profil tersimpan ke Firebase");
+            } catch(e) {
+                console.warn("⚠️ Firebase save gagal, pakai localStorage:", e);
+            }
+        };
+
+        // Simpan riwayat evaluasi mingguan ke Firebase
+        window.fbSaveWeekly = async function(wa, weeklyHistory) {
+            try {
+                await setDoc(doc(db, "users", wa), {
+                    weeklyHistory: weeklyHistory,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+                console.log("✅ Evaluasi mingguan tersimpan ke Firebase");
+            } catch(e) {
+                console.warn("⚠️ Firebase save weekly gagal:", e);
+            }
+        };
+
+        // Simpan startDate ke Firebase (sekali, tidak berubah)
+        window.fbSaveStartDate = async function(wa, startDate) {
+            try {
+                const ref = doc(db, "users", wa);
+                const snap = await getDoc(ref);
+                // Hanya simpan kalau belum ada (tidak mau overwrite)
+                if (!snap.exists() || !snap.data().startDate) {
+                    await setDoc(ref, {
+                        startDate: startDate,
+                        createdAt: new Date().toISOString()
+                    }, { merge: true });
+                    console.log("✅ StartDate tersimpan ke Firebase");
+                }
+            } catch(e) {
+                console.warn("⚠️ Firebase save startDate gagal:", e);
+            }
+        };
+
+        // Ambil data user dari Firebase (dipanggil saat load)
+        window.fbLoadUserData = async function(wa) {
+            try {
+                const snap = await getDoc(doc(db, "users", wa));
+                if (snap.exists()) {
+                    console.log("✅ Data ditemukan di Firebase");
+                    return snap.data();
+                }
+                return null;
+            } catch(e) {
+                console.warn("⚠️ Firebase load gagal:", e);
+                return null;
+            }
+        };
+
+        // Hapus data user dari Firebase (saat Mulai Baru)
+        window.fbDeleteUserData = async function(wa) {
+            try {
+                await setDoc(doc(db, "users", wa), {
+                    startDate: null,
+                    weeklyHistory: [],
+                    dietCal: 0,
+                    weeks: 0,
+                    targetDate: '',
+                    deletedAt: new Date().toISOString()
+                });
+                console.log("✅ Data Firebase direset");
+            } catch(e) {
+                console.warn("⚠️ Firebase delete gagal:", e);
+            }
+        };
+
+        // Simpan kendala ke Firebase
+        window.fbSaveKendala = async function(wa, weekNum, kendalaList, saranList) {
+            try {
+                await setDoc(doc(db, "kendala", wa + '_week' + weekNum), {
+                    wa: wa,
+                    week: weekNum,
+                    kendala: kendalaList,
+                    saran: saranList,
+                    savedAt: new Date().toISOString()
+                });
+                // Update agregat kendala (untuk analisa)
+                const agg = await getDoc(doc(db, "kendala_agregat", "summary"));
+                const aggData = agg.exists() ? agg.data() : {};
+                kendalaList.forEach(function(k) {
+                    aggData[k] = (aggData[k] || 0) + 1;
+                });
+                await setDoc(doc(db, "kendala_agregat", "summary"), aggData, { merge: true });
+                console.log("✅ Kendala tersimpan ke Firebase");
+            } catch(e) {
+                console.warn("⚠️ Firebase kendala gagal:", e);
+            }
+        };
+
+        console.log("🔥 Firebase initialized");
+    </script>
 </head>
 <body>
+<!-- QUIZ OVERLAY MODAL -->
+<div class="quiz-overlay" id="quizOverlay">
+    <div class="quiz-modal" id="quizModal">
+
+        <!-- Header -->
+        <div class="quiz-header">
+            <div class="quiz-badge"><i class="fas fa-dna"></i> KEMOENIK PROFILING</div>
+            <div class="quiz-title">Kenali Tipe<br>Metabolismemu</div>
+            <div class="quiz-subtitle">15 pertanyaan singkat untuk menemukan program diet yang paling cocok untukmu</div>
+        </div>
+
+        <!-- Progress -->
+        <div class="quiz-progress-wrap" id="quizProgressWrap">
+            <div class="quiz-progress-info">
+                <span class="quiz-progress-label">Pertanyaan <span id="qCurrent">1</span> dari <span id="qTotal">15</span></span>
+                <span class="quiz-progress-num" id="qPct">0%</span>
+            </div>
+            <div class="quiz-progress-bar">
+                <div class="quiz-progress-fill" id="qProgressFill" style="width:0%"></div>
+            </div>
+        </div>
+
+        <!-- Body: Pertanyaan -->
+        <div class="quiz-body" id="quizBody">
+            <div class="quiz-question-wrap" id="quizQuestionWrap">
+                <div class="quiz-question-num" id="qNum">Pertanyaan 01</div>
+                <div class="quiz-question-text" id="qText">Loading...</div>
+                <div class="quiz-options" id="qOptions"></div>
+                <div class="quiz-nav">
+                    <button class="btn-quiz-back" id="btnBack" onclick="quizBack()" style="display:none"><i class="fas fa-arrow-left"></i></button>
+                    <button class="btn-quiz-next" id="btnNext" onclick="quizNext()" disabled>
+                        Lanjut <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
     <!-- Access Check Layer -->
     <div id="accessCheck" style="display: none;">
         <div class="access-message">
@@ -942,8 +1598,120 @@
                             </div>
                         </div>
                         <div class="obstacle-section">
-                            <label class="form-label">Ada kendala minggu ini?</label>
-                            <textarea id="weeklyObstacle" class="obstacle-textarea" placeholder="Ceritakan kendala atau tantangan yang Anda hadapi minggu ini..."></textarea>
+                            <label class="form-label" style="margin-bottom:12px;display:block;">
+                                <i class="fas fa-exclamation-circle" style="color:var(--accent-gold);margin-right:6px;"></i>
+                                Kendala minggu ini? (pilih yang dialami)
+                            </label>
+
+                            <!-- Grid Kendala -->
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;" id="kendalaGrid">
+
+                                <!-- MAKAN & LAPAR -->
+                                <div class="kendala-item" onclick="toggleKendala(this,'lapar_malam')">
+                                    <span class="kendala-icon">🌙</span>
+                                    <span class="kendala-text">Lapar tengah malam</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'ngidam_manis')">
+                                    <span class="kendala-icon">🍫</span>
+                                    <span class="kendala-text">Ngidam makanan manis</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'bosen_menu')">
+                                    <span class="kendala-icon">😑</span>
+                                    <span class="kendala-text">Bosen sama menu diet</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'porsi_susah')">
+                                    <span class="kendala-icon">🍽️</span>
+                                    <span class="kendala-text">Susah kontrol porsi</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+
+                                <!-- BERAT BADAN -->
+                                <div class="kendala-item" onclick="toggleKendala(this,'bb_stagnan')">
+                                    <span class="kendala-icon">⚖️</span>
+                                    <span class="kendala-text">BB tidak turun-turun</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'bb_naik')">
+                                    <span class="kendala-icon">📈</span>
+                                    <span class="kendala-text">BB malah naik</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'perut_buncit')">
+                                    <span class="kendala-icon">🫃</span>
+                                    <span class="kendala-text">BB turun tapi perut masih buncit</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'yoyo')">
+                                    <span class="kendala-icon">🔄</span>
+                                    <span class="kendala-text">Turun tapi cepat naik lagi</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+
+                                <!-- TUBUH & KESEHATAN -->
+                                <div class="kendala-item" onclick="toggleKendala(this,'lemas')">
+                                    <span class="kendala-icon">😴</span>
+                                    <span class="kendala-text">Lemas & tidak berenergi</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'kembung')">
+                                    <span class="kendala-icon">🎈</span>
+                                    <span class="kendala-text">Perut kembung & begah</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'sembelit')">
+                                    <span class="kendala-icon">😣</span>
+                                    <span class="kendala-text">Sembelit / susah BAB</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'sakit_kepala')">
+                                    <span class="kendala-icon">🤕</span>
+                                    <span class="kendala-text">Sering sakit kepala</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+
+                                <!-- KONSISTENSI -->
+                                <div class="kendala-item" onclick="toggleKendala(this,'susah_konsisten')">
+                                    <span class="kendala-icon">😤</span>
+                                    <span class="kendala-text">Susah konsisten / sering cheating</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'stres_makan')">
+                                    <span class="kendala-icon">😰</span>
+                                    <span class="kendala-text">Stres bikin makan banyak</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'malas_olahraga')">
+                                    <span class="kendala-icon">🛋️</span>
+                                    <span class="kendala-text">Malas olahraga</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+                                <div class="kendala-item" onclick="toggleKendala(this,'tidak_ada_kendala')">
+                                    <span class="kendala-icon">✅</span>
+                                    <span class="kendala-text">Tidak ada kendala!</span>
+                                    <span class="kendala-check"><i class="fas fa-check"></i></span>
+                                </div>
+
+                            </div>
+
+                            <!-- Panel Jawaban Otomatis -->
+                            <div id="kendalaAnswerPanel" style="display:none;">
+                                <div style="background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:12px;padding:16px;color:white;margin-bottom:8px;">
+                                    <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:0.9;margin-bottom:12px;">
+                                        <i class="fas fa-robot" style="margin-right:6px;"></i>Saran untuk Kendala Kamu:
+                                    </div>
+                                    <div id="kendalaAnswerList" style="display:flex;flex-direction:column;gap:10px;"></div>
+                                </div>
+                                <div style="background:#FEF3C7;border-radius:8px;padding:10px 12px;font-size:11px;color:#92400E;border-left:3px solid var(--accent-gold);">
+                                    <i class="fas fa-lightbulb" style="margin-right:4px;"></i>
+                                    Tetap semangat! Kendala adalah bagian normal dari proses. Yang penting konsisten minum KEMOENIK setiap hari! 💪
+                                </div>
+                            </div>
+
+                            <!-- Input tambahan (opsional) -->
+                            <textarea id="weeklyObstacle" class="obstacle-textarea" placeholder="Catatan tambahan (opsional)..." style="margin-top:12px;height:60px;font-size:12px;"></textarea>
                         </div>
                         <div style="display: flex; gap: 12px; margin-top: 16px;" class="no-print">
                             <button class="btn btn-primary" id="btnSaveEval" onclick="saveWeeklyEval()"><i class="fas fa-save"></i>Simpan Evaluasi</button>
@@ -1107,8 +1875,33 @@
                 localStorage.removeItem('calfatloss_startdate_' + currentWA);
                 localStorage.removeItem('calfatloss_custommenu_' + currentWA);
                 localStorage.removeItem('calfatloss_newprogram_' + currentWA);
+                // Reset Firebase juga
+                if (typeof window.fbDeleteUserData === 'function') {
+                    window.fbDeleteUserData(currentWA);
+                }
             }
-            initializeApp();
+
+            // Coba load dari Firebase dulu, fallback ke localStorage
+            (async () => {
+                if (typeof window.fbLoadUserData === 'function') {
+                    const fbData = await window.fbLoadUserData(currentWA);
+                    if (fbData) {
+                        // Sinkronkan startDate dari Firebase ke localStorage
+                        if (fbData.startDate && !localStorage.getItem('calfatloss_startdate_' + currentWA)) {
+                            localStorage.setItem('calfatloss_startdate_' + currentWA, fbData.startDate);
+                        }
+                        // Sinkronkan weeklyHistory dari Firebase ke localStorage
+                        if (fbData.weeklyHistory && fbData.weeklyHistory.length > 0) {
+                            const localWeekly = localStorage.getItem('calfatloss_weekly_' + currentWA);
+                            const localData = localWeekly ? JSON.parse(localWeekly) : [];
+                            if (fbData.weeklyHistory.length >= localData.length) {
+                                localStorage.setItem('calfatloss_weekly_' + currentWA, JSON.stringify(fbData.weeklyHistory));
+                            }
+                        }
+                    }
+                }
+                initializeApp();
+            })();
         });
 
         function showAccessDenied() {
@@ -1120,6 +1913,24 @@
         function goToLogin() { window.location.href = 'index.html'; }
 
         function initializeApp() {
+            // Cek apakah user sudah pernah quiz, kalau belum tampilkan modal
+            setTimeout(function() {
+                const wa = localStorage.getItem('calfatloss_wa') || currentWA;
+                const done = wa ? localStorage.getItem('calfatloss_quizdone_' + wa) : null;
+                if (!done) {
+                    if (typeof window.initQuiz === 'function') window.initQuiz();
+                } else {
+                    // User sudah quiz, tampilkan banner hasil
+                    const saved = wa ? localStorage.getItem('calfatloss_quiz_' + wa) : null;
+                    if (saved) {
+                        try {
+                            const qData = JSON.parse(saved);
+                            const result = quizTypes.find(t => t.id === qData.tipe);
+                            if (result) showQuizResultBanner(result);
+                        } catch(e) {}
+                    }
+                }
+            }, 800);
             document.getElementById('accessCheck').style.display = 'none';
             document.getElementById('accessDenied').style.display = 'none';
             document.getElementById('mainApp').classList.remove('section-hidden');
@@ -1140,7 +1951,11 @@
                 if (data.tinggi) document.getElementById('inputTinggi').value = data.tinggi;
                 if (data.aktivitas) document.getElementById('inputAktivitas').value = data.aktivitas;
                 if (data.target) document.getElementById('inputTarget').value = data.target;
-                if (data.metode) document.getElementById('inputMetode').value = data.metode;
+                // Pakai metode dari hasil quiz kalau ada
+                const quizMetode = localStorage.getItem('calfatloss_quizmetode_' + currentWA);
+                const metodeToUse = quizMetode || data.metode;
+                if (metodeToUse) document.getElementById('inputMetode').value = metodeToUse;
+                if (metodeToUse) userData.metode = metodeToUse;
                 if (data.nama && data.gender && data.berat) {
                     calculateAndShowProgram(false);
                     showProgramSections();
@@ -1149,8 +1964,27 @@
             if (savedWeekly) { weeklyHistory = JSON.parse(savedWeekly); renderWeeklyHistory(); }
         }
 
-        function saveUserData() { localStorage.setItem('calfatloss_data_' + currentWA, JSON.stringify(userData)); }
-        function saveWeeklyData() { localStorage.setItem('calfatloss_weekly_' + currentWA, JSON.stringify(weeklyHistory)); }
+        function saveUserData() {
+            // Simpan ke localStorage (cepat, untuk session ini)
+            localStorage.setItem('calfatloss_data_' + currentWA, JSON.stringify(userData));
+            // Simpan hasil kalkulasi ke Firebase (aman, tidak hilang)
+            if (currentWA && typeof window.fbSaveUserData === 'function') {
+                window.fbSaveUserData(currentWA, userData);
+            }
+            // Simpan startDate ke Firebase (sekali, tidak berubah)
+            if (currentWA && userData.startDate && typeof window.fbSaveStartDate === 'function') {
+                window.fbSaveStartDate(currentWA, userData.startDate);
+            }
+        }
+
+        function saveWeeklyData() {
+            // Simpan ke localStorage
+            localStorage.setItem('calfatloss_weekly_' + currentWA, JSON.stringify(weeklyHistory));
+            // Simpan ke Firebase
+            if (currentWA && typeof window.fbSaveWeekly === 'function') {
+                window.fbSaveWeekly(currentWA, weeklyHistory);
+            }
+        }
 
         function calculateBMR(gender, weight, height, age) {
             return gender === 'pria' ? (10 * weight) + (6.25 * height) - (5 * age) + 5 : (10 * weight) + (6.25 * height) - (5 * age) - 161;
@@ -1373,6 +2207,22 @@
         }
 
         function saveWeeklyEval() {
+            // Ambil kendala yang aktif
+            var obstacle = activeKendala.join(',');
+            // Simpan kendala ke Firebase untuk analisa
+            if (currentWA && activeKendala.length > 0 && typeof window.fbSaveKendala === 'function') {
+                var saranList = activeKendala.map(function(k) {
+                    return kendalaDatabase[k] ? kendalaDatabase[k].title : k;
+                });
+                window.fbSaveKendala(currentWA, weeklyHistory.length + 1, activeKendala, saranList);
+            }
+            // Kalau ada catatan tambahan, gabung
+            var catatanEl = document.getElementById('weeklyObstacle');
+            if (catatanEl && catatanEl.value.trim()) {
+                obstacle += (obstacle ? '|' : '') + catatanEl.value.trim();
+            }
+            // Override weeklyObstacle value agar tersimpan
+            if (catatanEl) catatanEl.value = obstacle;
             const startWeight = parseFloat(document.getElementById('weekStartWeight').value);
             const endWeight = parseFloat(document.getElementById('weekEndWeight').value);
             const obstacle = document.getElementById('weeklyObstacle').value;
@@ -1387,6 +2237,7 @@
             }
             saveWeeklyData(); renderWeeklyHistory();
             document.getElementById('evalWeekDisplay').textContent = 'Minggu ke-' + (weeklyHistory.length + 1);
+            resetKendala();
         }
 
         function resetForm() {
@@ -1430,6 +2281,7 @@
         }
 
         function cancelEdit() {
+            resetKendala();
             editingIndex = -1; resetForm();
             document.getElementById('editModeIndicator').style.display = 'none';
             document.getElementById('btnSaveEval').innerHTML = '<i class="fas fa-save"></i> Simpan Evaluasi';
@@ -1476,6 +2328,140 @@
                 });
             }
         });
+
+        // ==================== KENDALA & JAWABAN OTOMATIS ====================
+        // ✏️ EDIT: Database kendala dan jawaban - tambah/ubah sesuai kebutuhan
+        const kendalaDatabase = {
+            lapar_malam: {
+                title: "🌙 Lapar Tengah Malam",
+                saran: "Ini tanda defisit kalori terlalu besar atau kurang protein di makan malam. Tambah protein (telur/dada ayam) di makan malam, minum 2 gelas air putih saat lapar, dan pastikan makan terakhir max jam 19.00. Minum KEMOENIK sebelum tidur untuk bantu kenyang lebih lama."
+            },
+            ngidam_manis: {
+                title: "🍫 Ngidam Makanan Manis",
+                saran: "Ngidam manis biasanya tanda gula darah tidak stabil. Ganti dengan buah (pisang/apel), dark chocolate 1-2 kotak, atau minum air putih hangat. Pastikan makan karbohidrat kompleks (nasi merah/ubi) agar gula darah lebih stabil sepanjang hari."
+            },
+            bosen_menu: {
+                title: "😑 Bosen Sama Menu Diet",
+                saran: "Ini sangat normal! Coba tab Custom Menu untuk pilih bahan sendiri sesuai selera. Variasikan cara masak: rebus, kukus, panggang. Ingat, yang penting total kalori tetap sesuai target — bukan menunya! Boleh sesekali makan di luar asal tetap hitung kalorinya."
+            },
+            porsi_susah: {
+                title: "🍽️ Susah Kontrol Porsi",
+                saran: "Gunakan piring lebih kecil agar porsi terlihat banyak. Minum 1 gelas air 30 menit sebelum makan. Makan perlahan & kunyah 20-30 kali. Isi setengah piring dengan sayuran dulu baru protein & karbo. KEMOENIK bantu tekan nafsu makan berlebih."
+            },
+            bb_stagnan: {
+                title: "⚖️ BB Tidak Turun-Turun",
+                saran: "Ini namanya weight loss plateau, sangat normal di minggu 3-6. Coba: hitung ulang kalori (mungkin ada yang terlewat), variasikan jenis olahraga, pastikan tidur 7-8 jam. Coba zigzag kalori: makan sedikit lebih banyak 1-2 hari lalu kembali defisit. BB stagnan bukan berarti tidak ada progres — lemak tubuh tetap berkurang!"
+            },
+            bb_naik: {
+                title: "📈 BB Malah Naik",
+                saran: "Jangan panik dulu! BB naik bisa karena: retensi air (terlalu banyak garam/kurang minum), masa menstruasi, atau otot bertambah. Cek apakah total kalori benar-benar defisit. Kurangi makanan asin & berlemak. Timbang di waktu yang sama setiap hari (pagi setelah bangun tidur)."
+            },
+            perut_buncit: {
+                title: "🫃 BB Turun Tapi Perut Masih Buncit",
+                saran: "Lemak perut (visceral fat) adalah yang paling terakhir hilang dan butuh waktu. Fokus pada kardio (jalan cepat, bersepeda) + latihan core (plank). Kurangi gula, alkohol, dan makanan olahan. KEMOENIK dengan kandungan herbal membantu percepat pembakaran lemak perut."
+            },
+            yoyo: {
+                title: "🔄 BB Turun Tapi Cepat Naik Lagi",
+                saran: "Ini efek yo-yo — biasanya karena diet terlalu ekstrem atau tidak ada fase maintenance. Setelah mencapai target, jangan langsung makan bebas. Naikkan kalori perlahan 100-200 kcal/minggu. Tetap minum KEMOENIK meski sudah di target untuk jaga metabolisme."
+            },
+            lemas: {
+                title: "😴 Lemas & Tidak Berenergi",
+                saran: "Kemungkinan penyebab: kalori terlalu rendah, kurang karbohidrat, atau kurang tidur. Jangan potong kalori di bawah 1200 kcal. Makan karbo kompleks di pagi hari untuk energi. Minum air putih minimal 8 gelas/hari. Istirahat cukup. Lemas di awal diet (1-2 minggu pertama) adalah normal."
+            },
+            kembung: {
+                title: "🎈 Perut Kembung & Begah",
+                saran: "Hindari makan terlalu cepat dan sambil bicara. Kurangi makanan penyebab kembung: kol, brokoli, kacang-kacangan berlebih, minuman bersoda. Minum air hangat atau teh jahe setelah makan. KEMOENIK dengan kandungan herbal alami membantu atasi kembung dan perlancar pencernaan."
+            },
+            sembelit: {
+                title: "😣 Sembelit / Susah BAB",
+                saran: "Perbanyak serat: sayuran hijau, buah, oatmeal. Minum air putih minimal 8 gelas/hari. Gerak aktif minimal 30 menit/hari. Minum air hangat di pagi hari sebelum makan. Kalau lebih dari 3 hari tidak BAB, konsultasikan ke dokter. KEMOENIK bantu perlancar sistem pencernaan."
+            },
+            sakit_kepala: {
+                title: "🤕 Sering Sakit Kepala",
+                saran: "Sakit kepala saat diet biasanya karena: dehidrasi, kalori terlalu rendah, atau kurang garam (sodium). Pastikan minum 8 gelas air/hari. Jangan skip makan. Tambahkan sedikit garam ke makanan. Kalau sakit kepala terus lebih dari 1 minggu, hentikan diet ekstrem dan konsultasi dokter."
+            },
+            susah_konsisten: {
+                title: "😤 Susah Konsisten / Sering Cheating",
+                saran: "Konsistensi 80% sudah cukup! Boleh cheat meal 1x seminggu asal tidak berlebihan. Siapkan meal prep di awal minggu. Foto makanan sebelum dimakan sebagai pengingat. Ingat WHY kamu mulai diet. Cheat meal bukan kegagalan — kegagalan adalah berhenti sama sekali!"
+            },
+            stres_makan: {
+                title: "😰 Stres Bikin Makan Banyak",
+                saran: "Ini namanya emotional eating — sangat umum. Saat stres & ingin makan: tunggu 10 menit, minum air putih, atau jalan kaki 5 menit. Ganti camilan stres dengan buah atau kacang almond. Kelola stres dengan meditasi 5 menit/hari atau deep breathing. KEMOENIK bantu keseimbangan hormonal yang mempengaruhi nafsu makan."
+            },
+            malas_olahraga: {
+                title: "🛋️ Malas Olahraga",
+                saran: "Mulai kecil: 10 menit jalan kaki setelah makan. Tidak perlu gym — jalan cepat, naik tangga, atau senam ringan di rumah sudah cukup. Cari partner olahraga agar lebih semangat. Ingat: diet 80% menentukan hasil, olahraga 20%. Yang terpenting adalah konsistensi minum KEMOENIK dan defisit kalori!"
+            },
+            tidak_ada_kendala: {
+                title: "✅ Tidak Ada Kendala!",
+                saran: "LUAR BIASA! Kamu sudah di jalur yang benar! Pertahankan konsistensi ini dan hasil akan semakin terlihat. Tetap semangat, tetap disiplin, dan jangan lupa minum KEMOENIK setiap hari! 🎉"
+            }
+        };
+
+        let activeKendala = [];
+
+        function toggleKendala(el, key) {
+            const idx = activeKendala.indexOf(key);
+            if (idx > -1) {
+                activeKendala.splice(idx, 1);
+                el.classList.remove('active');
+            } else {
+                // Kalau pilih "tidak ada kendala", reset yang lain
+                if (key === 'tidak_ada_kendala') {
+                    activeKendala = ['tidak_ada_kendala'];
+                    document.querySelectorAll('#kendalaGrid .kendala-item').forEach(function(item) {
+                        item.classList.remove('active');
+                    });
+                    el.classList.add('active');
+                } else {
+                    // Hapus "tidak ada kendala" kalau ada
+                    const noIdx = activeKendala.indexOf('tidak_ada_kendala');
+                    if (noIdx > -1) {
+                        activeKendala.splice(noIdx, 1);
+                        document.querySelectorAll('#kendalaGrid .kendala-item').forEach(function(item) {
+                            if (item.getAttribute('onclick') && item.getAttribute('onclick').includes('tidak_ada_kendala')) {
+                                item.classList.remove('active');
+                            }
+                        });
+                    }
+                    activeKendala.push(key);
+                    el.classList.add('active');
+                }
+            }
+            renderKendalaAnswers();
+        }
+
+        function renderKendalaAnswers() {
+            const panel = document.getElementById('kendalaAnswerPanel');
+            const list = document.getElementById('kendalaAnswerList');
+            if (activeKendala.length === 0) {
+                panel.style.display = 'none';
+                return;
+            }
+            panel.style.display = 'block';
+            list.innerHTML = activeKendala.map(function(key) {
+                const db = kendalaDatabase[key];
+                if (!db) return '';
+                return '<div class="kendala-answer-item">' +
+                    '<div class="kendala-answer-title">' + db.title + '</div>' +
+                    '<div class="kendala-answer-text">' + db.saran + '</div>' +
+                    '</div>';
+            }).join('');
+            // Smooth scroll ke panel jawaban
+            setTimeout(function() {
+                panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        // Reset kendala saat load evaluasi baru
+        function resetKendala() {
+            activeKendala = [];
+            document.querySelectorAll('#kendalaGrid .kendala-item').forEach(function(item) {
+                item.classList.remove('active');
+            });
+            document.getElementById('kendalaAnswerPanel').style.display = 'none';
+        }
+        // ==================== END KENDALA ====================
 
         // ==================== CUSTOM MENU LOGIC ====================
         var cmFoodDatabase = [
@@ -1717,6 +2703,540 @@
             }
         }
         // ==================== END CUSTOM MENU LOGIC ====================
+
+
+        // ============================================================
+        // QUIZ INTEGRATION - dipanggil saat panduan pertama dibuka
+        // ============================================================
+
+// ============================================================
+// ✏️ EDIT: Database Pertanyaan Quiz
+// Setiap pertanyaan punya 4 pilihan jawaban
+// Setiap jawaban punya skor untuk 7 tipe (scores: [t1,t2,t3,t4,t5,t6,t7])
+// t1=Nasi Warrior, t2=Lemak Fighter, t3=Otot Aktif
+// t4=Hemat Energi, t5=Mood & Lifestyle, t6=Perut Sensitif, t7=Seimbang
+// ============================================================
+const quizQuestions = [
+    {
+        text: "Bagaimana tubuhmu bereaksi setelah makan nasi atau roti dalam porsi banyak?",
+        options: [
+            { icon: "😴", text: "Langsung ngantuk dan lemas", scores: [3,1,0,1,0,0,0] },
+            { icon: "⚖️", text: "Berat badan naik dengan cepat", scores: [3,1,0,1,0,0,0] },
+            { icon: "⚡", text: "Tetap berenergi, tidak ada masalah", scores: [0,0,1,0,0,0,3] },
+            { icon: "🤷", text: "Biasa saja, tidak terlalu terasa", scores: [0,0,0,0,0,0,2] }
+        ]
+    },
+    {
+        text: "Ketika kamu diet dan olahraga rutin, hasilnya seperti apa?",
+        options: [
+            { icon: "📉", text: "Berat badan sangat susah turun", scores: [1,3,0,2,0,0,0] },
+            { icon: "🐢", text: "Turun tapi sangat lambat", scores: [1,1,0,3,0,0,0] },
+            { icon: "📊", text: "Turun normal sesuai ekspektasi", scores: [0,0,1,0,0,0,3] },
+            { icon: "🎯", text: "Belum pernah mencoba konsisten", scores: [0,0,0,0,2,0,1] }
+        ]
+    },
+    {
+        text: "Seberapa sering kamu merasa lapar dalam sehari?",
+        options: [
+            { icon: "🍽️", text: "Sangat sering, selalu ingin makan", scores: [2,1,2,0,1,0,0] },
+            { icon: "⏰", text: "Lapar setiap 2-3 jam sekali", scores: [1,0,3,0,0,0,0] },
+            { icon: "😐", text: "Normal, lapar saat jam makan", scores: [0,0,0,0,0,0,3] },
+            { icon: "🙅", text: "Jarang lapar, sering lupa makan", scores: [0,1,0,3,0,0,0] }
+        ]
+    },
+    {
+        text: "Bagaimana kondisi perutmu setelah minum susu atau makan produk susu?",
+        options: [
+            { icon: "🤢", text: "Kembung, mual, atau diare", scores: [0,0,0,0,0,3,0] },
+            { icon: "😣", text: "Sedikit tidak nyaman", scores: [0,0,0,0,0,2,1] },
+            { icon: "✅", text: "Tidak ada masalah sama sekali", scores: [0,0,1,0,0,0,3] },
+            { icon: "🚫", text: "Tidak pernah konsumsi susu", scores: [0,0,0,0,1,1,0] }
+        ]
+    },
+    {
+        text: "Bagaimana pola tidurmu dan pengaruhnya terhadap berat badan?",
+        options: [
+            { icon: "😰", text: "Kurang tidur, berat badan naik", scores: [0,0,0,0,3,0,0] },
+            { icon: "😴", text: "Tidur cukup tapi tetap gemuk", scores: [0,2,0,2,0,0,0] },
+            { icon: "💤", text: "Tidur baik, berat badan stabil", scores: [0,0,0,0,0,0,3] },
+            { icon: "🌙", text: "Sering begadang tapi berat normal", scores: [0,0,0,0,1,0,2] }
+        ]
+    },
+    {
+        text: "Bagaimana reaksi tubuhmu saat sedang stres atau tertekan?",
+        options: [
+            { icon: "🍫", text: "Nafsu makan meningkat drastis", scores: [0,0,0,0,3,0,0] },
+            { icon: "🚫", text: "Nafsu makan hilang sama sekali", scores: [0,0,0,1,2,0,0] },
+            { icon: "⚖️", text: "Tidak terlalu berpengaruh", scores: [0,0,0,0,0,0,3] },
+            { icon: "😤", text: "Makin semangat olahraga", scores: [0,0,2,0,0,0,1] }
+        ]
+    },
+    {
+        text: "Bagaimana kondisi perutmu sehari-hari?",
+        options: [
+            { icon: "🎈", text: "Sering kembung walau tidak makan banyak", scores: [0,0,0,0,0,3,0] },
+            { icon: "😖", text: "Sering sembelit atau susah BAB", scores: [0,0,0,0,0,3,0] },
+            { icon: "✅", text: "Pencernaan lancar dan normal", scores: [0,0,0,0,0,0,3] },
+            { icon: "🔄", text: "Kadang bermasalah, kadang tidak", scores: [0,0,0,0,1,1,1] }
+        ]
+    },
+    {
+        text: "Bagaimana tubuhmu merespons olahraga kardio (lari, jalan cepat, sepeda)?",
+        options: [
+            { icon: "🔥", text: "Berkeringat banyak tapi BB tidak turun", scores: [1,3,0,0,0,0,0] },
+            { icon: "💪", text: "Berkeringat dan BB turun", scores: [0,0,0,0,0,0,3] },
+            { icon: "😓", text: "Cepat lelah, sulit kardio lama", scores: [0,0,0,3,0,0,0] },
+            { icon: "🏃", text: "Lebih suka olahraga kekuatan/gym", scores: [0,0,3,0,0,0,0] }
+        ]
+    },
+    {
+        text: "Bagaimana distribusi lemak di tubuhmu?",
+        options: [
+            { icon: "🍎", text: "Banyak di perut (bentuk apel)", scores: [2,2,0,1,0,0,0] },
+            { icon: "🍐", text: "Banyak di pinggul/paha (bentuk pir)", scores: [1,1,0,1,1,0,0] },
+            { icon: "📏", text: "Merata di seluruh tubuh", scores: [0,1,0,2,0,0,1] },
+            { icon: "💪", text: "Lemak sedikit, tapi susah berotot", scores: [0,0,3,0,0,0,0] }
+        ]
+    },
+    {
+        text: "Setelah makan makanan berlemak (gorengan, santan), kamu merasakan?",
+        options: [
+            { icon: "🤢", text: "Mual atau tidak nyaman di perut", scores: [0,0,0,0,0,3,0] },
+            { icon: "😴", text: "Langsung mengantuk dan lemas", scores: [1,2,0,1,0,0,0] },
+            { icon: "✅", text: "Tidak ada masalah", scores: [0,0,1,0,0,0,3] },
+            { icon: "⚡", text: "Justru merasa lebih berenergi", scores: [0,1,1,0,0,0,1] }
+        ]
+    },
+    {
+        text: "Bagaimana kondisi kulitmu sehari-hari?",
+        options: [
+            { icon: "🔴", text: "Mudah berjerawat atau kemerahan", scores: [1,0,0,0,1,2,0] },
+            { icon: "💧", text: "Kering dan kusam", scores: [0,1,0,2,0,1,0] },
+            { icon: "✨", text: "Normal dan sehat", scores: [0,0,0,0,0,0,3] },
+            { icon: "🌊", text: "Berminyak terutama di T-zone", scores: [1,0,0,0,2,1,0] }
+        ]
+    },
+    {
+        text: "Apa yang terjadi saat kamu skip makan (puasa sebentar)?",
+        options: [
+            { icon: "😡", text: "Langsung pusing, lemas, dan marah", scores: [2,0,1,0,1,0,0] },
+            { icon: "💪", text: "Tidak masalah, masih berenergi", scores: [0,2,0,0,0,0,2] },
+            { icon: "🎯", text: "Justru merasa lebih fokus", scores: [0,3,0,0,0,0,1] },
+            { icon: "😐", text: "Biasa saja, tidak terlalu terasa", scores: [0,1,0,1,0,0,2] }
+        ]
+    },
+    {
+        text: "Bagaimana pola makan idealmu sehari-hari?",
+        options: [
+            { icon: "🥩", text: "Lebih suka daging & protein, kurang suka karbo", scores: [0,0,3,0,0,0,0] },
+            { icon: "🥗", text: "Lebih suka sayur & buah, hindari lemak", scores: [0,0,0,0,0,2,1] },
+            { icon: "🍱", text: "Makan apa saja tapi porsi kecil", scores: [0,0,0,3,0,0,1] },
+            { icon: "⚖️", text: "Seimbang, semua dimakan secukupnya", scores: [0,0,0,0,0,0,3] }
+        ]
+    },
+    {
+        text: "Bagaimana tingkat aktivitas fisikmu sehari-hari?",
+        options: [
+            { icon: "🪑", text: "Sangat jarang gerak, kerja duduk", scores: [1,2,0,2,0,0,0] },
+            { icon: "🚶", text: "Kadang jalan kaki, tidak rutin olahraga", scores: [1,1,0,1,1,0,0] },
+            { icon: "🏃", text: "Olahraga ringan 2-3x seminggu", scores: [0,0,1,0,0,0,2] },
+            { icon: "💪", text: "Olahraga intens hampir setiap hari", scores: [0,0,3,0,0,0,1] }
+        ]
+    },
+    {
+        text: "Apa pengalamanmu dengan program diet sebelumnya?",
+        options: [
+            { icon: "😤", text: "Sudah coba banyak diet tapi tidak berhasil", scores: [1,2,0,1,1,0,0] },
+            { icon: "🔄", text: "Berhasil tapi berat balik lagi (yo-yo)", scores: [2,1,0,0,1,0,0] },
+            { icon: "📈", text: "Belum pernah coba diet serius", scores: [0,0,0,0,2,0,1] },
+            { icon: "✅", text: "Cukup berhasil kalau konsisten", scores: [0,0,0,0,0,0,3] }
+        ]
+    }
+];
+
+// ============================================================
+// ✏️ EDIT: Definisi 7 Tipe Metabolisme
+// ============================================================
+const quizTypes = [
+    {
+        id: 1,
+        name: "Tipe Nasi Warrior",
+        tagline: "Tubuhmu bereaksi kuat terhadap karbohidrat",
+        icon: "🍚",
+        color: "#E07B39",
+        bg: "#FEF0E6",
+        metode: "standar",
+        metodeName: "Standar + Kurangi Karbo",
+        tips: [
+            "Batasi nasi putih max 1 centong per makan",
+            "Ganti dengan nasi merah, ubi, atau kentang rebus",
+            "Makan karbo hanya di pagi & siang, hindari malam",
+            "Perbanyak protein & sayuran di setiap makan",
+            "KEMOENIK membantu menstabilkan respons gula darah"
+        ],
+        hindari: "Nasi putih, roti putih, minuman manis",
+        anjuran: "Nasi merah, ubi jalar, oatmeal"
+    },
+    {
+        id: 2,
+        name: "Tipe Lemak Fighter",
+        tagline: "Tubuhmu butuh dorongan ekstra untuk bakar lemak",
+        icon: "🔥",
+        color: "#E53E3E",
+        bg: "#FEF2F2",
+        metode: "agresif",
+        metodeName: "Agresif + Intermittent Fasting 16:8",
+        tips: [
+            "Terapkan IF 16:8: makan dalam jendela 8 jam saja",
+            "Contoh: makan jam 10.00 - 18.00, puasa sisanya",
+            "Fokus pada makanan rendah lemak jenuh",
+            "Kardio minimal 30 menit setiap hari",
+            "KEMOENIK diminum saat buka puasa untuk efek maksimal"
+        ],
+        hindari: "Gorengan, santan, makanan olahan berlemak",
+        anjuran: "Dada ayam, ikan, tempe, sayuran hijau"
+    },
+    {
+        id: 3,
+        name: "Tipe Otot Aktif",
+        tagline: "Tubuhmu lebih optimal dengan asupan protein tinggi",
+        icon: "💪",
+        color: "#3182CE",
+        bg: "#EBF8FF",
+        metode: "standar",
+        metodeName: "Standar + Tinggi Protein",
+        tips: [
+            "Target protein 1.8-2.2g per kg berat badan",
+            "Makan protein di setiap waktu makan utama",
+            "Kombinasikan kardio dengan latihan kekuatan",
+            "Konsumsi protein dalam 30 menit setelah olahraga",
+            "KEMOENIK membantu pemulihan dan metabolisme optimal"
+        ],
+        hindari: "Diet terlalu rendah kalori yang merusak otot",
+        anjuran: "Telur, dada ayam, tempe, ikan, Greek yogurt"
+    },
+    {
+        id: 4,
+        name: "Tipe Hemat Energi",
+        tagline: "Metabolismemu bekerja lebih pelan dari rata-rata",
+        icon: "🐢",
+        color: "#7C3AED",
+        bg: "#F5F3FF",
+        metode: "ringan",
+        metodeName: "Ringan + Konsisten Jangka Panjang",
+        tips: [
+            "Jangan potong kalori drastis, kurangi perlahan",
+            "Defisit kecil (300 kcal) lebih efektif untuk tipe ini",
+            "Perbanyak aktivitas ringan: jalan kaki, naik tangga",
+            "Makan lebih sering dalam porsi kecil (5-6x sehari)",
+            "KEMOENIK membantu meningkatkan metabolisme secara alami"
+        ],
+        hindari: "Diet ekstrem atau crash diet",
+        anjuran: "Makanan tinggi serat, protein, dan air"
+    },
+    {
+        id: 5,
+        name: "Tipe Mood & Lifestyle",
+        tagline: "Gaya hidupmu sangat mempengaruhi berat badanmu",
+        icon: "🌙",
+        color: "#D97706",
+        bg: "#FFFBEB",
+        metode: "ringan",
+        metodeName: "Ringan + Kelola Stres & Tidur",
+        tips: [
+            "Prioritaskan tidur 7-8 jam per malam",
+            "Kelola stres dengan meditasi atau olahraga ringan",
+            "Hindari makan larut malam saat stres",
+            "Buat rutinitas makan yang teratur setiap hari",
+            "KEMOENIK membantu keseimbangan hormonal secara alami"
+        ],
+        hindari: "Begadang, makan emosional, kafein berlebih",
+        anjuran: "Makanan anti-stres: pisang, dark chocolate, teh herbal"
+    },
+    {
+        id: 6,
+        name: "Tipe Perut Sensitif",
+        tagline: "Sistem pencernaanmu butuh perhatian ekstra",
+        icon: "🌿",
+        color: "#059669",
+        bg: "#ECFDF5",
+        metode: "standar",
+        metodeName: "Standar + Anti Inflamasi",
+        tips: [
+            "Hindari makanan pemicu: susu, gluten, gorengan",
+            "Perbanyak probiotik: yogurt, tempe, kimchi",
+            "Makan perlahan dan kunyah hingga halus",
+            "Hindari makan terburu-buru atau sambil stres",
+            "KEMOENIK dengan kandungan herbal alami bantu sehatkan pencernaan"
+        ],
+        hindari: "Susu, gorengan, makanan pedas berlebih, gluten",
+        anjuran: "Yogurt, tempe, sayuran rebus, buah non-asam"
+    },
+    {
+        id: 7,
+        name: "Tipe Seimbang",
+        tagline: "Tubuhmu sudah baik, kuncinya konsistensi!",
+        icon: "⚖️",
+        color: "#2D5A3D",
+        bg: "#F0FDF4",
+        metode: "standar",
+        metodeName: "Standar + Konsistensi",
+        tips: [
+            "Tubuhmu merespons baik terhadap diet seimbang",
+            "Tetap pada defisit kalori yang konsisten setiap hari",
+            "Variasikan menu agar tidak bosan",
+            "Olahraga kombinasi kardio + kekuatan 3-4x seminggu",
+            "KEMOENIK sebagai pendamping untuk hasil lebih optimal"
+        ],
+        hindari: "Inkonsistensi dan cheat meal berlebihan",
+        anjuran: "Semua makanan bergizi dalam porsi seimbang"
+    }
+];
+
+// ============================================================
+// STATE QUIZ
+// ============================================================
+let currentQ = 0;
+let answers = new Array(quizQuestions.length).fill(null);
+let quizResult = null;
+
+function renderQuestion() {
+    const q = quizQuestions[currentQ];
+    const total = quizQuestions.length;
+    const pct = Math.round((currentQ / total) * 100);
+
+    document.getElementById('qCurrent').textContent = currentQ + 1;
+    document.getElementById('qTotal').textContent = total;
+    document.getElementById('qPct').textContent = pct + '%';
+    document.getElementById('qProgressFill').style.width = pct + '%';
+    document.getElementById('qNum').textContent = 'Pertanyaan ' + String(currentQ + 1).padStart(2, '0');
+    document.getElementById('qText').textContent = q.text;
+
+    // Render pilihan
+    const optionsEl = document.getElementById('qOptions');
+    optionsEl.innerHTML = q.options.map((opt, idx) => `
+        <div class="quiz-option ${answers[currentQ] === idx ? 'selected' : ''}" onclick="selectOption(${idx})">
+            <div class="quiz-option-icon">${opt.icon}</div>
+            <div class="quiz-option-text">${opt.text}</div>
+            <div class="quiz-option-check">${answers[currentQ] === idx ? '<i class="fas fa-check"></i>' : ''}</div>
+        </div>
+    `).join('');
+
+    // Tombol back
+    document.getElementById('btnBack').style.display = currentQ > 0 ? 'block' : 'none';
+
+    // Tombol next
+    const btnNext = document.getElementById('btnNext');
+    btnNext.disabled = answers[currentQ] === null;
+    btnNext.innerHTML = currentQ === total - 1
+        ? '<i class="fas fa-chart-bar"></i> Lihat Hasil'
+        : 'Lanjut <i class="fas fa-arrow-right"></i>';
+
+    // Animate
+    const wrap = document.getElementById('quizQuestionWrap');
+    wrap.style.animation = 'none';
+    wrap.offsetHeight;
+    wrap.style.animation = 'slideUp 0.35s ease';
+}
+
+function selectOption(idx) {
+    answers[currentQ] = idx;
+    renderQuestion();
+}
+
+function quizNext() {
+    if (answers[currentQ] === null) return;
+    if (currentQ < quizQuestions.length - 1) {
+        currentQ++;
+        renderQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function quizBack() {
+    if (currentQ > 0) {
+        currentQ--;
+        renderQuestion();
+    }
+}
+
+function calculateResult() {
+    const scores = new Array(7).fill(0);
+    answers.forEach((ansIdx, qIdx) => {
+        if (ansIdx === null) return;
+        const s = quizQuestions[qIdx].options[ansIdx].scores;
+        s.forEach((val, tIdx) => { scores[tIdx] += val; });
+    });
+    const maxIdx = scores.indexOf(Math.max(...scores));
+    return quizTypes[maxIdx];
+}
+
+function showResult() {
+    quizResult = calculateResult();
+
+    // Simpan ke localStorage & Firebase
+    const wa = localStorage.getItem('calfatloss_wa') || '';
+    if (wa) {
+        localStorage.setItem('calfatloss_quiz_' + wa, JSON.stringify({
+            tipe: quizResult.id,
+            tipeName: quizResult.name,
+            metode: quizResult.metode,
+            savedAt: new Date().toISOString()
+        }));
+        // Simpan ke Firebase kalau tersedia
+        if (typeof window.fbSaveQuizResult === 'function') {
+            window.fbSaveQuizResult(wa, quizResult);
+        }
+    }
+
+    // Hide progress
+    document.getElementById('quizProgressWrap').style.display = 'none';
+
+    // Render hasil
+    const body = document.getElementById('quizBody');
+    body.innerHTML = `
+        <div class="quiz-result">
+            <div class="result-dna-icon" style="background:${quizResult.bg};">
+                <span style="font-size:36px;">${quizResult.icon}</span>
+            </div>
+            <div class="result-label">Tipe Metabolismemu</div>
+            <div class="result-type-name" style="color:${quizResult.color};">${quizResult.name}</div>
+            <div class="result-tagline">"${quizResult.tagline}"</div>
+
+            <div class="result-cards">
+                <div class="result-card">
+                    <div class="result-card-label">Metode Diet</div>
+                    <div class="result-card-value" style="color:${quizResult.color};">${quizResult.metodeName}</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-card-label">Prioritas Utama</div>
+                    <div class="result-card-value">${quizResult.anjuran}</div>
+                </div>
+            </div>
+
+            <div class="result-tips">
+                <div class="result-tips-title"><i class="fas fa-lightbulb" style="color:var(--accent-gold);margin-right:6px;"></i>Tips untuk Tipe Kamu:</div>
+                <ul>
+                    ${quizResult.tips.map(t => `<li>${t}</li>`).join('')}
+                </ul>
+            </div>
+
+            <div class="result-disclaimer">
+                <i class="fas fa-info-circle" style="color:var(--accent-gold);margin-right:4px;"></i>
+                <strong>Disclaimer:</strong> Hasil ini bukan diagnosis medis. Ini adalah panduan pola makan berdasarkan respons tubuh. Konsultasikan dengan dokter untuk kondisi kesehatan khusus.
+            </div>
+
+            <button class="btn-result-lanjut" onclick="quizFinish()">
+                <i class="fas fa-rocket"></i> Mulai Program Diet Saya!
+            </button>
+            <button class="btn-result-ulang" onclick="quizReset()">
+                <i class="fas fa-redo"></i> Ulangi Quiz
+            </button>
+        </div>
+    `;
+}
+
+function quizFinish() {
+    // Set metode diet di localStorage agar kalkulator otomatis pakai metode yang tepat
+    const wa = localStorage.getItem('calfatloss_wa') || '';
+    if (wa && quizResult) {
+        localStorage.setItem('calfatloss_quizmetode_' + wa, quizResult.metode);
+        localStorage.setItem('calfatloss_quizdone_' + wa, 'true');
+    }
+    // Tutup overlay
+    document.getElementById('quizOverlay').classList.add('hidden');
+    // Kalau ada callback dari parent (panduan_1)
+    if (typeof window.onQuizFinished === 'function') {
+        window.onQuizFinished(quizResult);
+    }
+}
+
+function quizReset() {
+    currentQ = 0;
+    answers = new Array(quizQuestions.length).fill(null);
+    quizResult = null;
+    document.getElementById('quizProgressWrap').style.display = 'block';
+    document.getElementById('quizBody').innerHTML = `
+        <div class="quiz-question-wrap" id="quizQuestionWrap">
+            <div class="quiz-question-num" id="qNum">Pertanyaan 01</div>
+            <div class="quiz-question-text" id="qText">Loading...</div>
+            <div class="quiz-options" id="qOptions"></div>
+            <div class="quiz-nav">
+                <button class="btn-quiz-back" id="btnBack" onclick="quizBack()" style="display:none"><i class="fas fa-arrow-left"></i></button>
+                <button class="btn-quiz-next" id="btnNext" onclick="quizNext()" disabled>
+                    Lanjut <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    renderQuestion();
+}
+
+// ============================================================
+// FUNGSI UNTUK DIPANGGIL DARI PANDUAN_1
+// Cek apakah user sudah pernah quiz, kalau belum tampilkan
+// ============================================================
+window.initQuiz = function() {
+    const wa = localStorage.getItem('calfatloss_wa') || '';
+    const done = wa ? localStorage.getItem('calfatloss_quizdone_' + wa) : null;
+    if (!done) {
+        document.getElementById('quizOverlay').classList.remove('hidden');
+        renderQuestion();
+    }
+};
+
+window.showQuiz = function() {
+    document.getElementById('quizOverlay').classList.remove('hidden');
+    quizReset();
+};
+
+// Auto-init kalau dipanggil langsung
+document.addEventListener('DOMContentLoaded', function() {
+    renderQuestion();
+});
+
+
+        // Override quizFinish untuk integrasi dengan panduan_1
+        window.onQuizFinished = function(result) {
+            // Set metode diet di kalkulator sesuai hasil quiz
+            if (result && result.metode) {
+                const metodeEl = document.getElementById('inputMetode');
+                if (metodeEl) {
+                    metodeEl.value = result.metode;
+                    userData.metode = result.metode;
+                }
+                // Tampilkan banner tipe quiz di atas kalkulator
+                showQuizResultBanner(result);
+            }
+        };
+
+        function showQuizResultBanner(result) {
+            const existing = document.getElementById('quizResultBanner');
+            if (existing) existing.remove();
+            const calcSection = document.getElementById('calculatorSection');
+            if (!calcSection) return;
+            const banner = document.createElement('div');
+            banner.id = 'quizResultBanner';
+            banner.style.cssText = 'background:' + result.bg + ';border:2px solid ' + result.color + ';border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;';
+            banner.innerHTML = '<span style="font-size:28px;">' + result.icon + '</span>' +
+                '<div style="flex:1;">' +
+                '<div style="font-size:10px;color:' + result.color + ';font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Tipe Metabolismemu</div>' +
+                '<div style="font-size:15px;font-weight:700;color:' + result.color + ';">' + result.name + '</div>' +
+                '<div style="font-size:11px;color:#6B7280;">' + result.metodeName + '</div>' +
+                '</div>' +
+                '<button onclick="window.showQuiz()" style="padding:8px 12px;background:' + result.color + ';color:white;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">Ubah</button>';
+            calcSection.parentNode.insertBefore(banner, calcSection);
+        }
+
+        // Tambah fbSaveQuizResult ke Firebase module
+        window.fbSaveQuizResult = async function(wa, result) {
+            try {
+                if (typeof window.fbSaveUserData === 'function') {
+                    await window.fbSaveUserData(wa, { quizTipe: result.id, quizTipeName: result.name, quizMetode: result.metode });
+                }
+            } catch(e) { console.warn('Firebase quiz save gagal:', e); }
+        };
 
     </script>
 </body>
