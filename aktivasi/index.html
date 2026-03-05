@@ -367,41 +367,47 @@
             text-decoration: underline;
         }
     </style>
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <!-- Firebase SDK (compat version - lebih stabil di GitHub Pages) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script>
+        try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
+                authDomain: "project-panduan-dani.firebaseapp.com",
+                projectId: "project-panduan-dani",
+                storageBucket: "project-panduan-dani.firebasestorage.app",
+                messagingSenderId: "113559517545",
+                appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
+            };
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
-            authDomain: "project-panduan-dani.firebaseapp.com",
-            projectId: "project-panduan-dani",
-            storageBucket: "project-panduan-dani.firebasestorage.app",
-            messagingSenderId: "113559517545",
-            appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Reset data Firebase saat user pilih Mulai Baru
-        window.fbResetUserData = async function(wa) {
-            try {
-                await setDoc(doc(db, "users", wa), {
-                    startDate: null,
-                    weeklyHistory: [],
-                    dietCal: 0,
-                    weeks: 0,
-                    targetDate: '',
-                    resetAt: new Date().toISOString()
-                });
-                console.log("✅ Firebase data direset untuk:", wa);
-            } catch(e) {
-                console.warn("⚠️ Firebase reset gagal:", e);
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
             }
-        };
+            const db = firebase.firestore();
 
-        console.log("🔥 Firebase aktivitas initialized");
+            // Reset data Firebase saat user pilih Mulai Baru
+            window.fbResetUserData = async function(wa) {
+                try {
+                    await db.collection("users").doc(wa).set({
+                        startDate: null,
+                        weeklyHistory: [],
+                        dietCal: 0,
+                        weeks: 0,
+                        targetDate: '',
+                        resetAt: new Date().toISOString()
+                    });
+                    console.log("✅ Firebase data direset untuk:", wa);
+                } catch(e) {
+                    console.warn("⚠️ Firebase reset gagal:", e);
+                }
+            };
+
+            console.log("🔥 Firebase aktivitas initialized");
+        } catch(e) {
+            console.warn("Firebase init gagal:", e);
+            window.fbResetUserData = function() {}; // fallback kosong
+        }
     </script>
 </head>
 <body>
