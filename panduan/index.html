@@ -2159,7 +2159,7 @@
 
         function saveWeeklyEval() {
             // Ambil kendala yang aktif
-            var obstacle = activeKendala.join(',');
+            var obstacleStr = activeKendala.join(',');
             // Simpan kendala ke Firebase untuk analisa
             if (currentWA && activeKendala.length > 0 && typeof window.fbSaveKendala === 'function') {
                 var saranList = activeKendala.map(function(k) {
@@ -2170,13 +2170,13 @@
             // Kalau ada catatan tambahan, gabung
             var catatanEl = document.getElementById('weeklyObstacle');
             if (catatanEl && catatanEl.value.trim()) {
-                obstacle += (obstacle ? '|' : '') + catatanEl.value.trim();
+                obstacleStr += (obstacleStr ? '|' : '') + catatanEl.value.trim();
             }
             // Override weeklyObstacle value agar tersimpan
-            if (catatanEl) catatanEl.value = obstacle;
+            if (catatanEl) catatanEl.value = obstacleStr;
             const startWeight = parseFloat(document.getElementById('weekStartWeight').value);
             const endWeight = parseFloat(document.getElementById('weekEndWeight').value);
-            obstacle = document.getElementById('weeklyObstacle').value;
+            var obstacle = document.getElementById('weeklyObstacle').value;
             if (!startWeight || !endWeight) { alert('Mohon isi berat awal dan akhir minggu'); return; }
 
             if (editingIndex >= 0) {
