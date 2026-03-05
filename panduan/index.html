@@ -3178,9 +3178,14 @@ function quizReset() {
 // Cek apakah user sudah pernah quiz, kalau belum tampilkan
 // ============================================================
 window.initQuiz = function() {
-    const wa = localStorage.getItem('calfatloss_wa') || '';
+    const wa = localStorage.getItem('calfatloss_wa') || currentWA || '';
     const done = wa ? localStorage.getItem('calfatloss_quizdone_' + wa) : null;
     if (!done) {
+        // Reset state dulu
+        currentQ = 0;
+        answers = new Array(quizQuestions.length).fill(null);
+        quizResult = null;
+        document.getElementById('quizProgressWrap').style.display = 'block';
         document.getElementById('quizOverlay').classList.remove('hidden');
         renderQuestion();
     }
@@ -3192,9 +3197,8 @@ window.showQuiz = function() {
 };
 
 // Auto-init kalau dipanggil langsung
-document.addEventListener('DOMContentLoaded', function() {
-    renderQuestion();
-});
+// renderQuestion dipanggil via initQuiz() / showQuiz() dari panduan_1
+// tidak perlu DOMContentLoaded karena quiz terintegrasi sebagai modal
 
 
         // Override quizFinish untuk integrasi dengan panduan_1
