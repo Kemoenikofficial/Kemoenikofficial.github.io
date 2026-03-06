@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KEMOENIK</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Brand colors — exact dari kemasan KEMOENIK */
+  --bg:       #F2F8F3;
+  --surface:  #FFFFFF;
+  --card:     #FFFFFF;
+  --card2:    #E8F5EB;
+  --border:   #C8E0CC;
+  --border2:  #A8CEB0;
+
+  --green:    #2E8B35;   /* hijau utama kemasan */
+  --green2:   #1E6B24;   /* hijau medium */
+  --green3:   #1A5C20;   /* hijau tua/gelap kemasan */
+  --greenlit: #34A03C;   /* hijau terang / aktif */
+
+  --gold:     #E8A020;   /* kuning-gold strip kemasan */
+  --gold2:    #C07E10;   /* gold gelap */
+
+  --text:     #142418;   /* teks utama - gelap */
+  --text2:    #3A6040;   /* teks sekunder */
+  --text3:    #6A8870;   /* teks tersier / label */
+
+  --white:    #FFFFFF;   /* putih murni */
+  --offwhite: #F5F9F6;   /* putih kehijauan */
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; overflow:hidden; background:var(--bg); }
+body { font-family:'Plus Jakarta Sans', sans-serif; color:var(--text); font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+
+#app { display:flex; flex-direction:column; height:100%; max-width:430px; margin:0 auto; position:relative; overflow:hidden; background:var(--bg); }
+
+/* OVERLAY */
+#overlay { position:absolute; inset:0; background:rgba(20,36,24,0.5); z-index:100; opacity:0; pointer-events:none; transition:opacity 0.25s; backdrop-filter:blur(4px); }
+#overlay.on { opacity:1; pointer-events:all; }
+
+/* DRAWER */
+#drawer { position:absolute; top:0; left:0; bottom:0; width:272px; background:var(--surface); border-right:1px solid var(--border); z-index:101; transform:translateX(-100%); transition:transform 0.3s cubic-bezier(.4,0,.2,1); display:flex; flex-direction:column; box-shadow:8px 0 32px rgba(0,0,0,0.12); }
+#drawer.on { transform:translateX(0); }
+.d-top { padding:56px 20px 20px; background:linear-gradient(160deg, var(--green) 0%, var(--green3) 100%); border-bottom:1px solid var(--border); flex-shrink:0; position:relative; overflow:hidden; }
+.d-top::after { content:''; position:absolute; top:-60px; right:-60px; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle, rgba(232,160,32,0.2) 0%, transparent 65%); pointer-events:none; }
+.d-avatar { width:52px; height:52px; border-radius:16px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:14px; border:1px solid rgba(255,255,255,0.3); }
+.d-name { font-size:17px; font-weight:700; color:#FFFFFF; margin-bottom:3px; letter-spacing:-0.2px; }
+.d-sub { font-size:11px; color:rgba(255,255,255,0.65); }
+.d-body { flex:1; padding:8px; overflow-y:auto; background:var(--surface); }
+.d-group { font-size:10px; font-weight:600; letter-spacing:1.8px; text-transform:uppercase; color:var(--text3); padding:12px 12px 6px; }
+.d-item { display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:10px; font-size:13px; font-weight:500; color:var(--text2); cursor:pointer; margin-bottom:1px; transition:all 0.15s; }
+.d-item:active { background:var(--card2); }
+.d-item.on { color:var(--green); background:rgba(46,139,53,0.1); font-weight:600; }
+.d-ico { width:20px; text-align:center; font-size:16px; }
+.d-sep { height:1px; background:var(--border); margin:8px 12px; }
+
+/* TOPBAR */
+#topbar { height:56px; display:flex; align-items:center; justify-content:space-between; padding:0 16px; background:var(--surface); border-bottom:1px solid var(--border); flex-shrink:0; z-index:10; box-shadow:0 1px 0 var(--border); }
+.tb-btn { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:var(--offwhite); border:1px solid var(--border); transition:all 0.15s; font-size:15px; color:var(--text2); }
+.tb-btn:active { background:var(--card2); }
+.tb-logo { font-size:17px; font-weight:800; color:var(--green3); letter-spacing:0.5px; }
+.tb-logo span { color:var(--gold); }
+
+/* SCROLL */
+#content { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+#content::-webkit-scrollbar { display:none; }
+
+/* HERO */
+.hero { padding:24px 20px 0; background:linear-gradient(175deg, #C2E8C6 0%, #E8F5EB 60%, var(--bg) 100%); position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; top:-80px; right:-60px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle, rgba(232,160,32,0.15) 0%, transparent 65%); pointer-events:none; }
+.hero-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; }
+.hero-greeting { font-size:11px; font-weight:600; color:var(--green2); letter-spacing:0.3px; margin-bottom:4px; }
+.hero-name { font-size:26px; font-weight:800; color:var(--green3); letter-spacing:-0.5px; line-height:1.1; }
+.hero-name span { color:var(--gold2); }
+.hero-badge { display:flex; align-items:center; gap:6px; background:rgba(232,160,32,0.15); border:1px solid rgba(232,160,32,0.35); padding:6px 12px; border-radius:20px; font-size:11px; font-weight:600; color:var(--gold2); white-space:nowrap; flex-shrink:0; }
+.hero-badge::before { content:'●'; font-size:6px; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.stats-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding-bottom:24px; }
+.stat-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 12px; position:relative; overflow:hidden; box-shadow:0 2px 8px rgba(46,139,53,0.06); }
+.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--green), transparent); border-radius:14px 14px 0 0; }
+.stat-card.gold::before { background:linear-gradient(90deg, var(--gold), transparent); }
+.sc-val { font-size:18px; font-weight:800; color:var(--green3); line-height:1; margin-bottom:4px; letter-spacing:-0.5px; }
+.sc-key { font-size:9px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:1px; }
+
+/* PILL NAV */
+.pill-wrap { background:var(--surface); border-bottom:1px solid var(--border); padding:0 20px; position:sticky; top:0; z-index:5; display:flex; overflow-x:auto; scrollbar-width:none; box-shadow:0 1px 0 var(--border); }
+.pill-wrap::-webkit-scrollbar { display:none; }
+.pill { padding:14px 4px; margin-right:20px; font-size:13px; font-weight:600; color:var(--text3); cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; transition:all 0.18s; background:none; border-top:none; border-left:none; border-right:none; font-family:'Plus Jakarta Sans', sans-serif; flex-shrink:0; }
+.pill.on { color:var(--green); border-bottom-color:var(--green); }
+
+/* PAGES */
+.page { display:none; padding:20px 16px 24px; }
+.page.on { display:block; animation:fadeUp 0.24s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* COMMON */
+.sec-title { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text3); margin-bottom:12px; }
+.sec-title-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.sec-link { font-size:12px; font-weight:600; color:var(--green); cursor:pointer; }
+
+/* GREETING */
+.greeting-card { background:linear-gradient(135deg, var(--green) 0%, var(--green3) 100%); border-radius:18px; padding:18px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; position:relative; overflow:hidden; box-shadow:0 4px 16px rgba(46,139,53,0.25); }
+.greeting-card::before { content:''; position:absolute; top:-30px; right:-30px; width:120px; height:120px; border-radius:50%; background:radial-gradient(circle, rgba(232,160,32,0.2), transparent 65%); }
+.gc-hello { font-size:17px; font-weight:800; color:#FFFFFF; margin-bottom:6px; letter-spacing:-0.3px; }
+.gc-hello span { color:#FFD97A; }
+.gc-sub { font-size:12px; color:rgba(255,255,255,0.75); line-height:1.65; }
+.gc-sub strong { color:#C2E8C6; }
+.gc-avatar { font-size:40px; flex-shrink:0; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.2)); position:relative; z-index:1; }
+
+/* PROGRESS */
+.progress-card { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:18px; margin-bottom:20px; cursor:pointer; transition:background 0.15s; box-shadow:0 2px 8px rgba(46,139,53,0.06); }
+.progress-card:active { background:var(--card2); }
+.prog-card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
+.pct-label { font-size:10px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--text3); margin-bottom:3px; }
+.pct-day { font-size:20px; font-weight:800; color:var(--green3); letter-spacing:-0.5px; }
+.pct-of { font-size:13px; font-weight:500; color:var(--text3); }
+.pct-badge { background:rgba(46,139,53,0.12); border:1px solid rgba(46,139,53,0.25); color:var(--green); font-size:13px; font-weight:700; padding:6px 12px; border-radius:10px; }
+.prog-track { height:8px; background:var(--card2); border-radius:4px; position:relative; margin-bottom:8px; border:1px solid var(--border); }
+.prog-fill { height:100%; border-radius:4px; background:linear-gradient(90deg, var(--green), var(--greenlit)); transition:width 1.2s cubic-bezier(.4,0,.2,1); position:absolute; top:0; left:0; }
+.prog-thumb { width:16px; height:16px; border-radius:50%; background:var(--white); border:2.5px solid var(--green); position:absolute; top:-4px; transform:translateX(-50%); transition:left 1.2s cubic-bezier(.4,0,.2,1); box-shadow:0 0 8px rgba(46,139,53,0.4); }
+.prog-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--text3); margin-bottom:14px; }
+.eval-row { display:flex; padding-top:14px; border-top:1px solid var(--border); }
+.eval-item { flex:1; text-align:center; }
+.eval-val { font-size:14px; font-weight:800; color:var(--green3); letter-spacing:-0.3px; }
+.eval-key { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:0.8px; margin-top:3px; }
+.eval-div { width:1px; background:var(--border); margin:0 4px; }
+
+/* MISSION */
+.mission-list { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.mission-item { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:all 0.15s; box-shadow:0 1px 4px rgba(46,139,53,0.05); }
+.mission-item:active { background:var(--card2); }
+.mission-item.done { opacity:0.55; }
+.mission-check { width:24px; height:24px; border-radius:7px; border:1.5px solid var(--border2); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; transition:all 0.2s; }
+.mission-check.checked { background:var(--green); border-color:var(--green); color:white; }
+.mission-text { flex:1; }
+.mission-name { font-size:13px; font-weight:600; color:var(--text); }
+.mission-sub { font-size:11px; color:var(--text3); margin-top:2px; }
+.mission-tag { font-size:9px; font-weight:700; padding:3px 8px; border-radius:6px; letter-spacing:0.5px; white-space:nowrap; flex-shrink:0; }
+.mission-tag.green { background:rgba(46,139,53,0.12); color:var(--green); }
+.mission-tag.gold  { background:rgba(232,160,32,0.15); color:var(--gold2); }
+.mission-tag.gray  { background:var(--card2); color:var(--text3); }
+.mission-tag.blue  { background:rgba(59,130,246,0.12); color:#2563EB; }
+
+/* TIP HARIAN */
+.tip-card { background:var(--card); border:1px solid var(--border); border-left:3px solid var(--gold); border-radius:14px; padding:16px; display:flex; gap:13px; margin-bottom:20px; box-shadow:0 2px 8px rgba(232,160,32,0.08); }
+.tip-ico { font-size:22px; flex-shrink:0; margin-top:1px; }
+.tip-label { font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--gold2); margin-bottom:5px; }
+.tip-text { font-size:12px; color:var(--text2); line-height:1.7; }
+
+/* REMINDER */
+.reminder-list { display:flex; flex-direction:column; margin-bottom:4px; }
+.reminder-item { display:flex; gap:12px; align-items:stretch; }
+.rem-time-wrap { width:44px; flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; padding-top:14px; }
+.rem-time { font-size:12px; font-weight:700; color:var(--text3); }
+.rem-time-sub { font-size:9px; color:var(--text3); margin-top:2px; }
+.rem-line-wrap { display:flex; flex-direction:column; align-items:center; padding:14px 0 0; flex-shrink:0; }
+.rem-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+.done-dot { background:var(--green); opacity:0.4; }
+.active-dot { background:var(--gold); box-shadow:0 0 8px rgba(232,160,32,0.5); }
+.rem-line { flex:1; width:1.5px; background:var(--border); margin-top:4px; min-height:20px; }
+.rem-card { flex:1; border-radius:14px; padding:14px; display:flex; align-items:center; gap:12px; margin-bottom:10px; position:relative; overflow:hidden; }
+.done-card { background:var(--offwhite); border:1px solid var(--border); opacity:0.7; }
+.active-card { background:rgba(232,160,32,0.07); border:1px solid rgba(232,160,32,0.3); }
+.rem-ico { font-size:22px; flex-shrink:0; }
+.rem-name { font-size:13px; font-weight:600; color:var(--text); }
+.rem-sub { font-size:11px; color:var(--text3); margin-top:2px; }
+.rem-ping { position:absolute; top:12px; right:12px; width:8px; height:8px; border-radius:50%; background:var(--gold); animation:ping 1.5s infinite; }
+@keyframes ping { 0%{box-shadow:0 0 0 0 rgba(232,160,32,0.6)} 70%{box-shadow:0 0 0 8px rgba(232,160,32,0)} 100%{box-shadow:0 0 0 0 rgba(232,160,32,0)} }
+
+/* PROFILE CARD */
+.profile-card { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:18px; display:flex; gap:14px; align-items:center; margin-bottom:16px; box-shadow:0 2px 8px rgba(46,139,53,0.06); }
+.pc-dot { width:50px; height:50px; border-radius:14px; background:linear-gradient(135deg, var(--green), var(--green3)); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.pc-name { font-size:16px; font-weight:700; color:var(--green3); letter-spacing:-0.2px; }
+.pc-type { font-size:12px; color:var(--text2); margin-top:2px; }
+.pc-chip { display:inline-flex; align-items:center; gap:4px; background:rgba(46,139,53,0.12); color:var(--green); font-size:10px; font-weight:700; padding:3px 8px; border-radius:6px; margin-top:6px; }
+
+/* ACCORDION */
+.acc { background:var(--card); border:1px solid var(--border); border-radius:16px; margin-bottom:10px; overflow:hidden; box-shadow:0 2px 8px rgba(46,139,53,0.05); }
+.acc-hd { display:flex; align-items:center; gap:14px; padding:16px; cursor:pointer; transition:background 0.15s; user-select:none; }
+.acc-hd:active { background:var(--card2); }
+.acc-icon { width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+.acc-info { flex:1; }
+.acc-title { font-size:13px; font-weight:600; color:var(--text); }
+.acc-sub { font-size:11px; color:var(--text3); margin-top:2px; }
+.acc-toggle { width:28px; height:28px; border-radius:8px; background:var(--offwhite); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--text3); transition:all 0.25s; flex-shrink:0; font-weight:300; }
+.acc.on .acc-toggle { transform:rotate(45deg); color:var(--green); background:rgba(46,139,53,0.1); border-color:rgba(46,139,53,0.3); }
+.acc-body { display:none; padding:0 16px 16px; border-top:1px solid var(--border); }
+.acc.on .acc-body { display:block; animation:fadeUp 0.22s ease; }
+.ph { color:var(--text3); font-size:12px; padding:18px 0; text-align:center; }
+
+/* SCORE */
+.score-block { padding:20px 0 8px; display:flex; flex-direction:column; align-items:center; }
+.score-ring-wrap { position:relative; width:140px; height:140px; margin-bottom:16px; }
+.score-ring-wrap svg { width:100%; height:100%; transform:rotate(-90deg); }
+.sr-bg { fill:none; stroke:var(--border2); stroke-width:8; }
+.sr-fill { fill:none; stroke:url(#sg); stroke-width:8; stroke-linecap:round; stroke-dasharray:326; stroke-dashoffset:326; transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1); }
+.score-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-pct { font-size:32px; font-weight:800; color:var(--green3); line-height:1; letter-spacing:-1px; }
+.score-lbl { font-size:9px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+.score-desc { font-size:12px; color:var(--text2); text-align:center; line-height:1.7; max-width:250px; }
+
+/* EDIT ROW */
+.edit-row { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; transition:all 0.15s; box-shadow:0 2px 8px rgba(46,139,53,0.05); }
+.edit-row:active { background:var(--card2); }
+.er-left { display:flex; align-items:center; gap:12px; }
+.er-ico { width:38px; height:38px; border-radius:11px; background:rgba(232,160,32,0.12); display:flex; align-items:center; justify-content:center; font-size:17px; }
+.er-name { font-size:13px; font-weight:600; color:var(--text); }
+.er-sub { font-size:11px; color:var(--text3); margin-top:2px; }
+
+/* PROGRAM BANNER */
+.prog-banner { background:linear-gradient(135deg, var(--green) 0%, var(--green3) 100%); border-radius:18px; padding:20px; margin-bottom:16px; position:relative; overflow:hidden; box-shadow:0 4px 16px rgba(46,139,53,0.25); }
+.prog-banner::before { content:''; position:absolute; top:-40px; right:-40px; width:130px; height:130px; border-radius:50%; background:radial-gradient(circle, rgba(232,160,32,0.25), transparent 65%); }
+.pb-label { font-size:10px; font-weight:600; letter-spacing:1.5px; color:rgba(255,255,255,0.65); text-transform:uppercase; margin-bottom:6px; }
+.pb-name { font-size:20px; font-weight:800; color:#FFFFFF; letter-spacing:-0.3px; margin-bottom:4px; position:relative; }
+.pb-desc { font-size:12px; color:rgba(255,255,255,0.65); position:relative; }
+
+/* PROGRAM LIST */
+.prev-list { background:var(--card); border:1px solid var(--border); border-radius:16px; margin-bottom:16px; overflow:hidden; box-shadow:0 2px 8px rgba(46,139,53,0.05); }
+.prev-item { display:flex; align-items:center; gap:14px; padding:15px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; }
+.prev-item:last-child { border-bottom:none; }
+.prev-item:active { background:var(--card2); }
+.pi-ico { width:38px; height:38px; border-radius:11px; background:rgba(46,139,53,0.1); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.pi-name { font-size:13px; font-weight:600; color:var(--text); }
+.pi-sub { font-size:11px; color:var(--text3); margin-top:2px; }
+.pi-arr { margin-left:auto; color:var(--text3); font-size:18px; font-weight:300; }
+
+/* CTA */
+.cta-btn { width:100%; padding:17px; background:linear-gradient(135deg, var(--gold), var(--gold2)); color:#FFFFFF; border:none; border-radius:14px; font-family:'Plus Jakarta Sans', sans-serif; font-size:16px; font-weight:800; cursor:pointer; letter-spacing:-0.2px; box-shadow:0 8px 24px rgba(232,160,32,0.35); transition:all 0.18s; }
+.cta-btn:active { transform:scale(0.98); opacity:0.9; }
+.cta-note { font-size:11px; color:var(--text3); text-align:center; margin-top:10px; }
+
+/* BOTTOM NAV */
+#bnav { height:62px; background:var(--surface); border-top:1px solid var(--border); display:flex; align-items:stretch; flex-shrink:0; box-shadow:0 -1px 0 var(--border); }
+.bn { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; transition:all 0.15s; position:relative; }
+.bn:active { background:var(--card2); }
+.bn-ico { font-size:20px; line-height:1; }
+.bn-lbl { font-size:9px; font-weight:600; color:var(--text3); letter-spacing:0.3px; text-transform:uppercase; }
+.bn.on .bn-lbl { color:var(--green); }
+.bn.on::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:24px; height:3px; background:var(--green); border-radius:0 0 3px 3px; }
+
+/* MODAL SHEET */
+#modal { position:absolute; inset:0; background:rgba(20,36,24,0.6); z-index:200; display:none; align-items:flex-end; justify-content:center; backdrop-filter:blur(6px); }
+#modal.on { display:flex; }
+.sheet { background:var(--surface); border-top:1px solid var(--border); width:100%; max-width:430px; border-radius:20px 20px 0 0; animation:sheetUp 0.3s cubic-bezier(.4,0,.2,1); max-height:85vh; overflow-y:auto; }
+@keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.sh-pull { width:36px; height:4px; background:var(--border2); border-radius:2px; margin:14px auto 0; }
+.sh-head { padding:20px 22px 16px; border-bottom:1px solid var(--border); }
+.sh-title { font-size:20px; font-weight:800; color:var(--green3); letter-spacing:-0.3px; }
+.sh-sub { font-size:12px; color:var(--text3); margin-top:3px; }
+.sh-row { padding:16px 22px; border-bottom:1px solid var(--border); }
+.sh-label { font-size:10px; font-weight:600; letter-spacing:1.5px; color:var(--text3); text-transform:uppercase; margin-bottom:8px; }
+.sh-val { font-size:17px; font-weight:700; color:var(--text); }
+.sh-type { font-size:12px; color:var(--text3); margin-top:3px; }
+.sh-arrow { text-align:center; padding:10px 0; color:var(--text3); font-size:20px; }
+.sh-val-new { font-size:17px; font-weight:700; color:var(--green); }
+.sh-type-new { font-size:12px; color:var(--green2); margin-top:3px; }
+.sh-info { padding:14px 22px; border-bottom:1px solid var(--border); }
+.sh-info-box { background:rgba(46,139,53,0.08); border:1px solid rgba(46,139,53,0.2); border-radius:10px; padding:12px 14px; display:flex; gap:10px; font-size:12px; color:var(--text2); line-height:1.65; }
+.sh-actions { padding:16px 22px 36px; display:flex; flex-direction:column; gap:10px; }
+.sh-btn { width:100%; padding:15px; border-radius:12px; border:none; font-family:'Plus Jakarta Sans', sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.sh-btn:active { opacity:0.85; }
+.sh-ok { background:var(--gold); color:#FFFFFF; }
+.sh-no { background:var(--card2); color:var(--text2); border:1px solid var(--border); }
+</style>
+</head>
+<body>
+<div id="app">
+
+<div id="overlay" onclick="closeDrawer()"></div>
+
+<!-- DRAWER -->
+<div id="drawer">
+  <div class="d-top">
+    <div class="d-avatar">🌿</div>
+    <div class="d-name" id="dName">Lemak Fighter</div>
+    <div class="d-sub" id="dSub">Agresif · IF 16:8</div>
+  </div>
+  <div class="d-body">
+    <div class="d-group">Menu</div>
+    <div class="d-item on" id="di-home"    onclick="go('home');closeDrawer()"><span class="d-ico">🏠</span>Beranda</div>
+    <div class="d-item"    id="di-profil"  onclick="go('profil');closeDrawer()"><span class="d-ico">👤</span>Profil Metabolisme</div>
+    <div class="d-item"    id="di-tips"    onclick="go('tips');closeDrawer()"><span class="d-ico">🥗</span>Tips Diet</div>
+    <div class="d-item"    id="di-program" onclick="go('program');closeDrawer()"><span class="d-ico">📅</span>Program Saya</div>
+    <div class="d-sep"></div>
+    <div class="d-group">Lainnya</div>
+    <div class="d-item" onclick="openModal();closeDrawer()"><span class="d-ico">✏️</span>Edit Jawaban Quiz</div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="tb-btn" onclick="openDrawer()" style="flex-direction:column;gap:4px;padding:11px;">
+    <div style="width:16px;height:1.5px;background:var(--text2);border-radius:1px;"></div>
+    <div style="width:16px;height:1.5px;background:var(--text2);border-radius:1px;"></div>
+    <div style="width:10px;height:1.5px;background:var(--text2);border-radius:1px;"></div>
+  </div>
+  <div class="tb-logo">KEMO<span>ENIK</span></div>
+  <div class="tb-btn" onclick="openModal()">✏️</div>
+</div>
+
+<div id="content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-greeting">Profil Metabolisme</div>
+        <div class="hero-name" id="heroName">Lemak <span>Fighter</span></div>
+      </div>
+      <div class="hero-badge">Aktif</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="sc-val">72%</div><div class="sc-key">Akurasi</div></div>
+      <div class="stat-card gold"><div class="sc-val">750</div><div class="sc-key">kkal/hari</div></div>
+      <div class="stat-card"><div class="sc-val">Agresif</div><div class="sc-key">Metode</div></div>
+    </div>
+  </div>
+
+  <!-- PILL NAV -->
+  <div class="pill-wrap">
+    <button class="pill on" onclick="go('home')">Home</button>
+    <button class="pill"    onclick="go('profil')">Profil</button>
+    <button class="pill"    onclick="go('tips')">Tips Diet</button>
+    <button class="pill"    onclick="go('program')">Program</button>
+  </div>
+
+  <!-- HOME PAGE -->
+  <div class="page on" id="page-home">
+
+    <!-- 1. Greeting -->
+    <div class="greeting-card">
+      <div class="gc-left">
+        <div class="gc-hello">👋 Halo, <span id="userName">Siti</span>!</div>
+        <div class="gc-sub">Selamat datang di panduan diet<br><strong>KEMOENIK</strong> — hari ini kita jaga komitmenmu 💪</div>
+      </div>
+      <div class="gc-avatar">🌿</div>
+    </div>
+
+    <!-- 2. Progress -->
+    <div class="sec-title">Progres Program Diet</div>
+    <div class="progress-card" onclick="go('program')">
+      <div class="prog-card-top">
+        <div>
+          <div class="pct-label">Hari ini</div>
+          <div class="pct-day">Hari <span id="progHari">14</span> <span class="pct-of">dari 125</span></div>
+        </div>
+        <div class="pct-badge">11%</div>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="progFill" style="width:0%"></div>
+        <div class="prog-thumb" id="progThumb" style="left:0%"></div>
+      </div>
+      <div class="prog-labels"><span>Hari 1</span><span>Hari 125</span></div>
+      <div class="eval-row">
+        <div class="eval-item"><div class="eval-val" style="color:var(--green);">−1.2 kg</div><div class="eval-key">Minggu ini</div></div>
+        <div class="eval-div"></div>
+        <div class="eval-item"><div class="eval-val" style="color:var(--gold2);">−4.8 kg</div><div class="eval-key">Total</div></div>
+        <div class="eval-div"></div>
+        <div class="eval-item"><div class="eval-val">62 kg</div><div class="eval-key">Berat skrg</div></div>
+        <div class="eval-div"></div>
+        <div class="eval-item"><div class="eval-val" style="color:var(--text3);">55 kg</div><div class="eval-key">Target</div></div>
+      </div>
+    </div>
+
+    <!-- 3. Daily Mission -->
+    <div class="sec-title-row">
+      <div class="sec-title" style="margin-bottom:0;">Misi Hari Ini</div>
+      <div class="sec-link" onclick="go('program')">Lihat semua ›</div>
+    </div>
+    <div class="mission-list">
+      <div class="mission-item" id="m1" onclick="toggleMission('m1','mc1')">
+        <div class="mission-check" id="mc1"></div>
+        <div class="mission-text"><div class="mission-name">Jalan kaki 30 menit</div><div class="mission-sub">Pagi hari sebelum makan</div></div>
+        <div class="mission-tag green">Olahraga</div>
+      </div>
+      <div class="mission-item" id="m2" onclick="toggleMission('m2','mc2')">
+        <div class="mission-check" id="mc2"></div>
+        <div class="mission-text"><div class="mission-name">Makan siang max 500 kkal</div><div class="mission-sub">Sesuai meal plan harian</div></div>
+        <div class="mission-tag gold">Makan</div>
+      </div>
+      <div class="mission-item done" id="m3" onclick="toggleMission('m3','mc3')">
+        <div class="mission-check checked" id="mc3">✓</div>
+        <div class="mission-text"><div class="mission-name" style="text-decoration:line-through;opacity:0.5;">Minum air 8 gelas</div><div class="mission-sub" style="opacity:0.4;">Tersebar sepanjang hari</div></div>
+        <div class="mission-tag gray">Hidrasi</div>
+      </div>
+      <div class="mission-item" id="m4" onclick="toggleMission('m4','mc4')">
+        <div class="mission-check" id="mc4"></div>
+        <div class="mission-text"><div class="mission-name">Puasa 16:8 — stop makan 20.00</div><div class="mission-sub">Metode IF sesuai program</div></div>
+        <div class="mission-tag blue">IF 16:8</div>
+      </div>
+    </div>
+
+    <!-- 4. Tips Harian -->
+    <div class="sec-title-row">
+      <div class="sec-title" style="margin-bottom:0;">Tips Hari Ini</div>
+      <div class="sec-link" onclick="go('tips')">Lihat semua ›</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-ico">💡</div>
+      <div class="tip-body">
+        <div class="tip-label">Reminder Diet</div>
+        <div class="tip-text">Hindari minum boba atau teh manis hari ini. Ganti dengan air putih atau teh hijau tanpa gula untuk bantu pembakaran lemak lebih optimal.</div>
+      </div>
+    </div>
+
+    <!-- 5. Reminder Konsumsi -->
+    <div class="sec-title">Reminder Konsumsi</div>
+    <div class="reminder-list">
+      <div class="reminder-item">
+        <div class="rem-time-wrap"><div class="rem-time">07.30</div><div class="rem-time-sub">Sudah</div></div>
+        <div class="rem-line-wrap"><div class="rem-dot done-dot"></div><div class="rem-line"></div></div>
+        <div class="rem-card done-card">
+          <div class="rem-ico">🌿</div>
+          <div><div class="rem-name">KEMOENIK — Setelah sarapan</div><div class="rem-sub">1 kapsul + 200ml air hangat ✓</div></div>
+        </div>
+      </div>
+      <div class="reminder-item">
+        <div class="rem-time-wrap"><div class="rem-time" style="color:var(--gold2);">19.00</div><div class="rem-time-sub" style="color:var(--gold2);">Nanti</div></div>
+        <div class="rem-line-wrap"><div class="rem-dot active-dot"></div><div class="rem-line"></div></div>
+        <div class="rem-card active-card">
+          <div class="rem-ico">🌿</div>
+          <div><div class="rem-name">KEMOENIK — Setelah makan malam</div><div class="rem-sub">1 kapsul + 200ml air hangat</div></div>
+          <div class="rem-ping"></div>
+        </div>
+      </div>
+    </div>
+    <div style="height:8px;"></div>
+  </div>
+
+  <!-- PROFIL PAGE -->
+  <div class="page" id="page-profil">
+    <div class="acc" id="acc-trait">
+      <div class="acc-hd" onclick="tog('acc-trait')">
+        <div class="acc-icon" style="background:rgba(232,160,32,0.12);">📈</div>
+        <div class="acc-info"><div class="acc-title">Trait Bar</div><div class="acc-sub">5 karakteristik metabolisme</div></div>
+        <div class="acc-toggle">+</div>
+      </div>
+      <div class="acc-body"><div class="ph">— konten segera hadir —</div></div>
+    </div>
+    <div class="acc" id="acc-karakter">
+      <div class="acc-hd" onclick="tog('acc-karakter')">
+        <div class="acc-icon" style="background:rgba(46,139,53,0.12);">🧬</div>
+        <div class="acc-info"><div class="acc-title">Tipe & Karakteristik</div><div class="acc-sub">Penjelasan tipe metabolismemu</div></div>
+        <div class="acc-toggle">+</div>
+      </div>
+      <div class="acc-body"><div class="ph">— konten segera hadir —</div></div>
+    </div>
+    <div class="acc" id="acc-skor">
+      <div class="acc-hd" onclick="tog('acc-skor');setTimeout(animScore,80)">
+        <div class="acc-icon" style="background:rgba(59,130,246,0.1);">🎯</div>
+        <div class="acc-info"><div class="acc-title">Skor & Akurasi</div><div class="acc-sub">Seberapa tepat hasil quiz kamu</div></div>
+        <div class="acc-toggle">+</div>
+      </div>
+      <div class="acc-body">
+        <div class="score-block">
+          <div class="score-ring-wrap">
+            <svg viewBox="0 0 120 120">
+              <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#2E8B35"/><stop offset="100%" style="stop-color:#E8A020"/></linearGradient></defs>
+              <circle class="sr-bg" cx="60" cy="60" r="52"/>
+              <circle class="sr-fill" id="srFill" cx="60" cy="60" r="52"/>
+            </svg>
+            <div class="score-center"><div class="score-pct">72%</div><div class="score-lbl">Akurasi</div></div>
+          </div>
+          <div class="score-desc">Cukup akurat. Profil metabolismemu sudah terbaca dengan baik dari jawaban kamu.</div>
+        </div>
+      </div>
+    </div>
+    <div class="edit-row" onclick="openModal()">
+      <div class="er-left"><div class="er-ico">✏️</div><div><div class="er-name">Edit Jawaban Quiz</div><div class="er-sub">Ubah & lihat perubahan hasil</div></div></div>
+      <span style="color:var(--text3);font-size:20px;">›</span>
+    </div>
+  </div>
+
+  <!-- TIPS PAGE -->
+  <div class="page" id="page-tips">
+    <div class="acc" id="acc-defisit">
+      <div class="acc-hd" onclick="tog('acc-defisit')">
+        <div class="acc-icon" style="background:rgba(239,68,68,0.1);">🔥</div>
+        <div class="acc-info"><div class="acc-title">Defisit Kalori</div><div class="acc-sub">3 pilihan metode</div></div>
+        <div class="acc-toggle">+</div>
+      </div>
+      <div class="acc-body"><div class="ph">— konten segera hadir —</div></div>
+    </div>
+    <div class="acc" id="acc-gula">
+      <div class="acc-hd" onclick="tog('acc-gula')">
+        <div class="acc-icon" style="background:rgba(232,160,32,0.12);">🍬</div>
+        <div class="acc-info"><div class="acc-title">Panduan Kurangi Gula</div><div class="acc-sub">Hindari vs ganti dengan</div></div>
+        <div class="acc-toggle">+</div>
+      </div>
+      <div class="acc-body"><div class="ph">— konten segera hadir —</div></div>
+    </div>
+    <div class="acc" id="acc-ola">
+      <div class="acc-hd" onclick="tog('acc-ola')">
+        <div class="acc-icon" style="background:rgba(59,130,246,0.1);">🏃</div>
+        <div class="acc-info"><div class="acc-title">Panduan Olahraga</div><div class="acc-sub">4 jenis latihan</div></div>
+        <div class="acc-toggle">+</div>
+      </div>
+      <div class="acc-body"><div class="ph">— konten segera hadir —</div></div>
+    </div>
+    <div class="acc" id="acc-minum">
+      <div class="acc-hd" onclick="tog('acc-minum')">
+        <div class="acc-icon" style="background:rgba(46,139,53,0.12);">🌿</div>
+        <div class="acc-info"><div class="acc-title">Cara Minum KEMOENIK</div><div class="acc-sub">Waktu & cara optimal</div></div>
+        <div class="acc-toggle">+</div>
+      </div>
+      <div class="acc-body"><div class="ph">— konten segera hadir —</div></div>
+    </div>
+  </div>
+
+  <!-- PROGRAM PAGE -->
+  <div class="page" id="page-program">
+    <div class="prog-banner">
+      <div class="pb-label">Program Diet Kamu</div>
+      <div class="pb-name">Agresif + IF 16:8</div>
+      <div class="pb-desc">Defisit ~750 kkal/hari + olahraga intensif setiap hari</div>
+    </div>
+    <div class="sec-title">Yang kamu dapatkan</div>
+    <div class="prev-list">
+      <div class="prev-item"><div class="pi-ico">⚖️</div><div><div class="pi-name">Kalkulasi Kalori Personal</div><div class="pi-sub">BB, TB, usia & aktivitas</div></div><span class="pi-arr">›</span></div>
+      <div class="prev-item"><div class="pi-ico">📅</div><div><div class="pi-name">Timeline Mingguan</div><div class="pi-sub">Target per minggu hingga berat ideal</div></div><span class="pi-arr">›</span></div>
+      <div class="prev-item"><div class="pi-ico">🍱</div><div><div class="pi-name">Meal Plan Harian</div><div class="pi-sub">Menu pagi, siang & malam</div></div><span class="pi-arr">›</span></div>
+      <div class="prev-item"><div class="pi-ico">🏃</div><div><div class="pi-name">Jadwal Olahraga</div><div class="pi-sub">Sesuai metode & kemampuan</div></div><span class="pi-arr">›</span></div>
+      <div class="prev-item"><div class="pi-ico">📊</div><div><div class="pi-name">Evaluasi Mingguan</div><div class="pi-sub">Pantau progress berat badan</div></div><span class="pi-arr">›</span></div>
+    </div>
+    <button class="cta-btn" onclick="alert('Lanjut ke program...')">Mulai Program Diet Saya 🚀</button>
+    <div class="cta-note">Program disesuaikan dengan profil metabolismemu</div>
+    <div style="height:8px;"></div>
+  </div>
+
+</div><!-- end content -->
+
+<!-- BOTTOM NAV -->
+<div id="bnav">
+  <div class="bn on" id="bn-home"    onclick="go('home')"><div class="bn-ico">🏠</div><div class="bn-lbl">Home</div></div>
+  <div class="bn"    id="bn-profil"  onclick="go('profil')"><div class="bn-ico">👤</div><div class="bn-lbl">Profil</div></div>
+  <div class="bn"    id="bn-tips"    onclick="go('tips')"><div class="bn-ico">🥗</div><div class="bn-lbl">Tips</div></div>
+  <div class="bn"    id="bn-program" onclick="go('program')"><div class="bn-ico">📅</div><div class="bn-lbl">Program</div></div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" onclick="closeModal()">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sh-pull"></div>
+    <div class="sh-head"><div class="sh-title">Ringkasan Perubahan</div><div class="sh-sub">Cek dulu sebelum disimpan</div></div>
+    <div class="sh-row"><div class="sh-label">Sebelum</div><div class="sh-val">Lemak Fighter</div><div class="sh-type">Agresif + IF 16:8</div></div>
+    <div class="sh-arrow">↓</div>
+    <div class="sh-row"><div class="sh-label">Sesudah</div><div class="sh-val-new">Nasi Warrior</div><div class="sh-type-new">Standar + Kurangi Karbo</div></div>
+    <div class="sh-info"><div class="sh-info-box"><span style="font-size:16px;flex-shrink:0;">🔄</span><span>Tipe metabolismemu berubah. Metode diet akan diperbarui juga.</span></div></div>
+    <div class="sh-actions">
+      <button class="sh-btn sh-ok" onclick="closeModal()">Simpan perubahan</button>
+      <button class="sh-btn sh-no" onclick="closeModal()">Batal, pakai hasil lama</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+var pages = ['home','profil','tips','program'];
+var pills  = document.querySelectorAll('.pill');
+
+function go(id) {
+  pages.forEach(function(p) {
+    document.getElementById('page-'+p).classList.remove('on');
+    document.getElementById('bn-'+p).classList.remove('on');
+    var di = document.getElementById('di-'+p); if (di) di.classList.remove('on');
+  });
+  pills.forEach(function(pl, i) {
+    pl.classList.remove('on');
+    if (['home','profil','tips','program'][i] === id) pl.classList.add('on');
+  });
+  document.getElementById('page-'+id).classList.add('on');
+  document.getElementById('bn-'+id).classList.add('on');
+  var di = document.getElementById('di-'+id); if (di) di.classList.add('on');
+  document.getElementById('content').scrollTo({top:0, behavior:'smooth'});
+}
+
+function openDrawer()  { document.getElementById('drawer').classList.add('on');  document.getElementById('overlay').classList.add('on'); }
+function closeDrawer() { document.getElementById('drawer').classList.remove('on'); document.getElementById('overlay').classList.remove('on'); }
+function openModal()   { document.getElementById('modal').classList.add('on'); }
+function closeModal()  { document.getElementById('modal').classList.remove('on'); }
+function tog(id)       { document.getElementById(id).classList.toggle('on'); }
+
+function animScore() {
+  var fill = document.getElementById('srFill'); if (!fill) return;
+  var c = 2 * Math.PI * 52;
+  fill.style.strokeDasharray  = c;
+  fill.style.strokeDashoffset = c;
+  setTimeout(function() { fill.style.strokeDashoffset = c - (72/100)*c; }, 80);
+}
+
+// Progress bar animate on load
+setTimeout(function() {
+  var fill  = document.getElementById('progFill');
+  var thumb = document.getElementById('progThumb');
+  if (fill)  fill.style.width = '11%';
+  if (thumb) thumb.style.left = '11%';
+}, 400);
+
+// Mission toggle
+function toggleMission(itemId, checkId) {
+  var item  = document.getElementById(itemId);
+  var check = document.getElementById(checkId);
+  var name  = item.querySelector('.mission-name');
+  var sub   = item.querySelector('.mission-sub');
+  if (item.classList.contains('done')) {
+    item.classList.remove('done');
+    check.classList.remove('checked');
+    check.textContent = '';
+    name.style.cssText = '';
+    sub.style.cssText  = '';
+  } else {
+    item.classList.add('done');
+    check.classList.add('checked');
+    check.textContent = '✓';
+    name.style.cssText = 'text-decoration:line-through;opacity:0.5;';
+    sub.style.cssText  = 'opacity:0.4;';
+  }
+}
+</script>
+</body>
+</html>
