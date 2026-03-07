@@ -1959,23 +1959,27 @@ async function fbSaveKalkulator(data) {
   try {
     var menuHarian = {
       kaloriHarian: data.dietCal || 0,
-      dietCal: data.dietCal || 0,
+      dietCal:      data.dietCal || 0,
       targetMinggu: data.targetMinggu || 0,
-      targetBB: data.target || 0,
+      targetBB:     data.target || 0,
+      target:       data.target || 0,          // duplikat untuk kompatibilitas
       tanggalMulai: data.startDate || '',
-      estTanggal: data.estTanggal || '',
-      estLingkar: data.estLingkar || 0,
-      bmr: data.bmr || 0,
-      tdee: data.tdee || 0,
-      defisit: data.defisit || 0,
-      metode: data.metode || 'standar',
-      nama: data.nama || '',
-      gender: data.gender || '',
-      usia: data.usia || 0,
-      berat: data.berat || 0,
-      tinggi: data.tinggi || 0,
-      aktivitas: data.aktivitas || 1.375,
-      savedAt: new Date().toISOString()
+      startDate:    data.startDate || '',       // duplikat
+      startDateISO: data.startDateISO || '',    // ISO format untuk parsing reliable
+      estTanggal:   data.estTanggal || '',
+      estLingkar:   data.estLingkar || 0,
+      bmr:          data.bmr || 0,
+      tdee:         data.tdee || 0,
+      defisit:      data.defisit || 0,
+      metode:       data.metode || 'standar',
+      nama:         data.nama || '',
+      gender:       data.gender || 'perempuan',
+      usia:         data.usia || 0,
+      berat:        data.berat || 0,
+      tinggi:       data.tinggi || 0,
+      aktivitas:    data.aktivitas || 1.375,
+      savedAt:      new Date().toISOString(),
+      version:      '2.0'
     };
     // PATCH dengan updateMask.fieldPaths=menuHarian agar field lain tidak tersentuh
     var url = _FSBASE + dbUserWA + '?updateMask.fieldPaths=menuHarian&key=' + firebaseConfig.apiKey;
@@ -2067,8 +2071,10 @@ async function loadAllData() {
             state.set('kalkulator', {
               dietCal:      kal_dietCal,
               targetMinggu: mh.targetMinggu || 0,
-              target:       mh.targetBB || 0,
-              startDate:    mh.tanggalMulai || '',
+              target:       mh.target || mh.targetBB || 0,
+              // startDate: ambil ISO dulu, fallback ke display string
+              startDate:    mh.startDateISO || mh.startDate || mh.tanggalMulai || '',
+              startDateISO: mh.startDateISO || '',
               estTanggal:   mh.estTanggal || '',
               estLingkar:   mh.estLingkar || 0,
               bmr:          mh.bmr || 0,
@@ -2142,10 +2148,11 @@ async function loadAllData() {
         if (raw) {
           var p = JSON.parse(raw);
           if (p && (p.dietCal || p.kaloriHarian)) {
-            // Normalize field names
+            // Normalize field names (backward compat)
             if (!p.dietCal && p.kaloriHarian) p.dietCal = p.kaloriHarian;
             if (!p.target && p.targetBB) p.target = p.targetBB;
             if (!p.startDate && p.tanggalMulai) p.startDate = p.tanggalMulai;
+            if (!p.startDateISO) p.startDateISO = '';
             state.set('kalkulator', p);
             console.log('Kalkulator from localStorage (' + kalKeys[ki] + ') ✓');
             break;
@@ -2331,8 +2338,21 @@ async function initApp() {
 
   renderAll();
 
-  // Render jadwal ulang setelah DOM visible (pastikan konten muncul)
+  // Render jadwal ulang setelah DOM visible
   setTimeout(renderHomeJadwal, 150);
+
+  // Handle resume dari quiz: jika baru selesai quiz, force render profil
+  if (localStorage.getItem('kemoenik_just_finished_quiz') === 'true') {
+    localStorage.removeItem('kemoenik_just_finished_quiz');
+    setTimeout(function() {
+      renderProfilPage();
+      // Auto-expand accordion profil
+      ['acc-trait','acc-karakter','acc-skor'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.add('on');
+      });
+    }, 200);
+  }
 
   } catch(e) {
     console.error('initApp error:', e);
@@ -2486,6 +2506,8 @@ function togFaq(id) {
 // RENDER ALL
 // ============================================================
 function renderAll() {
+  console.log('[renderAll] kalkulator:', appState.kalkulator ? '✓ '+appState.kalkulator.dietCal+'kkal' : 'null');
+  console.log('[renderAll] quiz:', appState.quiz ? '✓ '+appState.quiz.tipeName : 'null');
   renderHomeStats();
   renderHomeGreeting();
   renderProgress();
@@ -2501,7 +2523,6 @@ function renderAll() {
   // Tampilkan notif "isi kuis dulu" di Program page jika kuis belum dikerjakan
   var kuisNotif = document.getElementById('kuisFirstNotif');
   if (kuisNotif) kuisNotif.style.display = appState.quiz ? 'none' : 'flex';
-
 }
 
 // ============================================================
@@ -2534,9 +2555,9 @@ function renderHomeStats() {
 
     // Program banner
     document.getElementById('progNama').textContent = (nama || '—') + (q ? ' — ' + q.tipeName : '');
-    document.getElementById('progDesc').textContent = 'Mulai: ' + (k.startDate || '—') + ' | Target: ' + (k.target || '—') + ' kg';
+    document.getElementById('progDesc').textContent = 'Mulai: ' + (k.startDateDisplay || k.startDate || '—') + ' | Target: ' + (k.target || '—') + ' kg';
     document.getElementById('piSubKalori').textContent = k.dietCal ? Math.round(k.dietCal) + ' kkal/hari • ' + k.targetMinggu + ' minggu' : 'Hitung kebutuhan kalori & target mingguanmu';
-    document.getElementById('piSubTimeline').textContent = k.startDate ? 'Mulai ' + k.startDate + ' → ' + k.estTanggal : 'Fase & jadwal program dietmu';
+    document.getElementById('piSubTimeline').textContent = k.startDate ? 'Mulai ' + (k.startDateDisplay || k.startDate) + ' → ' + k.estTanggal : 'Fase & jadwal program dietmu';
     document.getElementById('progNotif').style.display = 'flex';
   }
 
@@ -2584,7 +2605,7 @@ function renderHomeGreeting() {
 // ============================================================
 function renderProgress() {
   var k = appState.kalkulator;
-  if (!k || !k.startDate) {
+  if (!k || (!k.startDate && !k.startDateISO)) {
     document.getElementById('progHari').textContent = '—';
     document.getElementById('progTotal').textContent = '—';
     document.getElementById('progPct').textContent = '—%';
@@ -2592,10 +2613,54 @@ function renderProgress() {
     return;
   }
 
-  var start = new Date(k.startDate);
+  // ── Parse tanggal dengan multi-format fallback ────────────
+  var start = null;
+
+  // Prioritas 1: ISO format YYYY-MM-DD (paling reliable)
+  var isoStr = k.startDateISO || k.startDate || '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoStr)) {
+    // Append T00:00:00 agar tidak bergeser timezone
+    start = new Date(isoStr + 'T00:00:00');
+  }
+
+  // Prioritas 2: format lokal Indonesia "12 Jan 2025" / "12 Januari 2025"
+  if (!start || isNaN(start.getTime())) {
+    var dateStr = k.startDate || '';
+    var parts = dateStr.match(/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+    if (parts) {
+      var monthMap = {
+        jan:0, feb:1, mar:2, apr:3, mei:4, jun:5,
+        jul:6, agu:7, sep:8, okt:9, nov:10, des:11,
+        januari:0, februari:1, maret:2, april:3, juni:5,
+        juli:6, agustus:7, september:8, oktober:9, november:10, desember:11,
+        // English fallback
+        may:4, aug:7, oct:9, dec:11
+      };
+      var mKey = parts[2].toLowerCase();
+      if (monthMap[mKey] !== undefined) {
+        start = new Date(parseInt(parts[3]), monthMap[mKey], parseInt(parts[1]));
+      }
+    }
+  }
+
+  // Prioritas 3: native Date parse (handles ISO with time, RFC2822, etc.)
+  if (!start || isNaN(start.getTime())) {
+    start = new Date(k.startDate || k.startDateISO || '');
+  }
+
+  // Fallback: jika semua gagal → anggap mulai hari ini (hari ke-1)
+  if (!start || isNaN(start.getTime())) {
+    console.warn('renderProgress: invalid startDate:', k.startDate, '— using today');
+    start = new Date();
+  }
+
+  // ── Hitung selisih hari (murni tanggal, abaikan jam) ─────
   var today = new Date();
+  var startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+  var todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
   var totalHari = (k.targetMinggu || 4) * 7;
-  var hariKe = Math.max(1, Math.floor((today - start) / (1000*60*60*24)) + 1);
+  var hariKe = Math.max(1, Math.floor((todayDay - startDay) / (1000*60*60*24)) + 1);
   hariKe = Math.min(hariKe, totalHari);
   var pct = totalHari > 0 ? Math.round((hariKe / totalHari) * 100) : 0;
 
@@ -2604,16 +2669,34 @@ function renderProgress() {
   document.getElementById('progPct').textContent = pct + '%';
   document.getElementById('progTotalLabel').textContent = totalHari;
 
-  setTimeout(function(){
-    document.getElementById('progFill').style.width = pct + '%';
-    document.getElementById('progThumb').style.left = pct + '%';
-  }, 300);
+  // ── Animasi progress bar ──────────────────────────────────
+  var fill = document.getElementById('progFill');
+  var thumb = document.getElementById('progThumb');
+  if (fill && thumb) {
+    // Reset ke 0 dulu untuk trigger CSS transition ulang
+    fill.style.transition = 'none';
+    thumb.style.transition = 'none';
+    fill.style.width = '0%';
+    thumb.style.left = '0%';
+    // Force reflow
+    void fill.offsetWidth;
+    // Restore transition lalu animate
+    fill.style.transition = '';
+    thumb.style.transition = '';
+    setTimeout(function() {
+      fill.style.width = pct + '%';
+      thumb.style.left = pct + '%';
+    }, 50);
+  }
 
-  // Timeline dates
+  // ── Timeline dates ────────────────────────────────────────
+  var displayStart = k.startDateDisplay || k.startDate || '—';
   if (document.getElementById('timelineStartDate')) {
-    document.getElementById('timelineStartDate').textContent = k.startDate || '—';
+    document.getElementById('timelineStartDate').textContent = displayStart;
     document.getElementById('timelineEndDate').textContent = k.estTanggal || '—';
   }
+
+  console.log('Timeline: hari', hariKe, '/', totalHari, '(' + pct + '%), startDate:', isoStr);
 }
 
 // ============================================================
@@ -2957,10 +3040,19 @@ function hitungKalkulator() {
   document.getElementById('hasilKalkulator').style.display = 'block';
 
   // Simpan ke state sementara
+  // startDateISO: format YYYY-MM-DD untuk parsing reliable
+  // startDate: tetap simpan format display sebagai backward compat
+  var startDateISO = today.getFullYear() + '-' +
+    String(today.getMonth() + 1).padStart(2, '0') + '-' +
+    String(today.getDate()).padStart(2, '0');
+  var startDateDisplay = today.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
+
   window._tempKalData = {
     nama: nama.replace(/[<>"'&]/g, ''), gender, usia, berat, tinggi, aktivitas: parseFloat(aktivitas), target, metode,
     dietCal, targetMinggu, estTanggal, estLingkar, bmr: Math.round(bmr), tdee, defisit,
-    startDate: today.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})
+    startDate:    startDateISO,      // ISO format — primary untuk kalkulasi
+    startDateISO: startDateISO,      // explicit ISO copy
+    startDateDisplay: startDateDisplay  // untuk tampilan
   };
 }
 
@@ -2993,11 +3085,15 @@ async function simpanKalkulator(btnEl) {
     document.getElementById('kalkulatorForm').style.display = 'block';
     if (btnEl) { btnEl.innerHTML = origHtml || '<i class="fas fa-save"></i> Simpan & Mulai Program'; btnEl.disabled = false; }
 
+    // Backup ke kemoenik_kal_backup juga
+    try { localStorage.setItem('kemoenik_kal_backup', JSON.stringify(data)); } catch(e) {}
+
     // Close panel + navigate
     closePanel('panelKalkulator');
     go('home');
     setTimeout(function() {
-      renderAll();
+      renderAll();          // render semua termasuk renderHomeStats
+      renderHomeStats();    // explicit call untuk pastikan home stats terupdate
       loadMisiChecked();
       showToast('✅ Program tersimpan! Semangat ' + data.nama.split(' ')[0] + '! 💪');
     }, 80);
@@ -3599,8 +3695,22 @@ async function showResult() {
   }
 }
 
-function selesaiQuiz() {
-  go('home');
+async function selesaiQuiz() {
+  try {
+    // Persist state eksplisit sebelum navigasi
+    state._persist();
+    localStorage.setItem('kemoenik_just_finished_quiz', 'true');
+    // Beri waktu Firebase selesai (fbSaveQuiz async di showResult)
+    await new Promise(function(r){ setTimeout(r, 120); });
+    go('home');
+    setTimeout(function() {
+      renderAll();
+      showToast('✅ Profil metabolisme tersimpan! Lihat di menu Profil');
+    }, 150);
+  } catch(e) {
+    console.error('selesaiQuiz error:', e);
+    go('home');
+  }
 }
 
 function ulangQuiz() {
