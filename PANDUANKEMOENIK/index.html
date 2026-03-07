@@ -1890,101 +1890,278 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
 <script>
 // ============================================================
-// FIREBASE CONFIG
+// FIREBASE CONFIG — REST API ke struktur users/{userId}
 // ============================================================
-const firebaseConfig = {
+var firebaseConfig = {
   apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
-  authDomain: "project-panduan-dani.firebaseapp.com",
-  projectId: "project-panduan-dani",
-  storageBucket: "project-panduan-dani.firebasestorage.app",
-  messagingSenderId: "113559517545",
-  appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
+  projectId: "project-panduan-dani"
 };
+var _FSBASE = 'https://firestore.googleapis.com/v1/projects/project-panduan-dani/databases/(default)/documents/users/';
 
-// Firebase helpers using REST API (no SDK needed for basic Firestore)
 var dbUserWA = '';
 var dbUserVoucher = '';
 var APP_URL = 'https://kemoenikofficial.github.io/aktivitas/';
 
-async function fbSet(path, data) {
-  // PRIMARY: simpan ke localStorage (selalu berhasil)
-  try {
-    var lsKey = 'kdb_' + path.replace(/\//g,'_');
-    localStorage.setItem(lsKey, JSON.stringify(data));
-    // Backup extra SELALU (tidak depend WA) untuk quiz & kalkulator
-    if (path.indexOf('quiz') !== -1) localStorage.setItem('kemoenik_quiz_data', JSON.stringify(data));
-    if (path.indexOf('kalkulator') !== -1) localStorage.setItem('kemoenik_kal_data', JSON.stringify(data));
-    // Also save full state backup
-    if (path.indexOf('quiz') !== -1 || path.indexOf('kalkulator') !== -1) {
-      localStorage.setItem('kemoenik_last_saved', new Date().toISOString());
-    }
-  } catch(e2) { console.log('ls err:', e2); }
-  // SECONDARY: sync ke Firebase (best-effort, tidak memblokir)
-  try {
-    var url = 'https://firestore.googleapis.com/v1/projects/project-panduan-dani/databases/(default)/documents/' + path + '?key=' + firebaseConfig.apiKey;
-    var fields = {};
-    Object.keys(data).forEach(function(k) {
-      var v = data[k];
-      if (typeof v === 'string') fields[k] = {stringValue: v};
-      else if (typeof v === 'number') fields[k] = {doubleValue: v};
-      else if (typeof v === 'boolean') fields[k] = {booleanValue: v};
-      else fields[k] = {stringValue: JSON.stringify(v)};
-    });
-    await fetch(url, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({fields}) });
-  } catch(e) { console.log('Firebase sync (non-critical):', e); }
+// Helper: URL dokumen users/{wa}
+function _userDocUrl() {
+  return _FSBASE + dbUserWA + '?key=' + firebaseConfig.apiKey;
+}
+function _userDocPatchUrl(fields) {
+  var mask = fields.map(function(f){ return 'updateMask.fieldPaths=' + f; }).join('&');
+  return _FSBASE + dbUserWA + '?' + mask + '&key=' + firebaseConfig.apiKey;
 }
 
-async function fbGet(path) {
-  // Coba Firebase dulu
+// Konversi JS object ke Firestore map value
+function _toFsMap(obj) {
+  var fields = {};
+  Object.keys(obj).forEach(function(k) {
+    var v = obj[k];
+    if (v === null || v === undefined) fields[k] = {nullValue: null};
+    else if (typeof v === 'string') fields[k] = {stringValue: v};
+    else if (typeof v === 'number') fields[k] = {doubleValue: v};
+    else if (typeof v === 'boolean') fields[k] = {booleanValue: v};
+    else if (typeof v === 'object') fields[k] = {mapValue: {fields: _toFsMap(v)}};
+    else fields[k] = {stringValue: String(v)};
+  });
+  return fields;
+}
+
+// Konversi Firestore value ke JS
+function _fromFsVal(v) {
+  if (!v) return null;
+  if (v.stringValue !== undefined) return v.stringValue;
+  if (v.doubleValue !== undefined) return v.doubleValue;
+  if (v.integerValue !== undefined) return parseInt(v.integerValue);
+  if (v.booleanValue !== undefined) return v.booleanValue;
+  if (v.nullValue !== undefined) return null;
+  if (v.mapValue) {
+    var obj = {};
+    if (v.mapValue.fields) {
+      Object.keys(v.mapValue.fields).forEach(function(k) {
+        obj[k] = _fromFsVal(v.mapValue.fields[k]);
+      });
+    }
+    return obj;
+  }
+  if (v.arrayValue) {
+    if (!v.arrayValue.values) return [];
+    return v.arrayValue.values.map(_fromFsVal);
+  }
+  return null;
+}
+
+// ── SAVE KALKULATOR → field menuHarian ──────────────────────
+async function fbSaveKalkulator(data) {
+  // localStorage PRIMARY (selalu berhasil, tidak pernah gagal)
+  try { localStorage.setItem('kemoenik_kal_data', JSON.stringify(data)); } catch(e){}
+
+  // Firestore REST: PATCH document users/{wa} dengan field menuHarian
   try {
-    var url = 'https://firestore.googleapis.com/v1/projects/project-panduan-dani/databases/(default)/documents/' + path + '?key=' + firebaseConfig.apiKey;
+    var menuHarian = {
+      kaloriHarian: data.dietCal || 0,
+      dietCal: data.dietCal || 0,
+      targetMinggu: data.targetMinggu || 0,
+      targetBB: data.target || 0,
+      tanggalMulai: data.startDate || '',
+      estTanggal: data.estTanggal || '',
+      estLingkar: data.estLingkar || 0,
+      bmr: data.bmr || 0,
+      tdee: data.tdee || 0,
+      defisit: data.defisit || 0,
+      metode: data.metode || 'standar',
+      nama: data.nama || '',
+      gender: data.gender || '',
+      usia: data.usia || 0,
+      berat: data.berat || 0,
+      tinggi: data.tinggi || 0,
+      aktivitas: data.aktivitas || 1.375,
+      savedAt: new Date().toISOString()
+    };
+    // PATCH dengan updateMask.fieldPaths=menuHarian agar field lain tidak tersentuh
+    var url = _FSBASE + dbUserWA + '?updateMask.fieldPaths=menuHarian&key=' + firebaseConfig.apiKey;
+    var body = { fields: { menuHarian: { mapValue: { fields: _toFsMap(menuHarian) } } } };
+    var res = await fetch(url, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (res.ok) {
+      console.log('Kalkulator → menuHarian saved to Firestore ✓');
+    } else {
+      var err = await res.text();
+      console.warn('Firestore menuHarian PATCH err:', res.status, err);
+    }
+  } catch(e) { console.warn('Firestore kalkulator non-critical:', e); }
+}
+
+// ── SAVE QUIZ → field metabolism ─────────────────────────────
+async function fbSaveQuiz(data) {
+  // localStorage PRIMARY
+  try { localStorage.setItem('kemoenik_quiz_data', JSON.stringify(data)); } catch(e){}
+
+  // Firestore REST: PATCH document users/{wa} dengan field metabolism
+  try {
+    var metabolism = {
+      tipeMetabolisme: data.tipe || '',
+      tipeName: data.tipeName || '',
+      metodeDiet: data.metode || 'standar',
+      metodeName: data.metodeName || '',
+      skor: data.skor || 0,
+      tagline: data.tagline || '',
+      emoji: data.tipe_emoji || '',
+      nama: data.nama || '',
+      savedAt: new Date().toISOString()
+    };
+    var url = _FSBASE + dbUserWA + '?updateMask.fieldPaths=metabolism&key=' + firebaseConfig.apiKey;
+    var body = { fields: { metabolism: { mapValue: { fields: _toFsMap(metabolism) } } } };
+    var res = await fetch(url, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (res.ok) {
+      console.log('Quiz → metabolism saved to Firestore ✓');
+    } else {
+      var err = await res.text();
+      console.warn('Firestore metabolism PATCH err:', res.status, err);
+    }
+  } catch(e) { console.warn('Firestore quiz non-critical:', e); }
+}
+
+// ── SAVE EVALUASI → field evaluasi (array) ───────────────────
+async function fbSaveEvaluasi(minggu, evalData) {
+  try { localStorage.setItem('kdb_eval_minggu' + minggu, JSON.stringify(evalData)); } catch(e){}
+  try {
+    // Update array evaluasi di appState lalu PATCH ke Firestore
+    var allEval = appState.evaluasi ? appState.evaluasi.slice() : [];
+    var idx = allEval.findIndex(function(e){ return e.minggu == minggu; });
+    if (idx >= 0) allEval[idx] = evalData; else allEval.push(evalData);
+    // Simpan sebagai array di field evaluasi
+    var evalItems = allEval.map(function(e) {
+      return { mapValue: { fields: _toFsMap(e) } };
+    });
+    var url = _FSBASE + dbUserWA + '?updateMask.fieldPaths=evaluasi&key=' + firebaseConfig.apiKey;
+    var body = { fields: { evaluasi: { arrayValue: { values: evalItems } } } };
+    var res = await fetch(url, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (res.ok) {
+      console.log('Evaluasi saved to Firestore ✓');
+    } else {
+      console.warn('Firestore evaluasi PATCH err:', res.status);
+    }
+  } catch(e) { console.warn('Firestore evaluasi non-critical:', e); }
+}
+
+// ── LOAD ALL DATA dari Firestore ─────────────────────────────
+async function loadAllData() {
+  // Coba GET dari Firestore: GET users/{wa}
+  try {
+    var url = _FSBASE + dbUserWA + '?key=' + firebaseConfig.apiKey;
     var res = await fetch(url);
     if (res.ok) {
       var d = await res.json();
       if (d.fields) {
-        var out = {};
-        Object.keys(d.fields).forEach(function(k) {
-          var f = d.fields[k];
-          if (f.stringValue !== undefined) {
-            try { out[k] = JSON.parse(f.stringValue); } catch(e2) { out[k] = f.stringValue; }
-          } else if (f.doubleValue !== undefined) out[k] = f.doubleValue;
-          else if (f.booleanValue !== undefined) out[k] = f.booleanValue;
-        });
-        return out;
+        console.log('Firestore doc loaded, fields:', Object.keys(d.fields));
+
+        // ── Load kalkulator dari field menuHarian ──
+        if (d.fields.menuHarian && d.fields.menuHarian.mapValue) {
+          var mh = _fromFsVal(d.fields.menuHarian);
+          if (mh && (mh.dietCal || mh.kaloriHarian)) {
+            appState.kalkulator = {
+              dietCal:      mh.dietCal || mh.kaloriHarian || 0,
+              targetMinggu: mh.targetMinggu || 0,
+              target:       mh.targetBB || 0,
+              startDate:    mh.tanggalMulai || '',
+              estTanggal:   mh.estTanggal || '',
+              estLingkar:   mh.estLingkar || 0,
+              bmr:          mh.bmr || 0,
+              tdee:         mh.tdee || 0,
+              defisit:      mh.defisit || 0,
+              metode:       mh.metode || 'standar',
+              nama:         mh.nama || '',
+              gender:       mh.gender || 'perempuan',
+              usia:         mh.usia || 0,
+              berat:        mh.berat || 0,
+              tinggi:       mh.tinggi || 0,
+              aktivitas:    mh.aktivitas || 1.375
+            };
+            // Sync ke localStorage
+            try { localStorage.setItem('kemoenik_kal_data', JSON.stringify(appState.kalkulator)); } catch(e){}
+            console.log('Kalkulator loaded from Firestore menuHarian ✓');
+          }
+        }
+
+        // ── Load quiz dari field metabolism ──
+        if (d.fields.metabolism && d.fields.metabolism.mapValue) {
+          var m = _fromFsVal(d.fields.metabolism);
+          if (m && m.tipeMetabolisme) {
+            appState.quiz = {
+              tipe:       m.tipeMetabolisme || '',
+              tipeName:   m.tipeName || '',
+              metode:     m.metodeDiet || 'standar',
+              metodeName: m.metodeName || '',
+              skor:       m.skor || 0,
+              tagline:    m.tagline || '',
+              tipe_emoji: m.emoji || '',
+              nama:       m.nama || ''
+            };
+            // Sync ke localStorage
+            try { localStorage.setItem('kemoenik_quiz_data', JSON.stringify(appState.quiz)); } catch(e){}
+            console.log('Quiz loaded from Firestore metabolism ✓');
+          }
+        }
+
+        // ── Load evaluasi dari field evaluasi ──
+        if (d.fields.evaluasi && d.fields.evaluasi.arrayValue) {
+          var evalArr = _fromFsVal(d.fields.evaluasi);
+          if (evalArr && Array.isArray(evalArr) && evalArr.length) {
+            appState.evaluasi = evalArr.sort(function(a,b){ return (a.minggu||0)-(b.minggu||0); });
+            console.log('Evaluasi loaded from Firestore:', appState.evaluasi.length, 'entries ✓');
+          }
+        }
       }
+    } else {
+      console.warn('Firestore GET users/', dbUserWA, 'status:', res.status);
     }
-  } catch(e) { console.log('fbGet Firebase err, try localStorage:', e); }
-  // Fallback ke localStorage
-  try {
-    var lsKey = 'kdb_' + path.replace(/\//g,'_');
-    var ls = localStorage.getItem(lsKey);
-    if (ls) return JSON.parse(ls);
-  } catch(e2) {}
-  return null;
+  } catch(e) {
+    console.warn('Firestore load gagal, fallback ke localStorage:', e);
+  }
+
+  // ── Fallback localStorage untuk kalkulator ──
+  if (!appState.kalkulator) {
+    try {
+      var lsKal = localStorage.getItem('kemoenik_kal_data');
+      if (lsKal) {
+        var p = JSON.parse(lsKal);
+        if (p && p.dietCal) { appState.kalkulator = p; console.log('Kalkulator from LS ✓'); }
+      }
+    } catch(e){}
+  }
+
+  // ── Fallback localStorage untuk quiz ──
+  if (!appState.quiz) {
+    try {
+      var lsQ = localStorage.getItem('kemoenik_quiz_data');
+      if (lsQ) {
+        var p = JSON.parse(lsQ);
+        if (p && p.tipe) { appState.quiz = p; console.log('Quiz from LS ✓'); }
+      }
+    } catch(e){}
+  }
+
+  // Set nama dari kalkulator
+  if (appState.kalkulator && appState.kalkulator.nama) {
+    appState.user.nama = appState.kalkulator.nama;
+  }
 }
 
-async function fbGetCollection(path) {
-  try {
-    var url = 'https://firestore.googleapis.com/v1/projects/project-panduan-dani/databases/(default)/documents/' + path + '?key=' + firebaseConfig.apiKey;
-    var res = await fetch(url);
-    if (!res.ok) return [];
-    var d = await res.json();
-    if (!d.documents) return [];
-    return d.documents.map(function(doc) {
-      var out = { _id: doc.name.split('/').pop() };
-      if (doc.fields) {
-        Object.keys(doc.fields).forEach(function(k) {
-          var f = doc.fields[k];
-          if (f.stringValue !== undefined) {
-            try { out[k] = JSON.parse(f.stringValue); } catch(e2) { out[k] = f.stringValue; }
-          } else if (f.doubleValue !== undefined) out[k] = f.doubleValue;
-          else if (f.booleanValue !== undefined) out[k] = f.booleanValue;
-        });
-      }
-      return out;
-    });
-  } catch(e) { return []; }
+// ── LEGACY stubs (masih dipakai beberapa tempat) ─────────────
+async function fbSet(path, data) {
+  if (path.indexOf('kalkulator') !== -1) { await fbSaveKalkulator(data); }
+  else if (path.indexOf('quiz') !== -1)  { await fbSaveQuiz(data); }
+  else if (path.indexOf('evaluasi') !== -1) {
+    var m = path.split('minggu').pop();
+    await fbSaveEvaluasi(m, data);
+  } else {
+    try { localStorage.setItem('kdb_' + path.replace(/\//g,'_'), JSON.stringify(data)); } catch(e){}
+  }
 }
+async function fbGet(path) {
+  try { var ls = localStorage.getItem('kdb_' + path.replace(/\//g,'_')); if (ls) return JSON.parse(ls); } catch(e){}
+  return null;
+}
+async function fbGetCollection(path) { return appState.evaluasi || []; }
 
 // ============================================================
 // GLOBAL STATE
@@ -2052,41 +2229,6 @@ window.addEventListener('load', async function() {
   renderAll();
 });
 
-async function loadAllData() {
-  var basePath = 'kemoenik_users/' + dbUserWA;
-
-  // Load kalkulator - coba semua sumber
-  var kal = await fbGet(basePath + '/kalkulator/data');
-  if (!kal || !kal.nama) {
-    try {
-      var bk = localStorage.getItem('kemoenik_kal_data');
-      if (bk) { var parsedK = JSON.parse(bk); if (parsedK && parsedK.nama) kal = parsedK; }
-    } catch(e){}
-  }
-  if (kal && kal.nama) appState.kalkulator = kal;
-
-  // Load quiz - coba semua sumber, prioritas: Firebase > LS path-based > backup key
-  var q = await fbGet(basePath + '/quiz/data');
-  if (!q || !q.tipe) { // Kalau null atau objek kosong
-    try {
-      // Coba backup key yang tidak depend WA
-      var bq = localStorage.getItem('kemoenik_quiz_data');
-      if (bq) { var parsed = JSON.parse(bq); if (parsed && parsed.tipe) q = parsed; }
-    } catch(e){}
-  }
-  if (q && q.tipe) appState.quiz = q; // Hanya set kalau ada data valid (tipe wajib ada)
-
-  // Load evaluasi
-  var evals = await fbGetCollection(basePath + '/evaluasi');
-  if (evals && evals.length) {
-    appState.evaluasi = evals.sort(function(a,b){ return (a.minggu||0) - (b.minggu||0); });
-  }
-
-  // Load user info dari kalkulator
-  if (appState.kalkulator && appState.kalkulator.nama) {
-    appState.user.nama = appState.kalkulator.nama;
-  }
-}
 
 // ============================================================
 // NAVIGATION
@@ -2703,7 +2845,7 @@ async function simpanKalkulator(btnEl) {
   appState.user.nama = data.nama;
 
   // Simpan ke localStorage primary (tidak bisa gagal) + Firebase secondary
-  await fbSet('kemoenik_users/' + dbUserWA + '/kalkulator/data', data);
+  await fbSaveKalkulator(data);
 
   // Reset form
   window._tempKalData = null;
@@ -2805,7 +2947,7 @@ async function saveWeeklyEval() {
   }
 
   // Simpan ke Firebase
-  await fbSet('kemoenik_users/' + dbUserWA + '/evaluasi/minggu' + minggu, evalData);
+  await fbSaveEvaluasi(minggu, evalData);
 
   // Reset form
   document.getElementById('weekStartWeight').value = '';
@@ -3281,7 +3423,7 @@ async function showResult() {
     savedAt: new Date().toISOString()
   };
   appState.quiz = qData;
-  await fbSet('kemoenik_users/' + dbUserWA + '/quiz/data', qData);
+  await fbSaveQuiz(qData);
 
   renderAll();
   gtag('event', 'quiz_completed', { tipe: finalResult.name });
