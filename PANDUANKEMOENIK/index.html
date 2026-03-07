@@ -630,25 +630,6 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
       </div>
     </div>
 
-    <!-- NOTIF KUIS - Hanya tampil jika kuis belum diisi -->
-    <div id="homeKuisNotif" style="display:none;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid var(--gold);border-radius:14px;padding:14px 16px;margin-bottom:14px;">
-      <div style="display:flex;gap:12px;align-items:flex-start;">
-        <div style="font-size:28px;flex-shrink:0;line-height:1;">📝</div>
-        <div style="flex:1;">
-          <div style="font-size:14px;font-weight:800;color:#78350F;margin-bottom:4px;">Mulai dari Kuis Dulu!</div>
-          <div style="font-size:12px;color:#92400E;line-height:1.6;">Kuis menentukan <strong>tipe metabolisme</strong> dan <strong>metode diet</strong> yang paling cocok untukmu. Hanya 3 menit!</div>
-          <div style="display:flex;gap:8px;margin-top:10px;">
-            <button onclick="go('kuis')" style="flex:1;padding:9px;background:var(--gold2);color:#FFF;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
-              📝 Isi Kuis Sekarang
-            </button>
-            <button onclick="document.getElementById('homeKuisNotif').style.display='none'" style="padding:9px 12px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">
-              Nanti
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="shortcut-grid" style="grid-template-columns:1fr 1fr;">
       <!-- Kuis -->
       <div class="sc-card" onclick="go('kuis')">
@@ -1365,14 +1346,32 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Tingkat Aktivitas</label>
+          <label class="form-label">Aktivitas Harian</label>
           <select class="form-input" id="inputAktivitas">
-            <option value="1.2">Sedentary — Jarang/tidak olahraga</option>
-            <option value="1.375" selected>Lightly Active — Olahraga ringan 1–3x/minggu</option>
-            <option value="1.55">Moderately Active — Olahraga sedang 3–5x/minggu</option>
-            <option value="1.725">Very Active — Olahraga keras 6–7x/minggu</option>
-            <option value="1.9">Extra Active — Olahraga sangat keras / kerja fisik berat</option>
+            <option value="">— Pilih Level Aktivitas —</option>
+            <option value="1.2">Tidak Aktif</option>
+            <option value="1.375" selected>Ringan (1–2x Olahraga)</option>
+            <option value="1.55">Sedang (3–5x Olahraga)</option>
+            <option value="1.725">Berat (6–7x Olahraga)</option>
+            <option value="1.9">Sangat Berat (Atlet)</option>
           </select>
+          <!-- Keterangan aktivitas accordion -->
+          <div id="aktAccordion" style="margin-top:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div onclick="var b=document.getElementById('aktBody');var a=document.getElementById('aktArr');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'›':'⌄';" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:var(--offwhite);font-size:12px;font-weight:600;color:var(--green2);">
+              <span style="display:flex;align-items:center;gap:6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Keterangan Level Aktivitas
+              </span>
+              <span id="aktArr" style="font-size:16px;font-weight:400;color:var(--text3);">›</span>
+            </div>
+            <div id="aktBody" style="display:none;padding:12px 14px;background:white;font-size:12px;color:var(--text3);line-height:1.9;border-top:1px solid var(--border);">
+              <div style="margin-bottom:6px;"><span style="font-weight:700;color:var(--text);">Tidak Aktif:</span> Kerja duduk, hampir tidak olahraga, aktivitas minim sehari-hari</div>
+              <div style="margin-bottom:6px;"><span style="font-weight:700;color:var(--green);">Ringan (1–2x):</span> Jalan 30 menit, yoga ringan, gym santai, kardio ringan</div>
+              <div style="margin-bottom:6px;"><span style="font-weight:700;color:var(--gold2);">Sedang (3–5x):</span> Angkat beban rutin, lari 30–45 menit, kombinasi cardio + strength</div>
+              <div style="margin-bottom:6px;"><span style="font-weight:700;color:#E07B39;">Berat (6–7x):</span> Latihan intens tiap hari, pekerja fisik berat + gym</div>
+              <div><span style="font-weight:700;color:#DC2626;">Sangat Berat:</span> Atlet profesional, pekerja fisik ekstrem</div>
+            </div>
+          </div>
         </div>
         <div class="form-grid">
           <div class="form-group">
@@ -1380,11 +1379,11 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
             <input type="number" class="form-input" id="inputTarget" placeholder="55" step="0.1">
           </div>
           <div class="form-group">
-            <label class="form-label">Metode Diet</label>
+            <label class="form-label">Kecepatan Diet</label>
             <select class="form-input" id="inputMetode">
-              <option value="ringan">Ringan (~0.3 kg/minggu)</option>
-              <option value="standar" selected>Standar (~0.5 kg/minggu)</option>
-              <option value="agresif">Agresif (~0.7 kg/minggu)</option>
+              <option value="ringan">Ringan (300 kkal defisit)</option>
+              <option value="standar" selected>Standar (500 kkal defisit)</option>
+              <option value="agresif">Agresif (700 kkal defisit)</option>
             </select>
           </div>
         </div>
@@ -1411,7 +1410,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
           <strong style="color:var(--green2);">TDEE:</strong> <span id="hasilTDEE">—</span> kkal/hari &nbsp;|&nbsp;
           <strong style="color:var(--green2);">Defisit:</strong> <span id="hasilDefisit">—</span> kkal/hari
         </div>
-        <button class="btn-primary" onclick="simpanKalkulator()">
+        <button class="btn-primary" id="btnSimpanKal" onclick="simpanKalkulator(this)">
           <i class="fas fa-save"></i> Simpan & Mulai Program
         </button>
         <button class="btn-outline" style="margin-top:8px;" onclick="document.getElementById('hasilKalkulator').style.display='none';document.getElementById('kalkulatorForm').style.display='block'">
@@ -2153,9 +2152,6 @@ function renderAll() {
   var kuisNotif = document.getElementById('kuisFirstNotif');
   if (kuisNotif) kuisNotif.style.display = appState.quiz ? 'none' : 'flex';
 
-  // Tampilkan banner kuis di Home jika belum dikerjakan
-  var homeKuisNotif = document.getElementById('homeKuisNotif');
-  if (homeKuisNotif) homeKuisNotif.style.display = appState.quiz ? 'none' : 'block';
 }
 
 // ============================================================
@@ -2544,12 +2540,12 @@ function hitungKalkulator() {
   var usia = parseFloat(document.getElementById('inputUsia').value) || 0;
   var berat = parseFloat(document.getElementById('inputBerat').value) || 0;
   var tinggi = parseFloat(document.getElementById('inputTinggi').value) || 0;
-  var aktivitas = parseFloat(document.getElementById('inputAktivitas').value) || 1.375;
+  var aktivitas = parseFloat(document.getElementById('inputAktivitas').value) || 0;
   var target = parseFloat(document.getElementById('inputTarget').value) || 0;
   var metode = document.getElementById('inputMetode').value;
 
-  if (!nama || usia < 10 || berat < 30 || tinggi < 100 || target < 30) {
-    alert('Lengkapi semua data ya kak! 😊');
+  if (!nama || usia < 10 || berat < 30 || tinggi < 100 || target < 30 || !aktivitas) {
+    alert('Lengkapi semua data ya kak! Pastikan level aktivitas sudah dipilih 😊');
     return;
   }
   if (target >= berat) {
@@ -2567,9 +2563,9 @@ function hitungKalkulator() {
   var tdee = Math.round(bmr * aktivitas);
 
   // Defisit berdasarkan metode
-  var defisit = metode === 'ringan' ? 300 : metode === 'agresif' ? 750 : 500;
+  var defisit = metode === 'ringan' ? 300 : metode === 'agresif' ? 700 : 500; // sesuai panduan_1
   var dietCal = Math.round(tdee - defisit);
-  var penurunanPerMinggu = metode === 'ringan' ? 0.3 : metode === 'agresif' ? 0.75 : 0.5;
+  var penurunanPerMinggu = metode === 'ringan' ? 0.3 : metode === 'agresif' ? 0.7 : 0.5;
   var selisihBB = berat - target;
   var targetMinggu = Math.ceil(selisihBB / penurunanPerMinggu);
 
@@ -2608,22 +2604,25 @@ function hitungKalkulator() {
   };
 }
 
-async function simpanKalkulator() {
+async function simpanKalkulator(btnEl) {
   var data = window._tempKalData;
   if (!data) {
     alert('Klik "Generate Program" terlebih dahulu ya kak!');
     return;
   }
 
-  // Tampilkan loading state
-  var btn = event && event.target;
-  if (btn) { btn.textContent = '⏳ Menyimpan...'; btn.disabled = true; }
+  // Loading state
+  if (btnEl) { btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...'; btnEl.disabled = true; }
 
+  // Update state
   appState.kalkulator = data;
   appState.user.nama = data.nama;
 
-  // Simpan (localStorage primary, Firebase secondary - tidak bisa gagal)
+  // Simpan - localStorage primary (tidak bisa gagal), Firebase secondary
   await fbSet('kemoenik_users/' + dbUserWA + '/kalkulator/data', data);
+
+  // Reset btn
+  if (btnEl) { btnEl.innerHTML = '<i class="fas fa-save"></i> Simpan & Mulai Program'; btnEl.disabled = false; }
 
   // Update seluruh UI
   renderAll();
@@ -2633,7 +2632,6 @@ async function simpanKalkulator() {
   window._tempKalData = null;
   document.getElementById('hasilKalkulator').style.display = 'none';
   document.getElementById('kalkulatorForm').style.display = 'block';
-  if (btn) { btn.innerHTML = '<i class="fas fa-save"></i> Simpan & Mulai Program'; btn.disabled = false; }
 
   closePanel('panelKalkulator');
   alert('✅ Program berhasil disimpan! Semangat kak ' + data.nama.split(' ')[0] + '! 💪');
