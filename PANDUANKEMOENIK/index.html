@@ -629,6 +629,25 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
       </div>
     </div>
 
+    <!-- NOTIF KUIS - Hanya tampil jika kuis belum diisi -->
+    <div id="homeKuisNotif" style="display:none;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid var(--gold);border-radius:14px;padding:14px 16px;margin-bottom:14px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="font-size:28px;flex-shrink:0;line-height:1;">📝</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:800;color:#78350F;margin-bottom:4px;">Mulai dari Kuis Dulu!</div>
+          <div style="font-size:12px;color:#92400E;line-height:1.6;">Kuis menentukan <strong>tipe metabolisme</strong> dan <strong>metode diet</strong> yang paling cocok untukmu. Hanya 3 menit!</div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button onclick="go('kuis')" style="flex:1;padding:9px;background:var(--gold2);color:#FFF;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
+              📝 Isi Kuis Sekarang
+            </button>
+            <button onclick="document.getElementById('homeKuisNotif').style.display='none'" style="padding:9px 12px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">
+              Nanti
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="shortcut-grid">
       <div class="sc-card" onclick="go('kuis')">
         <div class="sc-card-ico">📝</div>
@@ -778,11 +797,22 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
   <!-- ===================== PROFIL PAGE ===================== -->
   <div class="page" id="page-profil">
-    <div id="profilBelumKuis" style="text-align:center;padding:40px 20px;">
-      <div style="font-size:48px;margin-bottom:16px;">📝</div>
-      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;">Kuis Belum Diisi</div>
-      <div style="font-size:13px;color:var(--text3);margin-bottom:24px;line-height:1.7;">Isi kuis terlebih dahulu untuk melihat profil metabolismemu secara lengkap.</div>
-      <button class="btn-primary" style="max-width:240px;" onclick="go('kuis')"><i class="fas fa-pencil-alt"></i> Isi Kuis Sekarang</button>
+    <div id="profilBelumKuis" style="text-align:center;padding:40px 20px;display:none;">
+      <div style="font-size:56px;margin-bottom:16px;">🧬</div>
+      <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:8px;">Profil Metabolisme Belum Ada</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:6px;line-height:1.7;">Isi kuis tipe metabolisme terlebih dahulu untuk mendapatkan analisis lengkap tentang tubuhmu.</div>
+      <div style="background:var(--offwhite);border-radius:12px;padding:14px;margin:16px 0;text-align:left;">
+        <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">Yang kamu dapatkan dari kuis:</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.9;">
+          📈 <strong>Trait Bar Metabolisme</strong> — 5 karakteristik metabolismemu<br>
+          🧬 <strong>Tipe & Karakteristik</strong> — profil lengkap + anjuran & pantangan<br>
+          🎯 <strong>Skor & Akurasi</strong> — kesesuaian program KEMOENIK untukmu<br>
+          ⚖️ <strong>Metode Diet</strong> — otomatis terisi di kalkulator
+        </div>
+      </div>
+      <button class="btn-primary" style="max-width:260px;" onclick="go('kuis')">
+        <i class="fas fa-pencil-alt"></i> Isi Kuis Sekarang (3 menit)
+      </button>
     </div>
 
     <div id="profilContent" style="display:none;">
@@ -1096,6 +1126,13 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
       <button class="notif-close" onclick="this.parentElement.style.display='none'">✕</button>
     </div>
 
+    <!-- NOTIF: Isi kuis dulu -->
+    <div class="notif-banner" id="kuisFirstNotif" style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid var(--gold);display:none;">
+      <div class="notif-icon">📝</div>
+      <div class="notif-text" style="color:#78350F;"><strong>Isi Kuis Dulu!</strong> Kuis menentukan tipe metabolisme & metode diet terbaik untukmu sebelum kalkulasi kalori.</div>
+      <button class="notif-close" onclick="go('kuis')" style="background:var(--gold2);color:#FFF;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;border:none;cursor:pointer;">Isi Kuis →</button>
+    </div>
+
     <div class="sec-title">Yang Kamu Dapatkan</div>
     <div class="prev-list">
       <div class="prev-item" onclick="openPanel('panelKalkulator')">
@@ -1252,6 +1289,23 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
       <div class="ms-sub">Hitung kebutuhan kalori & target program dietmu</div>
     </div>
     <div class="ms-body">
+      <!-- Notif kuis belum diisi -->
+      <div id="kalNotifKuis" style="display:none;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid var(--gold);border-radius:12px;padding:12px 14px;margin-bottom:14px;">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div style="font-size:20px;flex-shrink:0;">📝</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:700;color:#78350F;margin-bottom:3px;">Disarankan: Isi Kuis Dulu</div>
+            <div style="font-size:12px;color:#92400E;line-height:1.5;">Kuis akan menentukan <strong>tipe metabolisme</strong> & <strong>metode diet terbaik</strong> untukmu. Hasil kuis otomatis mengisi kolom Metode Diet di bawah.</div>
+          </div>
+        </div>
+        <button onclick="closePanel('panelKalkulator');go('kuis')" style="margin-top:10px;width:100%;padding:9px;background:var(--gold2);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
+          📝 Isi Kuis Sekarang →
+        </button>
+        <button onclick="document.getElementById('kalNotifKuis').style.display='none'" style="margin-top:6px;width:100%;padding:7px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">
+          Lanjut Kalkulator Saja
+        </button>
+      </div>
+
       <div id="kalkulatorForm">
         <div class="form-group">
           <label class="form-label">Nama Lengkap</label>
@@ -1942,10 +1996,10 @@ function go(page) {
   var pg = document.getElementById('page-' + page);
   if (pg) pg.classList.add('on');
 
-  // Pill nav (only first 4)
+  // Pill nav (4 pills: home, profil, tips, program)
   var pills = document.querySelectorAll('.pill');
-  var map = {home:0, profil:1, tips:2, program:3};
-  if (map[page] !== undefined) pills[map[page]].classList.add('on');
+  var pillMap = {home:0, profil:1, tips:2, program:3};
+  if (pillMap[page] !== undefined && pills[pillMap[page]]) pills[pillMap[page]].classList.add('on');
 
   // Bottom nav
   var bn = document.getElementById('bn-' + page);
@@ -1955,8 +2009,12 @@ function go(page) {
   var di = document.getElementById('di-' + page);
   if (di) di.classList.add('on');
 
+  // Re-render profil setiap kali dibuka agar selalu fresh
+  if (page === 'profil') renderProfilPage();
+
   // Scroll top
-  document.getElementById('content').scrollTo({top: 0, behavior:'smooth'});
+  var content = document.getElementById('content');
+  if (content) content.scrollTo({top: 0, behavior:'smooth'});
 
   gtag('event', 'page_view', { page_title: page });
 }
@@ -1971,6 +2029,35 @@ function closeDrawer() {
 }
 
 function openPanel(id) {
+  // Panel-specific pre-hooks
+  if (id === 'panelKalkulator') {
+    // Tampilkan notif kuis jika belum mengisi kuis
+    var kalNotif = document.getElementById('kalNotifKuis');
+    if (kalNotif) kalNotif.style.display = appState.quiz ? 'none' : 'block';
+
+    // Hanya load form jika belum ada _tempKalData yang pending (user sedang lihat hasil)
+    var hasilVisible = document.getElementById('hasilKalkulator') && document.getElementById('hasilKalkulator').style.display !== 'none';
+    if (!hasilVisible) {
+      // Reset state hasil dulu
+      window._tempKalData = null;
+      document.getElementById('hasilKalkulator').style.display = 'none';
+      document.getElementById('kalkulatorForm').style.display = 'block';
+      loadKalkulatorForm();
+    }
+  }
+  if (id === 'panelEvaluasi') {
+    var n = appState.evaluasi.length + 1;
+    var weekLabel = editingEvalIdx >= 0 ? 'Edit Minggu ke-' + appState.evaluasi[editingEvalIdx].minggu : 'Evaluasi Minggu ke-' + n;
+    document.getElementById('evalWeekDisplay').textContent = weekLabel;
+    renderEvalHistory();
+  }
+  if (id === 'panelMenu') renderMenuHarian();
+  if (id === 'panelJadwalOlahraga') renderJadwalOlahraga();
+  if (id === 'panelPanduanLengkap') {
+    if (document.getElementById('targetKcalLengkap')) {
+      document.getElementById('targetKcalLengkap').textContent = appState.kalkulator ? Math.round(appState.kalkulator.dietCal) : '—';
+    }
+  }
   document.getElementById(id).classList.add('on');
   document.body.style.overflow = 'hidden';
   gtag('event', 'open_panel', { panel: id });
@@ -2014,6 +2101,14 @@ function renderAll() {
   renderJadwalOlahraga();
   renderMenuHarian();
   renderDrawer();
+
+  // Tampilkan notif "isi kuis dulu" di Program page jika kuis belum dikerjakan
+  var kuisNotif = document.getElementById('kuisFirstNotif');
+  if (kuisNotif) kuisNotif.style.display = appState.quiz ? 'none' : 'flex';
+
+  // Tampilkan banner kuis di Home jika belum dikerjakan
+  var homeKuisNotif = document.getElementById('homeKuisNotif');
+  if (homeKuisNotif) homeKuisNotif.style.display = appState.quiz ? 'none' : 'block';
 }
 
 // ============================================================
@@ -2322,14 +2417,15 @@ var traitDataByType = {
 
 function renderProfilPage() {
   var q = appState.quiz;
+  var belumKuis = document.getElementById('profilBelumKuis');
+  var profilContent = document.getElementById('profilContent');
   if (!q) {
-    document.getElementById('profilBelumKuis').style.display = 'block';
-    document.getElementById('profilContent').style.display = 'none';
+    if (belumKuis) belumKuis.style.display = 'block';
+    if (profilContent) profilContent.style.display = 'none';
     return;
   }
-
-  document.getElementById('profilBelumKuis').style.display = 'none';
-  document.getElementById('profilContent').style.display = 'block';
+  if (belumKuis) belumKuis.style.display = 'none';
+  if (profilContent) profilContent.style.display = 'block';
 
   var tipeId = q.tipe || 2;
   var traits = traitDataByType[tipeId] || traitDataByType[2];
@@ -2466,39 +2562,65 @@ function hitungKalkulator() {
 }
 
 async function simpanKalkulator() {
-  if (!window._tempKalData) return;
   var data = window._tempKalData;
-  appState.kalkulator = data;
-  appState.user.nama = data.nama;
+  if (!data) {
+    alert('Klik "Generate Program" terlebih dahulu ya kak!');
+    return;
+  }
 
-  // Simpan ke Firebase
-  await fbSet('kemoenik_users/' + dbUserWA + '/kalkulator/data', data);
+  // Tampilkan loading state
+  var btn = event && event.target;
+  if (btn) { btn.textContent = '⏳ Menyimpan...'; btn.disabled = true; }
 
-  // Update UI
-  renderAll();
-  loadMisiChecked();
-  closePanel('panelKalkulator');
+  try {
+    appState.kalkulator = data;
+    appState.user.nama = data.nama;
 
-  // Reset form
-  document.getElementById('hasilKalkulator').style.display = 'none';
-  document.getElementById('kalkulatorForm').style.display = 'block';
+    // Simpan ke Firebase
+    await fbSet('kemoenik_users/' + dbUserWA + '/kalkulator/data', data);
 
-  alert('✅ Program berhasil disimpan! Semangat kak ' + data.nama.split(' ')[0] + '! 💪');
-  gtag('event', 'kalkulator_saved', { nama: data.nama });
+    // Update seluruh UI
+    renderAll();
+    loadMisiChecked();
+
+    // Reset panel ke form untuk session berikutnya
+    window._tempKalData = null;
+    document.getElementById('hasilKalkulator').style.display = 'none';
+    document.getElementById('kalkulatorForm').style.display = 'block';
+
+    closePanel('panelKalkulator');
+    alert('✅ Program berhasil disimpan! Semangat kak ' + data.nama.split(' ')[0] + '! 💪');
+    gtag('event', 'kalkulator_saved', { nama: data.nama });
+  } catch(err) {
+    if (btn) { btn.innerHTML = '<i class="fas fa-save"></i> Simpan & Mulai Program'; btn.disabled = false; }
+    alert('Gagal menyimpan. Periksa koneksi internet kamu dan coba lagi.');
+    console.error('simpanKalkulator error:', err);
+  }
 }
 
 // Load form if data exists
 function loadKalkulatorForm() {
   var k = appState.kalkulator;
-  if (!k) return;
-  document.getElementById('inputNama').value = k.nama || '';
-  document.getElementById('inputGender').value = k.gender || 'perempuan';
-  document.getElementById('inputUsia').value = k.usia || '';
-  document.getElementById('inputBerat').value = k.berat || '';
-  document.getElementById('inputTinggi').value = k.tinggi || '';
-  document.getElementById('inputAktivitas').value = k.aktivitas || 1.375;
-  document.getElementById('inputTarget').value = k.target || '';
-  document.getElementById('inputMetode').value = k.metode || 'standar';
+  var q = appState.quiz;
+  if (k) {
+    document.getElementById('inputNama').value = k.nama || '';
+    document.getElementById('inputGender').value = k.gender || 'perempuan';
+    document.getElementById('inputUsia').value = k.usia || '';
+    document.getElementById('inputBerat').value = k.berat || '';
+    document.getElementById('inputTinggi').value = k.tinggi || '';
+    document.getElementById('inputAktivitas').value = k.aktivitas || 1.375;
+    document.getElementById('inputTarget').value = k.target || '';
+    document.getElementById('inputMetode').value = k.metode || 'standar';
+  } else if (q) {
+    // Auto-set metode dari hasil kuis jika belum pernah generate kalkulator
+    document.getElementById('inputMetode').value = q.metode || 'standar';
+    // Tampilkan hint
+    var metodeEl = document.getElementById('inputMetode');
+    if (metodeEl) {
+      metodeEl.style.borderColor = 'var(--green)';
+      metodeEl.title = 'Otomatis dari hasil kuis: ' + q.metodeName;
+    }
+  }
 }
 
 // ============================================================
@@ -3019,18 +3141,7 @@ function renderDrawer() {
 // ============================================================
 // OPEN PANEL HOOKS
 // ============================================================
-var origOpenPanel = openPanel;
-openPanel = function(id) {
-  if (id === 'panelKalkulator') loadKalkulatorForm();
-  if (id === 'panelEvaluasi') {
-    var n = appState.evaluasi.length + 1;
-    document.getElementById('evalWeekDisplay').textContent = 'Evaluasi Minggu ke-' + n;
-    renderEvalHistory();
-  }
-  if (id === 'panelMenu') renderMenuHarian();
-  if (id === 'panelJadwalOlahraga') renderJadwalOlahraga();
-  origOpenPanel(id);
-};
+// (panel hooks sudah diintegrasikan langsung ke openPanel di atas)
 
 // ============================================================
 // INIT on DOM ready
