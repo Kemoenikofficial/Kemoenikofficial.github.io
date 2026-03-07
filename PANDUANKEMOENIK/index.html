@@ -286,6 +286,7 @@ body { font-family:'Plus Jakarta Sans', sans-serif; color:var(--text); font-size
 .sc-card.green-fill .sc-card-sub { color:rgba(255,255,255,0.6); }
 .sc-card-ico { font-size:22px; margin-bottom:10px; }
 .sc-card-ico-wrap { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
+@keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(16px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
 .sc-card-name { font-size:13px; font-weight:700; color:var(--text); }
 .sc-card-sub { font-size:11px; color:var(--text3); margin-top:3px; }
 .sc-card-arr { position:absolute; bottom:14px; right:14px; color:var(--text3); font-size:14px; }
@@ -740,16 +741,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
     </div>
     <div id="homeJadwalWrap" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:14px;">
       <div id="homeJadwalContent" style="padding:14px 16px;">
-        <!-- diisi JS berdasarkan hari ini -->
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--green),var(--green3));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8m-4-5l4 3 4-3"/><path d="M8 18l-2 3M16 18l2 3"/></svg>
-          </div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text);">Memuat jadwal hari ini...</div>
-            <div style="font-size:11px;color:var(--text3);">Sebentar ya kak</div>
-          </div>
-        </div>
+        <!-- diisi JS renderHomeJadwal() -->
       </div>
     </div>
 
@@ -2134,6 +2126,20 @@ function closePanel(id) {
   document.getElementById(id).classList.remove('on');
   document.body.style.overflow = '';
 }
+
+function showToast(msg) {
+  var existing = document.getElementById('appToast');
+  if (existing) existing.remove();
+  var toast = document.createElement('div');
+  toast.id = 'appToast';
+  toast.textContent = msg;
+  toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1A3A1F;color:white;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3);max-width:85vw;text-align:center;animation:toastIn 0.3s ease;';
+  document.body.appendChild(toast);
+  setTimeout(function() {
+    toast.style.animation = 'toastIn 0.3s ease reverse';
+    setTimeout(function() { if (toast.parentNode) toast.remove(); }, 300);
+  }, 3000);
+}
 function openBeli() { openPanel('modalBeli'); }
 function openFaq() { go('home'); setTimeout(function(){ document.getElementById('faqHomeSection').scrollIntoView({behavior:'smooth'}); }, 200); }
 
@@ -2648,14 +2654,14 @@ async function simpanKalkulator(btnEl) {
   var origHtml = btnEl ? btnEl.innerHTML : '';
   if (btnEl) { btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...'; btnEl.disabled = true; }
 
-  // Update state
+  // Update state dulu
   appState.kalkulator = data;
   appState.user.nama = data.nama;
 
-  // Simpan - localStorage primary (tidak bisa gagal), Firebase secondary
+  // Simpan ke localStorage primary (tidak bisa gagal) + Firebase secondary
   await fbSet('kemoenik_users/' + dbUserWA + '/kalkulator/data', data);
 
-  // Reset state DULU sebelum close
+  // Reset form
   window._tempKalData = null;
   document.getElementById('hasilKalkulator').style.display = 'none';
   document.getElementById('kalkulatorForm').style.display = 'block';
@@ -2664,11 +2670,13 @@ async function simpanKalkulator(btnEl) {
   // Close panel
   closePanel('panelKalkulator');
 
-  // Update UI
+  // Pergi ke home dan update UI
+  go('home');
   renderAll();
   loadMisiChecked();
 
-  alert('✅ Program berhasil disimpan! Semangat kak ' + data.nama.split(' ')[0] + '! 💪');
+  // Toast notification (tidak diblok browser, lebih reliable dari alert)
+  showToast('✅ Program disimpan! Semangat ' + data.nama.split(' ')[0] + '! 💪');
   gtag('event', 'kalkulator_saved', { nama: data.nama });
 }
 
