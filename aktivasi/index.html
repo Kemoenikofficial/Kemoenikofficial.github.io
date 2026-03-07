@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Verifikasi Kode Konsultasi - Kemoenik</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,7 +14,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
             min-height: 100vh;
             display: flex;
@@ -44,12 +45,13 @@
 
         .logo h2 {
             font-size: 22px;
-            font-weight: 600;
+            font-weight: 800;
+            color: #2E8B35;
         }
 
         .logo p {
             font-size: 14px;
-            color: #888;
+            color: #6A8870;
             margin-top: 5px;
         }
 
@@ -60,7 +62,7 @@
         .form-group label {
             font-size: 13px;
             font-weight: 600;
-            color: #555;
+            color: #3A6040;
             margin-bottom: 8px;
             display: block;
         }
@@ -74,37 +76,40 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #aaa;
+            color: #6A8870;
         }
 
         input {
             width: 100%;
             padding: 14px 14px 14px 45px;
             border-radius: 12px;
-            border: 2px solid #e8e8e8;
+            border: 2px solid #C8E0CC;
             font-size: 15px;
-            background: #fafafa;
+            background: #F5F9F6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.2s;
         }
 
         input:focus {
             outline: none;
-            border-color: #16a34a;
+            border-color: #2E8B35;
             background: white;
-            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+            box-shadow: 0 0 0 4px rgba(46, 139, 53, 0.1);
         }
 
         button {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #16a34a 0%, #4ade80 100%);
+            background: linear-gradient(135deg, #2E8B35 0%, #1E6B24 100%);
             color: white;
             border: none;
             border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             margin-top: 10px;
             cursor: pointer;
             transition: transform 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         button:active {
@@ -140,15 +145,15 @@
         }
 
         .success {
-            background: linear-gradient(135deg, #11998e, #38ef7d);
+            background: linear-gradient(135deg, #2E8B35, #34A03C);
         }
 
         .warning {
-            background: linear-gradient(135deg, #f2994a, #f2c94c);
+            background: linear-gradient(135deg, #E8A020, #C07E10);
         }
 
         .error {
-            background: linear-gradient(135deg, #eb3349, #f45c43);
+            background: linear-gradient(135deg, #DC2626, #B91C1C);
         }
 
         .btn-lanjut {
@@ -157,52 +162,51 @@
             text-align: center;
             padding: 14px;
             border-radius: 12px;
-            border: 2px solid #16a34a;
-            color: #16a34a;
+            border: 2px solid #2E8B35;
+            color: #2E8B35;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             background: white;
+            transition: all 0.2s;
         }
 
         .btn-lanjut:hover {
-            background: #16a34a;
+            background: #2E8B35;
             color: white;
         }
 
-        /* Privacy Text Style */
         .privacy-text {
             font-size: 11px;
-            color: #888;
+            color: #6A8870;
             margin-top: 6px;
             line-height: 1.4;
             font-style: italic;
         }
 
-        /* FAQ Accordion Styles */
         .faq-section {
             margin-top: 30px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #C8E0CC;
             padding-top: 20px;
         }
 
         .faq-title {
             font-size: 15px;
-            font-weight: 600;
-            color: #333;
+            font-weight: 700;
+            color: #142418;
             margin-bottom: 15px;
             text-align: center;
         }
 
         .accordion {
-            border: 1px solid #e8e8e8;
+            border: 1px solid #C8E0CC;
             border-radius: 10px;
             overflow: hidden;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .accordion-item {
-            border-bottom: 1px solid #e8e8e8;
+            border-bottom: 1px solid #C8E0CC;
         }
 
         .accordion-item:last-child {
@@ -212,12 +216,12 @@
         .accordion-header {
             width: 100%;
             padding: 14px;
-            background: #f9f9f9;
+            background: #F5F9F6;
             border: none;
             text-align: left;
             font-size: 13px;
             font-weight: 600;
-            color: #444;
+            color: #3A6040;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -226,12 +230,12 @@
         }
 
         .accordion-header:hover {
-            background: #f1f1f1;
+            background: #E8F5EB;
         }
 
         .accordion-header i {
             transition: transform 0.3s;
-            color: #16a34a;
+            color: #2E8B35;
         }
 
         .accordion-header.active i {
@@ -245,7 +249,7 @@
             background: white;
             transition: max-height 0.3s ease-out, padding 0.3s ease-out;
             font-size: 13px;
-            color: #555;
+            color: #3A6040;
             line-height: 1.6;
         }
 
@@ -267,22 +271,21 @@
             gap: 5px;
             text-decoration: none;
             font-size: 13px;
-            color: #555;
-            background: #f5f5f5;
+            color: #3A6040;
+            background: #F5F9F6;
             padding: 8px 12px;
             border-radius: 20px;
             transition: background 0.3s;
         }
 
         .social-links a:hover {
-            background: #e0e0e0;
+            background: #E8F5EB;
         }
 
         .social-links i {
             font-size: 16px;
         }
 
-        /* Modal Styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -290,11 +293,12 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(20, 36, 24, 0.6);
             z-index: 1000;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            backdrop-filter: blur(6px);
         }
 
         .modal-content {
@@ -309,20 +313,20 @@
 
         .modal-icon {
             font-size: 48px;
-            color: #16a34a;
+            color: #2E8B35;
             margin-bottom: 15px;
         }
 
         .modal-title {
             font-size: 20px;
-            font-weight: 600;
+            font-weight: 800;
             margin-bottom: 10px;
-            color: #333;
+            color: #142418;
         }
 
         .modal-desc {
             font-size: 14px;
-            color: #666;
+            color: #6A8870;
             margin-bottom: 20px;
             line-height: 1.5;
         }
@@ -338,19 +342,66 @@
             border-radius: 10px;
             border: none;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .modal-btn-primary {
-            background: #16a34a;
+            background: linear-gradient(135deg, #2E8B35, #1E6B24);
             color: white;
         }
 
         .modal-btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
+            background: #F5F9F6;
+            color: #3A6040;
+            border: 1px solid #C8E0CC;
+        }
+
+        .cloud-info {
+            margin-top: 20px;
+            background: #E8F5EB;
+            border: 1.5px solid #A8CEB0;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .cloud-info-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .cloud-info-header i {
+            color: #2E8B35;
+            font-size: 20px;
+        }
+
+        .cloud-info-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1A5C20;
+        }
+
+        .cloud-info-text {
+            font-size: 12px;
+            color: #3A6040;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #6A8870;
+        }
+
+        .footer a {
+            color: #2E8B35;
+            font-weight: 600;
+            text-decoration: none;
         }
 
         @keyframes spin {
@@ -361,47 +412,15 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        .date-highlight {
-            font-weight: bold;
-            text-decoration: underline;
-        }
     </style>
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
-            authDomain: "project-panduan-dani.firebaseapp.com",
-            projectId: "project-panduan-dani",
-            storageBucket: "project-panduan-dani.firebasestorage.app",
-            messagingSenderId: "113559517545",
-            appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Reset data Firebase saat user pilih Mulai Baru
-        window.fbResetUserData = async function(wa) {
-            try {
-                await setDoc(doc(db, "users", wa), {
-                    startDate: null,
-                    weeklyHistory: [],
-                    dietCal: 0,
-                    weeks: 0,
-                    targetDate: '',
-                    resetAt: new Date().toISOString()
-                });
-                console.log("✅ Firebase data direset untuk:", wa);
-            } catch(e) {
-                console.warn("⚠️ Firebase reset gagal:", e);
-            }
-        };
-
-        console.log("🔥 Firebase aktivitas initialized");
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
     </script>
 </head>
 <body>
@@ -426,7 +445,6 @@
                 <i class="fab fa-whatsapp"></i>
                 <input type="tel" id="wa" placeholder="Contoh: 08123456789" required>
             </div>
-            <!-- Tambahan Teks Privasi (Poin 2) -->
             <p class="privacy-text">
                 <i class="fas fa-shield-alt"></i> 
                 "Kami menjamin privasi data Anda sesuai kebijakan Kebijakan Privasi. Nomor WhatsApp hanya digunakan untuk sinkronisasi data diet Anda."
@@ -446,32 +464,28 @@
             <div class="spinner"></div>
         </button>
 
-        <!-- Tombol Buka Panduan (Poin 1) -->
-        <a id="btnLanjutManual" class="btn-lanjut" style="display: none;">
+        <a id="btnLanjut" class="btn-lanjut">
             <i class="fas fa-book-open"></i> Buka Panduan
         </a>
 
         <div id="result"></div>
 
-        <!-- Info Data Aman di Cloud -->
-        <div style="margin-top: 20px; background: #ECFDF5; border: 1.5px solid #6EE7B7; border-radius: 12px; padding: 16px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-shield-alt" style="color: #059669; font-size: 20px; flex-shrink: 0;"></i>
-                <div>
-                    <p style="font-size: 13px; font-weight: 700; color: #065F46; margin-bottom: 4px;">✅ Data Kamu Aman di Cloud!</p>
-                    <p style="font-size: 12px; color: #047857; line-height: 1.6;">
-                        Progress diet, evaluasi mingguan, dan timeline kamu tersimpan otomatis di server kami. Ganti HP, hapus cache, atau ganti browser — data tetap aman dan bisa diakses kapanpun dengan nomor WA yang sama.
-                    </p>
-                </div>
+        <!-- Cloud Info -->
+        <div class="cloud-info">
+            <div class="cloud-info-header">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span class="cloud-info-title">✅ Data Kamu Aman di Cloud!</span>
             </div>
+            <p class="cloud-info-text">
+                Progress diet, evaluasi mingguan, dan timeline kamu tersimpan otomatis di server kami. Ganti HP, hapus cache, atau ganti browser — data tetap aman dan bisa diakses kapanpun dengan nomor WA yang sama.
+            </p>
         </div>
 
-        <!-- Bagian FAQ Accordion (Poin 4) -->
+        <!-- FAQ Section -->
         <div class="faq-section">
             <div class="faq-title">Masa Aktif & Data (Sistem Voucher)</div>
             
             <div class="accordion">
-                <!-- Pertanyaan 1 -->
                 <div class="accordion-item">
                     <button class="accordion-header">
                         1. Kenapa saya tidak bisa login/terkunci?
@@ -482,7 +496,6 @@
                     </div>
                 </div>
 
-                <!-- Pertanyaan 2 -->
                 <div class="accordion-item">
                     <button class="accordion-header">
                         2. Apakah data berat badan hilang kalau voucher habis?
@@ -493,7 +506,6 @@
                     </div>
                 </div>
 
-                <!-- Pertanyaan 3 -->
                 <div class="accordion-item">
                     <button class="accordion-header">
                         3. Boleh pakai No WA berbeda untuk voucher baru?
@@ -504,7 +516,6 @@
                     </div>
                 </div>
 
-                <!-- Pertanyaan 4 -->
                 <div class="accordion-item">
                     <button class="accordion-header">
                         4. Halaman web putih/blank saat scan QR?
@@ -516,9 +527,8 @@
                 </div>
             </div>
 
-            <!-- Link Sosmed -->
             <div class="social-links">
-                <a href="https://www.instagram.com/kemoenik26?igsh=aTU3ODg3Yzg3Nmkx" target="_blank">
+                <a href="https://www.instagram.com/kemoenik26" target="_blank">
                     <i class="fab fa-instagram"></i> Instagram
                 </a>
                 <a href="https://www.tiktok.com/@kemoenik" target="_blank">
@@ -526,17 +536,16 @@
                 </a>
             </div>
         </div>
-        <!-- Akhir FAQ -->
 
-        <div class="footer" style="margin-top: 20px;">
+        <div class="footer">
             Butuh bantuan? 
-            <a href="https://wa.me/6281546450547?text=Halo%20admin,%20saya%20butuh%20bantuan%20kode%20konsultasi" target="_blank" class="link-bantuan">
+            <a href="https://wa.me/6281546450547?text=Halo%20admin,%20saya%20butuh%20bantuan%20kode%20konsultasi" target="_blank">
                 Hubungi kami
             </a>
         </div>
     </div>
 
-    <!-- Modal untuk Pilihan Program -->
+    <!-- Modal Pilihan Program -->
     <div id="programChoiceModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-icon">
@@ -557,7 +566,42 @@
         </div>
     </div>
 
+    <!-- Firebase SDK v9 (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
+            authDomain: "project-panduan-dani.firebaseapp.com",
+            projectId: "project-panduan-dani",
+            storageBucket: "project-panduan-dani.firebasestorage.app",
+            messagingSenderId: "113559517545",
+            appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Expose ke global scope
+        window.fbApp = app;
+        window.fbDb = db;
+        window.fbSetDoc = setDoc;
+        window.fbGetDoc = getDoc;
+        window.fbDoc = doc;
+        window.fbServerTimestamp = serverTimestamp;
+    </script>
+
     <script>
+        // Konfigurasi
+        const CONFIG = {
+            PANDUAN_URL: 'https://kemoenikofficial.github.io/PANDUANKEMOENIK/',
+            APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec',
+            VOUCHER_DAYS: 7
+        };
+
+        let tempData = {}; 
+
         // Normalisasi nomor WA ke format 628
         function normalizeWA(wa) {
             wa = wa.replace(/\D/g, '');
@@ -568,19 +612,15 @@
             return wa;
         }
 
-        let tempData = {}; 
-
-        // Fungsi untuk menangani Accordion
+        // Setup Accordion
         document.querySelectorAll('.accordion-header').forEach(button => {
             button.addEventListener('click', () => {
                 const accordionBody = button.nextElementSibling;
                 const isActive = button.classList.contains('active');
 
-                // Tutup semua body lain
                 document.querySelectorAll('.accordion-body').forEach(body => body.classList.remove('show'));
                 document.querySelectorAll('.accordion-header').forEach(head => head.classList.remove('active'));
 
-                // Toggle body yang diklik
                 if (!isActive) {
                     button.classList.add('active');
                     accordionBody.classList.add('show');
@@ -588,19 +628,19 @@
             });
         });
 
-        function cekKode() {
+        async function cekKode() {
             const nama = document.getElementById("nama").value.trim();
             const wa = document.getElementById("wa").value.trim();
             const kode = document.getElementById("kode").value.trim();
             const btn = document.getElementById("btnCek");
             const result = document.getElementById("result");
-            const btnLanjut = document.getElementById("btnLanjutManual");
+            const btnLanjut = document.getElementById("btnLanjut");
 
-            // Reset tampilan
             result.innerHTML = "";
             btnLanjut.style.display = "none";
-            btnLanjut.onclick = null; // Hapus event lama
+            btnLanjut.onclick = null;
 
+            // Validasi input
             if (nama.length < 3) return show("error", "Nama minimal 3 karakter");
             if (wa.replace(/\D/g, '').length < 10) return show("error", "Nomor WA tidak valid");
             if (kode.length < 6) return show("error", "Kode tidak valid");
@@ -609,107 +649,151 @@
 
             btn.classList.add("loading");
 
-            // Fetch ke Apps Script
-            fetch(`https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec?action=verify&kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(normalizedWA)}&_=${Date.now()}`)
-                .then(res => res.json())
-                .then(data => {
-                    btn.classList.remove("loading");
-                    
-                    // Cek apakah user punya data lama di local storage (untuk teks sambutan)
-                    const existingUserData = localStorage.getItem(`calfatloss_data_${normalizedWA}`);
-                    const isReturningUser = existingUserData !== null;
+            try {
+                // Cek ke Apps Script
+                const response = await fetch(`${CONFIG.APPS_SCRIPT_URL}?action=verify&kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(normalizedWA)}&_=${Date.now()}`);
+                const data = await response.json();
 
-                    if (data.status === "SUCCESS") {
-                        // === LOGIAN KALIMAT SAMBUTAN (POIN 3) ===
-                        let welcomeMsg = "";
-                        const expDate = formatDate(data.tanggal_expired);
-                        
-                        // Gunakan Nama User dari input
-                        const userName = nama; 
+                btn.classList.remove("loading");
 
-                        if (isReturningUser) {
-                            // User Lama (ada data di localstorage)
-                            welcomeMsg = `Selamat datang kembali, ${userName}! 🌟 Voucher Kakak berhasil diaktifkan (Berlaku hingga: ${expDate}). Kami sudah menarik data diet Kakak sebelumnya. Mari lanjut ke target minggu ini.`;
-                        } else {
-                            // User Baru
-                            welcomeMsg = `Selamat datang, ${userName}! 🌟 Voucher Kakak berhasil diaktifkan (Berlaku hingga: ${expDate}). Mari buat program diet bertarget mingguan.`;
+                if (data.status === "SUCCESS" || data.status === "ACTIVE_SAME_WA") {
+                    // Cek apakah user punya data di Firebase
+                    const userRef = window.fbDoc(window.fbDb, "users", normalizedWA);
+                    const userSnap = await window.fbGetDoc(userRef);
+                    const hasExistingData = userSnap.exists() && userSnap.data().progress;
+
+                    const expDate = formatDate(data.tanggal_expired || new Date(Date.now() + CONFIG.VOUCHER_DAYS * 24 * 60 * 60 * 1000));
+                    const isReturningUser = data.status === "ACTIVE_SAME_WA" || hasExistingData;
+
+                    // Simpan ke localStorage (sementara)
+                    localStorage.setItem('kemoenik_temp_wa', normalizedWA);
+                    localStorage.setItem('kemoenik_temp_voucher', kode);
+                    localStorage.setItem('kemoenik_temp_nama', nama);
+                    localStorage.setItem('kemoenik_temp_expired', data.tanggal_expired);
+
+                    // Simpan identitas ke Firebase (minimal data)
+                    await window.fbSetDoc(userRef, {
+                        profile: {
+                            nama: nama,
+                            wa: normalizedWA,
+                            voucherAktif: kode,
+                            voucherExpired: data.tanggal_expired,
+                            lastLogin: window.fbServerTimestamp()
                         }
+                    }, { merge: true });
 
-                        show("success", welcomeMsg);
-                        
-                        // Tampilkan tombol panduan, JANGAN redirect otomatis (POIN 1)
-                        setupPanduanButton(normalizedWA, kode, isReturningUser);
-                        
-                    } else if (data.status === "ACTIVE_SAME_WA") {
-                        // Sudah aktif, pastikan user lama
-                        const expDate = formatDate(data.tanggal_expired);
-                        const userName = nama;
-                        const msg = `Selamat datang kembali, ${userName}! 🌟 Kode Kakak masih aktif (Berlaku hingga: ${expDate}). Silakan lanjutkan program Anda.`;
-                        
-                        show("success", msg);
-                        setupPanduanButton(normalizedWA, kode, true);
-                        
-                    } else if (data.status === "ACTIVE_DIFFERENT_WA") {
-                        show("error", "Kode ini sudah digunakan oleh nomor WA lain.");
-                    } else if (data.status === "EXPIRED") {
-                        show("warning", "Kode sudah expired. Silakan gunakan kode baru.");
-                    } else if (data.status === "INVALID") {
-                        show("error", "Kode tidak ditemukan di sistem.");
+                    // Tampilkan sambutan
+                    let welcomeMsg = "";
+                    if (isReturningUser) {
+                        welcomeMsg = `Selamat datang kembali, ${nama}! 🌟 Voucher Kakak berhasil diaktifkan (Berlaku hingga: ${expDate}). Kami sudah menarik data diet Kakak sebelumnya. Mari lanjut ke target minggu ini.`;
                     } else {
-                        show("error", "Terjadi kesalahan. Silakan coba lagi.");
+                        welcomeMsg = `Selamat datang, ${nama}! 🌟 Voucher Kakak berhasil diaktifkan (Berlaku hingga: ${expDate}). Mari buat program diet bertarget mingguan.`;
                     }
-                })
-                .catch(() => {
-                    btn.classList.remove("loading");
-                    show("error", "Gagal terhubung ke server. Cek koneksi internet.");
-                });
+
+                    show("success", welcomeMsg);
+                    setupPanduanButton(normalizedWA, kode, isReturningUser);
+
+                    // Track GA4
+                    gtag('event', 'voucher_activated', {
+                        'event_category': 'engagement',
+                        'event_label': isReturningUser ? 'returning_user' : 'new_user',
+                        'value': 1
+                    });
+
+                } else if (data.status === "ACTIVE_DIFFERENT_WA") {
+                    show("error", "Kode ini sudah digunakan oleh nomor WA lain.");
+                } else if (data.status === "EXPIRED") {
+                    show("warning", "Kode sudah expired. Silakan gunakan kode baru.");
+                } else if (data.status === "INVALID") {
+                    show("error", "Kode tidak ditemukan di sistem.");
+                } else {
+                    show("error", "Terjadi kesalahan. Silakan coba lagi.");
+                }
+
+            } catch (error) {
+                btn.classList.remove("loading");
+                show("error", "Gagal terhubung ke server. Cek koneksi internet.");
+                console.error(error);
+            }
         }
 
         function setupPanduanButton(wa, kode, isReturningUser) {
-            const btnLanjut = document.getElementById("btnLanjutManual");
+            const btnLanjut = document.getElementById("btnLanjut");
             btnLanjut.style.display = "block";
 
             btnLanjut.onclick = function() {
-                tempData = { wa, kode };
-
                 if (isReturningUser) {
-                    // Tampilkan modal pilihan Lanjut / Baru untuk user lama
+                    // Tampilkan modal pilihan
                     document.getElementById("programChoiceModal").style.display = "flex";
                 } else {
                     // User baru, langsung redirect
-                    redirectToPanduan(wa, kode);
+                    redirectToPanduan(wa, kode, 'new');
                 }
             };
         }
 
-        function continueOldProgram() {
+        async function continueOldProgram() {
             document.getElementById("programChoiceModal").style.display = "none";
-            // Lanjutkan: jangan reset apapun, data lama tetap utuh
-            redirectToPanduan(tempData.wa, tempData.kode);
+            const wa = localStorage.getItem('kemoenik_temp_wa');
+            const kode = localStorage.getItem('kemoenik_temp_voucher');
+            
+            // Update flag di Firebase
+            const userRef = window.fbDoc(window.fbDb, "users", wa);
+            await window.fbSetDoc(userRef, {
+                profile: {
+                    programChoice: 'continue',
+                    lastActive: window.fbServerTimestamp()
+                }
+            }, { merge: true });
+
+            redirectToPanduan(wa, kode, 'continue');
         }
 
-        function startNewProgram() {
-            const wa = tempData.wa;
-            // Reset SEMUA data localStorage
-            localStorage.removeItem(`calfatloss_weekly_${wa}`);
-            localStorage.removeItem(`calfatloss_data_${wa}`);
-            localStorage.removeItem(`calfatloss_startdate_${wa}`);
-            localStorage.removeItem(`calfatloss_custommenu_${wa}`);
-            // Reset Firebase juga
-            if (typeof window.fbResetUserData === 'function') {
-                window.fbResetUserData(wa);
-            }
-            // Flag agar panduan_1 tahu ini program baru
-            localStorage.setItem(`calfatloss_newprogram_${wa}`, 'true');
+        async function startNewProgram() {
             document.getElementById("programChoiceModal").style.display = "none";
-            redirectToPanduan(tempData.wa, tempData.kode);
+            const wa = localStorage.getItem('kemoenik_temp_wa');
+            const kode = localStorage.getItem('kemoenik_temp_voucher');
+
+            // Reset data progress tapi keep profile
+            const userRef = window.fbDoc(window.fbDb, "users", wa);
+            const userSnap = await window.fbGetDoc(userRef);
+            const oldProfile = userSnap.exists() ? userSnap.data().profile : {};
+
+            await window.fbSetDoc(userRef, {
+                profile: {
+                    ...oldProfile,
+                    programChoice: 'new',
+                    resetAt: window.fbServerTimestamp(),
+                    lastActive: window.fbServerTimestamp()
+                },
+                // Reset data penting lainnya
+                metabolism: null,
+                progress: null,
+                weeklyHistory: [],
+                missions: null,
+                consumption: null,
+                menuHarian: null
+            });
+
+            redirectToPanduan(wa, kode, 'new');
         }
 
-        function redirectToPanduan(wa, voucher) {
-            localStorage.setItem('calfatloss_wa', wa);
-            localStorage.setItem('calfatloss_voucher', voucher);
-            // Langsung ke panduan - quiz muncul otomatis di dalam panduan
-            window.location.href = `/panduan/?wa=${encodeURIComponent(wa)}&voucher=${encodeURIComponent(voucher)}`;
+        function redirectToPanduan(wa, voucher, mode) {
+            // Bersihkan localStorage temp
+            localStorage.removeItem('kemoenik_temp_wa');
+            localStorage.removeItem('kemoenik_temp_voucher');
+            localStorage.removeItem('kemoenik_temp_nama');
+            localStorage.removeItem('kemoenik_temp_expired');
+
+            // Redirect dengan params
+            const params = new URLSearchParams({
+                wa: wa,
+                voucher: voucher,
+                mode: mode,
+                t: Date.now()
+            });
+
+            window.location.href = `${CONFIG.PANDUAN_URL}?${params.toString()}`;
         }
 
         function formatDate(dateStr) {
@@ -725,6 +809,11 @@
         function show(type, msg) {
             document.getElementById("result").innerHTML = `<div class="result-box ${type}">${msg}</div>`;
         }
+
+        // Expose fungsi ke global untuk onclick
+        window.cekKode = cekKode;
+        window.continueOldProgram = continueOldProgram;
+        window.startNewProgram = startNewProgram;
     </script>
 </body>
 </html>
