@@ -739,14 +739,17 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
       <div class="sec-link" onclick="openPanel('panelJadwalOlahraga')">Lihat semua ›</div>
     </div>
     <div id="homeJadwalWrap" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:14px;">
-      <div id="homeJadwalContent">
+      <div id="homeJadwalContent" style="padding:14px 16px;">
         <!-- diisi JS berdasarkan hari ini -->
-      </div>
-      <div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:10px;">
-        <button onclick="openPanel('panelJadwalOlahraga')" style="flex:1;padding:9px;background:var(--green);color:#FFF;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Jadwal Lengkap Seminggu
-        </button>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--green),var(--green3));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8m-4-5l4 3 4-3"/><path d="M8 18l-2 3M16 18l2 3"/></svg>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);">Memuat jadwal hari ini...</div>
+            <div style="font-size:11px;color:var(--text3);">Sebentar ya kak</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1881,6 +1884,13 @@ async function fbSet(path, data) {
   try {
     var lsKey = 'kdb_' + path.replace(/\//g,'_');
     localStorage.setItem(lsKey, JSON.stringify(data));
+    // Backup extra SELALU (tidak depend WA) untuk quiz & kalkulator
+    if (path.indexOf('quiz') !== -1) localStorage.setItem('kemoenik_quiz_data', JSON.stringify(data));
+    if (path.indexOf('kalkulator') !== -1) localStorage.setItem('kemoenik_kal_data', JSON.stringify(data));
+    // Also save full state backup
+    if (path.indexOf('quiz') !== -1 || path.indexOf('kalkulator') !== -1) {
+      localStorage.setItem('kemoenik_last_saved', new Date().toISOString());
+    }
   } catch(e2) { console.log('ls err:', e2); }
   // SECONDARY: sync ke Firebase (best-effort, tidak memblokir)
   try {
@@ -2009,13 +2019,26 @@ window.addEventListener('load', async function() {
 async function loadAllData() {
   var basePath = 'kemoenik_users/' + dbUserWA;
 
-  // Load kalkulator
+  // Load kalkulator - coba semua sumber
   var kal = await fbGet(basePath + '/kalkulator/data');
-  if (kal) appState.kalkulator = kal;
+  if (!kal || !kal.nama) {
+    try {
+      var bk = localStorage.getItem('kemoenik_kal_data');
+      if (bk) { var parsedK = JSON.parse(bk); if (parsedK && parsedK.nama) kal = parsedK; }
+    } catch(e){}
+  }
+  if (kal && kal.nama) appState.kalkulator = kal;
 
-  // Load quiz
+  // Load quiz - coba semua sumber, prioritas: Firebase > LS path-based > backup key
   var q = await fbGet(basePath + '/quiz/data');
-  if (q) appState.quiz = q;
+  if (!q || !q.tipe) { // Kalau null atau objek kosong
+    try {
+      // Coba backup key yang tidak depend WA
+      var bq = localStorage.getItem('kemoenik_quiz_data');
+      if (bq) { var parsed = JSON.parse(bq); if (parsed && parsed.tipe) q = parsed; }
+    } catch(e){}
+  }
+  if (q && q.tipe) appState.quiz = q; // Hanya set kalau ada data valid (tipe wajib ada)
 
   // Load evaluasi
   var evals = await fbGetCollection(basePath + '/evaluasi');
@@ -2511,6 +2534,15 @@ function renderProfilPage() {
   var skor = q.skor || 72;
   document.getElementById('scorePct').textContent = skor + '%';
   document.getElementById('scoreDesc').textContent = 'Program KEMOENIK dengan metode ' + (q.metodeName || q.metode) + ' memiliki kesesuaian ' + skor + '% dengan profil metabolismemu. Semakin konsisten, semakin tinggi efektivitasnya!';
+
+  // Auto-expand semua accordion profil (jangan biarkan user nebak harus klik)
+  var profilAccs = ['acc-trait', 'acc-karakter', 'acc-skor'];
+  profilAccs.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && !el.classList.contains('on')) el.classList.add('on');
+  });
+  // Animate skor ring
+  setTimeout(animScore, 100);
 }
 
 function animScore() {
@@ -2611,7 +2643,9 @@ async function simpanKalkulator(btnEl) {
     return;
   }
 
-  // Loading state
+  // Loading state - pakai btnEl atau fallback ke getElementById
+  if (!btnEl) btnEl = document.getElementById('btnSimpanKal');
+  var origHtml = btnEl ? btnEl.innerHTML : '';
   if (btnEl) { btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...'; btnEl.disabled = true; }
 
   // Update state
@@ -2621,19 +2655,19 @@ async function simpanKalkulator(btnEl) {
   // Simpan - localStorage primary (tidak bisa gagal), Firebase secondary
   await fbSet('kemoenik_users/' + dbUserWA + '/kalkulator/data', data);
 
-  // Reset btn
-  if (btnEl) { btnEl.innerHTML = '<i class="fas fa-save"></i> Simpan & Mulai Program'; btnEl.disabled = false; }
-
-  // Update seluruh UI
-  renderAll();
-  loadMisiChecked();
-
-  // Reset panel ke form
+  // Reset state DULU sebelum close
   window._tempKalData = null;
   document.getElementById('hasilKalkulator').style.display = 'none';
   document.getElementById('kalkulatorForm').style.display = 'block';
+  if (btnEl) { btnEl.innerHTML = origHtml || '<i class="fas fa-save"></i> Simpan & Mulai Program'; btnEl.disabled = false; }
 
+  // Close panel
   closePanel('panelKalkulator');
+
+  // Update UI
+  renderAll();
+  loadMisiChecked();
+
   alert('✅ Program berhasil disimpan! Semangat kak ' + data.nama.split(' ')[0] + '! 💪');
   gtag('event', 'kalkulator_saved', { nama: data.nama });
 }
@@ -2843,47 +2877,60 @@ function renderJadwalOlahraga() {
 function renderHomeJadwal() {
   var el = document.getElementById('homeJadwalContent');
   if (!el) return;
-  var metode = appState.quiz ? appState.quiz.metode : 'standar';
-  var jadwal = targetOlahragaData[metode] || targetOlahragaData.standar;
-  var hariIdx = new Date().getDay(); // 0=Min,1=Sen,...,6=Sab
-  var hariMap = [6,0,1,2,3,4,5]; // JS Sunday=0 → data index 6
-  var todayData = jadwal[hariMap[hariIdx]];
-  var hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  var hariName = hariNames[hariIdx];
-  var isRest = todayData.aktivitas.indexOf('Istirahat') !== -1 || todayData.aktivitas.indexOf('recovery') !== -1;
+  try {
+    var metode = (appState.quiz && appState.quiz.metode) ? appState.quiz.metode : 'standar';
+    var jadwal = targetOlahragaData[metode] || targetOlahragaData['standar'];
+    var hariIdx = new Date().getDay(); // 0=Min, 1=Sen, ... 6=Sab
+    var hariMap = [6, 0, 1, 2, 3, 4, 5]; // JS getDay() ke index array jadwal
+    var todayData = jadwal[hariMap[hariIdx]] || jadwal[0];
+    var hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    var hariName = hariNames[hariIdx];
+    var akt = todayData.aktivitas || '';
+    var isRest = akt.indexOf('Istirahat') !== -1 || akt.indexOf('recovery') !== -1;
 
-  var html = '<div style="padding:14px 16px;">';
-  html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
-  html += '<div style="background:' + (isRest ? '#F3F4F6' : 'linear-gradient(135deg,var(--green),var(--green3))') + ';width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
-  if (isRest) {
-    html += '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><path d="M12 2a5 5 0 1 0 5 5"/><path d="M2 12h20M12 22a10 10 0 0 1-7.07-17.07"/></svg>';
-  } else {
-    html += '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8m-4-5l4 3 4-3"/><path d="M8 18l-2 3M16 18l2 3"/></svg>';
-  }
-  html += '</div>';
-  html += '<div><div style="font-size:13px;font-weight:700;color:var(--text);">' + hariName + ' — ' + (isRest ? 'Hari Istirahat' : 'Waktunya Bergerak!') + '</div>';
-  html += '<div style="font-size:11px;color:var(--text3);margin-top:2px;">Metode: ' + (metode.charAt(0).toUpperCase() + metode.slice(1)) + '</div></div></div>';
-
-  html += '<div style="background:' + (isRest ? '#F9FAFB' : '#ECFDF5') + ';border-radius:12px;padding:12px 14px;">';
-  html += '<div style="font-size:13px;color:' + (isRest ? 'var(--text3)' : '#065F46') + ';line-height:1.6;font-weight:' + (isRest ? '400' : '600') + ';">' + todayData.aktivitas + '</div>';
-
-  if (!isRest) {
-    // Estimasi durasi & kalori
-    var dur = todayData.aktivitas.indexOf('45') !== -1 ? '45 menit' : todayData.aktivitas.indexOf('20') !== -1 ? '20 menit' : '30 menit';
-    html += '<div style="display:flex;gap:10px;margin-top:8px;">';
-    html += '<div style="background:white;border-radius:8px;padding:6px 10px;display:flex;align-items:center;gap:5px;">';
-    html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
-    html += '<span style="font-size:11px;color:var(--green);font-weight:600;">' + dur + '</span></div>';
-    html += '<div style="background:white;border-radius:8px;padding:6px 10px;display:flex;align-items:center;gap:5px;">';
-    html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E07B39" stroke-width="2.5" stroke-linecap="round"><path d="M12 2c-4 6-6 9-6 13a6 6 0 0 0 12 0c0-4-2-7-6-13z"/></svg>';
-    html += '<span style="font-size:11px;color:#E07B39;font-weight:600;">~150 kkal terbakar</span></div>';
+    var html = '';
+    // Header hari ini
+    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">';
+    html += '<div style="width:44px;height:44px;border-radius:13px;background:' + (isRest ? '#F3F4F6' : 'linear-gradient(135deg,var(--green),var(--green3))') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
+    if (isRest) {
+      html += '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>';
+    } else {
+      html += '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8"/><path d="M8 12l4 3 4-3"/><path d="M8 19l-2 3M16 19l2 3"/></svg>';
+    }
     html += '</div>';
-  } else {
-    html += '<div style="font-size:11px;color:var(--text3);margin-top:6px;">Istirahat penting untuk pemulihan otot. Boleh lakukan lymphatic drainage ringan sebelum tidur.</div>';
-  }
-  html += '</div></div>';
+    html += '<div style="flex:1;">';
+    html += '<div style="font-size:14px;font-weight:800;color:var(--text);">' + hariName + (isRest ? ' — Hari Istirahat' : ' — Olahraga Hari Ini') + '</div>';
+    html += '<div style="font-size:11px;color:var(--text3);margin-top:1px;">Metode ' + metode.charAt(0).toUpperCase() + metode.slice(1) + '</div>';
+    html += '</div></div>';
 
-  el.innerHTML = html;
+    // Konten aktivitas
+    html += '<div style="background:' + (isRest ? '#F9FAFB' : '#ECFDF5') + ';border-radius:12px;padding:12px 14px;margin-bottom:12px;">';
+    html += '<div style="font-size:13px;color:' + (isRest ? '#6B7280' : '#065F46') + ';font-weight:' + (isRest ? '400' : '700') + ';line-height:1.7;">' + akt + '</div>';
+    if (!isRest) {
+      var dur = akt.indexOf('60') !== -1 ? '60 menit' : akt.indexOf('45') !== -1 ? '45 menit' : akt.indexOf('20') !== -1 ? '20 menit' : '30 menit';
+      html += '<div style="display:flex;gap:8px;margin-top:10px;">';
+      html += '<div style="background:white;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;">';
+      html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+      html += '<span style="font-size:11px;color:var(--green);font-weight:700;">' + dur + '</span></div>';
+      html += '<div style="background:white;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;">';
+      html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E07B39" stroke-width="2.5" stroke-linecap="round"><path d="M12 2c-4 6-6 9-6 13a6 6 0 0012 0c0-4-2-7-6-13z"/></svg>';
+      html += '<span style="font-size:11px;color:#E07B39;font-weight:700;">~150 kkal</span></div>';
+      html += '</div>';
+    } else {
+      html += '<div style="font-size:11px;color:#9CA3AF;margin-top:6px;">Istirahat optimal untuk pemulihan. Cukup lymphatic drainage ringan malam ini.</div>';
+    }
+    html += '</div>';
+
+    // Tombol jadwal lengkap di dalam konten
+    html += '<button onclick="openPanel(&quot;panelJadwalOlahraga&quot;)" style="width:100%;padding:10px;background:var(--green);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;">';
+    html += '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+    html += 'Jadwal Lengkap Seminggu</button>';
+
+    el.innerHTML = html;
+  } catch(err) {
+    console.log('renderHomeJadwal err:', err);
+    el.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text3);font-size:13px;">Ketuk untuk lihat jadwal olahraga minggu ini</div>';
+  }
 }
 
 function toggleOlahraga(mode) {
