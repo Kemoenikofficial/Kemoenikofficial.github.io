@@ -2064,7 +2064,7 @@ async function loadAllData() {
           var mh = _fromFsVal(mhField);
           var kal_dietCal = mh.dietCal || mh.kaloriHarian || 0;
           if (kal_dietCal > 0) {
-            appState.kalkulator = {
+            state.set('kalkulator', {
               dietCal:      kal_dietCal,
               targetMinggu: mh.targetMinggu || 0,
               target:       mh.targetBB || 0,
@@ -2081,7 +2081,7 @@ async function loadAllData() {
               berat:        mh.berat || 0,
               tinggi:       mh.tinggi || 0,
               aktivitas:    mh.aktivitas || 1.375
-            };
+            });
             // Cache ke localStorage agar tersedia offline
             try {
               localStorage.setItem('kemoenik_kal_data', JSON.stringify(appState.kalkulator));
@@ -2096,7 +2096,7 @@ async function loadAllData() {
         if (metField && metField.mapValue && metField.mapValue.fields) {
           var m = _fromFsVal(metField);
           if (m && m.tipeMetabolisme) {
-            appState.quiz = {
+            state.set('quiz', {
               tipe:       m.tipeMetabolisme || '',
               tipeName:   m.tipeName || '',
               metode:     m.metodeDiet || 'standar',
@@ -2105,7 +2105,7 @@ async function loadAllData() {
               tagline:    m.tagline || '',
               tipe_emoji: m.emoji || '',
               nama:       m.nama || ''
-            };
+            });
             // Cache ke localStorage (multi-key untuk kompatibilitas)
             try {
               localStorage.setItem('kemoenik_quiz', JSON.stringify(appState.quiz));
@@ -2120,7 +2120,7 @@ async function loadAllData() {
         if (evalField && evalField.arrayValue && evalField.arrayValue.values) {
           var evalArr = _fromFsVal(evalField);
           if (Array.isArray(evalArr) && evalArr.length) {
-            appState.evaluasi = evalArr.sort(function(a,b){ return (a.minggu||0)-(b.minggu||0); });
+            state.set('evaluasi', evalArr.sort(function(a,b){ return (a.minggu||0)-(b.minggu||0); }));
             console.log('Evaluasi loaded from Firestore:', appState.evaluasi.length, 'entries ✓');
           }
         }
@@ -2146,7 +2146,7 @@ async function loadAllData() {
             if (!p.dietCal && p.kaloriHarian) p.dietCal = p.kaloriHarian;
             if (!p.target && p.targetBB) p.target = p.targetBB;
             if (!p.startDate && p.tanggalMulai) p.startDate = p.tanggalMulai;
-            appState.kalkulator = p;
+            state.set('kalkulator', p);
             console.log('Kalkulator from localStorage (' + kalKeys[ki] + ') ✓');
             break;
           }
@@ -2164,7 +2164,7 @@ async function loadAllData() {
         if (raw) {
           var p = JSON.parse(raw);
           if (p && p.tipe) {
-            appState.quiz = p;
+            state.set('quiz', p);
             console.log('Quiz from localStorage (' + quizKeys[qi] + ') ✓');
             break;
           }
@@ -2175,37 +2175,101 @@ async function loadAllData() {
 
   // ── Nama user dari kalkulator ─────────────────────────────
   if (appState.kalkulator && appState.kalkulator.nama) {
+    state.set('user.nama', appState.kalkulator.nama);
     appState.user.nama = appState.kalkulator.nama;
   }
+
+  // Persist state setelah load untuk offline access
+  state._persist();
 }
 
 // ── LEGACY stubs (masih dipakai beberapa tempat) ─────────────
 async function fbSet(path, data) {
-  if (path.indexOf('kalkulator') !== -1) { await fbSaveKalkulator(data); }
-  else if (path.indexOf('quiz') !== -1)  { await fbSaveQuiz(data); }
-  else if (path.indexOf('evaluasi') !== -1) {
-    var m = path.split('minggu').pop();
-    await fbSaveEvaluasi(m, data);
-  } else {
-    try { localStorage.setItem('kdb_' + path.replace(/\//g,'_'), JSON.stringify(data)); } catch(e){}
-  }
+  try {
+    if (path.indexOf('kalkulator') !== -1) { await fbSaveKalkulator(data); }
+    else if (path.indexOf('quiz') !== -1)  { await fbSaveQuiz(data); }
+    else if (path.indexOf('evaluasi') !== -1) {
+      var m = path.split('minggu').pop();
+      await fbSaveEvaluasi(m, data);
+    } else {
+      try { localStorage.setItem('kdb_' + path.replace(/\//g,'_'), JSON.stringify(data)); } catch(e){}
+    }
+  } catch(e) { console.warn('fbSet error:', e); }
 }
 async function fbGet(path) {
   try { var ls = localStorage.getItem('kdb_' + path.replace(/\//g,'_')); if (ls) return JSON.parse(ls); } catch(e){}
   return null;
 }
-async function fbGetCollection(path) { return appState.evaluasi || []; }
+async function fbGetCollection(path) {
+  try { return appState.evaluasi || []; } catch(e) { return []; }
+}
 
 // ============================================================
-// GLOBAL STATE
+// STATE MANAGER — persistent, safe state management
 // ============================================================
-var appState = {
-  user: { nama:'', wa:'', voucher:'', gender:'perempuan', usia:0, berat:0, tinggi:0 },
-  kalkulator: null,  // { dietCal, targetMinggu, estTanggal, estLingkar, tdee, bmr, defisit, target, metode, startDate }
-  evaluasi: [],      // array evaluasi mingguan
-  quiz: null,        // { tipe, tipeName, metode, metodeName, tagline, savedAt }
-  misiChecked: {}    // { n1:true, n2:false, ... }
-};
+var StateManager = /** @class */ (function() {
+  function StateManager() {
+    this._state = {
+      user: { nama:'', wa:'', voucher:'', gender:'perempuan', usia:0, berat:0, tinggi:0 },
+      kalkulator: null,
+      evaluasi: [],
+      quiz: null,
+      misiChecked: {}
+    };
+  }
+
+  StateManager.prototype.get = function(path, defaultValue) {
+    if (defaultValue === undefined) defaultValue = null;
+    var keys = path.split('.');
+    var value = this._state;
+    for (var i = 0; i < keys.length; i++) {
+      if (value === null || value === undefined) return defaultValue;
+      value = value[keys[i]];
+    }
+    return value !== undefined ? value : defaultValue;
+  };
+
+  StateManager.prototype.set = function(path, value) {
+    var keys = path.split('.');
+    var target = this._state;
+    for (var i = 0; i < keys.length - 1; i++) {
+      if (!target[keys[i]] || typeof target[keys[i]] !== 'object') target[keys[i]] = {};
+      target = target[keys[i]];
+    }
+    target[keys[keys.length - 1]] = value;
+    this._persist();
+  };
+
+  StateManager.prototype._persist = function() {
+    try {
+      localStorage.setItem('kemoenik_state_v2', JSON.stringify(this._state));
+    } catch(e) { console.warn('State persist failed:', e); }
+  };
+
+  StateManager.prototype.loadFromStorage = function() {
+    try {
+      var saved = localStorage.getItem('kemoenik_state_v2');
+      if (saved) {
+        var parsed = JSON.parse(saved);
+        // Merge top-level keys, keeping defaults for missing ones
+        var s = this._state;
+        if (parsed.user) s.user = Object.assign({}, s.user, parsed.user);
+        if (parsed.kalkulator) s.kalkulator = parsed.kalkulator;
+        if (parsed.evaluasi && Array.isArray(parsed.evaluasi)) s.evaluasi = parsed.evaluasi;
+        if (parsed.quiz) s.quiz = parsed.quiz;
+        if (parsed.misiChecked) s.misiChecked = parsed.misiChecked;
+      }
+    } catch(e) { console.warn('State load failed:', e); }
+  };
+
+  return StateManager;
+}());
+
+var state = new StateManager();
+
+// appState as transparent alias to state._state for backward compatibility
+// All existing code using appState.kalkulator etc continues to work
+var appState = state._state;
 
 // ============================================================
 // OLAHRAGA DATA — dideklarasi di sini agar tersedia saat renderAll() pertama dipanggil
@@ -2228,17 +2292,20 @@ function getQueryParam(key) {
   return params.get(key) || '';
 }
 
-window.addEventListener('load', async function() {
+// ============================================================
+// INIT — DOMContentLoaded untuk pastikan DOM siap sebelum akses element
+// ============================================================
+async function initApp() {
+  try {
   // Cek akses dari URL params atau localStorage
   var wa = getQueryParam('wa') || localStorage.getItem('kemoenik_wa') || '';
   var voucher = getQueryParam('voucher') || localStorage.getItem('kemoenik_voucher') || '';
 
-  // Juga cek format lama dari aktivitas_1
+  // Cek format lama dari aktivitas_1
   if (!wa) wa = localStorage.getItem('kemoenik_temp_wa') || '';
   if (!voucher) voucher = localStorage.getItem('kemoenik_temp_voucher') || '';
 
   if (!wa || !voucher) {
-    // Tampilkan access screen
     document.getElementById('accessScreen').style.display = 'flex';
     return;
   }
@@ -2249,24 +2316,33 @@ window.addEventListener('load', async function() {
   dbUserWA = wa.replace(/[^a-zA-Z0-9]/g,'_');
   dbUserVoucher = voucher;
 
-  // Sembunyikan access screen, tampilkan loading
   document.getElementById('accessScreen').style.display = 'none';
   document.getElementById('loadingScreen').style.display = 'flex';
 
-  // Load data dari Firebase
-  await loadAllData();
+  try {
+    await loadAllData();
+  } catch(e) {
+    console.warn('loadAllData failed during init:', e);
+    showToast('Data lokal digunakan — koneksi bermasalah');
+  }
 
   document.getElementById('loadingScreen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
 
-  // renderAll termasuk renderHomeJadwal di dalamnya
   renderAll();
 
-  // Panggil ulang renderHomeJadwal setelah DOM visible untuk pastikan jadwal muncul
-  setTimeout(function() {
-    renderHomeJadwal();
-  }, 150);
-});
+  // Render jadwal ulang setelah DOM visible (pastikan konten muncul)
+  setTimeout(renderHomeJadwal, 150);
+
+  } catch(e) {
+    console.error('initApp error:', e);
+  }
+}
+
+// Gunakan DOMContentLoaded agar elemen HTML sudah ada saat init berjalan
+document.addEventListener('DOMContentLoaded', function() { initApp(); });
+// Fallback: jika DOMContentLoaded sudah lewat (misal script di bawah body)
+if (document.readyState === 'interactive' || document.readyState === 'complete') { initApp(); }
 
 
 // ============================================================
@@ -2365,6 +2441,26 @@ function showToast(msg) {
     setTimeout(function() { if (toast.parentNode) toast.remove(); }, 300);
   }, 3000);
 }
+
+// ── UTILITY: escape HTML untuk cegah XSS ────────────────────
+function escHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// setSafeHTML: bersihkan innerHTML via DOM API (untuk konten dinamis kompleks)
+function setSafeHTML(el, html) {
+  if (!el) return;
+  el.innerHTML = '';
+  var tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  while (tmp.firstChild) el.appendChild(tmp.firstChild);
+}
 function openBeli() { openPanel('modalBeli'); }
 function openFaq() { go('home'); setTimeout(function(){ document.getElementById('faqHomeSection').scrollIntoView({behavior:'smooth'}); }, 200); }
 
@@ -2421,7 +2517,7 @@ function renderHomeStats() {
   document.getElementById('dName').textContent = nama || '—';
 
   if (q) {
-    document.getElementById('heroName').innerHTML = q.tipeName + ' <span>' + q.tipe_emoji + '</span>';
+    document.getElementById('heroName').innerHTML = escHtml(q.tipeName) + ' <span>' + escHtml(q.tipe_emoji) + '</span>';
     document.getElementById('heroTypeName').textContent = '';
     document.getElementById('heroBadge').textContent = q.metode === 'agresif' ? '🔥 Agresif' : q.metode === 'ringan' ? '🐢 Ringan' : '⚖️ Standar';
     document.getElementById('statMetode').textContent = q.metode || '—';
@@ -2464,9 +2560,10 @@ function renderHomeGreeting() {
 
   var desc = 'Selamat datang di panduan diet<br><strong>KEMOENIK</strong> — hari ini kita jaga komitmenmu 💪';
   if (q) {
-    desc = 'Tipe: <strong>' + q.tipeName + '</strong> | Metode: <strong>' + q.metodeName + '</strong><br>Tetap konsisten dengan program KEMOENIK kamu! 💪';
-    document.getElementById('greetingDesc').innerHTML = desc;
+    desc = 'Tipe: <strong>' + escHtml(q.tipeName) + '</strong> | Metode: <strong>' + escHtml(q.metodeName) + '</strong><br>Tetap konsisten dengan program KEMOENIK kamu! 💪';
   }
+  var greetEl = document.getElementById('greetingDesc');
+  if (greetEl) setSafeHTML(greetEl, desc);
 
   // Tips harian rotate
   var tips = [
@@ -2500,7 +2597,7 @@ function renderProgress() {
   var totalHari = (k.targetMinggu || 4) * 7;
   var hariKe = Math.max(1, Math.floor((today - start) / (1000*60*60*24)) + 1);
   hariKe = Math.min(hariKe, totalHari);
-  var pct = Math.round((hariKe / totalHari) * 100);
+  var pct = totalHari > 0 ? Math.round((hariKe / totalHari) * 100) : 0;
 
   document.getElementById('progHari').textContent = hariKe;
   document.getElementById('progTotal').textContent = totalHari;
@@ -2737,7 +2834,7 @@ function renderProfilPage() {
     traitHtml += '<div class="trait-desc">' + t.desc + '</div>';
     traitHtml += '</div>';
   });
-  document.getElementById('traitBarContent').innerHTML = traitHtml;
+  setSafeHTML(document.getElementById('traitBarContent'), traitHtml);
   document.getElementById('traitBarSub').textContent = q.tipeName + ' — ' + traits.length + ' karakteristik';
 
   // Tipe & Karakteristik
@@ -2758,7 +2855,7 @@ function renderProfilPage() {
   karHtml += '<div style="background:#FEE2E2;border-radius:8px;padding:8px 12px;font-size:12px;color:#991B1B;"><strong>Hindari:</strong> ' + tipe.hindari + '</div>';
   karHtml += '<div style="background:#DCFCE7;border-radius:8px;padding:8px 12px;font-size:12px;color:#065F46;"><strong>Anjurkan:</strong> ' + tipe.anjuran + '</div>';
   karHtml += '</div>';
-  document.getElementById('tipeKarakterContent').innerHTML = karHtml;
+  setSafeHTML(document.getElementById('tipeKarakterContent'), karHtml);
   document.getElementById('tipeKarakterSub').textContent = tipe.name;
 
   // Skor
@@ -2808,11 +2905,11 @@ function hitungKalkulator() {
   var metode = document.getElementById('inputMetode').value;
 
   if (!nama || usia < 10 || berat < 30 || tinggi < 100 || target < 30 || !aktivitas) {
-    alert('Lengkapi semua data ya kak! Pastikan level aktivitas sudah dipilih 😊');
+    showToast('Lengkapi semua data ya kak! Pastikan level aktivitas sudah dipilih 😊');
     return;
   }
   if (target >= berat) {
-    alert('Target BB harus lebih kecil dari berat badan saat ini ya kak!');
+    showToast('Target BB harus lebih kecil dari berat badan saat ini ya kak!');
     return;
   }
 
@@ -2830,7 +2927,7 @@ function hitungKalkulator() {
   var dietCal = Math.round(tdee - defisit);
   var penurunanPerMinggu = metode === 'ringan' ? 0.3 : metode === 'agresif' ? 0.7 : 0.5;
   var selisihBB = berat - target;
-  var targetMinggu = Math.ceil(selisihBB / penurunanPerMinggu);
+  var targetMinggu = (penurunanPerMinggu > 0 && selisihBB > 0) ? Math.ceil(selisihBB / penurunanPerMinggu) : 4;
 
   // Estimasi tanggal
   var today = new Date();
@@ -2838,12 +2935,12 @@ function hitungKalkulator() {
   var estTanggal = estDate.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
 
   // Estimasi lingkar perut (rumus dari BMI)
-  var bmi = berat / ((tinggi/100) * (tinggi/100));
+  var bmi = (tinggi > 0 && berat > 0) ? berat / ((tinggi/100) * (tinggi/100)) : 0;
   var estLingkar;
   if (gender === 'laki') {
-    estLingkar = Math.round(0.722 * bmi + 0.525 * tinggi/100 * 100 - 48.3 - (selisihBB * 0.8));
+    estLingkar = tinggi > 0 ? Math.round(0.722 * bmi + 0.525 * (tinggi/100) * 100 - 48.3 - (selisihBB * 0.8)) : 0;
   } else {
-    estLingkar = Math.round(0.735 * bmi + 0.625 * tinggi/100 * 100 - 40.2 - (selisihBB * 0.8));
+    estLingkar = tinggi > 0 ? Math.round(0.735 * bmi + 0.625 * (tinggi/100) * 100 - 40.2 - (selisihBB * 0.8)) : 0;
   }
   estLingkar = Math.max(60, estLingkar);
 
@@ -2861,7 +2958,7 @@ function hitungKalkulator() {
 
   // Simpan ke state sementara
   window._tempKalData = {
-    nama, gender, usia, berat, tinggi, aktivitas: parseFloat(aktivitas), target, metode,
+    nama: nama.replace(/[<>"'&]/g, ''), gender, usia, berat, tinggi, aktivitas: parseFloat(aktivitas), target, metode,
     dietCal, targetMinggu, estTanggal, estLingkar, bmr: Math.round(bmr), tdee, defisit,
     startDate: today.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})
   };
@@ -2870,7 +2967,7 @@ function hitungKalkulator() {
 async function simpanKalkulator(btnEl) {
   var data = window._tempKalData;
   if (!data) {
-    alert('Klik "Generate Program" terlebih dahulu ya kak!');
+    showToast('Klik "Generate Program" terlebih dahulu ya kak!');
     return;
   }
 
@@ -2879,35 +2976,37 @@ async function simpanKalkulator(btnEl) {
   var origHtml = btnEl ? btnEl.innerHTML : '';
   if (btnEl) { btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...'; btnEl.disabled = true; }
 
-  // Update state dulu
-  appState.kalkulator = data;
-  appState.user.nama = data.nama;
-
-  // Simpan ke localStorage DULU (tidak bisa gagal) sebelum Firebase
   try {
-    localStorage.setItem('kemoenik_kal_data', JSON.stringify(data));
-  } catch(e) {}
+    // Update state
+    state.set('kalkulator', data);
+    state.set('user.nama', data.nama);
 
-  // Lalu sync ke Firebase (best-effort)
-  await fbSaveKalkulator(data);
+    // Simpan ke localStorage DULU (tidak bisa gagal) sebelum Firebase
+    try { localStorage.setItem('kemoenik_kal_data', JSON.stringify(data)); } catch(e) {}
 
-  // Reset form
-  window._tempKalData = null;
-  document.getElementById('hasilKalkulator').style.display = 'none';
-  document.getElementById('kalkulatorForm').style.display = 'block';
-  if (btnEl) { btnEl.innerHTML = origHtml || '<i class="fas fa-save"></i> Simpan & Mulai Program'; btnEl.disabled = false; }
+    // Sync ke Firebase (best-effort, error tidak stop flow)
+    await fbSaveKalkulator(data);
 
-  // Close panel
-  closePanel('panelKalkulator');
+    // Reset form
+    window._tempKalData = null;
+    document.getElementById('hasilKalkulator').style.display = 'none';
+    document.getElementById('kalkulatorForm').style.display = 'block';
+    if (btnEl) { btnEl.innerHTML = origHtml || '<i class="fas fa-save"></i> Simpan & Mulai Program'; btnEl.disabled = false; }
 
-  // Pergi ke home, tunggu sebentar lalu update UI agar DOM sempat settle
-  go('home');
-  setTimeout(function() {
-    renderAll();
-    loadMisiChecked();
-    showToast('✅ Program tersimpan! Semangat ' + data.nama.split(' ')[0] + '! 💪');
-  }, 80);
-  gtag('event', 'kalkulator_saved', { nama: data.nama });
+    // Close panel + navigate
+    closePanel('panelKalkulator');
+    go('home');
+    setTimeout(function() {
+      renderAll();
+      loadMisiChecked();
+      showToast('✅ Program tersimpan! Semangat ' + data.nama.split(' ')[0] + '! 💪');
+    }, 80);
+    gtag('event', 'kalkulator_saved', { nama: data.nama });
+  } catch(e) {
+    console.error('simpanKalkulator error:', e);
+    showToast('Gagal menyimpan program, coba lagi');
+    if (btnEl) { btnEl.innerHTML = origHtml || '<i class="fas fa-save"></i> Simpan & Mulai Program'; btnEl.disabled = false; }
+  }
 }
 
 // Load form if data exists
@@ -2963,53 +3062,60 @@ async function saveWeeklyEval() {
   var end = parseFloat(document.getElementById('weekEndWeight').value) || 0;
   var obstacle = document.getElementById('weeklyObstacle').value;
 
-  if (!start || !end) { alert('Isi berat awal dan akhir minggu ya kak!'); return; }
+  if (!start || !end) { showToast('Isi berat awal dan akhir minggu ya kak!'); return; }
 
-  var turun = Math.max(0, parseFloat((start - end).toFixed(1)));
-  var tanggal = new Date().toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'});
+  try {
+    var turun = Math.max(0, parseFloat((start - end).toFixed(1)));
+    var tanggal = new Date().toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'});
 
-  var minggu;
-  if (editingEvalIdx >= 0) {
-    minggu = appState.evaluasi[editingEvalIdx].minggu;
-  } else {
-    minggu = appState.evaluasi.length + 1;
+    var minggu;
+    if (editingEvalIdx >= 0) {
+      minggu = appState.evaluasi[editingEvalIdx].minggu;
+    } else {
+      minggu = appState.evaluasi.length + 1;
+    }
+
+    var evalData = {
+      minggu: minggu, beratAwal: start, beratAkhir: end, turun: turun,
+      obstacle: obstacle || '',
+      kondisi: Object.keys(condChecked).filter(function(k){ return condChecked[k]; }).join(','),
+      tanggal: tanggal, savedAt: new Date().toISOString()
+    };
+
+    if (editingEvalIdx >= 0) {
+      appState.evaluasi[editingEvalIdx] = evalData;
+      editingEvalIdx = -1;
+      document.getElementById('editModeIndicator').style.display = 'none';
+      document.getElementById('btnCancelEdit').style.display = 'none';
+    } else {
+      appState.evaluasi.push(evalData);
+    }
+    state._persist(); // sync state after mutation
+
+    // Simpan ke Firebase (best-effort)
+    await fbSaveEvaluasi(minggu, evalData);
+
+    // Reset form
+    document.getElementById('weekStartWeight').value = '';
+    document.getElementById('weekEndWeight').value = '';
+    document.getElementById('weeklyObstacle').value = '';
+    document.getElementById('weeklyLossResult').style.display = 'none';
+    condChecked = {};
+    document.querySelectorAll('.cond-item').forEach(function(el){ el.classList.remove('checked'); });
+
+    renderEvalHome();
+    renderEvalHistory();
+    renderHomeStats();
+
+    var lbl = 'Minggu ke-' + minggu;
+    document.getElementById('evalWeekDisplay').textContent = lbl;
+    document.getElementById('piSubEval').textContent = 'Terakhir: ' + lbl + ' | -' + turun + ' kg';
+
+    showToast('✅ Evaluasi Minggu ke-' + minggu + ' berhasil disimpan! -' + turun + ' kg 💪');
+  } catch(e) {
+    console.error('saveWeeklyEval error:', e);
+    showToast('Gagal menyimpan evaluasi, coba lagi');
   }
-
-  var evalData = {
-    minggu, beratAwal: start, beratAkhir: end, turun, obstacle: obstacle || '',
-    kondisi: Object.keys(condChecked).filter(function(k){ return condChecked[k]; }).join(','),
-    tanggal, savedAt: new Date().toISOString()
-  };
-
-  if (editingEvalIdx >= 0) {
-    appState.evaluasi[editingEvalIdx] = evalData;
-    editingEvalIdx = -1;
-    document.getElementById('editModeIndicator').style.display = 'none';
-    document.getElementById('btnCancelEdit').style.display = 'none';
-  } else {
-    appState.evaluasi.push(evalData);
-  }
-
-  // Simpan ke Firebase
-  await fbSaveEvaluasi(minggu, evalData);
-
-  // Reset form
-  document.getElementById('weekStartWeight').value = '';
-  document.getElementById('weekEndWeight').value = '';
-  document.getElementById('weeklyObstacle').value = '';
-  document.getElementById('weeklyLossResult').style.display = 'none';
-  condChecked = {};
-  document.querySelectorAll('.cond-item').forEach(function(el){ el.classList.remove('checked'); });
-
-  renderEvalHome();
-  renderEvalHistory();
-  renderHomeStats();
-
-  var lbl = 'Minggu ke-' + minggu;
-  document.getElementById('evalWeekDisplay').textContent = lbl;
-  document.getElementById('piSubEval').textContent = 'Terakhir: ' + lbl + ' | -' + turun + ' kg';
-
-  alert('✅ Evaluasi Minggu ke-' + minggu + ' berhasil disimpan! -' + turun + ' kg 💪');
 }
 
 function cancelEdit() {
@@ -3033,7 +3139,7 @@ function renderEvalHistory() {
     var realIdx = appState.evaluasi.length - 1 - revIdx;
     html += '<div class="hist-card">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">';
-    html += '<div><div class="hist-week">Minggu ke-' + e.minggu + '</div><div class="hist-date">' + e.tanggal + '</div></div>';
+    html += '<div><div class="hist-week">Minggu ke-' + escHtml(String(e.minggu||'')) + '</div><div class="hist-date">' + escHtml(String(e.tanggal||'')) + '</div></div>';
     html += '<div style="display:flex;gap:6px;">';
     html += '<button onclick="editEval(' + realIdx + ')" style="padding:5px 10px;background:var(--offwhite);border:1px solid var(--border);border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;">Edit</button>';
     html += '</div></div>';
@@ -3042,10 +3148,11 @@ function renderEvalHistory() {
     html += '<div><div class="hv-label">Berat Akhir</div><div class="hv-val">' + e.beratAkhir + ' kg</div></div>';
     html += '<div><div class="hv-label">Turun</div><div class="hv-val" style="color:var(--green);">-' + e.turun + ' kg</div></div>';
     html += '</div>';
-    if (e.kondisi) html += '<div style="font-size:11px;color:var(--text3);">Kondisi: ' + e.kondisi.replace(/,/g, ' · ') + '</div>';
+    if (e.kondisi) html += '<div style="font-size:11px;color:var(--text3);">Kondisi: ' + escHtml(String(e.kondisi).replace(/,/g, ' · ')) + '</div>';
+    if (e.obstacle) html += '<div style="font-size:11px;color:var(--text3);margin-top:2px;">Catatan: ' + escHtml(String(e.obstacle)) + '</div>';
     html += '</div>';
   });
-  container.innerHTML = html;
+  setSafeHTML(container, html);
 }
 
 function editEval(idx) {
@@ -3104,7 +3211,7 @@ function renderJadwalOlahraga() {
     if (!isRest) html += '<div style="font-size:16px;">💪</div>';
     html += '</div>';
   });
-  if (document.getElementById('jadwalNormalList')) document.getElementById('jadwalNormalList').innerHTML = html;
+  setSafeHTML(document.getElementById('jadwalNormalList'), html);
 }
 
 function renderHomeJadwal() {
@@ -3165,10 +3272,10 @@ function renderHomeJadwal() {
     html += '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
     html += 'Jadwal Lengkap Seminggu</button>';
 
-    el.innerHTML = html;
+    setSafeHTML(el, html);
   } catch(err) {
     console.log('renderHomeJadwal err:', err);
-    el.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text3);font-size:13px;">Ketuk untuk lihat jadwal olahraga minggu ini</div>';
+    el.textContent = 'Ketuk untuk lihat jadwal olahraga minggu ini';
   }
 }
 
@@ -3221,7 +3328,7 @@ function renderMenuHarian() {
     html += '<div class="meal-cal">~' + m.cal + ' kkal</div>';
     html += '</div>';
   });
-  if (document.getElementById('menuHariIni')) document.getElementById('menuHariIni').innerHTML = html;
+  setSafeHTML(document.getElementById('menuHariIni'), html);
 }
 
 function switchMenuTab(tab, btn) {
@@ -3318,7 +3425,7 @@ function renderCmFoodGrid() {
     html += '<div class="cm-cal">' + f.baseCal + ' kkal/' + f.baseAmount + ' ' + f.unit + '</div>';
     html += '</div>';
   });
-  document.getElementById('cmFoodGrid').innerHTML = html;
+  setSafeHTML(document.getElementById('cmFoodGrid'), html);
 }
 
 function cmToggleFood(id) {
@@ -3331,8 +3438,8 @@ function cmToggleFood(id) {
 }
 
 function cmUpdateSummary() {
-  var total = cmSelectedItems.reduce(function(sum, item){ return sum + Math.round(item.cal * item.amount / item.baseAmount); }, 0);
-  var pct = Math.min(100, Math.round(total / cmTargetCalories * 100));
+  var total = cmSelectedItems.reduce(function(sum, item){ return sum + (item.baseAmount > 0 ? Math.round(item.cal * item.amount / item.baseAmount) : 0); }, 0);
+  var pct = cmTargetCalories > 0 ? Math.min(100, Math.round(total / cmTargetCalories * 100)) : 0;
   var remaining = cmTargetCalories - total;
   document.getElementById('cmDisplayUsed').textContent = total;
   document.getElementById('cmProgressBar').style.width = pct + '%';
@@ -3383,7 +3490,7 @@ function renderQuestion() {
     html += '<div class="quiz-opt-radio">' + (sel ? '<div style="width:8px;height:8px;border-radius:50%;background:#FFF;"></div>' : '') + '</div>';
     html += '</div>';
   });
-  document.getElementById('qOptions').innerHTML = html;
+  setSafeHTML(document.getElementById('qOptions'), html);
 
   var btnBack = document.getElementById('btnBack');
   var btnNext = document.getElementById('btnNext');
@@ -3416,12 +3523,13 @@ function calculateResult() {
 }
 
 async function showResult() {
+  try {
   finalResult = calculateResult();
   document.getElementById('quizRunning').style.display = 'none';
   document.getElementById('quizResult').style.display = 'block';
 
   // Fill result UI
-  document.getElementById('qrTypeName').innerHTML = 'Tipe <em>' + finalResult.name.replace('Tipe ','') + '</em>';
+  document.getElementById('qrTypeName').innerHTML = 'Tipe <em>' + escHtml(finalResult.name.replace('Tipe ','')) + '</em>';
   document.getElementById('qrTagline').textContent = finalResult.tagline;
   document.getElementById('qrMetodeName').textContent = finalResult.metodeName;
   document.getElementById('qrScore').textContent = finalResult.skor;
@@ -3436,7 +3544,7 @@ async function showResult() {
     tHtml += '<div class="trait-labels">' + t.labels.map(function(l){ return '<span>' + l + '</span>'; }).join('') + '</div>';
     tHtml += '<div class="trait-desc">' + t.desc + '</div></div>';
   });
-  document.getElementById('quizTraitCards').innerHTML = tHtml;
+  setSafeHTML(document.getElementById('quizTraitCards'), tHtml);
 
   // Tips content
   var tipsHtml = '<div style="background:' + finalResult.bg + ';border-radius:14px;padding:14px;margin-bottom:14px;">';
@@ -3447,7 +3555,7 @@ async function showResult() {
     tipsHtml += '<div style="color:var(--green);font-size:14px;margin-top:1px;">✓</div>';
     tipsHtml += '<div style="font-size:13px;color:var(--text3);line-height:1.6;">' + tip + '</div></div>';
   });
-  document.getElementById('quizTipsContent').innerHTML = tipsHtml;
+  setSafeHTML(document.getElementById('quizTipsContent'), tipsHtml);
 
   // Program content (jadwal olahraga)
   var metodeKey = finalResult.metode;
@@ -3463,7 +3571,7 @@ async function showResult() {
     progHtml += '</div>';
   });
   progHtml += '</div>';
-  document.getElementById('quizProgramContent').innerHTML = progHtml;
+  setSafeHTML(document.getElementById('quizProgramContent'), progHtml);
 
   // Simpan ke Firebase
   var qData = {
@@ -3472,7 +3580,7 @@ async function showResult() {
     skor: finalResult.skor, tipe_emoji: finalResult.emoji, nama: appState.user.nama || '',
     savedAt: new Date().toISOString()
   };
-  appState.quiz = qData;
+  state.set('quiz', qData);
 
   // Simpan ke localStorage DULU untuk reliability
   try {
@@ -3485,6 +3593,10 @@ async function showResult() {
 
   renderAll();
   gtag('event', 'quiz_completed', { tipe: finalResult.name });
+  } catch(e) {
+    console.error('showResult error:', e);
+    showToast('Gagal menampilkan hasil kuis');
+  }
 }
 
 function selesaiQuiz() {
