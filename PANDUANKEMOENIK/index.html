@@ -79,7 +79,7 @@ body { font-family:'Plus Jakarta Sans', sans-serif; color:var(--text); font-size
 .d-item { display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:10px; font-size:13px; font-weight:500; color:var(--text2); cursor:pointer; margin-bottom:1px; transition:all 0.15s; }
 .d-item:active { background:var(--card2); }
 .d-item.on { color:var(--green); background:rgba(46,139,53,0.1); font-weight:600; }
-.d-ico { width:20px; text-align:center; font-size:16px; }
+.d-ico { width:24px; text-align:center; font-size:16px; display:flex; align-items:center; justify-content:center; }
 .d-sep { height:1px; background:var(--border); margin:8px 12px; }
 
 /* TOPBAR */
@@ -285,6 +285,7 @@ body { font-family:'Plus Jakarta Sans', sans-serif; color:var(--text); font-size
 .sc-card.green-fill .sc-card-name { color:#FFF; }
 .sc-card.green-fill .sc-card-sub { color:rgba(255,255,255,0.6); }
 .sc-card-ico { font-size:22px; margin-bottom:10px; }
+.sc-card-ico-wrap { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
 .sc-card-name { font-size:13px; font-weight:700; color:var(--text); }
 .sc-card-sub { font-size:11px; color:var(--text3); margin-top:3px; }
 .sc-card-arr { position:absolute; bottom:14px; right:14px; color:var(--text3); font-size:14px; }
@@ -294,7 +295,7 @@ body { font-family:'Plus Jakarta Sans', sans-serif; color:var(--text); font-size
 #bnav { height:62px; background:var(--surface); border-top:1px solid var(--border); display:flex; align-items:stretch; flex-shrink:0; }
 .bn { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; transition:all 0.15s; position:relative; }
 .bn:active { background:var(--card2); }
-.bn-ico { font-size:20px; line-height:1; }
+.bn-ico { font-size:20px; line-height:1; display:flex; align-items:center; justify-content:center; height:24px; }
 .bn-lbl { font-size:9px; font-weight:600; color:var(--text3); letter-spacing:0.3px; text-transform:uppercase; }
 .bn.on .bn-lbl { color:var(--green); }
 .bn.on::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:24px; height:3px; background:var(--green); border-radius:0 0 3px 3px; }
@@ -512,15 +513,15 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
   </div>
   <div class="d-body">
     <div class="d-group">Menu Utama</div>
-    <div class="d-item on" id="di-home" onclick="go('home');closeDrawer()"><span class="d-ico">🏠</span>Beranda</div>
-    <div class="d-item" id="di-profil" onclick="go('profil');closeDrawer()"><span class="d-ico">👤</span>Profil Metabolisme</div>
-    <div class="d-item" id="di-tips" onclick="go('tips');closeDrawer()"><span class="d-ico">🥗</span>Tips Diet</div>
-    <div class="d-item" id="di-program" onclick="go('program');closeDrawer()"><span class="d-ico">📅</span>Program Saya</div>
-    <div class="d-item" id="di-kuis" onclick="go('kuis');closeDrawer()"><span class="d-ico">📝</span>Isi Kuis</div>
+    <div class="d-item on" id="di-home" onclick="go('home');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Beranda</div>
+    <div class="d-item" id="di-profil" onclick="go('profil');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profil Metabolisme</div>
+    <div class="d-item" id="di-tips" onclick="go('tips');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>Tips Diet</div>
+    <div class="d-item" id="di-program" onclick="go('program');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Program Saya</div>
+    <div class="d-item" id="di-kuis" onclick="go('kuis');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>Isi Kuis</div>
     <div class="d-sep"></div>
     <div class="d-group">Informasi</div>
-    <div class="d-item" onclick="go('home');closeDrawer();setTimeout(()=>{ document.getElementById('faqHomeSection').scrollIntoView({behavior:'smooth'}); },200)"><span class="d-ico">❓</span>FAQ</div>
-    <div class="d-item" onclick="closeDrawer();openBeli()"><span class="d-ico">🛒</span>Beli KEMOENIK</div>
+    <div class="d-item" onclick="go('home');closeDrawer();setTimeout(()=>{ document.getElementById('faqHomeSection').scrollIntoView({behavior:'smooth'}); },200)"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>FAQ</div>
+    <div class="d-item" onclick="closeDrawer();openBeli()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>Beli KEMOENIK</div>
     <div class="d-item" onclick="closeDrawer();window.open('https://wa.me/6281546450547','_blank')"><span class="d-ico">💬</span>Konsultasi WA</div>
     <div class="d-sep"></div>
   </div>
@@ -648,27 +649,39 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
       </div>
     </div>
 
-    <div class="shortcut-grid">
+    <div class="shortcut-grid" style="grid-template-columns:1fr 1fr;">
+      <!-- Kuis -->
       <div class="sc-card" onclick="go('kuis')">
-        <div class="sc-card-ico">📝</div>
-        <div class="sc-card-name">Isi Kuis</div>
+        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div class="sc-card-name">Kuis Tipe</div>
         <div class="sc-card-sub">Temukan tipe metabolismemu</div>
         <span class="sc-card-arr">›</span>
       </div>
-      <div class="sc-card green-fill" onclick="go('program')">
-        <div class="sc-card-ico">📅</div>
-        <div class="sc-card-name">Program Diet</div>
-        <div class="sc-card-sub">Lihat & mulai programmu</div>
+      <!-- Kalkulator -->
+      <div class="sc-card" onclick="openPanel('panelKalkulator')">
+        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#DCFCE7,#A7F3D0);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>
+        </div>
+        <div class="sc-card-name">Kalkulator</div>
+        <div class="sc-card-sub">Hitung kalori & target dietmu</div>
         <span class="sc-card-arr">›</span>
       </div>
+      <!-- Tips -->
       <div class="sc-card" onclick="go('tips')">
-        <div class="sc-card-ico">💡</div>
+        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#EFF6FF,#BFDBFE);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
         <div class="sc-card-name">Tips Diet</div>
         <div class="sc-card-sub">Panduan & strategi diet</div>
         <span class="sc-card-arr">›</span>
       </div>
+      <!-- FAQ -->
       <div class="sc-card" onclick="openFaq()">
-        <div class="sc-card-ico">❓</div>
+        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#F5F3FF,#DDD6FE);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
         <div class="sc-card-name">FAQ</div>
         <div class="sc-card-sub">Pertanyaan yang sering ditanya</div>
         <span class="sc-card-arr">›</span>
@@ -686,27 +699,27 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
     <div class="mission-set show" id="misiNormal">
       <div class="mission-item" id="n1" onclick="toggleMission('n1','nc1')">
         <div class="mission-check" id="nc1"></div>
-        <div class="mission-text"><div class="mission-name">🌅 Bangun & Minum Air</div><div class="mission-sub">2 gelas air putih hangat sebelum apapun</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#EFF6FF;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></span>Bangun & Minum Air</div><div class="mission-sub">2 gelas air putih hangat sebelum apapun</div></div>
         <div class="mission-tag tag-blue">Pagi</div>
       </div>
       <div class="mission-item" id="n2" onclick="toggleMission('n2','nc2')">
         <div class="mission-check" id="nc2"></div>
-        <div class="mission-text"><div class="mission-name">🏃 Olahraga Pagi</div><div class="mission-sub">Jalan kaki 30 menit / Jumping jack / Lompat tali</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#DCFCE7;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v5l3 3"/><path d="M9 12H6M18 12h-3"/></svg></span>Olahraga Pagi</div><div class="mission-sub">Jalan kaki 30 menit / Jumping jack / Lompat tali</div></div>
         <div class="mission-tag tag-green">Aktif</div>
       </div>
       <div class="mission-item" id="n3" onclick="toggleMission('n3','nc3')">
         <div class="mission-check" id="nc3"></div>
-        <div class="mission-text"><div class="mission-name">🌿 Minum KEMOENIK Pagi</div><div class="mission-sub">Sesudah sarapan untuk aktivasi metabolisme</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#DCFCE7;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2.5" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 7 3 2 4c1 4 4 7 10 8z"/></svg></span>Minum KEMOENIK Pagi</div><div class="mission-sub">Sesudah sarapan untuk aktivasi metabolisme</div></div>
         <div class="mission-tag tag-gold">Herbal</div>
       </div>
       <div class="mission-item" id="n4" onclick="toggleMission('n4','nc4')">
         <div class="mission-check" id="nc4"></div>
-        <div class="mission-text"><div class="mission-name">💆 Lymphatic Drainage</div><div class="mission-sub">10–15 menit pijat ringan sore hari</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#F5F3FF;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4"/></svg></span>Lymphatic Drainage</div><div class="mission-sub">10–15 menit pijat ringan sore hari</div></div>
         <div class="mission-tag tag-gray">Sore</div>
       </div>
       <div class="mission-item" id="n5" onclick="toggleMission('n5','nc5')">
         <div class="mission-check" id="nc5"></div>
-        <div class="mission-text"><div class="mission-name">🌿 Minum KEMOENIK Malam</div><div class="mission-sub">Sesudah makan malam untuk metabolisme malam</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#DCFCE7;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span>Minum KEMOENIK Malam</div><div class="mission-sub">Sesudah makan malam untuk metabolisme malam</div></div>
         <div class="mission-tag tag-gold">Herbal</div>
       </div>
     </div>
@@ -714,32 +727,49 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
     <div class="mission-set" id="misiIF">
       <div class="mission-item" id="i1" onclick="toggleMission('i1','ic1')">
         <div class="mission-check" id="ic1"></div>
-        <div class="mission-text"><div class="mission-name">🔴 Mulai Puasa 16 Jam</div><div class="mission-sub">Hanya air putih, teh tanpa gula, kopi tanpa gula</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#FEE2E2;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></span>Mulai Puasa 16 Jam</div><div class="mission-sub">Hanya air putih, teh tanpa gula, kopi tanpa gula</div></div>
         <div class="mission-tag tag-red">Puasa</div>
       </div>
       <div class="mission-item" id="i2" onclick="toggleMission('i2','ic2')">
         <div class="mission-check" id="ic2"></div>
-        <div class="mission-text"><div class="mission-name">🏃 Olahraga Pagi (saat puasa)</div><div class="mission-sub">Jalan kaki 30–45 menit untuk bakar lemak optimal</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#DCFCE7;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v5l3 3"/></svg></span>Olahraga Pagi (saat puasa)</div><div class="mission-sub">Jalan kaki 30–45 menit untuk bakar lemak optimal</div></div>
         <div class="mission-tag tag-blue">IF+Kardio</div>
       </div>
       <div class="mission-item" id="i3" onclick="toggleMission('i3','ic3')">
         <div class="mission-check" id="ic3"></div>
-        <div class="mission-text"><div class="mission-name">🍳 Buka Puasa (10:00)</div><div class="mission-sub">Protein + sayuran — Minum KEMOENIK sesudah makan</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#FEF3C7;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2.5" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg></span>Buka Puasa (10:00)</div><div class="mission-sub">Protein + sayuran — Minum KEMOENIK sesudah makan</div></div>
         <div class="mission-tag tag-green">Makan</div>
       </div>
       <div class="mission-item" id="i4" onclick="toggleMission('i4','ic4')">
         <div class="mission-check" id="ic4"></div>
-        <div class="mission-text"><div class="mission-name">💆 Lymphatic Drainage</div><div class="mission-sub">10–15 menit untuk lancarkan sirkulasi</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#F5F3FF;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4"/></svg></span>Lymphatic Drainage</div><div class="mission-sub">10–15 menit untuk lancarkan sirkulasi</div></div>
         <div class="mission-tag tag-gray">Sore</div>
       </div>
       <div class="mission-item" id="i5" onclick="toggleMission('i5','ic5')">
         <div class="mission-check" id="ic5"></div>
-        <div class="mission-text"><div class="mission-name">🍽️ Makan Terakhir (17:00)</div><div class="mission-sub">Protein + sayuran ringan, skip nasi — Minum KEMOENIK</div></div>
+        <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#FEF3C7;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2.5" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg></span>Makan Terakhir (17:00)</div><div class="mission-sub">Protein + sayuran ringan, skip nasi — Minum KEMOENIK</div></div>
         <div class="mission-tag tag-gold">Makan</div>
       </div>
     </div>
 
+    <!-- JADWAL OLAHRAGA MINI DI HOME -->
     <div class="sec-title-row" style="margin-top:20px;">
+      <div class="sec-title" style="margin-bottom:0;">Jadwal Olahraga Hari Ini</div>
+      <div class="sec-link" onclick="openPanel('panelJadwalOlahraga')">Lihat semua ›</div>
+    </div>
+    <div id="homeJadwalWrap" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:14px;">
+      <div id="homeJadwalContent">
+        <!-- diisi JS berdasarkan hari ini -->
+      </div>
+      <div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:10px;">
+        <button onclick="openPanel('panelJadwalOlahraga')" style="flex:1;padding:9px;background:var(--green);color:#FFF;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Jadwal Lengkap Seminggu
+        </button>
+      </div>
+    </div>
+
+    <div class="sec-title-row" style="margin-top:4px;">
       <div class="sec-title" style="margin-bottom:0;">Tips Hari Ini</div>
       <div class="sec-link" onclick="go('tips')">Lihat semua ›</div>
     </div>
@@ -757,7 +787,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
         <div class="rem-time-wrap"><div class="rem-time">07.30</div><div class="rem-time-sub">Pagi</div></div>
         <div class="rem-line-wrap"><div class="rem-dot done-dot"></div><div class="rem-line"></div></div>
         <div class="rem-card done-card">
-          <div class="rem-ico">🌿</div>
+          <div class="rem-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 7 3 2 4c1 4 4 7 10 8zM12 12c0-5 5-9 10-8-1 4-4 7-10 8z"/></svg></div>
           <div><div class="rem-name">Minum KEMOENIK Pagi</div><div class="rem-sub">3 kapsul sesudah sarapan + air hangat</div></div>
         </div>
       </div>
@@ -765,7 +795,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
         <div class="rem-time-wrap"><div class="rem-time" style="color:var(--gold2);">18.30</div><div class="rem-time-sub" style="color:var(--gold2);">Malam</div></div>
         <div class="rem-line-wrap"><div class="rem-dot active-dot"></div><div class="rem-line"></div></div>
         <div class="rem-card active-card">
-          <div class="rem-ico">🌿</div>
+          <div class="rem-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 7 3 2 4c1 4 4 7 10 8zM12 12c0-5 5-9 10-8-1 4-4 7-10 8z"/></svg></div>
           <div><div class="rem-name">Minum KEMOENIK Malam</div><div class="rem-sub">3 kapsul sesudah makan malam + air putih</div></div>
           <div class="rem-ping"></div>
         </div>
@@ -818,7 +848,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
     <div id="profilContent" style="display:none;">
       <div class="acc" id="acc-trait">
         <div class="acc-hd" onclick="tog('acc-trait')">
-          <div class="acc-icon" style="background:rgba(232,160,32,0.12);">📈</div>
+          <div class="acc-icon" style="background:rgba(232,160,32,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2" stroke-linecap="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
           <div class="acc-info">
             <div class="acc-title">Trait Bar Metabolisme</div>
             <div class="acc-sub" id="traitBarSub">Karakteristik metabolismemu</div>
@@ -832,7 +862,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
       <div class="acc" id="acc-karakter">
         <div class="acc-hd" onclick="tog('acc-karakter')">
-          <div class="acc-icon" style="background:rgba(46,139,53,0.12);">🧬</div>
+          <div class="acc-icon" style="background:rgba(46,139,53,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2" stroke-linecap="round"><path d="M2 15c6.667-6 13.333 0 20-6M2 9c6.667 6 13.333 0 20 6"/></svg></div>
           <div class="acc-info">
             <div class="acc-title">Tipe & Karakteristik</div>
             <div class="acc-sub" id="tipeKarakterSub">Tipe metabolismemu</div>
@@ -846,7 +876,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
       <div class="acc" id="acc-skor">
         <div class="acc-hd" onclick="tog('acc-skor');setTimeout(animScore,80)">
-          <div class="acc-icon" style="background:rgba(59,130,246,0.1);">🎯</div>
+          <div class="acc-icon" style="background:rgba(59,130,246,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
           <div class="acc-info">
             <div class="acc-title">Skor & Akurasi</div>
             <div class="acc-sub" id="skorSub">Kesesuaian program dengan metabolismemu</div>
@@ -886,7 +916,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
     <div class="acc" id="acc-defisit">
       <div class="acc-hd" onclick="tog('acc-defisit')">
-        <div class="acc-icon" style="background:rgba(239,68,68,0.1);">🔥</div>
+        <div class="acc-icon" style="background:rgba(239,68,68,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round"><path d="M12 2c-4 6-6 9-6 13a6 6 0 0 0 12 0c0-4-2-7-6-13z"/></svg></div>
         <div class="acc-info">
           <div class="acc-title">Defisit Kalori</div>
           <div class="acc-sub">Cara defisit kalori yang benar & efektif</div>
@@ -936,7 +966,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
     <div class="acc" id="acc-gula">
       <div class="acc-hd" onclick="tog('acc-gula')">
-        <div class="acc-icon" style="background:rgba(232,160,32,0.12);">🍬</div>
+        <div class="acc-icon" style="background:rgba(232,160,32,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
         <div class="acc-info">
           <div class="acc-title">Panduan Kurangi Gula</div>
           <div class="acc-sub">Musuh terbesar diet yang sering terlewat</div>
@@ -973,7 +1003,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
     <div class="acc" id="acc-ola">
       <div class="acc-hd" onclick="tog('acc-ola')">
-        <div class="acc-icon" style="background:rgba(59,130,246,0.1);">🏃</div>
+        <div class="acc-icon" style="background:rgba(59,130,246,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8m-4-5l4 3 4-3"/><path d="M8 18l-2 3M16 18l2 3"/></svg></div>
         <div class="acc-info">
           <div class="acc-title">Panduan Olahraga</div>
           <div class="acc-sub">Olahraga yang direkomendasikan untuk diet</div>
@@ -1036,7 +1066,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
     <div class="acc" id="acc-minum">
       <div class="acc-hd" onclick="tog('acc-minum')">
-        <div class="acc-icon" style="background:rgba(46,139,53,0.12);">🌿</div>
+        <div class="acc-icon" style="background:rgba(46,139,53,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 7 3 2 4c1 4 4 7 10 8zM12 12c0-5 5-9 10-8-1 4-4 7-10 8z"/></svg></div>
         <div class="acc-info">
           <div class="acc-title">Cara Minum KEMOENIK</div>
           <div class="acc-sub">Jadwal & aturan konsumsi optimal</div>
@@ -1082,7 +1112,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
     <!-- IF sebagai opsi di tips -->
     <div class="acc" id="acc-if">
       <div class="acc-hd" onclick="tog('acc-if')">
-        <div class="acc-icon" style="background:rgba(124,58,237,0.1);">⏰</div>
+        <div class="acc-icon" style="background:rgba(124,58,237,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
         <div class="acc-info">
           <div class="acc-title">Opsi: Intermittent Fasting</div>
           <div class="acc-sub">Tidak wajib, tapi bisa percepat hasil</div>
@@ -1136,32 +1166,32 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
     <div class="sec-title">Yang Kamu Dapatkan</div>
     <div class="prev-list">
       <div class="prev-item" onclick="openPanel('panelKalkulator')">
-        <div class="pi-ico">⚖️</div>
+        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/></svg></div>
         <div><div class="pi-name">Kalkulasi Kalori Personal</div><div class="pi-sub" id="piSubKalori">Hitung kebutuhan kalori & target mingguanmu</div></div>
         <span class="pi-arr">›</span>
       </div>
       <div class="prev-item" onclick="openPanel('panelTimeline')">
-        <div class="pi-ico">📅</div>
+        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
         <div><div class="pi-name">Timeline Program</div><div class="pi-sub" id="piSubTimeline">Fase & jadwal program dietmu</div></div>
         <span class="pi-arr">›</span>
       </div>
       <div class="prev-item" onclick="openPanel('panelMenu')">
-        <div class="pi-ico">🍱</div>
+        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M3 6h18v13a2 2 0 01-2 2H5a2 2 0 01-2-2V6z"/><line x1="3" y1="11" x2="21" y2="11"/><line x1="12" y1="6" x2="12" y2="21"/></svg></div>
         <div><div class="pi-name">Panduan Menu Harian</div><div class="pi-sub" id="piSubMenu">Menu makan personal berdasarkan kalorimu</div></div>
         <span class="pi-arr">›</span>
       </div>
       <div class="prev-item" onclick="openPanel('panelJadwalOlahraga')">
-        <div class="pi-ico">🏃</div>
+        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8m-4-5l4 3 4-3"/><path d="M8 18l-2 3M16 18l2 3"/></svg></div>
         <div><div class="pi-name">Jadwal Olahraga</div><div class="pi-sub">Rencana olahraga mingguan berdasarkan tipe metabolismemu</div></div>
         <span class="pi-arr">›</span>
       </div>
       <div class="prev-item" onclick="openPanel('panelPanduanLengkap')">
-        <div class="pi-ico">📋</div>
+        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>
         <div><div class="pi-name">Panduan Harian Lengkap</div><div class="pi-sub">Menu lengkap 10 hari: Ekonomis, Standar, Premium & Custom</div></div>
         <span class="pi-arr">›</span>
       </div>
       <div class="prev-item" onclick="openPanel('panelEvaluasi')">
-        <div class="pi-ico">📊</div>
+        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
         <div><div class="pi-name">Evaluasi Mingguan</div><div class="pi-sub" id="piSubEval">Catat & pantau perkembangan berat badanmu</div></div>
         <span class="pi-arr">›</span>
       </div>
@@ -1269,11 +1299,11 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
 <!-- BOTTOM NAV -->
 <div id="bnav">
-  <div class="bn on" id="bn-home" onclick="go('home')"><div class="bn-ico">🏠</div><div class="bn-lbl">Home</div></div>
-  <div class="bn" id="bn-profil" onclick="go('profil')"><div class="bn-ico">👤</div><div class="bn-lbl">Profil</div></div>
-  <div class="bn" id="bn-tips" onclick="go('tips')"><div class="bn-ico">🥗</div><div class="bn-lbl">Tips</div></div>
-  <div class="bn" id="bn-program" onclick="go('program')"><div class="bn-ico">📅</div><div class="bn-lbl">Program</div></div>
-  <div class="bn" id="bn-kuis" onclick="go('kuis')"><div class="bn-ico">📝</div><div class="bn-lbl">Kuis</div></div>
+  <div class="bn on" id="bn-home" onclick="go('home')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="bn-lbl">Home</div></div>
+  <div class="bn" id="bn-profil" onclick="go('profil')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="bn-lbl">Profil</div></div>
+  <div class="bn" id="bn-tips" onclick="go('tips')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="bn-lbl">Tips</div></div>
+  <div class="bn" id="bn-program" onclick="go('program')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="bn-lbl">Program</div></div>
+  <div class="bn" id="bn-kuis" onclick="go('kuis')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="bn-lbl">Kuis</div></div>
 </div>
 
 </div><!-- end app -->
@@ -1848,6 +1878,12 @@ var dbUserVoucher = '';
 var APP_URL = 'https://kemoenikofficial.github.io/aktivitas/';
 
 async function fbSet(path, data) {
+  // PRIMARY: simpan ke localStorage (selalu berhasil)
+  try {
+    var lsKey = 'kdb_' + path.replace(/\//g,'_');
+    localStorage.setItem(lsKey, JSON.stringify(data));
+  } catch(e2) { console.log('ls err:', e2); }
+  // SECONDARY: sync ke Firebase (best-effort, tidak memblokir)
   try {
     var url = 'https://firestore.googleapis.com/v1/projects/project-panduan-dani/databases/(default)/documents/' + path + '?key=' + firebaseConfig.apiKey;
     var fields = {};
@@ -1859,26 +1895,36 @@ async function fbSet(path, data) {
       else fields[k] = {stringValue: JSON.stringify(v)};
     });
     await fetch(url, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({fields}) });
-  } catch(e) { console.log('fbSet err:', e); }
+  } catch(e) { console.log('Firebase sync (non-critical):', e); }
 }
 
 async function fbGet(path) {
+  // Coba Firebase dulu
   try {
     var url = 'https://firestore.googleapis.com/v1/projects/project-panduan-dani/databases/(default)/documents/' + path + '?key=' + firebaseConfig.apiKey;
     var res = await fetch(url);
-    if (!res.ok) return null;
-    var d = await res.json();
-    if (!d.fields) return null;
-    var out = {};
-    Object.keys(d.fields).forEach(function(k) {
-      var f = d.fields[k];
-      if (f.stringValue !== undefined) {
-        try { out[k] = JSON.parse(f.stringValue); } catch(e2) { out[k] = f.stringValue; }
-      } else if (f.doubleValue !== undefined) out[k] = f.doubleValue;
-      else if (f.booleanValue !== undefined) out[k] = f.booleanValue;
-    });
-    return out;
-  } catch(e) { return null; }
+    if (res.ok) {
+      var d = await res.json();
+      if (d.fields) {
+        var out = {};
+        Object.keys(d.fields).forEach(function(k) {
+          var f = d.fields[k];
+          if (f.stringValue !== undefined) {
+            try { out[k] = JSON.parse(f.stringValue); } catch(e2) { out[k] = f.stringValue; }
+          } else if (f.doubleValue !== undefined) out[k] = f.doubleValue;
+          else if (f.booleanValue !== undefined) out[k] = f.booleanValue;
+        });
+        return out;
+      }
+    }
+  } catch(e) { console.log('fbGet Firebase err, try localStorage:', e); }
+  // Fallback ke localStorage
+  try {
+    var lsKey = 'kdb_' + path.replace(/\//g,'_');
+    var ls = localStorage.getItem(lsKey);
+    if (ls) return JSON.parse(ls);
+  } catch(e2) {}
+  return null;
 }
 
 async function fbGetCollection(path) {
@@ -2101,6 +2147,7 @@ function renderAll() {
   renderJadwalOlahraga();
   renderMenuHarian();
   renderDrawer();
+  renderHomeJadwal();
 
   // Tampilkan notif "isi kuis dulu" di Program page jika kuis belum dikerjakan
   var kuisNotif = document.getElementById('kuisFirstNotif');
@@ -2572,30 +2619,25 @@ async function simpanKalkulator() {
   var btn = event && event.target;
   if (btn) { btn.textContent = '⏳ Menyimpan...'; btn.disabled = true; }
 
-  try {
-    appState.kalkulator = data;
-    appState.user.nama = data.nama;
+  appState.kalkulator = data;
+  appState.user.nama = data.nama;
 
-    // Simpan ke Firebase
-    await fbSet('kemoenik_users/' + dbUserWA + '/kalkulator/data', data);
+  // Simpan (localStorage primary, Firebase secondary - tidak bisa gagal)
+  await fbSet('kemoenik_users/' + dbUserWA + '/kalkulator/data', data);
 
-    // Update seluruh UI
-    renderAll();
-    loadMisiChecked();
+  // Update seluruh UI
+  renderAll();
+  loadMisiChecked();
 
-    // Reset panel ke form untuk session berikutnya
-    window._tempKalData = null;
-    document.getElementById('hasilKalkulator').style.display = 'none';
-    document.getElementById('kalkulatorForm').style.display = 'block';
+  // Reset panel ke form
+  window._tempKalData = null;
+  document.getElementById('hasilKalkulator').style.display = 'none';
+  document.getElementById('kalkulatorForm').style.display = 'block';
+  if (btn) { btn.innerHTML = '<i class="fas fa-save"></i> Simpan & Mulai Program'; btn.disabled = false; }
 
-    closePanel('panelKalkulator');
-    alert('✅ Program berhasil disimpan! Semangat kak ' + data.nama.split(' ')[0] + '! 💪');
-    gtag('event', 'kalkulator_saved', { nama: data.nama });
-  } catch(err) {
-    if (btn) { btn.innerHTML = '<i class="fas fa-save"></i> Simpan & Mulai Program'; btn.disabled = false; }
-    alert('Gagal menyimpan. Periksa koneksi internet kamu dan coba lagi.');
-    console.error('simpanKalkulator error:', err);
-  }
+  closePanel('panelKalkulator');
+  alert('✅ Program berhasil disimpan! Semangat kak ' + data.nama.split(' ')[0] + '! 💪');
+  gtag('event', 'kalkulator_saved', { nama: data.nama });
 }
 
 // Load form if data exists
@@ -2798,6 +2840,52 @@ function renderJadwalOlahraga() {
     html += '</div>';
   });
   if (document.getElementById('jadwalNormalList')) document.getElementById('jadwalNormalList').innerHTML = html;
+}
+
+function renderHomeJadwal() {
+  var el = document.getElementById('homeJadwalContent');
+  if (!el) return;
+  var metode = appState.quiz ? appState.quiz.metode : 'standar';
+  var jadwal = targetOlahragaData[metode] || targetOlahragaData.standar;
+  var hariIdx = new Date().getDay(); // 0=Min,1=Sen,...,6=Sab
+  var hariMap = [6,0,1,2,3,4,5]; // JS Sunday=0 → data index 6
+  var todayData = jadwal[hariMap[hariIdx]];
+  var hariNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  var hariName = hariNames[hariIdx];
+  var isRest = todayData.aktivitas.indexOf('Istirahat') !== -1 || todayData.aktivitas.indexOf('recovery') !== -1;
+
+  var html = '<div style="padding:14px 16px;">';
+  html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
+  html += '<div style="background:' + (isRest ? '#F3F4F6' : 'linear-gradient(135deg,var(--green),var(--green3))') + ';width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
+  if (isRest) {
+    html += '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><path d="M12 2a5 5 0 1 0 5 5"/><path d="M2 12h20M12 22a10 10 0 0 1-7.07-17.07"/></svg>';
+  } else {
+    html += '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8m-4-5l4 3 4-3"/><path d="M8 18l-2 3M16 18l2 3"/></svg>';
+  }
+  html += '</div>';
+  html += '<div><div style="font-size:13px;font-weight:700;color:var(--text);">' + hariName + ' — ' + (isRest ? 'Hari Istirahat' : 'Waktunya Bergerak!') + '</div>';
+  html += '<div style="font-size:11px;color:var(--text3);margin-top:2px;">Metode: ' + (metode.charAt(0).toUpperCase() + metode.slice(1)) + '</div></div></div>';
+
+  html += '<div style="background:' + (isRest ? '#F9FAFB' : '#ECFDF5') + ';border-radius:12px;padding:12px 14px;">';
+  html += '<div style="font-size:13px;color:' + (isRest ? 'var(--text3)' : '#065F46') + ';line-height:1.6;font-weight:' + (isRest ? '400' : '600') + ';">' + todayData.aktivitas + '</div>';
+
+  if (!isRest) {
+    // Estimasi durasi & kalori
+    var dur = todayData.aktivitas.indexOf('45') !== -1 ? '45 menit' : todayData.aktivitas.indexOf('20') !== -1 ? '20 menit' : '30 menit';
+    html += '<div style="display:flex;gap:10px;margin-top:8px;">';
+    html += '<div style="background:white;border-radius:8px;padding:6px 10px;display:flex;align-items:center;gap:5px;">';
+    html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+    html += '<span style="font-size:11px;color:var(--green);font-weight:600;">' + dur + '</span></div>';
+    html += '<div style="background:white;border-radius:8px;padding:6px 10px;display:flex;align-items:center;gap:5px;">';
+    html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E07B39" stroke-width="2.5" stroke-linecap="round"><path d="M12 2c-4 6-6 9-6 13a6 6 0 0 0 12 0c0-4-2-7-6-13z"/></svg>';
+    html += '<span style="font-size:11px;color:#E07B39;font-weight:600;">~150 kkal terbakar</span></div>';
+    html += '</div>';
+  } else {
+    html += '<div style="font-size:11px;color:var(--text3);margin-top:6px;">Istirahat penting untuk pemulihan otot. Boleh lakukan lymphatic drainage ringan sebelum tidur.</div>';
+  }
+  html += '</div></div>';
+
+  el.innerHTML = html;
 }
 
 function toggleOlahraga(mode) {
