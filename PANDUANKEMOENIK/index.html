@@ -1992,8 +1992,11 @@ async function fbSaveKalkulator(data) {
 
 // ── SAVE QUIZ → field metabolism ─────────────────────────────
 async function fbSaveQuiz(data) {
-  // localStorage PRIMARY
-  try { localStorage.setItem('kemoenik_quiz_data', JSON.stringify(data)); } catch(e){}
+  // localStorage PRIMARY — simpan ke DUA key untuk reliability
+  try {
+    localStorage.setItem('kemoenik_quiz', JSON.stringify(data));      // key utama
+    localStorage.setItem('kemoenik_quiz_data', JSON.stringify(data)); // backward compat
+  } catch(e){}
 
   // Firestore REST: PATCH document users/{wa} dengan field metabolism
   try {
@@ -2045,21 +2048,24 @@ async function fbSaveEvaluasi(minggu, evalData) {
 
 // ── LOAD ALL DATA dari Firestore ─────────────────────────────
 async function loadAllData() {
-  // Coba GET dari Firestore: GET users/{wa}
+  // ── STEP 1: Coba load dari Firestore users/{wa} ──────────
   try {
     var url = _FSBASE + dbUserWA + '?key=' + firebaseConfig.apiKey;
     var res = await fetch(url);
     if (res.ok) {
       var d = await res.json();
-      if (d.fields) {
-        console.log('Firestore doc loaded, fields:', Object.keys(d.fields));
+      if (d && d.fields) {
+        console.log('Firestore doc fields:', Object.keys(d.fields));
 
-        // ── Load kalkulator dari field menuHarian ──
-        if (d.fields.menuHarian && d.fields.menuHarian.mapValue) {
-          var mh = _fromFsVal(d.fields.menuHarian);
-          if (mh && (mh.dietCal || mh.kaloriHarian)) {
+        // Load menuHarian → kalkulator
+        // Handle: bisa mapValue (ada data) atau nullValue (null di Firestore)
+        var mhField = d.fields.menuHarian;
+        if (mhField && mhField.mapValue && mhField.mapValue.fields) {
+          var mh = _fromFsVal(mhField);
+          var kal_dietCal = mh.dietCal || mh.kaloriHarian || 0;
+          if (kal_dietCal > 0) {
             appState.kalkulator = {
-              dietCal:      mh.dietCal || mh.kaloriHarian || 0,
+              dietCal:      kal_dietCal,
               targetMinggu: mh.targetMinggu || 0,
               target:       mh.targetBB || 0,
               startDate:    mh.tanggalMulai || '',
@@ -2076,15 +2082,19 @@ async function loadAllData() {
               tinggi:       mh.tinggi || 0,
               aktivitas:    mh.aktivitas || 1.375
             };
-            // Sync ke localStorage
-            try { localStorage.setItem('kemoenik_kal_data', JSON.stringify(appState.kalkulator)); } catch(e){}
-            console.log('Kalkulator loaded from Firestore menuHarian ✓');
+            // Cache ke localStorage agar tersedia offline
+            try {
+              localStorage.setItem('kemoenik_kal_data', JSON.stringify(appState.kalkulator));
+              localStorage.setItem('kemoenik_quiz_data_v2', JSON.stringify(appState.kalkulator));
+            } catch(e){}
+            console.log('Kalkulator loaded from Firestore menuHarian ✓', kal_dietCal, 'kkal');
           }
         }
 
-        // ── Load quiz dari field metabolism ──
-        if (d.fields.metabolism && d.fields.metabolism.mapValue) {
-          var m = _fromFsVal(d.fields.metabolism);
+        // Load metabolism → quiz
+        var metField = d.fields.metabolism;
+        if (metField && metField.mapValue && metField.mapValue.fields) {
+          var m = _fromFsVal(metField);
           if (m && m.tipeMetabolisme) {
             appState.quiz = {
               tipe:       m.tipeMetabolisme || '',
@@ -2096,51 +2106,74 @@ async function loadAllData() {
               tipe_emoji: m.emoji || '',
               nama:       m.nama || ''
             };
-            // Sync ke localStorage
-            try { localStorage.setItem('kemoenik_quiz_data', JSON.stringify(appState.quiz)); } catch(e){}
-            console.log('Quiz loaded from Firestore metabolism ✓');
+            // Cache ke localStorage (multi-key untuk kompatibilitas)
+            try {
+              localStorage.setItem('kemoenik_quiz', JSON.stringify(appState.quiz));
+              localStorage.setItem('kemoenik_quiz_data', JSON.stringify(appState.quiz));
+            } catch(e){}
+            console.log('Quiz loaded from Firestore metabolism ✓', m.tipeMetabolisme);
           }
         }
 
-        // ── Load evaluasi dari field evaluasi ──
-        if (d.fields.evaluasi && d.fields.evaluasi.arrayValue) {
-          var evalArr = _fromFsVal(d.fields.evaluasi);
-          if (evalArr && Array.isArray(evalArr) && evalArr.length) {
+        // Load evaluasi
+        var evalField = d.fields.evaluasi;
+        if (evalField && evalField.arrayValue && evalField.arrayValue.values) {
+          var evalArr = _fromFsVal(evalField);
+          if (Array.isArray(evalArr) && evalArr.length) {
             appState.evaluasi = evalArr.sort(function(a,b){ return (a.minggu||0)-(b.minggu||0); });
             console.log('Evaluasi loaded from Firestore:', appState.evaluasi.length, 'entries ✓');
           }
         }
       }
     } else {
-      console.warn('Firestore GET users/', dbUserWA, 'status:', res.status);
+      console.warn('Firestore GET status:', res.status, '— akan coba localStorage');
     }
   } catch(e) {
-    console.warn('Firestore load gagal, fallback ke localStorage:', e);
+    console.warn('Firestore load gagal:', e.message || e, '— fallback ke localStorage');
   }
 
-  // ── Fallback localStorage untuk kalkulator ──
+  // ── STEP 2: Fallback localStorage untuk kalkulator ───────
+  // Diprioritaskan jika Firestore tidak mengembalikan data
   if (!appState.kalkulator) {
-    try {
-      var lsKal = localStorage.getItem('kemoenik_kal_data');
-      if (lsKal) {
-        var p = JSON.parse(lsKal);
-        if (p && p.dietCal) { appState.kalkulator = p; console.log('Kalkulator from LS ✓'); }
-      }
-    } catch(e){}
+    var kalKeys = ['kemoenik_kal_data'];
+    for (var ki = 0; ki < kalKeys.length; ki++) {
+      try {
+        var raw = localStorage.getItem(kalKeys[ki]);
+        if (raw) {
+          var p = JSON.parse(raw);
+          if (p && (p.dietCal || p.kaloriHarian)) {
+            // Normalize field names
+            if (!p.dietCal && p.kaloriHarian) p.dietCal = p.kaloriHarian;
+            if (!p.target && p.targetBB) p.target = p.targetBB;
+            if (!p.startDate && p.tanggalMulai) p.startDate = p.tanggalMulai;
+            appState.kalkulator = p;
+            console.log('Kalkulator from localStorage (' + kalKeys[ki] + ') ✓');
+            break;
+          }
+        }
+      } catch(e){}
+    }
   }
 
-  // ── Fallback localStorage untuk quiz ──
+  // ── STEP 3: Fallback localStorage untuk quiz ─────────────
   if (!appState.quiz) {
-    try {
-      var lsQ = localStorage.getItem('kemoenik_quiz_data');
-      if (lsQ) {
-        var p = JSON.parse(lsQ);
-        if (p && p.tipe) { appState.quiz = p; console.log('Quiz from LS ✓'); }
-      }
-    } catch(e){}
+    var quizKeys = ['kemoenik_quiz', 'kemoenik_quiz_data'];
+    for (var qi = 0; qi < quizKeys.length; qi++) {
+      try {
+        var raw = localStorage.getItem(quizKeys[qi]);
+        if (raw) {
+          var p = JSON.parse(raw);
+          if (p && p.tipe) {
+            appState.quiz = p;
+            console.log('Quiz from localStorage (' + quizKeys[qi] + ') ✓');
+            break;
+          }
+        }
+      } catch(e){}
+    }
   }
 
-  // Set nama dari kalkulator
+  // ── Nama user dari kalkulator ─────────────────────────────
   if (appState.kalkulator && appState.kalkulator.nama) {
     appState.user.nama = appState.kalkulator.nama;
   }
@@ -2226,7 +2259,13 @@ window.addEventListener('load', async function() {
   document.getElementById('loadingScreen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
 
+  // renderAll termasuk renderHomeJadwal di dalamnya
   renderAll();
+
+  // Panggil ulang renderHomeJadwal setelah DOM visible untuk pastikan jadwal muncul
+  setTimeout(function() {
+    renderHomeJadwal();
+  }, 150);
 });
 
 
@@ -2844,7 +2883,12 @@ async function simpanKalkulator(btnEl) {
   appState.kalkulator = data;
   appState.user.nama = data.nama;
 
-  // Simpan ke localStorage primary (tidak bisa gagal) + Firebase secondary
+  // Simpan ke localStorage DULU (tidak bisa gagal) sebelum Firebase
+  try {
+    localStorage.setItem('kemoenik_kal_data', JSON.stringify(data));
+  } catch(e) {}
+
+  // Lalu sync ke Firebase (best-effort)
   await fbSaveKalkulator(data);
 
   // Reset form
@@ -3065,7 +3109,13 @@ function renderJadwalOlahraga() {
 
 function renderHomeJadwal() {
   var el = document.getElementById('homeJadwalContent');
-  if (!el) return;
+  if (!el) { console.warn('homeJadwalContent not found'); return; }
+  // Guard: targetOlahragaData harus sudah ada
+  if (!targetOlahragaData || !targetOlahragaData.standar) {
+    console.warn('targetOlahragaData belum ready, retry...');
+    setTimeout(renderHomeJadwal, 200);
+    return;
+  }
   try {
     var metode = (appState.quiz && appState.quiz.metode) ? appState.quiz.metode : 'standar';
     var jadwal = targetOlahragaData[metode] || targetOlahragaData['standar'];
@@ -3423,6 +3473,14 @@ async function showResult() {
     savedAt: new Date().toISOString()
   };
   appState.quiz = qData;
+
+  // Simpan ke localStorage DULU untuk reliability
+  try {
+    localStorage.setItem('kemoenik_quiz', JSON.stringify(qData));
+    localStorage.setItem('kemoenik_quiz_data', JSON.stringify(qData));
+  } catch(e) {}
+
+  // Sync ke Firebase
   await fbSaveQuiz(qData);
 
   renderAll();
