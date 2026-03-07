@@ -570,6 +570,28 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
     <div style="width:16px;height:1.5px;background:var(--text2);border-radius:1px;"></div>
     <div style="width:10px;height:1.5px;background:var(--text2);border-radius:1px;"></div>
   </div>
+
+<!-- IN-APP REMINDER -->
+<div id="inAppReminder" style="display:none;position:fixed;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold2),#B8860B);color:white;padding:14px 20px;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:999;max-width:90vw;width:380px;animation:slideDown 0.3s ease;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="font-size:28px;">💊</div>
+    <div style="flex:1;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:2px;" id="reminderTitle">Waktunya KEMOENIK!</div>
+      <div style="font-size:12px;opacity:0.95;line-height:1.4;" id="reminderBody">Minum 3 kapsul sesudah makan</div>
+    </div>
+    <button onclick="dismissReminder()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">✕</button>
+  </div>
+  <div style="margin-top:10px;display:flex;gap:8px;">
+    <button onclick="markReminderDone()" style="flex:1;padding:8px;background:rgba(255,255,255,0.25);border:none;border-radius:8px;color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">✓ Sudah Minum</button>
+    <button onclick="snoozeReminder()" style="flex:1;padding:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">⏰ Tunda 15m</button>
+  </div>
+</div>
+<style>
+@keyframes slideDown {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+</style>
   <div class="tb-logo">KEMO<span>ENIK</span></div>
   <div class="tb-btn" onclick="openBeli()" style="font-size:18px;">🛒</div>
 </div>
@@ -1301,7 +1323,8 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px;">
         <button class="btn-primary" onclick="selesaiQuiz()"><i class="fas fa-rocket"></i> Mulai Program Diet Saya!</button>
-        <button class="btn-outline" onclick="ulangQuiz()">Ulangi Quiz</button>
+        <button class="btn-outline" id="btnResetQuiz" onclick="resetQuizData()" style="display:none;"><i class="fas fa-redo"></i> Reset Quiz</button>
+        <button class="btn-outline" onclick="ulangQuiz()">Ulangi Quiz (Tanpa Simpan)</button>
       </div>
     </div>
   </div>
@@ -1417,9 +1440,14 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
             </select>
           </div>
         </div>
-        <button class="btn-primary" onclick="hitungKalkulator()" id="btnHitung">
-          <i class="fas fa-calculator"></i> Generate Program
-        </button>
+        <div style="display:flex;gap:8px;margin-top:0;">
+          <button class="btn-primary" onclick="hitungKalkulator()" id="btnHitung" style="flex:1;">
+            <i class="fas fa-calculator"></i> Generate Program
+          </button>
+          <button class="btn-outline" id="btnResetKal" onclick="resetKalkulator()" style="display:none;">
+            <i class="fas fa-redo"></i> Reset
+          </button>
+        </div>
       </div>
 
       <!-- Hasil Kalkulator -->
@@ -1888,328 +1916,199 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
   </div>
 </div>
 
-<script>
-// ============================================================
-// FIREBASE CONFIG — REST API ke struktur users/{userId}
-// ============================================================
-var firebaseConfig = {
-  apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
-  projectId: "project-panduan-dani"
-};
-var _FSBASE = 'https://firestore.googleapis.com/v1/projects/project-panduan-dani/databases/(default)/documents/users/';
+<!--
+ * KEMOENIK APP v2.0
+ * Firebase Modular SDK v9 Implementation
+ * Features: Voucher-based access, One-time Kalkulator/Quiz, Reset functionality
+ * Data Structure: Simplified (kalkulator essentials + quiz result only)
+-->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    serverTimestamp,
+    onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-var dbUserWA = '';
-var dbUserVoucher = '';
+  const firebaseConfig = {
+    apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
+    authDomain: "project-panduan-dani.firebaseapp.com",
+    projectId: "project-panduan-dani",
+    storageBucket: "project-panduan-dani.firebasestorage.app",
+    messagingSenderId: "113559517545",
+    appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Expose ke global untuk fungsi non-module
+  window.fbApp = app;
+  window.fbDb = db;
+  window.fbDoc = doc;
+  window.fbGetDoc = getDoc;
+  window.fbSetDoc = setDoc;
+  window.fbUpdateDoc = updateDoc;
+  window.fbServerTimestamp = serverTimestamp;
+  window.fbOnSnapshot = onSnapshot;
+</script>
+
+<script>
+/*
+ * KEMOENIK APP v2.0
+ * Firebase Modular SDK v9 Implementation
+ * Features: Voucher-based access, One-time Kalkulator/Quiz, Reset functionality
+ * Data Structure: Simplified (kalkulator essentials + quiz result only)
+ */
+
 var APP_URL = 'https://kemoenikofficial.github.io/aktivitas/';
 
-// Helper: URL dokumen users/{wa}
-function _userDocUrl() {
-  return _FSBASE + dbUserWA + '?key=' + firebaseConfig.apiKey;
-}
-function _userDocPatchUrl(fields) {
-  var mask = fields.map(function(f){ return 'updateMask.fieldPaths=' + f; }).join('&');
-  return _FSBASE + dbUserWA + '?' + mask + '&key=' + firebaseConfig.apiKey;
-}
+// ============================================================
+// DATA SERVICE — Centralized Firebase operations
+// ============================================================
+const DataService = {
+  userRef(wa) {
+    return window.fbDoc(window.fbDb, "users", wa);
+  },
 
-// Konversi JS object ke Firestore map value
-function _toFsMap(obj) {
-  var fields = {};
-  Object.keys(obj).forEach(function(k) {
-    var v = obj[k];
-    if (v === null || v === undefined) fields[k] = {nullValue: null};
-    else if (typeof v === 'string') fields[k] = {stringValue: v};
-    else if (typeof v === 'number') fields[k] = {doubleValue: v};
-    else if (typeof v === 'boolean') fields[k] = {booleanValue: v};
-    else if (typeof v === 'object') fields[k] = {mapValue: {fields: _toFsMap(v)}};
-    else fields[k] = {stringValue: String(v)};
-  });
-  return fields;
-}
-
-// Konversi Firestore value ke JS
-function _fromFsVal(v) {
-  if (!v) return null;
-  if (v.stringValue !== undefined) return v.stringValue;
-  if (v.doubleValue !== undefined) return v.doubleValue;
-  if (v.integerValue !== undefined) return parseInt(v.integerValue);
-  if (v.booleanValue !== undefined) return v.booleanValue;
-  if (v.nullValue !== undefined) return null;
-  if (v.mapValue) {
-    var obj = {};
-    if (v.mapValue.fields) {
-      Object.keys(v.mapValue.fields).forEach(function(k) {
-        obj[k] = _fromFsVal(v.mapValue.fields[k]);
-      });
-    }
-    return obj;
-  }
-  if (v.arrayValue) {
-    if (!v.arrayValue.values) return [];
-    return v.arrayValue.values.map(_fromFsVal);
-  }
-  return null;
-}
-
-// ── SAVE KALKULATOR → field menuHarian ──────────────────────
-async function fbSaveKalkulator(data) {
-  // localStorage PRIMARY (selalu berhasil, tidak pernah gagal)
-  try { localStorage.setItem('kemoenik_kal_data', JSON.stringify(data)); } catch(e){}
-
-  // Firestore REST: PATCH document users/{wa} dengan field menuHarian
-  try {
-    var menuHarian = {
-      kaloriHarian: data.dietCal || 0,
-      dietCal:      data.dietCal || 0,
-      targetMinggu: data.targetMinggu || 0,
-      targetBB:     data.target || 0,
-      target:       data.target || 0,          // duplikat untuk kompatibilitas
-      tanggalMulai: data.startDate || '',
-      startDate:    data.startDate || '',       // duplikat
-      startDateISO: data.startDateISO || '',    // ISO format untuk parsing reliable
-      estTanggal:   data.estTanggal || '',
-      estLingkar:   data.estLingkar || 0,
-      bmr:          data.bmr || 0,
-      tdee:         data.tdee || 0,
-      defisit:      data.defisit || 0,
-      metode:       data.metode || 'standar',
-      nama:         data.nama || '',
-      gender:       data.gender || 'perempuan',
-      usia:         data.usia || 0,
-      berat:        data.berat || 0,
-      tinggi:       data.tinggi || 0,
-      aktivitas:    data.aktivitas || 1.375,
-      savedAt:      new Date().toISOString(),
-      version:      '2.0'
-    };
-    // PATCH dengan updateMask.fieldPaths=menuHarian agar field lain tidak tersentuh
-    var url = _FSBASE + dbUserWA + '?updateMask.fieldPaths=menuHarian&key=' + firebaseConfig.apiKey;
-    var body = { fields: { menuHarian: { mapValue: { fields: _toFsMap(menuHarian) } } } };
-    var res = await fetch(url, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
-    if (res.ok) {
-      console.log('Kalkulator → menuHarian saved to Firestore ✓');
-    } else {
-      var err = await res.text();
-      console.warn('Firestore menuHarian PATCH err:', res.status, err);
-    }
-  } catch(e) { console.warn('Firestore kalkulator non-critical:', e); }
-}
-
-// ── SAVE QUIZ → field metabolism ─────────────────────────────
-async function fbSaveQuiz(data) {
-  // localStorage PRIMARY — simpan ke DUA key untuk reliability
-  try {
-    localStorage.setItem('kemoenik_quiz', JSON.stringify(data));      // key utama
-    localStorage.setItem('kemoenik_quiz_data', JSON.stringify(data)); // backward compat
-  } catch(e){}
-
-  // Firestore REST: PATCH document users/{wa} dengan field metabolism
-  try {
-    var metabolism = {
-      tipeMetabolisme: data.tipe || '',
-      tipeName: data.tipeName || '',
-      metodeDiet: data.metode || 'standar',
-      metodeName: data.metodeName || '',
-      skor: data.skor || 0,
-      tagline: data.tagline || '',
-      emoji: data.tipe_emoji || '',
-      nama: data.nama || '',
-      savedAt: new Date().toISOString()
-    };
-    var url = _FSBASE + dbUserWA + '?updateMask.fieldPaths=metabolism&key=' + firebaseConfig.apiKey;
-    var body = { fields: { metabolism: { mapValue: { fields: _toFsMap(metabolism) } } } };
-    var res = await fetch(url, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
-    if (res.ok) {
-      console.log('Quiz → metabolism saved to Firestore ✓');
-    } else {
-      var err = await res.text();
-      console.warn('Firestore metabolism PATCH err:', res.status, err);
-    }
-  } catch(e) { console.warn('Firestore quiz non-critical:', e); }
-}
-
-// ── SAVE EVALUASI → field evaluasi (array) ───────────────────
-async function fbSaveEvaluasi(minggu, evalData) {
-  try { localStorage.setItem('kdb_eval_minggu' + minggu, JSON.stringify(evalData)); } catch(e){}
-  try {
-    // Update array evaluasi di appState lalu PATCH ke Firestore
-    var allEval = appState.evaluasi ? appState.evaluasi.slice() : [];
-    var idx = allEval.findIndex(function(e){ return e.minggu == minggu; });
-    if (idx >= 0) allEval[idx] = evalData; else allEval.push(evalData);
-    // Simpan sebagai array di field evaluasi
-    var evalItems = allEval.map(function(e) {
-      return { mapValue: { fields: _toFsMap(e) } };
-    });
-    var url = _FSBASE + dbUserWA + '?updateMask.fieldPaths=evaluasi&key=' + firebaseConfig.apiKey;
-    var body = { fields: { evaluasi: { arrayValue: { values: evalItems } } } };
-    var res = await fetch(url, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
-    if (res.ok) {
-      console.log('Evaluasi saved to Firestore ✓');
-    } else {
-      console.warn('Firestore evaluasi PATCH err:', res.status);
-    }
-  } catch(e) { console.warn('Firestore evaluasi non-critical:', e); }
-}
-
-// ── LOAD ALL DATA dari Firestore ─────────────────────────────
-async function loadAllData() {
-  // ── STEP 1: Coba load dari Firestore users/{wa} ──────────
-  try {
-    var url = _FSBASE + dbUserWA + '?key=' + firebaseConfig.apiKey;
-    var res = await fetch(url);
-    if (res.ok) {
-      var d = await res.json();
-      if (d && d.fields) {
-        console.log('Firestore doc fields:', Object.keys(d.fields));
-
-        // Load menuHarian → kalkulator
-        // Handle: bisa mapValue (ada data) atau nullValue (null di Firestore)
-        var mhField = d.fields.menuHarian;
-        if (mhField && mhField.mapValue && mhField.mapValue.fields) {
-          var mh = _fromFsVal(mhField);
-          var kal_dietCal = mh.dietCal || mh.kaloriHarian || 0;
-          if (kal_dietCal > 0) {
-            state.set('kalkulator', {
-              dietCal:      kal_dietCal,
-              targetMinggu: mh.targetMinggu || 0,
-              target:       mh.target || mh.targetBB || 0,
-              // startDate: ambil ISO dulu, fallback ke display string
-              startDate:    mh.startDateISO || mh.startDate || mh.tanggalMulai || '',
-              startDateISO: mh.startDateISO || '',
-              estTanggal:   mh.estTanggal || '',
-              estLingkar:   mh.estLingkar || 0,
-              bmr:          mh.bmr || 0,
-              tdee:         mh.tdee || 0,
-              defisit:      mh.defisit || 0,
-              metode:       mh.metode || 'standar',
-              nama:         mh.nama || '',
-              gender:       mh.gender || 'perempuan',
-              usia:         mh.usia || 0,
-              berat:        mh.berat || 0,
-              tinggi:       mh.tinggi || 0,
-              aktivitas:    mh.aktivitas || 1.375
-            });
-            // Cache ke localStorage agar tersedia offline
-            try {
-              localStorage.setItem('kemoenik_kal_data', JSON.stringify(appState.kalkulator));
-              localStorage.setItem('kemoenik_quiz_data_v2', JSON.stringify(appState.kalkulator));
-            } catch(e){}
-            console.log('Kalkulator loaded from Firestore menuHarian ✓', kal_dietCal, 'kkal');
-          }
-        }
-
-        // Load metabolism → quiz
-        var metField = d.fields.metabolism;
-        if (metField && metField.mapValue && metField.mapValue.fields) {
-          var m = _fromFsVal(metField);
-          if (m && m.tipeMetabolisme) {
-            state.set('quiz', {
-              tipe:       m.tipeMetabolisme || '',
-              tipeName:   m.tipeName || '',
-              metode:     m.metodeDiet || 'standar',
-              metodeName: m.metodeName || '',
-              skor:       m.skor || 0,
-              tagline:    m.tagline || '',
-              tipe_emoji: m.emoji || '',
-              nama:       m.nama || ''
-            });
-            // Cache ke localStorage (multi-key untuk kompatibilitas)
-            try {
-              localStorage.setItem('kemoenik_quiz', JSON.stringify(appState.quiz));
-              localStorage.setItem('kemoenik_quiz_data', JSON.stringify(appState.quiz));
-            } catch(e){}
-            console.log('Quiz loaded from Firestore metabolism ✓', m.tipeMetabolisme);
-          }
-        }
-
-        // Load evaluasi
-        var evalField = d.fields.evaluasi;
-        if (evalField && evalField.arrayValue && evalField.arrayValue.values) {
-          var evalArr = _fromFsVal(evalField);
-          if (Array.isArray(evalArr) && evalArr.length) {
-            state.set('evaluasi', evalArr.sort(function(a,b){ return (a.minggu||0)-(b.minggu||0); }));
-            console.log('Evaluasi loaded from Firestore:', appState.evaluasi.length, 'entries ✓');
-          }
-        }
+  async loadUserData(wa) {
+    try {
+      const snap = await window.fbGetDoc(this.userRef(wa));
+      if (snap.exists()) {
+        return snap.data();
       }
-    } else {
-      console.warn('Firestore GET status:', res.status, '— akan coba localStorage');
+      return null;
+    } catch (e) {
+      console.error("DataService.loadUserData error:", e);
+      return null;
     }
-  } catch(e) {
-    console.warn('Firestore load gagal:', e.message || e, '— fallback ke localStorage');
-  }
+  },
 
-  // ── STEP 2: Fallback localStorage untuk kalkulator ───────
-  // Diprioritaskan jika Firestore tidak mengembalikan data
-  if (!appState.kalkulator) {
-    var kalKeys = ['kemoenik_kal_data'];
-    for (var ki = 0; ki < kalKeys.length; ki++) {
-      try {
-        var raw = localStorage.getItem(kalKeys[ki]);
-        if (raw) {
-          var p = JSON.parse(raw);
-          if (p && (p.dietCal || p.kaloriHarian)) {
-            // Normalize field names (backward compat)
-            if (!p.dietCal && p.kaloriHarian) p.dietCal = p.kaloriHarian;
-            if (!p.target && p.targetBB) p.target = p.targetBB;
-            if (!p.startDate && p.tanggalMulai) p.startDate = p.tanggalMulai;
-            if (!p.startDateISO) p.startDateISO = '';
-            state.set('kalkulator', p);
-            console.log('Kalkulator from localStorage (' + kalKeys[ki] + ') ✓');
-            break;
-          }
-        }
-      } catch(e){}
+  async saveKalkulator(wa, data) {
+    try {
+      const existing = await this.loadUserData(wa);
+      if (existing && existing.kalkulator && existing.kalkulator.dietCal > 0) {
+        console.log("Kalkulator already exists, skipping save");
+        return { success: false, reason: "exists" };
+      }
+
+      const payload = {
+        kalkulator: {
+          ...data,
+          savedAt: window.fbServerTimestamp(),
+          version: "2.0"
+        },
+        updatedAt: window.fbServerTimestamp()
+      };
+
+      await window.fbSetDoc(this.userRef(wa), payload, { merge: true });
+      return { success: true };
+    } catch (e) {
+      console.error("DataService.saveKalkulator error:", e);
+      return { success: false, reason: "error", error: e };
+    }
+  },
+
+  async saveQuiz(wa, data) {
+    try {
+      const existing = await this.loadUserData(wa);
+      if (existing && existing.quiz && existing.quiz.tipe) {
+        console.log("Quiz already exists, skipping save");
+        return { success: false, reason: "exists" };
+      }
+
+      const payload = {
+        quiz: {
+          tipe: data.tipe,
+          tipeName: data.tipeName,
+          metode: data.metode,
+          metodeName: data.metodeName,
+          skor: data.skor,
+          tagline: data.tagline,
+          tipe_emoji: data.tipe_emoji,
+          savedAt: window.fbServerTimestamp()
+        },
+        updatedAt: window.fbServerTimestamp()
+      };
+
+      await window.fbSetDoc(this.userRef(wa), payload, { merge: true });
+      return { success: true };
+    } catch (e) {
+      console.error("DataService.saveQuiz error:", e);
+      return { success: false, reason: "error", error: e };
+    }
+  },
+
+  async saveEvaluasi(wa, evalData) {
+    try {
+      const userData = await this.loadUserData(wa) || {};
+      const evaluasi = userData.evaluasi || [];
+
+      const idx = evaluasi.findIndex(e => e.minggu === evalData.minggu);
+      if (idx >= 0) {
+        evaluasi[idx] = { ...evalData, updatedAt: new Date().toISOString() };
+      } else {
+        evaluasi.push({ ...evalData, savedAt: new Date().toISOString() });
+      }
+
+      await window.fbSetDoc(this.userRef(wa), {
+        evaluasi: evaluasi,
+        updatedAt: window.fbServerTimestamp()
+      }, { merge: true });
+
+      return { success: true };
+    } catch (e) {
+      console.error("DataService.saveEvaluasi error:", e);
+      return { success: false };
+    }
+  },
+
+  async saveProfile(wa, profile) {
+    try {
+      await window.fbSetDoc(this.userRef(wa), {
+        profile: {
+          ...profile,
+          lastLogin: window.fbServerTimestamp()
+        },
+        updatedAt: window.fbServerTimestamp()
+      }, { merge: true });
+      return { success: true };
+    } catch (e) {
+      console.error("DataService.saveProfile error:", e);
+      return { success: false };
+    }
+  },
+
+  async resetProgram(wa) {
+    try {
+      const userData = await this.loadUserData(wa) || {};
+      const profile = userData.profile || {};
+
+      await window.fbSetDoc(this.userRef(wa), {
+        profile: profile,
+        kalkulator: null,
+        quiz: null,
+        evaluasi: [],
+        missions: null,
+        consumption: null,
+        menuHarian: null,
+        resetAt: window.fbServerTimestamp(),
+        updatedAt: window.fbServerTimestamp()
+      });
+
+      return { success: true };
+    } catch (e) {
+      console.error("DataService.resetProgram error:", e);
+      return { success: false };
     }
   }
+};
 
-  // ── STEP 3: Fallback localStorage untuk quiz ─────────────
-  if (!appState.quiz) {
-    var quizKeys = ['kemoenik_quiz', 'kemoenik_quiz_data'];
-    for (var qi = 0; qi < quizKeys.length; qi++) {
-      try {
-        var raw = localStorage.getItem(quizKeys[qi]);
-        if (raw) {
-          var p = JSON.parse(raw);
-          if (p && p.tipe) {
-            state.set('quiz', p);
-            console.log('Quiz from localStorage (' + quizKeys[qi] + ') ✓');
-            break;
-          }
-        }
-      } catch(e){}
-    }
-  }
-
-  // ── Nama user dari kalkulator ─────────────────────────────
-  if (appState.kalkulator && appState.kalkulator.nama) {
-    state.set('user.nama', appState.kalkulator.nama);
-    appState.user.nama = appState.kalkulator.nama;
-  }
-
-  // Persist state setelah load untuk offline access
-  state._persist();
-}
-
-// ── LEGACY stubs (masih dipakai beberapa tempat) ─────────────
-async function fbSet(path, data) {
-  try {
-    if (path.indexOf('kalkulator') !== -1) { await fbSaveKalkulator(data); }
-    else if (path.indexOf('quiz') !== -1)  { await fbSaveQuiz(data); }
-    else if (path.indexOf('evaluasi') !== -1) {
-      var m = path.split('minggu').pop();
-      await fbSaveEvaluasi(m, data);
-    } else {
-      try { localStorage.setItem('kdb_' + path.replace(/\//g,'_'), JSON.stringify(data)); } catch(e){}
-    }
-  } catch(e) { console.warn('fbSet error:', e); }
-}
-async function fbGet(path) {
-  try { var ls = localStorage.getItem('kdb_' + path.replace(/\//g,'_')); if (ls) return JSON.parse(ls); } catch(e){}
-  return null;
-}
-async function fbGetCollection(path) {
-  try { return appState.evaluasi || []; } catch(e) { return []; }
-}
+window.DataService = DataService;
 
 // ============================================================
 // STATE MANAGER — persistent, safe state management
@@ -2302,60 +2201,195 @@ function getQueryParam(key) {
 // ============================================================
 // INIT — DOMContentLoaded untuk pastikan DOM siap sebelum akses element
 // ============================================================
+function normalizeWA(wa) {
+  wa = wa.replace(/\D/g, '');
+  if (wa.startsWith('08')) return '62' + wa.substring(1);
+  if (wa.startsWith('+62')) return wa.substring(1);
+  if (wa.startsWith('62')) return wa;
+  if (wa.startsWith('0')) return '62' + wa.substring(1);
+  return wa;
+}
+
+async function checkVoucherValid(wa, voucher) {
+  try {
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec';
+    const response = await fetch(
+      `${APPS_SCRIPT_URL}?action=verify&kode=${encodeURIComponent(voucher)}&wa=${encodeURIComponent(wa)}&_=${Date.now()}`
+    );
+    const data = await response.json();
+    if (data.status === "SUCCESS" || data.status === "ACTIVE_SAME_WA") {
+      return { valid: true, expiredDate: data.tanggal_expired };
+    } else if (data.status === "EXPIRED") {
+      return { valid: false, message: "Voucher sudah expired. Silakan gunakan voucher baru." };
+    } else if (data.status === "ACTIVE_DIFFERENT_WA") {
+      return { valid: false, message: "Voucher ini digunakan nomor WA lain." };
+    } else {
+      return { valid: false, message: "Voucher tidak valid." };
+    }
+  } catch(e) {
+    console.error("checkVoucherValid error:", e);
+    return { valid: true, fallback: true };
+  }
+}
+
+function showVoucherExpiredBlock(message) {
+  document.getElementById('loadingScreen').style.display = 'none';
+  var blockHTML = `
+    <div style="position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;z-index:9999;text-align:center;">
+      <div style="font-size:64px;margin-bottom:20px;">🔒</div>
+      <div style="font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--green2);margin-bottom:12px;">Voucher Expired</div>
+      <div style="font-size:14px;color:var(--text3);line-height:1.7;max-width:320px;margin-bottom:30px;">
+        ${message}<br><br>
+        Silakan verifikasi voucher baru di halaman aktivitas untuk melanjutkan program diet Anda.
+      </div>
+      <button onclick="goToAktivitas()" style="padding:16px 32px;background:linear-gradient(135deg,var(--green),var(--green2));color:#FFF;border:none;border-radius:var(--r-lg);font-family:var(--font-body);font-size:15px;font-weight:700;cursor:pointer;">
+        Verifikasi Voucher Baru
+      </button>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', blockHTML);
+}
+
 async function initApp() {
   try {
-  // Cek akses dari URL params atau localStorage
-  var wa = getQueryParam('wa') || localStorage.getItem('kemoenik_wa') || '';
-  var voucher = getQueryParam('voucher') || localStorage.getItem('kemoenik_voucher') || '';
+    var wa = getQueryParam('wa') || localStorage.getItem('kemoenik_wa') || '';
+    var voucher = getQueryParam('voucher') || localStorage.getItem('kemoenik_voucher') || '';
+    var mode = getQueryParam('mode') || 'continue';
 
-  // Cek format lama dari aktivitas_1
-  if (!wa) wa = localStorage.getItem('kemoenik_temp_wa') || '';
-  if (!voucher) voucher = localStorage.getItem('kemoenik_temp_voucher') || '';
+    if (!wa) wa = localStorage.getItem('kemoenik_temp_wa') || '';
+    if (!voucher) voucher = localStorage.getItem('kemoenik_temp_voucher') || '';
 
-  if (!wa || !voucher) {
-    document.getElementById('accessScreen').style.display = 'flex';
-    return;
-  }
+    if (!wa || !voucher) {
+      document.getElementById('accessScreen').style.display = 'flex';
+      return;
+    }
 
-  // Punya akses — simpan ke localStorage
-  localStorage.setItem('kemoenik_wa', wa);
-  localStorage.setItem('kemoenik_voucher', voucher);
-  dbUserWA = wa.replace(/[^a-zA-Z0-9]/g,'_');
-  dbUserVoucher = voucher;
+    var normalizedWA = normalizeWA(wa);
 
-  document.getElementById('accessScreen').style.display = 'none';
-  document.getElementById('loadingScreen').style.display = 'flex';
+    localStorage.setItem('kemoenik_wa', normalizedWA);
+    localStorage.setItem('kemoenik_voucher', voucher);
+    localStorage.setItem('kemoenik_mode', mode);
 
-  try {
-    await loadAllData();
-  } catch(e) {
-    console.warn('loadAllData failed during init:', e);
-    showToast('Data lokal digunakan — koneksi bermasalah');
-  }
+    document.getElementById('accessScreen').style.display = 'none';
+    document.getElementById('loadingScreen').style.display = 'flex';
 
-  document.getElementById('loadingScreen').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
+    // Cek voucher via Apps Script
+    var isValid = await checkVoucherValid(normalizedWA, voucher);
+    if (!isValid.valid) {
+      showVoucherExpiredBlock(isValid.message);
+      return;
+    }
 
-  renderAll();
+    // Load data dari Firebase
+    var userData = await DataService.loadUserData(normalizedWA);
 
-  // Render jadwal ulang setelah DOM visible
-  setTimeout(renderHomeJadwal, 150);
+    // Handle mode "new" — reset program, keep profile
+    if (mode === 'new' && userData) {
+      await DataService.resetProgram(normalizedWA);
+      userData = { profile: userData.profile };
+    }
 
-  // Handle resume dari quiz: jika baru selesai quiz, force render profil
-  if (localStorage.getItem('kemoenik_just_finished_quiz') === 'true') {
-    localStorage.removeItem('kemoenik_just_finished_quiz');
-    setTimeout(function() {
-      renderProfilPage();
-      // Auto-expand accordion profil
-      ['acc-trait','acc-karakter','acc-skor'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.classList.add('on');
-      });
-    }, 200);
-  }
+    // Sync ke appState
+    if (userData) {
+      if (userData.kalkulator) {
+        state.set('kalkulator', {
+          dietCal: userData.kalkulator.dietCal,
+          targetMinggu: userData.kalkulator.targetMinggu,
+          target: userData.kalkulator.target,
+          estTanggal: userData.kalkulator.estTanggal,
+          estLingkar: userData.kalkulator.estLingkar,
+          nama: userData.kalkulator.nama || userData.profile?.nama || '',
+          bmr: userData.kalkulator.bmr,
+          tdee: userData.kalkulator.tdee,
+          defisit: userData.kalkulator.defisit,
+          metode: userData.kalkulator.metode,
+          startDate: userData.kalkulator.startDate,
+          startDateISO: userData.kalkulator.startDateISO
+        });
+      }
+
+      if (userData.quiz) {
+        state.set('quiz', {
+          tipe: userData.quiz.tipe,
+          tipeName: userData.quiz.tipeName,
+          metode: userData.quiz.metode,
+          metodeName: userData.quiz.metodeName,
+          skor: userData.quiz.skor,
+          tagline: userData.quiz.tagline,
+          tipe_emoji: userData.quiz.tipe_emoji
+        });
+      }
+
+      if (userData.evaluasi) {
+        state.set('evaluasi', userData.evaluasi);
+      }
+
+      if (userData.profile) {
+        state.set('user.nama', userData.profile.nama);
+        state.set('user.wa', normalizedWA);
+      }
+    }
+
+    // Fallback localStorage untuk kalkulator
+    if (!appState.kalkulator) {
+      try {
+        var raw = localStorage.getItem('kemoenik_kal_data');
+        if (raw) {
+          var p = JSON.parse(raw);
+          if (p && (p.dietCal || p.kaloriHarian)) {
+            if (!p.dietCal && p.kaloriHarian) p.dietCal = p.kaloriHarian;
+            state.set('kalkulator', p);
+          }
+        }
+      } catch(e) {}
+    }
+
+    // Fallback localStorage untuk quiz
+    if (!appState.quiz) {
+      try {
+        var rawQ = localStorage.getItem('kemoenik_quiz');
+        if (rawQ) {
+          var pq = JSON.parse(rawQ);
+          if (pq && pq.tipe) state.set('quiz', pq);
+        }
+      } catch(e) {}
+    }
+
+    if (appState.kalkulator && appState.kalkulator.nama) {
+      state.set('user.nama', appState.kalkulator.nama);
+      appState.user.nama = appState.kalkulator.nama;
+    }
+
+    state._persist();
+
+    // Simpan profile ke Firebase
+    await DataService.saveProfile(normalizedWA, {
+      nama: appState.user.nama || 'User',
+      wa: normalizedWA,
+      voucherAktif: voucher,
+      lastActive: new Date().toISOString()
+    });
+
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+
+    renderAll();
+    setTimeout(renderHomeJadwal, 150);
+
+    if (localStorage.getItem('kemoenik_just_finished_quiz') === 'true') {
+      localStorage.removeItem('kemoenik_just_finished_quiz');
+      setTimeout(function() {
+        renderProfilPage();
+        ['acc-trait','acc-karakter','acc-skor'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.add('on');
+        });
+      }, 200);
+    }
 
   } catch(e) {
     console.error('initApp error:', e);
+    showToast('Gagal memuat aplikasi. Coba refresh halaman.');
   }
 }
 
@@ -3063,45 +3097,96 @@ async function simpanKalkulator(btnEl) {
     return;
   }
 
-  // Loading state - pakai btnEl atau fallback ke getElementById
   if (!btnEl) btnEl = document.getElementById('btnSimpanKal');
   var origHtml = btnEl ? btnEl.innerHTML : '';
   if (btnEl) { btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...'; btnEl.disabled = true; }
 
   try {
-    // Update state
+    var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+    if (!wa) {
+      showToast('Error: WA tidak ditemukan');
+      if (btnEl) { btnEl.innerHTML = origHtml; btnEl.disabled = false; }
+      return;
+    }
+
+    var check = await DataService.saveKalkulator(wa, data);
+
+    if (!check.success && check.reason === "exists") {
+      showToast('Kalkulator sudah pernah diisi. Gunakan tombol Reset untuk mengulang.');
+      if (btnEl) { btnEl.innerHTML = origHtml; btnEl.disabled = false; }
+      return;
+    }
+
+    if (!check.success) {
+      throw new Error("Firebase save failed");
+    }
+
     state.set('kalkulator', data);
     state.set('user.nama', data.nama);
 
-    // Simpan ke localStorage DULU (tidak bisa gagal) sebelum Firebase
     try { localStorage.setItem('kemoenik_kal_data', JSON.stringify(data)); } catch(e) {}
 
-    // Sync ke Firebase (best-effort, error tidak stop flow)
-    await fbSaveKalkulator(data);
-
-    // Reset form
     window._tempKalData = null;
-    document.getElementById('hasilKalkulator').style.display = 'none';
-    document.getElementById('kalkulatorForm').style.display = 'block';
-    if (btnEl) { btnEl.innerHTML = origHtml || '<i class="fas fa-save"></i> Simpan & Mulai Program'; btnEl.disabled = false; }
 
-    // Backup ke kemoenik_kal_backup juga
-    try { localStorage.setItem('kemoenik_kal_backup', JSON.stringify(data)); } catch(e) {}
+    if (btnEl) {
+      btnEl.innerHTML = '<i class="fas fa-check"></i> Tersimpan!';
+      setTimeout(() => { btnEl.innerHTML = origHtml; btnEl.disabled = false; }, 1500);
+    }
 
-    // Close panel + navigate
+    updateResetButtonVisibility();
     closePanel('panelKalkulator');
     go('home');
     setTimeout(function() {
-      renderAll();          // render semua termasuk renderHomeStats
-      renderHomeStats();    // explicit call untuk pastikan home stats terupdate
+      renderAll();
+      renderHomeStats();
       loadMisiChecked();
       showToast('✅ Program tersimpan! Semangat ' + data.nama.split(' ')[0] + '! 💪');
     }, 80);
     gtag('event', 'kalkulator_saved', { nama: data.nama });
+
   } catch(e) {
     console.error('simpanKalkulator error:', e);
-    showToast('Gagal menyimpan program, coba lagi');
-    if (btnEl) { btnEl.innerHTML = origHtml || '<i class="fas fa-save"></i> Simpan & Mulai Program'; btnEl.disabled = false; }
+    showToast('Gagal menyimpan, coba lagi');
+    if (btnEl) { btnEl.innerHTML = origHtml; btnEl.disabled = false; }
+  }
+}
+
+function updateResetButtonVisibility() {
+  var hasData = appState.kalkulator && appState.kalkulator.dietCal > 0;
+  var btnReset = document.getElementById('btnResetKal');
+  if (btnReset) {
+    btnReset.style.display = hasData ? 'block' : 'none';
+  }
+}
+
+async function resetKalkulator() {
+  if (!confirm('Yakin reset kalkulator? Data akan dihapus dan bisa isi ulang.')) return;
+
+  var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+  if (!wa) return;
+
+  try {
+    await window.fbSetDoc(DataService.userRef(wa), {
+      kalkulator: null,
+      updatedAt: window.fbServerTimestamp()
+    }, { merge: true });
+
+    state.set('kalkulator', null);
+    localStorage.removeItem('kemoenik_kal_data');
+
+    document.getElementById('hasilKalkulator').style.display = 'none';
+    document.getElementById('kalkulatorForm').style.display = 'block';
+    document.getElementById('inputNama').value = '';
+    document.getElementById('inputUsia').value = '';
+    document.getElementById('inputBerat').value = '';
+    document.getElementById('inputTinggi').value = '';
+    document.getElementById('inputTarget').value = '';
+
+    showToast('✅ Kalkulator direset. Silakan isi ulang.');
+    updateResetButtonVisibility();
+  } catch(e) {
+    console.error('resetKalkulator error:', e);
+    showToast('Gagal reset, coba lagi');
   }
 }
 
@@ -3128,6 +3213,8 @@ function loadKalkulatorForm() {
       metodeEl.title = 'Otomatis dari hasil kuis: ' + q.metodeName;
     }
   }
+  updateResetButtonVisibility();
+  updateQuizResetButtonVisibility();
 }
 
 // ============================================================
@@ -3188,8 +3275,11 @@ async function saveWeeklyEval() {
     }
     state._persist(); // sync state after mutation
 
-    // Simpan ke Firebase (best-effort)
-    await fbSaveEvaluasi(minggu, evalData);
+    // Simpan ke Firebase via DataService
+    var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+    if (wa) {
+      await DataService.saveEvaluasi(wa, evalData);
+    }
 
     // Reset form
     document.getElementById('weekStartWeight').value = '';
@@ -3669,23 +3759,24 @@ async function showResult() {
   progHtml += '</div>';
   setSafeHTML(document.getElementById('quizProgramContent'), progHtml);
 
-  // Simpan ke Firebase
+  // Simpan ke Firebase via DataService
   var qData = {
     tipe: finalResult.id, tipeName: finalResult.name, metode: finalResult.metode,
     metodeName: finalResult.metodeName, tagline: finalResult.tagline,
-    skor: finalResult.skor, tipe_emoji: finalResult.emoji, nama: appState.user.nama || '',
-    savedAt: new Date().toISOString()
+    skor: finalResult.skor, tipe_emoji: finalResult.emoji
   };
   state.set('quiz', qData);
 
-  // Simpan ke localStorage DULU untuk reliability
+  // Cache ke localStorage
   try {
     localStorage.setItem('kemoenik_quiz', JSON.stringify(qData));
-    localStorage.setItem('kemoenik_quiz_data', JSON.stringify(qData));
   } catch(e) {}
 
-  // Sync ke Firebase
-  await fbSaveQuiz(qData);
+  // Simpan ke Firebase
+  var waForQuiz = appState.user.wa || localStorage.getItem('kemoenik_wa');
+  if (waForQuiz) {
+    await DataService.saveQuiz(waForQuiz, qData);
+  }
 
   renderAll();
   gtag('event', 'quiz_completed', { tipe: finalResult.name });
@@ -3697,19 +3788,93 @@ async function showResult() {
 
 async function selesaiQuiz() {
   try {
-    // Persist state eksplisit sebelum navigasi
+    if (!finalResult) {
+      showToast('Error: Hasil kuis tidak ditemukan');
+      return;
+    }
+
+    var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+    if (!wa) {
+      showToast('Error: WA tidak ditemukan');
+      return;
+    }
+
+    var qData = {
+      tipe: finalResult.id,
+      tipeName: finalResult.name,
+      metode: finalResult.metode,
+      metodeName: finalResult.metodeName,
+      tagline: finalResult.tagline,
+      skor: finalResult.skor,
+      tipe_emoji: finalResult.emoji
+    };
+
+    var check = await DataService.saveQuiz(wa, qData);
+    if (!check.success && check.reason === "exists") {
+      showToast('Kuis sudah pernah diisi. Gunakan tombol Reset Quiz untuk mengulang.');
+      return;
+    }
+    if (!check.success) {
+      throw new Error("Firebase save failed");
+    }
+
+    state.set('quiz', qData);
+    try { localStorage.setItem('kemoenik_quiz', JSON.stringify(qData)); } catch(e) {}
     state._persist();
-    localStorage.setItem('kemoenik_just_finished_quiz', 'true');
-    // Beri waktu Firebase selesai (fbSaveQuiz async di showResult)
-    await new Promise(function(r){ setTimeout(r, 120); });
-    go('home');
+
+    updateQuizResetButtonVisibility();
+
+    await new Promise(r => setTimeout(r, 100));
+    go('profil');
     setTimeout(function() {
       renderAll();
-      showToast('✅ Profil metabolisme tersimpan! Lihat di menu Profil');
+      renderProfilPage();
+      ['acc-trait','acc-karakter','acc-skor'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.add('on');
+      });
+      showToast('✅ Profil metabolisme tersimpan!');
     }, 150);
+
   } catch(e) {
     console.error('selesaiQuiz error:', e);
-    go('home');
+    showToast('Gagal menyimpan hasil kuis');
+  }
+}
+
+function updateQuizResetButtonVisibility() {
+  var hasData = appState.quiz && appState.quiz.tipe;
+  var btnReset = document.getElementById('btnResetQuiz');
+  if (btnReset) {
+    btnReset.style.display = hasData ? 'block' : 'none';
+  }
+}
+
+async function resetQuizData() {
+  if (!confirm('Yakin reset hasil kuis? Data akan dihapus dan bisa isi ulang.')) return;
+
+  var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+  if (!wa) return;
+
+  try {
+    await window.fbSetDoc(DataService.userRef(wa), {
+      quiz: null,
+      updatedAt: window.fbServerTimestamp()
+    }, { merge: true });
+
+    state.set('quiz', null);
+    localStorage.removeItem('kemoenik_quiz');
+
+    showToast('✅ Quiz direset. Silakan isi ulang.');
+
+    document.getElementById('quizIntro').style.display = 'block';
+    document.getElementById('quizRunning').style.display = 'none';
+    document.getElementById('quizResult').style.display = 'none';
+
+    updateQuizResetButtonVisibility();
+  } catch(e) {
+    console.error('resetQuizData error:', e);
+    showToast('Gagal reset quiz');
   }
 }
 
@@ -3728,6 +3893,91 @@ function showResultTab(name, btn) {
   document.getElementById('rt' + name.charAt(0).toUpperCase() + name.slice(1)).classList.add('on');
   if (btn) btn.classList.add('on');
 }
+
+// ============================================================
+// NOTIFICATION & REMINDER SYSTEM
+// ============================================================
+const NotificationService = {
+  async requestPermission() {
+    if (!("Notification" in window)) return false;
+    const permission = await Notification.requestPermission();
+    return permission === "granted";
+  },
+
+  scheduleReminder(title, body, timestamp) {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    const now = Date.now();
+    const delay = timestamp - now;
+    if (delay > 0) {
+      setTimeout(() => {
+        new Notification(title, {
+          body: body,
+          icon: "https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg",
+          badge: "https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg",
+          tag: "kemoenik-reminder",
+          requireInteraction: true
+        });
+      }, delay);
+    }
+  },
+
+  setupDailyReminders() {
+    if (!appState.kalkulator) return;
+    const now = new Date();
+    const times = [
+      { hour: 7, minute: 30, title: "☀️ KEMOENIK Pagi", body: "Minum 3 kapsul sesudah sarapan + air hangat" },
+      { hour: 18, minute: 30, title: "🌙 KEMOENIK Malam", body: "Minum 3 kapsul sesudah makan malam + air putih" }
+    ];
+    times.forEach(t => {
+      const reminderTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), t.hour, t.minute);
+      if (reminderTime > now) {
+        this.scheduleReminder(t.title, t.body, reminderTime.getTime());
+      }
+    });
+  }
+};
+window.NotificationService = NotificationService;
+
+function checkAndShowReminder() {
+  if (!appState.kalkulator) return;
+  const now = new Date();
+  const hour = now.getHours();
+  if (hour >= 7 && hour < 9) {
+    showInAppReminder("☀️ KEMOENIK Pagi", "Minum 3 kapsul sesudah sarapan + air hangat");
+  } else if (hour >= 18 && hour < 20) {
+    showInAppReminder("🌙 KEMOENIK Malam", "Minum 3 kapsul sesudah makan malam + air putih");
+  }
+}
+
+function showInAppReminder(title, body) {
+  const today = new Date().toDateString();
+  const dismissed = localStorage.getItem('kemoenik_reminder_dismissed');
+  if (dismissed === today) return;
+  document.getElementById('reminderTitle').textContent = title;
+  document.getElementById('reminderBody').textContent = body;
+  document.getElementById('inAppReminder').style.display = 'block';
+}
+
+function dismissReminder() {
+  document.getElementById('inAppReminder').style.display = 'none';
+  localStorage.setItem('kemoenik_reminder_dismissed', new Date().toDateString());
+}
+
+function markReminderDone() {
+  dismissReminder();
+  showToast('✅ Great! Konsistensi adalah kunci sukses 💪');
+}
+
+function snoozeReminder() {
+  dismissReminder();
+  setTimeout(() => {
+    document.getElementById('inAppReminder').style.display = 'block';
+  }, 15 * 60 * 1000);
+}
+
+// Check reminder setiap menit
+setInterval(checkAndShowReminder, 60000);
+setTimeout(checkAndShowReminder, 2000);
 
 // ============================================================
 // DRAWER RENDER
