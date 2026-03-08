@@ -1527,10 +1527,7 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
       </div>
     </div>
     <div style="height:16px;"></div>
-    <div style="padding:0 20px;display:flex;gap:10px;">
-      <button class="btn-primary" style="flex:1;" onclick="closePanel('panelTimeline');go('home');"><i class="fas fa-play"></i> Mulai</button>
-      <button class="btn-outline" style="flex:1;" onclick="closePanel('panelTimeline')">Tutup</button>
-    </div>
+    <div style="padding:0 20px;"><button class="btn-outline" onclick="closePanel('panelTimeline')">Tutup</button></div>
     <div style="height:16px;"></div>
   </div>
 </div>
@@ -2591,21 +2588,10 @@ function renderHomeStats() {
     document.getElementById('estLingkar').textContent = k.estLingkar ? k.estLingkar + ' cm' : '—';
 
     // Program banner
-    // Generate startDateDisplay dari ISO string kalau tidak ada
-    var startDisplay = k.startDateDisplay || k.startDate || '';
-    if (!k.startDateDisplay && k.startDateISO) {
-      try {
-        var sd = new Date(k.startDateISO);
-        if (!isNaN(sd)) startDisplay = sd.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
-      } catch(e) {}
-    }
-
-    document.getElementById('statKkal').textContent = k.dietCal ? Math.round(k.dietCal).toLocaleString('id') : '—';
-    document.getElementById('statMinggu').textContent = k.targetMinggu ? k.targetMinggu + 'mg' : '—';
     document.getElementById('progNama').textContent = (nama || '—') + (q ? ' — ' + q.tipeName : '');
-    document.getElementById('progDesc').textContent = 'Mulai: ' + (startDisplay || '—') + ' | Target: ' + (k.target || '—') + ' kg';
+    document.getElementById('progDesc').textContent = 'Mulai: ' + (k.startDateDisplay || k.startDate || '—') + ' | Target: ' + (k.target || '—') + ' kg';
     document.getElementById('piSubKalori').textContent = k.dietCal ? Math.round(k.dietCal) + ' kkal/hari • ' + k.targetMinggu + ' minggu' : 'Hitung kebutuhan kalori & target mingguanmu';
-    document.getElementById('piSubTimeline').textContent = k.startDate ? 'Mulai ' + (startDisplay || k.startDate) + ' → ' + k.estTanggal : 'Fase & jadwal program dietmu';
+    document.getElementById('piSubTimeline').textContent = k.startDate ? 'Mulai ' + (k.startDateDisplay || k.startDate) + ' → ' + k.estTanggal : 'Fase & jadwal program dietmu';
     document.getElementById('progNotif').style.display = 'flex';
   }
 
@@ -2739,12 +2725,6 @@ function renderProgress() {
 
   // ── Timeline dates ────────────────────────────────────────
   var displayStart = k.startDateDisplay || k.startDate || '—';
-  if (!k.startDateDisplay && k.startDateISO) {
-    try {
-      var sdT = new Date(k.startDateISO);
-      if (!isNaN(sdT)) displayStart = sdT.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
-    } catch(e) {}
-  }
   if (document.getElementById('timelineStartDate')) {
     document.getElementById('timelineStartDate').textContent = displayStart;
     document.getElementById('timelineEndDate').textContent = k.estTanggal || '—';
