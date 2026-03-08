@@ -3,234 +3,801 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>KEMOENIK</title>
+<title>KEMOENIK - AI Diet Coach</title>
 
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-R7JZQXBQ57"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-R7JZQXBQ57');</script>
-
-<!-- Fonts & Icons -->
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- 1 File CSS Saja -->
+<!-- CSS -->
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- ACCESS SCREEN -->
-<div id="accessScreen">
-  <div class="as-logo">KEMO<span>ENIK</span></div>
-  <div class="as-icon">🔒</div>
-  <div class="as-title">Akses Diperlukan</div>
-  <div class="as-desc">Verifikasi kode konsultasi di halaman Log Aktivitas.</div>
-  <button class="as-btn" onclick="goToAktivitas()">Verifikasi di Log Aktivitas</button>
-</div>
+<!-- ==================== APP CONTAINER ==================== -->
+<div id="app">
 
-<!-- LOADING -->
-<div id="loadingScreen" style="display:none;">
-  <div class="ls-logo">KEMO<span>ENIK</span></div>
-  <div class="ls-spin"></div>
-</div>
-
-<!-- MAIN APP -->
-<div id="app" style="display:none;">
-  <div id="overlay" onclick="closeDrawer()"></div>
-  
-  <!-- Drawer -->
-  <div id="drawer">
-    <div class="d-top">
-      <div class="d-avatar">🌿</div>
-      <div class="d-name" id="dName">—</div>
-      <div class="d-sub">Program Diet KEMOENIK</div>
+  <!-- HEADER (Fixed Top) -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="brand">
+        <div class="brand-icon">🌿</div>
+        <span class="brand-text">KEMOENIK</span>
+      </div>
+      <button class="btn-icon" onclick="toggleNotif()">
+        <i class="fa-regular fa-bell"></i>
+        <span class="badge">2</span>
+      </button>
     </div>
-    <div class="d-body">
-      <div class="d-group">Menu Utama</div>
-      <div class="d-item on" onclick="go('home');closeDrawer()">🏠 Beranda</div>
-      <div class="d-item" onclick="go('profil');closeDrawer()">👤 Profil</div>
-      <div class="d-item" onclick="go('tips');closeDrawer()">💡 Tips</div>
-      <div class="d-item" onclick="go('program');closeDrawer()">📅 Program</div>
-      <div class="d-item" onclick="go('kuis');closeDrawer()">📝 Isi Kuis</div>
-      <div class="d-sep"></div>
-      <div class="d-group">Informasi</div>
-      <div class="d-item" onclick="go('home');closeDrawer();scrollToFaq()">❓ FAQ</div>
-      <div class="d-item" onclick="closeDrawer();openBeli()">🛒 Beli KEMOENIK</div>
-      <div class="d-item" onclick="closeDrawer();window.open('https://wa.me/6281546450547')">💬 Konsultasi</div>
-    </div>
-  </div>
+  </header>
 
-  <!-- Topbar -->
-  <div id="topbar">
-    <div class="tb-btn" onclick="openDrawer()">☰</div>
-    <div class="tb-logo">KEMO<span>ENIK</span></div>
-    <div class="tb-btn" onclick="openBeli()">🛒</div>
-  </div>
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
 
-  <!-- Content -->
-  <div id="content">
-    <!-- HOME -->
-    <div class="page on" id="page-home">
-      <div class="hero">
-        <div class="hero-top">
-          <div>
-            <div class="hero-greeting">Profil Metabolisme</div>
-            <div class="hero-name" id="heroName">—</div>
+    <!-- ==================== PAGE: BERANDA ==================== -->
+    <section class="page active" id="page-beranda">
+      
+      <!-- Greeting -->
+      <div class="greeting-section">
+        <p class="greeting-sub">Selamat pagi,</p>
+        <h1 class="greeting-name">Sarah Amanda</h1>
+        <p class="greeting-date">Senin, 9 Maret 2026</p>
+      </div>
+
+      <!-- Card: Profil Metabolisme -->
+      <div class="card card-gradient">
+        <div class="card-header">
+          <span class="card-tag">Profil Metabolisme</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </div>
+        <h2 class="metabolism-type">Lemak Fighter 🔥</h2>
+        <div class="metabolism-indicators">
+          <div class="indicator">
+            <span class="indicator-value">1,450</span>
+            <span class="indicator-label">Kalori/Hari</span>
           </div>
-          <div class="hero-badge" id="heroBadge">—</div>
-        </div>
-        <div class="stats-row">
-          <div class="stat-card"><div class="sc-val" id="statKkal">—</div><div class="sc-key">Kkal/Hari</div></div>
-          <div class="stat-card gold"><div class="sc-val" id="statMinggu">—</div><div class="sc-key">Minggu</div></div>
-          <div class="stat-card"><div class="sc-val" id="statMetode">—</div><div class="sc-key">Metode</div></div>
-        </div>
-      </div>
-
-      <div class="pill-wrap">
-        <button class="pill on" onclick="go('home')">Home</button>
-        <button class="pill" onclick="go('profil')">Profil</button>
-        <button class="pill" onclick="go('tips')">Tips</button>
-        <button class="pill" onclick="go('program')">Program</button>
-      </div>
-
-      <div class="greeting-card">
-        <div class="gc-hello">Halo, <span id="userName">—</span>! 👋</div>
-        <div class="gc-sub" id="greetingDesc">Selamat datang di panduan diet KEMOENIK</div>
-      </div>
-
-      <div class="progress-card" onclick="go('program')">
-        <div class="prog-card-top">
-          <div>
-            <div class="pct-label">Hari ini</div>
-            <div class="pct-day">Hari <span id="progHari">—</span> dari <span id="progTotal">—</span></div>
+          <div class="indicator-divider"></div>
+          <div class="indicator">
+            <span class="indicator-value">-5 kg</span>
+            <span class="indicator-label">Target Turun</span>
           </div>
-          <div class="pct-badge" id="progPct">—%</div>
-        </div>
-        <div class="prog-track">
-          <div class="prog-fill" id="progFill" style="width:0%"></div>
-        </div>
-      </div>
-
-      <!-- Shortcuts -->
-      <div class="shortcut-grid">
-        <div class="sc-card" onclick="go('kuis')">📝<br>Kuis Tipe</div>
-        <div class="sc-card" onclick="openPanel('panelKalkulator')">🧮<br>Kalkulator</div>
-        <div class="sc-card" onclick="go('tips')">💡<br>Tips Diet</div>
-        <div class="sc-card" onclick="scrollToFaq()">❓<br>FAQ</div>
-      </div>
-
-      <!-- Misi -->
-      <div class="sec-title">Misi Hari Ini</div>
-      <div class="mission-list" id="missionList">
-        <!-- Diisi JS -->
-      </div>
-
-      <!-- FAQ Section -->
-      <div id="faqSection"></div>
-    </div>
-
-    <!-- PROFIL -->
-    <div class="page" id="page-profil">
-      <div id="profilEmpty">Isi kuis dulu untuk lihat profil metabolisme</div>
-      <div id="profilContent" style="display:none;">
-        <div class="acc" onclick="toggle(this)">
-          <div class="acc-hd">📊 Trait Metabolisme</div>
-          <div class="acc-body" id="traitBody"></div>
-        </div>
-        <div class="acc" onclick="toggle(this)">
-          <div class="acc-hd">🧬 Tipe & Karakteristik</div>
-          <div class="acc-body" id="tipeBody"></div>
+          <div class="indicator-divider"></div>
+          <div class="indicator">
+            <span class="indicator-value">Agresif</span>
+            <span class="indicator-label">Metode Diet</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- TIPS -->
-    <div class="page" id="page-tips">
-      <div class="acc" onclick="toggle(this)">
-        <div class="acc-hd">🔥 Defisit Kalori</div>
-        <div class="acc-body">Panduan defisit kalori yang benar...</div>
-      </div>
-      <div class="acc" onclick="toggle(this)">
-        <div class="acc-hd">🍯 Kurangi Gula</div>
-        <div class="acc-body">Batasi gula maksimal 25g/hari...</div>
-      </div>
-      <div class="acc" onclick="toggle(this)">
-        <div class="acc-hd">🏃 Olahraga</div>
-        <div class="acc-body">Jalan kaki 30 menit, jumping jack...</div>
-      </div>
-    </div>
-
-    <!-- PROGRAM -->
-    <div class="page" id="page-program">
-      <div class="prog-banner">
-        <div class="pb-name" id="progNama">Program Diet</div>
-        <div class="pb-desc">Generate kalkulator untuk mulai</div>
-      </div>
-      <button class="cta-btn" onclick="openPanel('panelKalkulator')">🧮 Mulai Program</button>
-    </div>
-
-    <!-- KUIS -->
-    <div class="page" id="page-kuis">
-      <div id="quizIntro">
-        <h3>Temukan Tipe Metabolisme</h3>
-        <p>15 pertanyaan, 3 menit</p>
-        <button class="btn-primary" onclick="startQuiz()">Mulai Kuis</button>
-      </div>
-      <div id="quizRun" style="display:none;">
-        <div class="quiz-progress">
-          <div class="quiz-bar"><div class="quiz-fill" id="qFill"></div></div>
-          <span id="qNum">1/15</span>
+      <!-- Card: Metabolism Score -->
+      <div class="card card-score">
+        <div class="score-content">
+          <div class="score-text">
+            <h3>Metabolism Score</h3>
+            <p class="score-desc">Tubuhmu optimal membakar lemak</p>
+            <div class="score-badge">Good</div>
+          </div>
+          <div class="score-circle">
+            <svg viewBox="0 0 36 36">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="circle-fill" stroke-dasharray="78, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <div class="score-number">78</div>
+          </div>
         </div>
-        <div class="quiz-q" id="qText"></div>
-        <div id="qOptions"></div>
-        <button class="btn-primary" id="btnNext" onclick="nextQ()" disabled>Lanjut</button>
       </div>
-      <div id="quizResult" style="display:none;">
-        <h3 id="rTipe">Tipe Kamu</h3>
-        <p id="rDesc"></p>
-        <button class="btn-primary" onclick="saveQuiz()">Simpan & Lanjut</button>
+
+      <!-- Card: Progress Berat Badan -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Progress Berat Badan</h3>
+          <span class="trend-down"><i class="fa-solid fa-arrow-trend-down"></i> -2.4 kg</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="weightChart"></canvas>
+        </div>
+        <div class="progress-target">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 48%"></div>
+          </div>
+          <div class="progress-labels">
+            <span>68 kg</span>
+            <span>Target: 63 kg</span>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Bottom Nav -->
-  <div id="bnav">
-    <div class="bn on" onclick="go('home')">🏠<br>Home</div>
-    <div class="bn" onclick="go('profil')">👤<br>Profil</div>
-    <div class="bn" onclick="go('tips')">💡<br>Tips</div>
-    <div class="bn" onclick="go('program')">📅<br>Program</div>
-    <div class="bn" onclick="go('kuis')">📝<br>Kuis</div>
-  </div>
-</div>
+      <!-- Card: Misi Diet Hari Ini -->
+      <div class="card card-missions">
+        <div class="card-header">
+          <h3>Misi Hari Ini</h3>
+          <span class="mission-progress">3/5</span>
+        </div>
+        <div class="mission-list">
+          <label class="mission-item">
+            <input type="checkbox" checked>
+            <span class="checkmark"><i class="fa-solid fa-check"></i></span>
+            <div class="mission-info">
+              <span class="mission-name">Minum air hangat</span>
+              <span class="mission-time">07:00</span>
+            </div>
+          </label>
+          <label class="mission-item">
+            <input type="checkbox" checked>
+            <span class="checkmark"><i class="fa-solid fa-check"></i></span>
+            <div class="mission-info">
+              <span class="mission-name">Olahraga pagi 30 menit</span>
+              <span class="mission-time">06:30</span>
+            </div>
+          </label>
+          <label class="mission-item">
+            <input type="checkbox" checked>
+            <span class="checkmark"><i class="fa-solid fa-check"></i></span>
+            <div class="mission-info">
+              <span class="mission-name">KEMOENIK pagi</span>
+              <span class="mission-time">08:00</span>
+            </div>
+          </label>
+          <label class="mission-item">
+            <input type="checkbox">
+            <span class="checkmark"><i class="fa-solid fa-check"></i></span>
+            <div class="mission-info">
+              <span class="mission-name">Lymphatic drainage</span>
+              <span class="mission-time">16:00</span>
+            </div>
+          </label>
+          <label class="mission-item">
+            <input type="checkbox">
+            <span class="checkmark"><i class="fa-solid fa-check"></i></span>
+            <div class="mission-info">
+              <span class="mission-name">KEMOENIK malam</span>
+              <span class="mission-time">19:00</span>
+            </div>
+          </label>
+        </div>
+        <div class="mission-footer">
+          <div class="streak">
+            <i class="fa-solid fa-fire"></i>
+            <span>7 hari streak</span>
+          </div>
+          <div class="mission-percent">60%</div>
+        </div>
+      </div>
 
-<!-- Panel Kalkulator -->
-<div class="modal" id="panelKalkulator">
-  <div class="modal-sheet">
-    <h3>⚖️ Kalkulator Kalori</h3>
-    <input type="text" id="inNama" placeholder="Nama">
-    <input type="number" id="inUsia" placeholder="Usia">
-    <input type="number" id="inBerat" placeholder="Berat (kg)">
-    <input type="number" id="inTinggi" placeholder="Tinggi (cm)">
-    <select id="inAktivitas">
-      <option value="1.2">Tidak Aktif</option>
-      <option value="1.375" selected>Ringan</option>
-      <option value="1.55">Sedang</option>
-      <option value="1.725">Berat</option>
-    </select>
-    <input type="number" id="inTarget" placeholder="Target BB (kg)">
-    <button class="btn-primary" onclick="hitungKal()">Hitung</button>
-    <div id="hasilKal" style="display:none;margin-top:16px;"></div>
-  </div>
-</div>
+      <!-- Section: Jadwal Olahraga -->
+      <div class="section-header">
+        <h3>Jadwal Olahraga Hari Ini</h3>
+        <button class="btn-text">Lihat semua <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="card card-workout">
+        <div class="workout-icon">🏃</div>
+        <div class="workout-info">
+          <h4>Jalan Cepat + Jumping Jack</h4>
+          <p>30 menit · 150 kkal</p>
+        </div>
+        <button class="btn-start">Mulai</button>
+      </div>
 
-<!-- Panel Beli -->
-<div class="modal" id="modalBeli">
-  <div class="modal-sheet">
-    <h3>🛒 Beli KEMOENIK</h3>
-    <a href="https://s.shopee.co.id/xxx" target="_blank" rel="noopener"> class="shop-btn">🛍️ Shopee</a>
-    <a href="https://vt.tiktok.com/xxx" target="_blank" rel="noopener"> class="shop-btn">🎵 TikTok</a>
-    <button onclick="closeModal('modalBeli')">Tutup</button>
-  </div>
+      <!-- Section: Tips -->
+      <div class="section-header">
+        <h3>Tips Hari Ini</h3>
+        <button class="btn-text">Lihat semua <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="card card-tip">
+        <div class="tip-icon">💡</div>
+        <p class="tip-text">Minum air putih 30 menit sebelum makan dapat mengurangi nafsu makan hingga 13%</p>
+      </div>
+
+      <!-- Card: Reminder -->
+      <div class="card card-reminder">
+        <div class="reminder-icon">⏰</div>
+        <div class="reminder-content">
+          <h4>Reminder Diet</h4>
+          <p>Jangan lupa minum KEMOENIK sesudah makan siang ya!</p>
+        </div>
+      </div>
+
+      <!-- Card: AI Recommendation -->
+      <div class="card card-ai">
+        <div class="ai-header">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Rekomendasi AI Hari Ini</span>
+        </div>
+        <p>Berdasarkan progressmu, tambahkan 10 menit cardio untuk mempercepat pembakaran lemak minggu ini.</p>
+      </div>
+
+      <!-- Card: Motivasi -->
+      <div class="card card-quote">
+        <i class="fa-solid fa-quote-left"></i>
+        <p>"Konsistensi lebih penting dari kesempurnaan."</p>
+      </div>
+
+    </section>
+
+    <!-- ==================== PAGE: PROGRAM ==================== -->
+    <section class="page" id="page-program">
+      
+      <div class="page-header">
+        <h1>Program Diet</h1>
+        <p>Program aktif: <strong>Agresif + IF 16:8</strong></p>
+      </div>
+
+      <!-- Card: Progress Program -->
+      <div class="card card-program-progress">
+        <div class="program-day">
+          <div class="day-circle">
+            <span class="day-current">12</span>
+            <span class="day-total">/28</span>
+          </div>
+          <div class="day-info">
+            <h3>Hari ke-12</h3>
+            <p>Tinggal 16 hari lagi menuju target!</p>
+          </div>
+        </div>
+        <div class="program-timeline-mini">
+          <div class="timeline-bar">
+            <div class="timeline-fill" style="width: 43%"></div>
+          </div>
+          <div class="timeline-labels">
+            <span>Mulai</span>
+            <span>Target: 6 Apr</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Statistik Program -->
+      <div class="card">
+        <h3 class="card-title-center">Statistik Program</h3>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-icon">📉</span>
+            <span class="stat-value">-0.8</span>
+            <span class="stat-unit">kg/minggu</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-icon">🏆</span>
+            <span class="stat-value">-2.4</span>
+            <span class="stat-unit">kg total</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-icon">⚖️</span>
+            <span class="stat-value">65.6</span>
+            <span class="stat-unit">kg sekarang</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-icon">🎯</span>
+            <span class="stat-value">63.0</span>
+            <span class="stat-unit">kg target</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Checklist Aktivitas -->
+      <div class="card">
+        <h3>Aktivitas Program Hari Ini</h3>
+        <div class="checklist-program">
+          <div class="check-item done">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Puasa 16 jam (18:00 - 10:00)</span>
+          </div>
+          <div class="check-item done">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Minum air 2.5 liter</span>
+          </div>
+          <div class="check-item">
+            <i class="fa-regular fa-circle"></i>
+            <span>Olahraga 30 menit</span>
+          </div>
+          <div class="check-item">
+            <i class="fa-regular fa-circle"></i>
+            <span>Makan protein 80g</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Timeline Program -->
+      <div class="card">
+        <h3>Timeline Program</h3>
+        <div class="timeline-vertical">
+          <div class="timeline-item done">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Fase 1: Detoks</h4>
+              <p>Hari 1-7 · Selesai</p>
+            </div>
+          </div>
+          <div class="timeline-item done">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Fase 2: Pembakaran</h4>
+              <p>Hari 8-14 · Sedang berjalan</p>
+            </div>
+          </div>
+          <div class="timeline-item active">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Fase 3: Stabilisasi</h4>
+              <p>Hari 15-21 · Mendatang</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4>Fase 4: Target Tercapai</h4>
+              <p>Hari 22-28 · Mendatang</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== PAGE: TIPS ==================== -->
+    <section class="page" id="page-tips">
+      
+      <div class="page-header">
+        <h1>Tips Diet</h1>
+        <p>Panduan lengkap diet sehat</p>
+      </div>
+
+      <!-- Accordion Tips -->
+      <div class="accordion-list">
+
+        <div class="accordion-card">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-icon">🔥</div>
+            <span>Defisit Kalori</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <p class="lead">Defisit kalori adalah kunci utama penurunan berat badan.</p>
+              
+              <h4>3 Metode Defisit:</h4>
+              <div class="method-cards">
+                <div class="method-card light">
+                  <div class="method-title">🟢 Ringan</div>
+                  <div class="method-value">-300 kkal</div>
+                  <p>Turun ~0.3 kg/minggu</p>
+                </div>
+                <div class="method-card medium">
+                  <div class="method-title">🟡 Standar</div>
+                  <div class="method-value">-500 kkal</div>
+                  <p>Turun ~0.5 kg/minggu</p>
+                </div>
+                <div class="method-card aggressive">
+                  <div class="method-title">🔴 Agresif</div>
+                  <div class="method-value">-750 kkal</div>
+                  <p>Turun ~0.7-1 kg/minggu</p>
+                </div>
+              </div>
+
+              <h4>Tips Praktis:</h4>
+              <ul class="tip-list">
+                <li>Ganti nasi putih → nasi merah/ubi</li>
+                <li>Kurangi porsi nasi jadi ½ centong</li>
+                <li>Ganti gorengan → panggang/rebus</li>
+                <li>Hindari minuman manis</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-card">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-icon">🍯</div>
+            <span>Panduan Kurangi Gula</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <p>WHO merekomendasikan maksimal <strong>25 gram gula tambahan</strong> per hari.</p>
+              
+              <div class="avoid-grid">
+                <div class="avoid-box">
+                  <h5>❌ Hindari</h5>
+                  <ul>
+                    <li>Teh manis</li>
+                    <li>Es kopi susu</li>
+                    <li>Minuman boba</li>
+                    <li>Jus kemasan</li>
+                  </ul>
+                </div>
+                <div class="avoid-box good">
+                  <h5>✅ Ganti Dengan</h5>
+                  <ul>
+                    <li>Air putih hangat</li>
+                    <li>Teh tanpa gula</li>
+                    <li>Infused water</li>
+                    <li>Buah segar</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-card">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-icon">🏃</div>
+            <span>Panduan Olahraga</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <div class="workout-recommend">
+                <span class="rec-badge">Direkomendasikan untukmu</span>
+                <h4>Lymphatic Drainage + Jalan Cepat</h4>
+              </div>
+
+              <div class="workout-list">
+                <div class="workout-detail">
+                  <div class="workout-emoji">🚶</div>
+                  <div>
+                    <h5>Jalan Cepat</h5>
+                    <p>30-45 menit · 150-200 kkal</p>
+                  </div>
+                </div>
+                <div class="workout-detail">
+                  <div class="workout-emoji">⭐</div>
+                  <div>
+                    <h5>Jumping Jack</h5>
+                    <p>3-5 set · 20-30 reps</p>
+                  </div>
+                </div>
+                <div class="workout-detail">
+                  <div class="workout-emoji">🪢</div>
+                  <div>
+                    <h5>Lompat Tali</h5>
+                    <p>10-15 menit · 200-300 kkal</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-card">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-icon">🌿</div>
+            <span>Cara Minum KEMOENIK</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <div class="kemoenik-schedule">
+                <div class="schedule-item">
+                  <div class="schedule-time">☀️ 07:00-08:00</div>
+                  <div class="schedule-detail">
+                    <strong>3 kapsul sesudah sarapan</strong>
+                    <p>+ air hangat untuk aktivasi metabolisme</p>
+                  </div>
+                </div>
+                <div class="schedule-item">
+                  <div class="schedule-time">🌙 18:00-19:00</div>
+                  <div class="schedule-detail">
+                    <strong>3 kapsul sesudah makan malam</strong>
+                    <p>+ air putih untuk metabolisme malam</p>
+                  </div>
+                </div>
+              </div>
+              <div class="kemoenik-note">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <p>Alternatif: 3x2 kapsul (pagi, siang, malam). Jangan minum saat perut kosong.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-card">
+          <button class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-icon">⏰</div>
+            <span>Intermittent Fasting</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <p>IF membatasi waktu makan dalam jendela tertentu.</p>
+              
+              <div class="if-options">
+                <div class="if-card active">
+                  <div class="if-ratio">16:8</div>
+                  <p>Puasa 16 jam<br>Makan 8 jam</p>
+                </div>
+                <div class="if-card">
+                  <div class="if-ratio">18:6</div>
+                  <p>Puasa 18 jam<br>Makan 6 jam</p>
+                </div>
+                <div class="if-card">
+                  <div class="if-ratio">5:2</div>
+                  <p>5 hari normal<br>2 hari defisit</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==================== PAGE: PROGRESS ==================== -->
+    <section class="page" id="page-progress">
+      
+      <div class="page-header">
+        <h1>Progress</h1>
+        <p>Tracking perjalanan dietmu</p>
+      </div>
+
+      <!-- Card: Grafik Berat -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Grafik Berat Badan</h3>
+          <select class="select-filter">
+            <option>1 Bulan</option>
+            <option>3 Bulan</option>
+            <option>Semua</option>
+          </select>
+        </div>
+        <div class="chart-container large">
+          <canvas id="progressChart"></canvas>
+        </div>
+        <div class="chart-stats">
+          <div>
+            <span class="chart-label">Awal</span>
+            <span class="chart-value">68.0 kg</span>
+          </div>
+          <div>
+            <span class="chart-label">Sekarang</span>
+            <span class="chart-value current">65.6 kg</span>
+          </div>
+          <div>
+            <span class="chart-label">Target</span>
+            <span class="chart-value target">63.0 kg</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Statistik Progress -->
+      <div class="card">
+        <h3 class="card-title-center">Statistik Progress</h3>
+        <div class="stats-grid compact">
+          <div class="stat-pill">
+            <i class="fa-solid fa-arrow-trend-down"></i>
+            <div>
+              <span class="sp-value">-2.4 kg</span>
+              <span class="sp-label">Total turun</span>
+            </div>
+          </div>
+          <div class="stat-pill">
+            <i class="fa-solid fa-calendar-week"></i>
+            <div>
+              <span class="sp-value">-0.8 kg</span>
+              <span class="sp-label">Minggu ini</span>
+            </div>
+          </div>
+          <div class="stat-pill">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <div>
+              <span class="sp-value">24.2</span>
+              <span class="sp-label">BMI</span>
+            </div>
+          </div>
+          <div class="stat-pill">
+            <i class="fa-solid fa-ruler-horizontal"></i>
+            <div>
+              <span class="sp-value">78 cm</span>
+              <span class="sp-label">Lingkar perut</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Timeline Progress -->
+      <div class="card">
+        <h3>Progress Program</h3>
+        <div class="progress-visual">
+          <div class="progress-ring-large">
+            <svg viewBox="0 0 36 36">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="circle-fill" stroke-dasharray="43, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <div class="ring-center">
+              <span class="ring-percent">43%</span>
+              <span class="ring-label">selesai</span>
+            </div>
+          </div>
+          <div class="progress-info">
+            <div class="pi-item">
+              <span class="pi-dot done"></span>
+              <span>12 hari selesai</span>
+            </div>
+            <div class="pi-item">
+              <span class="pi-dot remaining"></span>
+              <span>16 hari tersisa</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Button: Input Data -->
+      <button class="btn-primary btn-large">
+        <i class="fa-solid fa-plus"></i>
+        Input Berat Minggu Ini
+      </button>
+
+    </section>
+
+    <!-- ==================== PAGE: PROFIL ==================== -->
+    <section class="page" id="page-profil">
+      
+      <div class="page-header center">
+        <div class="profile-avatar">SA</div>
+        <h1>Sarah Amanda</h1>
+        <p>Member sejak Maret 2026</p>
+      </div>
+
+      <!-- Card: Profil Metabolisme -->
+      <div class="card card-metabolism-profile">
+        <div class="metabolism-badge">🔥 Lemak Fighter</div>
+        <h3>Profil Metabolisme</h3>
+        <p>Tubuhmu butuh dorongan ekstra untuk bakar lemak. Metode Agresif + IF 16:8 sangat cocok untukmu.</p>
+      </div>
+
+      <!-- Card: Trait Bar -->
+      <div class="card">
+        <h3>Trait Metabolisme</h3>
+        <div class="trait-list">
+          <div class="trait-item">
+            <div class="trait-header">
+              <span>Kemampuan Bakar Lemak</span>
+              <span class="trait-badge warning">Perlu Perhatian</span>
+            </div>
+            <div class="trait-slider">
+              <div class="trait-track">
+                <div class="trait-fill" style="width: 72%"></div>
+                <div class="trait-marker" style="left: 72%"></div>
+              </div>
+              <div class="trait-labels">
+                <span>Rendah</span>
+                <span>Normal</span>
+                <span>Tinggi</span>
+              </div>
+            </div>
+          </div>
+          <div class="trait-item">
+            <div class="trait-header">
+              <span>Toleransi Puasa</span>
+              <span class="trait-badge good">Baik</span>
+            </div>
+            <div class="trait-slider">
+              <div class="trait-track">
+                <div class="trait-fill good" style="width: 25%"></div>
+                <div class="trait-marker good" style="left: 25%"></div>
+              </div>
+              <div class="trait-labels">
+                <span>Rendah</span>
+                <span>Normal</span>
+                <span>Tinggi</span>
+              </div>
+            </div>
+          </div>
+          <div class="trait-item">
+            <div class="trait-header">
+              <span>Respons Kardio</span>
+              <span class="trait-badge danger">Kurang Optimal</span>
+            </div>
+            <div class="trait-slider">
+              <div class="trait-track">
+                <div class="trait-fill danger" style="width: 78%"></div>
+                <div class="trait-marker danger" style="left: 78%"></div>
+              </div>
+              <div class="trait-labels">
+                <span>Kurang</span>
+                <span>Cukup</span>
+                <span>Baik</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Tipe & Karakteristik -->
+      <div class="card">
+        <h3>Tipe & Karakteristik</h3>
+        <div class="character-card">
+          <div class="char-icon">🔥</div>
+          <h4>Lemak Fighter</h4>
+          <p class="char-tagline">"Tubuhmu butuh dorongan ekstra untuk bakar lemak"</p>
+          <div class="char-tips">
+            <div class="char-tip"><i class="fa-solid fa-check"></i> Terapkan IF 16:8</div>
+            <div class="char-tip"><i class="fa-solid fa-check"></i> Fokus rendah lemak jenuh</div>
+            <div class="char-tip"><i class="fa-solid fa-check"></i> Kardio 30 menit/hari</div>
+          </div>
+          <div class="char-avoid">
+            <strong>Hindari:</strong> Gorengan, santan, makanan olahan berlemak
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Skor & Akurasi -->
+      <div class="card card-accuracy">
+        <h3>Skor & Akurasi Program</h3>
+        <div class="accuracy-content">
+          <div class="accuracy-circle">
+            <svg viewBox="0 0 36 36">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="circle-fill gold" stroke-dasharray="72, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <div class="accuracy-number">72%</div>
+          </div>
+          <div class="accuracy-info">
+            <h4>Kesesuaian Program</h4>
+            <p>Program KEMOENIK dengan metode <strong>Agresif + IF 16:8</strong> memiliki kesesuaian tinggi dengan profil metabolismemu.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings List -->
+      <div class="settings-list">
+        <button class="settings-item">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Reset Program</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <button class="settings-item">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Bantuan & FAQ</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <button class="settings-item">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Keluar</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ==================== PAGE: KUIS (Placeholder) ==================== -->
+    <section class="page" id="page-kuis">
+      <div class="quiz-placeholder">
+        <div class="quiz-icon">📝</div>
+        <h2>Kuis Metabolisme</h2>
+        <p>Jawab 15 pertanyaan untuk mengetahui tipe metabolisme dan program diet terbaik untukmu.</p>
+        <button class="btn-primary btn-large">Mulai Kuis</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== BOTTOM NAVIGATION ==================== -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="goToPage('beranda', this)">
+      <i class="fa-solid fa-house"></i>
+      <span>Beranda</span>
+    </button>
+    <button class="nav-item" onclick="goToPage('program', this)">
+      <i class="fa-solid fa-calendar-check"></i>
+      <span>Program</span>
+    </button>
+    <button class="nav-item" onclick="goToPage('tips', this)">
+      <i class="fa-solid fa-lightbulb"></i>
+      <span>Tips</span>
+    </button>
+    <button class="nav-item" onclick="goToPage('progress', this)">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Progress</span>
+    </button>
+    <button class="nav-item" onclick="goToPage('profil', this)">
+      <i class="fa-solid fa-user"></i>
+      <span>Profil</span>
+    </button>
+  </nav>
+
 </div>
 
 <!-- Scripts -->
