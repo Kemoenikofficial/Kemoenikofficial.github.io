@@ -3,6 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script>
+    (function() {
+        var params = new URLSearchParams(window.location.search);
+        var wa = params.get('wa');
+        var voucher = params.get('voucher');
+        if (wa && voucher && wa !== 'null' && voucher !== 'null' && wa !== '' && voucher !== '') {
+            document.addEventListener('DOMContentLoaded', function() {
+                var accessScreen = document.getElementById('accessScreen');
+                var loadingScreen = document.getElementById('loadingScreen');
+                var app = document.getElementById('app');
+                if (accessScreen) accessScreen.style.display = 'none';
+                if (loadingScreen) loadingScreen.style.display = 'flex';
+                if (app) app.style.display = 'flex';
+            });
+        }
+    })();
+    </script>
     <title>KEMOENIK - Panduan Diet Personal</title>
     <!-- Google Analytics (ganti dengan ID Anda) --><!DOCTYPE html>
 <html lang="id">
