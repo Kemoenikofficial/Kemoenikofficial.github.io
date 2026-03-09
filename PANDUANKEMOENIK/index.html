@@ -4,21 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- EARLY FALLBACK: langsung sembunyikan access screen jika parameter ada -->
+    <!-- EARLY FALLBACK - LANGSUNG JALANKAN TANPA TUNGGU -->
     <script>
     (function() {
+        // Baca parameter URL secepat mungkin
         var params = new URLSearchParams(window.location.search);
         var wa = params.get('wa');
         var voucher = params.get('voucher');
+        
+        // Jika parameter valid, langsung sembunyikan access screen
         if (wa && voucher && wa !== 'null' && voucher !== 'null' && wa !== '' && voucher !== '') {
+            // Coba sembunyikan langsung (elemen mungkin belum ada, tapi aman)
+            try {
+                document.getElementById('accessScreen')?.style.setProperty('display', 'none', 'important');
+                document.getElementById('loadingScreen')?.style.setProperty('display', 'flex', 'important');
+                document.getElementById('app')?.style.setProperty('display', 'flex', 'important');
+            } catch(e) {}
+            
+            // Backup pake DOMContentLoaded
             document.addEventListener('DOMContentLoaded', function() {
-                var accessScreen = document.getElementById('accessScreen');
-                var loadingScreen = document.getElementById('loadingScreen');
+                var access = document.getElementById('accessScreen');
+                var loading = document.getElementById('loadingScreen');
                 var app = document.getElementById('app');
-                if (accessScreen) accessScreen.style.display = 'none';
-                if (loadingScreen) loadingScreen.style.display = 'flex';
+                if (access) access.style.display = 'none';
+                if (loading) loading.style.display = 'flex';
                 if (app) app.style.display = 'flex';
-                console.log('✅ Fallback: Parameter ditemukan, access screen disembunyikan');
             });
         }
     })();
@@ -26,7 +36,7 @@
     
     <title>KEMOENIK - Panduan Diet Personal</title>
     
-    <!-- Google Analytics (ganti dengan ID Anda) -->
+    <!-- Google Analytics (async biar gak blocking) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -35,7 +45,7 @@
         gtag('config', 'G-XXXXXXXXXX');
     </script>
     
-    <!-- Fonts & Icons -->
+    <!-- Font & Icons - pake preconnect biar cepet -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -43,6 +53,12 @@
     
     <!-- CSS Utama -->
     <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* OPTIMASI: hide access screen lebih cepat via CSS */
+        #accessScreen { display: flex; } /* default */
+        #loadingScreen, #app { display: none; } /* default */
+    </style>
 </head>
 <body>
 
@@ -52,19 +68,20 @@
     <div class="as-icon">🔒</div>
     <div class="as-title">Akses Diperlukan</div>
     <div class="as-desc">Kamu perlu verifikasi kode konsultasi terlebih dahulu di halaman Log Aktivitas untuk membuka panduan diet personalmu.</div>
-    <button class="as-btn" onclick="goToAktivitas()">
+    <button class="as-btn" onclick="window.location.href='../aktivitas.html'">
         <i class="fas fa-arrow-right" style="margin-right:8px;"></i>Verifikasi di Log Aktivitas
     </button>
 </div>
 
 <!-- LOADING SCREEN -->
-<div id="loadingScreen" style="display:none;">
+<div id="loadingScreen">
     <div class="ls-logo">KEMO<span>ENIK</span></div>
     <div class="ls-spin"></div>
     <div style="font-size:12px;color:var(--text3);">Memuat data program...</div>
 </div>
 
-<div id="app" style="display:none;">
+<!-- APP (konten utama) -->
+<div id="app">
     <!-- DRAWER -->
     <div id="overlay" onclick="closeDrawer()"></div>
     <div id="drawer">
@@ -75,17 +92,16 @@
         </div>
         <div class="d-body">
             <div class="d-group">Menu Utama</div>
-            <div class="d-item on" id="di-home" onclick="go('home');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Beranda</div>
-            <div class="d-item" id="di-profil" onclick="go('profil');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profil Metabolisme</div>
-            <div class="d-item" id="di-tips" onclick="go('tips');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>Tips Diet</div>
-            <div class="d-item" id="di-program" onclick="go('program');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Program Saya</div>
-            <div class="d-item" id="di-kuis" onclick="go('kuis');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>Isi Kuis</div>
+            <div class="d-item" id="di-home" onclick="if(window.go)go('home');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Beranda</div>
+            <div class="d-item" id="di-profil" onclick="if(window.go)go('profil');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profil Metabolisme</div>
+            <div class="d-item" id="di-tips" onclick="if(window.go)go('tips');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>Tips Diet</div>
+            <div class="d-item" id="di-program" onclick="if(window.go)go('program');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Program Saya</div>
+            <div class="d-item" id="di-kuis" onclick="if(window.go)go('kuis');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>Isi Kuis</div>
             <div class="d-sep"></div>
             <div class="d-group">Informasi</div>
-            <div class="d-item" onclick="go('home');closeDrawer();setTimeout(()=>{ document.getElementById('faqHomeSection').scrollIntoView({behavior:'smooth'}); },200)"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>FAQ</div>
-            <div class="d-item" onclick="closeDrawer();openBeli()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>Beli KEMOENIK</div>
+            <div class="d-item" onclick="if(window.go){go('home');setTimeout(()=>document.getElementById('faqHomeSection')?.scrollIntoView({behavior:'smooth'}),200)};closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>FAQ</div>
+            <div class="d-item" onclick="closeDrawer();if(window.openBeli)openBeli()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>Beli KEMOENIK</div>
             <div class="d-item" onclick="closeDrawer();window.open('https://wa.me/6281546450547','_blank')"><span class="d-ico">💬</span>Konsultasi WA</div>
-            <div class="d-sep"></div>
         </div>
     </div>
 
@@ -97,307 +113,23 @@
             <div style="width:10px;height:1.5px;background:var(--text2);border-radius:1px;"></div>
         </div>
         <div class="tb-logo">KEMO<span>ENIK</span></div>
-        <div class="tb-btn" onclick="openBeli()" style="font-size:18px;">🛒</div>
+        <div class="tb-btn" onclick="if(window.openBeli)openBeli()" style="font-size:18px;">🛒</div>
     </div>
 
-    <!-- IN-APP REMINDER -->
-    <div id="inAppReminder" style="display:none;position:fixed;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold2),#B8860B);color:white;padding:14px 20px;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:999;max-width:90vw;width:380px;animation:slideDown 0.3s ease;">
-        <div style="display:flex;align-items:center;gap:12px;">
-            <div style="font-size:28px;">💊</div>
-            <div style="flex:1;">
-                <div style="font-size:13px;font-weight:700;margin-bottom:2px;" id="reminderTitle">Waktunya KEMOENIK!</div>
-                <div style="font-size:12px;opacity:0.95;line-height:1.4;" id="reminderBody">Minum 3 kapsul sesudah makan</div>
-            </div>
-            <button onclick="dismissReminder()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>
-        </div>
-        <div style="margin-top:10px;display:flex;gap:8px;">
-            <button onclick="markReminderDone()" style="flex:1;padding:8px;background:rgba(255,255,255,0.25);border:none;border-radius:8px;color:white;font-size:12px;font-weight:600;">✓ Sudah Minum</button>
-            <button onclick="snoozeReminder()" style="flex:1;padding:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;color:white;font-size:12px;">⏰ Tunda 15m</button>
-        </div>
-    </div>
-
-    <div id="content">
-        <!-- HERO -->
-        <div class="hero">
-            <div class="hero-top">
-                <div>
-                    <div class="hero-greeting">Profil Metabolisme</div>
-                    <div class="hero-name" id="heroName">— <span id="heroTypeName">—</span></div>
-                </div>
-                <div class="hero-badge" id="heroBadge">—</div>
-            </div>
-            <div class="stats-row">
-                <div class="stat-card"><div class="sc-val" id="statKkal">—</div><div class="sc-key">Kkal/Hari</div></div>
-                <div class="stat-card gold"><div class="sc-val" id="statMinggu">—</div><div class="sc-key">Target/Minggu</div></div>
-                <div class="stat-card"><div class="sc-val" id="statMetode">—</div><div class="sc-key">Metode</div></div>
-            </div>
-        </div>
-
-        <!-- ESTIMASI PANEL -->
-        <div class="estimasi-panel">
-            <div class="est-item">
-                <div class="est-val" id="estMinggu">—</div>
-                <div class="est-key">Target/Minggu</div>
-            </div>
-            <div class="est-item">
-                <div class="est-val" id="estTanggal">—</div>
-                <div class="est-key">Est. Tercapai</div>
-            </div>
-            <div class="est-item">
-                <div class="est-val" id="estLingkar">—</div>
-                <div class="est-key">Est. Lingkar Perut</div>
-            </div>
-        </div>
-
-        <!-- PILL NAV -->
-        <div class="pill-wrap">
-            <button class="pill on" onclick="go('home')">Home</button>
-            <button class="pill" onclick="go('profil')">Profil</button>
-            <button class="pill" onclick="go('tips')">Tips Diet</button>
-            <button class="pill" onclick="go('program')">Program</button>
-        </div>
-
-        <!-- ===================== HOME PAGE ===================== -->
-        <div class="page on" id="page-home">
-            <div class="greeting-card">
-                <div>
-                    <div class="gc-hello">Halo, <span id="userName">—</span>! 👋</div>
-                    <div class="gc-sub" id="greetingDesc">Selamat datang di panduan diet<br><strong>KEMOENIK</strong> — hari ini kita jaga komitmenmu 💪</div>
-                </div>
-            </div>
-
-            <div class="sec-title">Progres Program Diet</div>
-            <div class="progress-card" onclick="go('program')">
-                <div class="prog-card-top">
-                    <div>
-                        <div class="pct-label">Hari ini</div>
-                        <div class="pct-day">Hari <span id="progHari">—</span> <span class="pct-of">dari <span id="progTotal">—</span></span></div>
-                    </div>
-                    <div class="pct-badge" id="progPct">—%</div>
-                </div>
-                <div class="prog-track">
-                    <div class="prog-fill" id="progFill" style="width:0%"></div>
-                    <div class="prog-thumb" id="progThumb" style="left:0%"></div>
-                </div>
-                <div class="prog-labels">
-                    <span>Hari 1</span>
-                    <span>Hari <span id="progTotalLabel">—</span></span>
-                </div>
-                <div class="eval-row">
-                    <div class="eval-item">
-                        <div class="eval-val" id="evalMingguLabel">—</div>
-                        <div class="eval-key">Periode</div>
-                    </div>
-                    <div class="eval-div"></div>
-                    <div class="eval-item">
-                        <div class="eval-val" id="evalPenurunan" style="color:var(--green);">— kg</div>
-                        <div class="eval-key">Akumulasi</div>
-                    </div>
-                    <div class="eval-div"></div>
-                    <div class="eval-item">
-                        <div class="eval-val" id="evalBerat">— kg</div>
-                        <div class="eval-key">Berat skrg</div>
-                    </div>
-                    <div class="eval-div"></div>
-                    <div class="eval-item">
-                        <div class="eval-val" id="evalTarget" style="color:var(--text3);">— kg</div>
-                        <div class="eval-key">Target</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="shortcut-grid" style="grid-template-columns:1fr 1fr;">
-                <!-- Kuis -->
-                <div class="sc-card" onclick="go('kuis')">
-                    <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-                    </div>
-                    <div class="sc-card-name">Kuis Tipe</div>
-                    <div class="sc-card-sub">Temukan tipe metabolismemu</div>
-                    <span class="sc-card-arr">›</span>
-                </div>
-                <!-- Kalkulator -->
-                <div class="sc-card" onclick="openPanel('panelKalkulator')">
-                    <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#DCFCE7,#A7F3D0);">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>
-                    </div>
-                    <div class="sc-card-name">Kalkulator</div>
-                    <div class="sc-card-sub">Hitung kalori & target dietmu</div>
-                    <span class="sc-card-arr">›</span>
-                </div>
-                <!-- Tips -->
-                <div class="sc-card" onclick="go('tips')">
-                    <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#EFF6FF,#BFDBFE);">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    </div>
-                    <div class="sc-card-name">Tips Diet</div>
-                    <div class="sc-card-sub">Panduan & strategi diet</div>
-                    <span class="sc-card-arr">›</span>
-                </div>
-                <!-- FAQ -->
-                <div class="sc-card" onclick="openFaq()">
-                    <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#F5F3FF,#DDD6FE);">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                    </div>
-                    <div class="sc-card-name">FAQ</div>
-                    <div class="sc-card-sub">Pertanyaan yang sering ditanya</div>
-                    <span class="sc-card-arr">›</span>
-                </div>
-            </div>
-
-            <div class="sec-title-row">
-                <div class="sec-title" style="margin-bottom:0;">Misi Hari Ini</div>
-                <div class="sec-link" onclick="go('program')">Lihat semua ›</div>
-            </div>
-            <div class="mission-mode-bar">
-                <div class="mm-btn on" id="modeNormal" onclick="setMissionMode('normal')">Program Normal</div>
-                <div class="mm-btn" id="modeIF" onclick="setMissionMode('if')">Program IF 16:8</div>
-            </div>
-            <div class="mission-set show" id="misiNormal">
-                <div class="mission-item" id="n1" onclick="toggleMission('n1','nc1')">
-                    <div class="mission-check" id="nc1"></div>
-                    <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#EFF6FF;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></span>Bangun & Minum Air</div><div class="mission-sub">2 gelas air putih hangat sebelum apapun</div></div>
-                    <div class="mission-tag tag-blue">Pagi</div>
-                </div>
-                <div class="mission-item" id="n2" onclick="toggleMission('n2','nc2')">
-                    <div class="mission-check" id="nc2"></div>
-                    <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#DCFCE7;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v5l3 3"/><path d="M9 12H6M18 12h-3"/></svg></span>Olahraga Pagi</div><div class="mission-sub">Jalan kaki 30 menit / Jumping jack / Lompat tali</div></div>
-                    <div class="mission-tag tag-green">Aktif</div>
-                </div>
-                <div class="mission-item" id="n3" onclick="toggleMission('n3','nc3')">
-                    <div class="mission-check" id="nc3"></div>
-                    <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#DCFCE7;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2.5" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 7 3 2 4c1 4 4 7 10 8z"/></svg></span>Minum KEMOENIK Pagi</div><div class="mission-sub">Sesudah sarapan untuk aktivasi metabolisme</div></div>
-                    <div class="mission-tag tag-gold">Herbal</div>
-                </div>
-                <div class="mission-item" id="n4" onclick="toggleMission('n4','nc4')">
-                    <div class="mission-check" id="nc4"></div>
-                    <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#F5F3FF;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4"/></svg></span>Lymphatic Drainage</div><div class="mission-sub">10–15 menit pijat ringan sore hari</div></div>
-                    <div class="mission-tag tag-gray">Sore</div>
-                </div>
-                <div class="mission-item" id="n5" onclick="toggleMission('n5','nc5')">
-                    <div class="mission-check" id="nc5"></div>
-                    <div class="mission-text"><div class="mission-name"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#DCFCE7;border-radius:6px;margin-right:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span>Minum KEMOENIK Malam</div><div class="mission-sub">Sesudah makan malam untuk metabolisme malam</div></div>
-                    <div class="mission-tag tag-gold">Herbal</div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- CONTENT (akan diisi oleh JS) -->
+    <div id="content"></div>
 
     <!-- BOTTOM NAV -->
     <div id="bnav">
-        <div class="bn on" id="bn-home" onclick="go('home')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="bn-lbl">Home</div></div>
-        <div class="bn" id="bn-profil" onclick="go('profil')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="bn-lbl">Profil</div></div>
-        <div class="bn" id="bn-tips" onclick="go('tips')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="bn-lbl">Tips</div></div>
-        <div class="bn" id="bn-program" onclick="go('program')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="bn-lbl">Program</div></div>
-        <div class="bn" id="bn-kuis" onclick="go('kuis')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="bn-lbl">Kuis</div></div>
-    </div>
-</div><!-- end app -->
-
-<!-- ===================== MODALS / PANELS ===================== -->
-<div class="modal-panel" id="panelKalkulator">
-    <div class="modal-sheet">
-        <div class="ms-pull"></div>
-        <div class="ms-head">
-            <div class="ms-title">⚖️ Kalkulasi Kalori Personal</div>
-            <div class="ms-sub">Hitung kebutuhan kalori & target program dietmu</div>
-        </div>
-        <div class="ms-body">
-            <div id="kalNotifKuis" style="display:none;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid var(--gold);border-radius:12px;padding:12px 14px;margin-bottom:14px;">
-                <div style="display:flex;gap:10px;align-items:center;">
-                    <div style="font-size:20px;flex-shrink:0;">📝</div>
-                    <div style="flex:1;">
-                        <div style="font-size:13px;font-weight:700;color:#78350F;margin-bottom:3px;">Disarankan: Isi Kuis Dulu</div>
-                        <div style="font-size:12px;color:#92400E;line-height:1.5;">Kuis akan menentukan <strong>tipe metabolisme</strong> & <strong>metode diet terbaik</strong> untukmu.</div>
-                    </div>
-                </div>
-                <button onclick="closePanel('panelKalkulator');go('kuis')" style="margin-top:10px;width:100%;padding:9px;background:var(--gold2);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📝 Isi Kuis Sekarang →</button>
-                <button onclick="document.getElementById('kalNotifKuis').style.display='none'" style="margin-top:6px;width:100%;padding:7px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;">Lanjut Kalkulator Saja</button>
-            </div>
-
-            <div id="kalkulatorForm">
-                <div class="form-group">
-                    <label class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-input" id="inputNama" placeholder="Contoh: Anita Susanti">
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Jenis Kelamin</label>
-                        <select class="form-input" id="inputGender">
-                            <option value="perempuan">Perempuan</option>
-                            <option value="laki">Laki-laki</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Usia (tahun)</label>
-                        <input type="number" class="form-input" id="inputUsia" placeholder="25">
-                    </div>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Berat Badan (kg)</label>
-                        <input type="number" class="form-input" id="inputBerat" placeholder="65" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Tinggi Badan (cm)</label>
-                        <input type="number" class="form-input" id="inputTinggi" placeholder="160">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Aktivitas Harian</label>
-                    <select class="form-input" id="inputAktivitas">
-                        <option value="">— Pilih Level Aktivitas —</option>
-                        <option value="1.2">Tidak Aktif</option>
-                        <option value="1.375" selected>Ringan (1–2x Olahraga)</option>
-                        <option value="1.55">Sedang (3–5x Olahraga)</option>
-                        <option value="1.725">Berat (6–7x Olahraga)</option>
-                        <option value="1.9">Sangat Berat (Atlet)</option>
-                    </select>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Target BB (kg)</label>
-                        <input type="number" class="form-input" id="inputTarget" placeholder="55" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Kecepatan Diet</label>
-                        <select class="form-input" id="inputMetode">
-                            <option value="ringan">Ringan (300 kkal defisit)</option>
-                            <option value="standar" selected>Standar (500 kkal defisit)</option>
-                            <option value="agresif">Agresif (700 kkal defisit)</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="display:flex;gap:8px;margin-top:0;">
-                    <button class="btn-primary" onclick="hitungKalkulator()" id="btnHitung" style="flex:1;">
-                        <i class="fas fa-calculator"></i> Generate Program
-                    </button>
-                    <button class="btn-outline" id="btnResetKal" onclick="resetKalkulator()" style="display:none;">
-                        <i class="fas fa-redo"></i> Reset
-                    </button>
-                </div>
-            </div>
-
-            <div id="hasilKalkulator" style="display:none;margin-top:16px;">
-                <div style="background:linear-gradient(135deg,var(--green),var(--green3));border-radius:16px;padding:18px;margin-bottom:14px;color:white;">
-                    <div style="font-size:11px;opacity:0.7;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">Hasil Kalkulasi</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
-                        <div><div style="font-size:22px;font-weight:800;" id="hasilKkal">—</div><div style="font-size:11px;opacity:0.75;">kkal/hari</div></div>
-                        <div><div style="font-size:22px;font-weight:800;" id="hasilMinggu">—</div><div style="font-size:11px;opacity:0.75;">minggu program</div></div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                        <div><div style="font-size:16px;font-weight:700;" id="hasilTanggal">—</div><div style="font-size:11px;opacity:0.75;">Est. target tercapai</div></div>
-                        <div><div style="font-size:16px;font-weight:700;" id="hasilLingkar">—</div><div style="font-size:11px;opacity:0.75;">Est. lingkar perut</div></div>
-                    </div>
-                </div>
-                <button class="btn-primary" id="btnSimpanKal" onclick="simpanKalkulator(this)">
-                    <i class="fas fa-save"></i> Simpan & Mulai Program
-                </button>
-            </div>
-        </div>
-        <div style="padding:0 20px 20px;"><button class="btn-outline" onclick="closePanel('panelKalkulator')">Tutup</button></div>
+        <div class="bn" id="bn-home" onclick="if(window.go)go('home')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="bn-lbl">Home</div></div>
+        <div class="bn" id="bn-profil" onclick="if(window.go)go('profil')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="bn-lbl">Profil</div></div>
+        <div class="bn" id="bn-tips" onclick="if(window.go)go('tips')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="bn-lbl">Tips</div></div>
+        <div class="bn" id="bn-program" onclick="if(window.go)go('program')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="bn-lbl">Program</div></div>
+        <div class="bn" id="bn-kuis" onclick="if(window.go)go('kuis')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="bn-lbl">Kuis</div></div>
     </div>
 </div>
 
+<!-- MODAL BELI -->
 <div class="modal-panel" id="modalBeli">
     <div class="modal-sheet">
         <div class="ms-pull"></div>
@@ -415,48 +147,38 @@
     </div>
 </div>
 
-<!-- JS files -->
-<script src="js/utils.js"></script>
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+<!-- JS files - load async biar gak blocking -->
+<script src="js/utils.js" defer></script>
+<script src="js/data.js" defer></script>
+<script src="js/app.js" defer></script>
 
-<!-- FALLBACK KEDUA: setelah semua script -->
+<!-- FUNGSI DASAR - langsung jalan tanpa tunggu -->
 <script>
+// Fungsi dasar yang diperlukan segera
+window.goToAktivitas = function() { window.location.href = '../aktivitas.html'; };
+window.closeDrawer = function() { document.getElementById('drawer')?.classList.remove('on'); document.getElementById('overlay')?.classList.remove('on'); };
+window.openDrawer = function() { document.getElementById('drawer')?.classList.add('on'); document.getElementById('overlay')?.classList.add('on'); };
+window.openBeli = function() { document.getElementById('modalBeli')?.classList.add('on'); document.body.style.overflow = 'hidden'; };
+window.closePanel = function(id) { document.getElementById(id)?.classList.remove('on'); document.body.style.overflow = ''; };
+window.dismissReminder = function() { document.getElementById('inAppReminder')?.style.setProperty('display', 'none', 'important'); };
+window.markReminderDone = function() { window.dismissReminder(); };
+window.snoozeReminder = function() { window.dismissReminder(); };
+
+// HAPUS DELAY - langsung sembunyiin access screen
 (function() {
-    setTimeout(function() {
-        var params = new URLSearchParams(window.location.search);
-        var wa = params.get('wa');
-        var voucher = params.get('voucher');
-        if (wa && voucher && wa !== 'null' && voucher !== 'null' && wa !== '' && voucher !== '') {
-            var access = document.getElementById('accessScreen');
-            if (access) access.style.display = 'none';
-            var loading = document.getElementById('loadingScreen');
-            if (loading) loading.style.display = 'flex';
-            var app = document.getElementById('app');
-            if (app) app.style.display = 'flex';
-            console.log('✅ Fallback kedua: access screen dipastikan tersembunyi');
-        }
-    }, 100);
+    var params = new URLSearchParams(window.location.search);
+    var wa = params.get('wa');
+    var voucher = params.get('voucher');
+    
+    if (wa && voucher && wa !== 'null' && voucher !== 'null' && wa !== '' && voucher !== '') {
+        var access = document.getElementById('accessScreen');
+        var loading = document.getElementById('loadingScreen');
+        var app = document.getElementById('app');
+        if (access) access.style.display = 'none';
+        if (loading) loading.style.display = 'flex';
+        if (app) app.style.display = 'flex';
+    }
 })();
-
-// Fungsi goToAktivitas untuk tombol access screen
-function goToAktivitas() {
-    window.location.href = '../aktivitas.html';
-}
-
-// Fungsi closeDrawer sementara (akan diganti oleh app.js)
-function closeDrawer() {}
-function openDrawer() {}
-function go(page) {}
-function openPanel(id) {}
-function closePanel(id) {}
-function openBeli() { openPanel('modalBeli'); }
-function openFaq() {}
-function setMissionMode() {}
-function toggleMission() {}
-function hitungKalkulator() {}
-function resetKalkulator() {}
-function simpanKalkulator() {}
 </script>
 
 </body>
