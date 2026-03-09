@@ -1,197 +1,275 @@
-/* ============================================================
-   KEMOENIK APP v2.0 - utils.js
-   LocalStorage helpers, StateManager, Notifications
-   ============================================================ */
+/*
+ * utils.js — KEMOENIK
+ * Access Control, Voucher, initApp, Navigation, Panels, Toast, Utilities
+ * Depends on: data.js
+ */
 
-// LOCAL STORAGE HELPERS
-function _lsKey(wa, suffix) {
-  return 'kemoenik_' + (wa || 'guest') + '_' + suffix;
+// ACCESS CONTROL
+// ============================================================
+function goToAktivitas() {
+  window.location.href = APP_URL;
 }
 
-function lsSave(wa, key, data) {
+function getQueryParam(key) {
+  var params = new URLSearchParams(window.location.search);
+  return params.get(key) || '';
+}
+
+// ============================================================
+// INIT — DOMContentLoaded untuk pastikan DOM siap sebelum akses element
+// ============================================================
+function normalizeWA(wa) {
+  wa = wa.replace(/\D/g, '');
+  if (wa.startsWith('08')) return '62' + wa.substring(1);
+  if (wa.startsWith('+62')) return wa.substring(1);
+  if (wa.startsWith('62')) return wa;
+  if (wa.startsWith('0')) return '62' + wa.substring(1);
+  return wa;
+}
+
+async function checkVoucherValid(wa, voucher) {
   try {
-    localStorage.setItem(_lsKey(wa, key), JSON.stringify(data));
-    return true;
-  } catch(e) {
-    console.warn('lsSave error:', e);
-    return false;
-  }
-}
-
-function lsLoad(wa, key) {
-  try {
-    var raw = localStorage.getItem(_lsKey(wa, key));
-    return raw ? JSON.parse(raw) : null;
-  } catch(e) {
-    return null;
-  }
-}
-
-function lsRemove(wa, key) {
-  try { localStorage.removeItem(_lsKey(wa, key)); } catch(e) {}
-}
-
-function lsLoadAll(wa) {
-  return {
-    kalkulator: lsLoad(wa, 'kalkulator'),
-    quiz: lsLoad(wa, 'quiz'),
-    evaluasi: lsLoad(wa, 'evaluasi') || [],
-    profile: lsLoad(wa, 'profile')
-  };
-}
-
-// STATE MANAGER
-var StateManager = function() {
-  this._state = {
-    user: { nama:'', wa:'', voucher:'', gender:'perempuan', usia:0, berat:0, tinggi:0 },
-    kalkulator: null,
-    evaluasi: [],
-    quiz: null,
-    misiChecked: {}
-  };
-};
-
-StateManager.prototype.get = function(path, defaultValue) {
-  if (defaultValue === undefined) defaultValue = null;
-  var keys = path.split('.');
-  var value = this._state;
-  for (var i = 0; i < keys.length; i++) {
-    if (value === null || value === undefined) return defaultValue;
-    value = value[keys[i]];
-  }
-  return value !== undefined ? value : defaultValue;
-};
-
-StateManager.prototype.set = function(path, value) {
-  var keys = path.split('.');
-  var target = this._state;
-  for (var i = 0; i < keys.length - 1; i++) {
-    if (!target[keys[i]] || typeof target[keys[i]] !== 'object') target[keys[i]] = {};
-    target = target[keys[i]];
-  }
-  target[keys[keys.length - 1]] = value;
-  this._persist();
-};
-
-StateManager.prototype._persist = function() {
-  try {
-    localStorage.setItem('kemoenik_state_v2', JSON.stringify(this._state));
-  } catch(e) { console.warn('State persist failed:', e); }
-};
-
-StateManager.prototype.loadFromStorage = function() {
-  try {
-    var saved = localStorage.getItem('kemoenik_state_v2');
-    if (saved) {
-      var parsed = JSON.parse(saved);
-      var s = this._state;
-      if (parsed.user) s.user = Object.assign({}, s.user, parsed.user);
-      if (parsed.kalkulator) s.kalkulator = parsed.kalkulator;
-      if (parsed.evaluasi && Array.isArray(parsed.evaluasi)) s.evaluasi = parsed.evaluasi;
-      if (parsed.quiz) s.quiz = parsed.quiz;
-      if (parsed.misiChecked) s.misiChecked = parsed.misiChecked;
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec';
+    const response = await fetch(
+      `${APPS_SCRIPT_URL}?action=verify&kode=${encodeURIComponent(voucher)}&wa=${encodeURIComponent(wa)}&_=${Date.now()}`
+    );
+    const data = await response.json();
+    if (data.status === "SUCCESS" || data.status === "ACTIVE_SAME_WA") {
+      return { valid: true, expiredDate: data.tanggal_expired };
+    } else if (data.status === "EXPIRED") {
+      return { valid: false, message: "Voucher sudah expired. Silakan gunakan voucher baru." };
+    } else if (data.status === "ACTIVE_DIFFERENT_WA") {
+      return { valid: false, message: "Voucher ini digunakan nomor WA lain." };
+    } else {
+      return { valid: false, message: "Voucher tidak valid." };
     }
-  } catch(e) { console.warn('State load failed:', e); }
-};
+  } catch(e) {
+    console.error("checkVoucherValid error:", e);
+    return { valid: true, fallback: true };
+  }
+}
 
-var state = new StateManager();
-var appState = state._state;
+function showVoucherExpiredBlock(message) {
+  document.getElementById('loadingScreen').style.display = 'none';
+  var blockHTML = `
+    <div style="position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;z-index:9999;text-align:center;">
+      <div style="font-size:64px;margin-bottom:20px;">🔒</div>
+      <div style="font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--green2);margin-bottom:12px;">Voucher Expired</div>
+      <div style="font-size:14px;color:var(--text3);line-height:1.7;max-width:320px;margin-bottom:30px;">
+        ${message}<br><br>
+        Silakan verifikasi voucher baru di halaman aktivitas untuk melanjutkan program diet Anda.
+      </div>
+      <button onclick="goToAktivitas()" style="padding:16px 32px;background:linear-gradient(135deg,var(--green),var(--green2));color:#FFF;border:none;border-radius:var(--r-lg);font-family:var(--font-body);font-size:15px;font-weight:700;cursor:pointer;">
+        Verifikasi Voucher Baru
+      </button>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', blockHTML);
+}
 
-// NOTIFICATION SERVICE
-var NotificationService = {
-  requestPermission: function() {
-    if (!("Notification" in window)) return Promise.resolve(false);
-    return Notification.requestPermission().then(function(p) { return p === "granted"; });
-  },
-  
-  scheduleReminder: function(title, body, timestamp) {
-    if (!("Notification" in window) || Notification.permission !== "granted") return;
-    var now = Date.now();
-    var delay = timestamp - now;
-    if (delay > 0) {
-      setTimeout(function() {
-        new Notification(title, {
-          body: body,
-          icon: "https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg",
-          badge: "https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg",
-          tag: "kemoenik-reminder",
-          requireInteraction: true
+function initApp() {
+  try {
+    var wa = getQueryParam('wa') || localStorage.getItem('kemoenik_wa') || '';
+    var voucher = getQueryParam('voucher') || localStorage.getItem('kemoenik_voucher') || '';
+    var mode = getQueryParam('mode') || 'continue';
+
+    if (!wa) wa = localStorage.getItem('kemoenik_temp_wa') || '';
+    if (!voucher) voucher = localStorage.getItem('kemoenik_temp_voucher') || '';
+
+    if (!wa || !voucher) {
+      document.getElementById('accessScreen').style.display = 'flex';
+      return;
+    }
+
+    var normalizedWA = normalizeWA(wa);
+
+    localStorage.setItem('kemoenik_wa', normalizedWA);
+    localStorage.setItem('kemoenik_voucher', voucher);
+    localStorage.setItem('kemoenik_mode', mode);
+
+    document.getElementById('accessScreen').style.display = 'none';
+    document.getElementById('loadingScreen').style.display = 'flex';
+
+    // Load data dari localStorage (berdasarkan nomor WA)
+    var userData = DataService.loadUserData(normalizedWA);
+
+    // Handle mode "new" — reset program, keep profile
+    if (mode === 'new' && userData) {
+      DataService.resetProgram(normalizedWA);
+      userData = { profile: userData.profile };
+    }
+
+    // Sync ke appState dari data tersimpan
+    if (userData) {
+      if (userData.kalkulator) {
+        state.set('kalkulator', {
+          dietCal: userData.kalkulator.dietCal,
+          targetMinggu: userData.kalkulator.targetMinggu,
+          target: userData.kalkulator.target,
+          estTanggal: userData.kalkulator.estTanggal,
+          estLingkar: userData.kalkulator.estLingkar,
+          nama: userData.kalkulator.nama || (userData.profile ? userData.profile.nama : '') || '',
+          bmr: userData.kalkulator.bmr,
+          tdee: userData.kalkulator.tdee,
+          defisit: userData.kalkulator.defisit,
+          metode: userData.kalkulator.metode,
+          startDate: userData.kalkulator.startDate,
+          startDateISO: userData.kalkulator.startDateISO
         });
-      }, delay);
-    }
-  },
-
-  setupDailyReminders: function() {
-    if (!appState.kalkulator) return;
-    var now = new Date();
-    var times = [
-      { hour: 7, minute: 30, title: "☀️ KEMOENIK Pagi", body: "Minum 3 kapsul sesudah sarapan + air hangat" },
-      { hour: 18, minute: 30, title: "🌙 KEMOENIK Malam", body: "Minum 3 kapsul sesudah makan malam + air putih" }
-    ];
-    var self = this;
-    times.forEach(function(t) {
-      var reminderTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), t.hour, t.minute);
-      if (reminderTime > now) {
-        self.scheduleReminder(t.title, t.body, reminderTime.getTime());
       }
+
+      if (userData.quiz) {
+        state.set('quiz', {
+          tipe: userData.quiz.tipe,
+          tipeName: userData.quiz.tipeName,
+          metode: userData.quiz.metode,
+          metodeName: userData.quiz.metodeName,
+          skor: userData.quiz.skor,
+          tagline: userData.quiz.tagline,
+          tipe_emoji: userData.quiz.tipe_emoji
+        });
+      }
+
+      if (userData.evaluasi && Array.isArray(userData.evaluasi)) {
+        state.set('evaluasi', userData.evaluasi);
+      }
+
+      if (userData.profile) {
+        state.set('user.nama', userData.profile.nama);
+        state.set('user.wa', normalizedWA);
+      }
+    }
+
+    // Set WA di state
+    state.set('user.wa', normalizedWA);
+
+    if (appState.kalkulator && appState.kalkulator.nama) {
+      state.set('user.nama', appState.kalkulator.nama);
+      appState.user.nama = appState.kalkulator.nama;
+    }
+
+    state._persist();
+
+    // Simpan/update profile ke localStorage
+    DataService.saveProfile(normalizedWA, {
+      nama: appState.user.nama || 'User',
+      wa: normalizedWA,
+      voucherAktif: voucher,
+      lastActive: new Date().toISOString()
     });
+
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+
+    renderAll();
+    setTimeout(renderHomeJadwal, 150);
+
+    if (localStorage.getItem('kemoenik_just_finished_quiz') === 'true') {
+      localStorage.removeItem('kemoenik_just_finished_quiz');
+      setTimeout(function() {
+        renderProfilPage();
+        ['acc-trait','acc-karakter','acc-skor'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.add('on');
+        });
+      }, 200);
+    }
+
+  } catch(e) {
+    console.error('initApp error:', e);
+    showToast('Gagal memuat aplikasi. Coba refresh halaman.');
   }
-};
+}
 
-window.NotificationService = NotificationService;
+// Gunakan DOMContentLoaded agar elemen HTML sudah ada saat init berjalan
+document.addEventListener('DOMContentLoaded', function() { initApp(); });
+// Fallback: jika DOMContentLoaded sudah lewat (misal script di bawah body)
+if (document.readyState === 'interactive' || document.readyState === 'complete') { initApp(); }
 
-function checkAndShowReminder() {
-  if (!appState.kalkulator) return;
-  var now = new Date();
-  var hour = now.getHours();
-  if (hour >= 7 && hour < 9) {
-    showInAppReminder("☀️ KEMOENIK Pagi", "Minum 3 kapsul sesudah sarapan + air hangat");
-  } else if (hour >= 18 && hour < 20) {
-    showInAppReminder("🌙 KEMOENIK Malam", "Minum 3 kapsul sesudah makan malam + air putih");
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function go(page) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.pill').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.bn').forEach(function(b){ b.classList.remove('on'); });
+  document.querySelectorAll('.d-item').forEach(function(d){ d.classList.remove('on'); });
+
+  var pg = document.getElementById('page-' + page);
+  if (pg) pg.classList.add('on');
+
+  // Pill nav (4 pills: home, profil, tips, program)
+  var pills = document.querySelectorAll('.pill');
+  var pillMap = {home:0, profil:1, tips:2, program:3};
+  if (pillMap[page] !== undefined && pills[pillMap[page]]) pills[pillMap[page]].classList.add('on');
+
+  // Bottom nav
+  var bn = document.getElementById('bn-' + page);
+  if (bn) bn.classList.add('on');
+
+  // Drawer
+  var di = document.getElementById('di-' + page);
+  if (di) di.classList.add('on');
+
+  // Re-render profil setiap kali dibuka agar selalu fresh
+  if (page === 'profil') renderProfilPage();
+
+  // Scroll top
+  var content = document.getElementById('content');
+  if (content) content.scrollTo({top: 0, behavior:'smooth'});
+
+  gtag('event', 'page_view', { page_title: page });
+}
+
+function openDrawer() {
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('overlay').classList.add('on');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('overlay').classList.remove('on');
+}
+
+function openPanel(id) {
+  // Panel-specific pre-hooks
+  if (id === 'panelKalkulator') {
+    // Tampilkan notif kuis jika belum mengisi kuis
+    var kalNotif = document.getElementById('kalNotifKuis');
+    if (kalNotif) kalNotif.style.display = appState.quiz ? 'none' : 'block';
+
+    // Hanya load form jika belum ada _tempKalData yang pending (user sedang lihat hasil)
+    var hasilVisible = document.getElementById('hasilKalkulator') && document.getElementById('hasilKalkulator').style.display !== 'none';
+    if (!hasilVisible) {
+      // Reset state hasil dulu
+      window._tempKalData = null;
+      document.getElementById('hasilKalkulator').style.display = 'none';
+      document.getElementById('kalkulatorForm').style.display = 'block';
+      loadKalkulatorForm();
+    }
   }
+  if (id === 'panelEvaluasi') {
+    var n = appState.evaluasi.length + 1;
+    var weekLabel = editingEvalIdx >= 0 ? 'Edit Minggu ke-' + appState.evaluasi[editingEvalIdx].minggu : 'Evaluasi Minggu ke-' + n;
+    document.getElementById('evalWeekDisplay').textContent = weekLabel;
+    renderEvalHistory();
+  }
+  if (id === 'panelMenu') renderMenuHarian();
+  if (id === 'panelJadwalOlahraga') renderJadwalOlahraga();
+  if (id === 'panelPanduanLengkap') {
+    if (document.getElementById('targetKcalLengkap')) {
+      document.getElementById('targetKcalLengkap').textContent = appState.kalkulator ? Math.round(appState.kalkulator.dietCal) : '—';
+    }
+  }
+  document.getElementById(id).classList.add('on');
+  document.body.style.overflow = 'hidden';
+  gtag('event', 'open_panel', { panel: id });
+}
+function closePanel(id) {
+  document.getElementById(id).classList.remove('on');
+  document.body.style.overflow = '';
 }
 
-function showInAppReminder(title, body) {
-  var today = new Date().toDateString();
-  var dismissed = localStorage.getItem('kemoenik_reminder_dismissed');
-  if (dismissed === today) return;
-  var el = document.getElementById('inAppReminder');
-  if (!el) return;
-  document.getElementById('reminderTitle').textContent = title;
-  document.getElementById('reminderBody').textContent = body;
-  el.style.display = 'block';
-}
-
-function dismissReminder() {
-  var el = document.getElementById('inAppReminder');
-  if (el) el.style.display = 'none';
-  localStorage.setItem('kemoenik_reminder_dismissed', new Date().toDateString());
-}
-
-function markReminderDone() {
-  dismissReminder();
-  showToast('✅ Great! Konsistensi adalah kunci sukses 💪');
-}
-
-function snoozeReminder() {
-  dismissReminder();
-  setTimeout(function() {
-    var el = document.getElementById('inAppReminder');
-    if (el) el.style.display = 'block';
-  }, 15 * 60 * 1000);
-}
-
-// DRAWER RENDER
-function renderDrawer() {
-  var k = appState.kalkulator;
-  var nama = k ? k.nama : (appState.user.nama || '—');
-  var dName = document.getElementById('dName');
-  var dSub = document.getElementById('dSub');
-  if (dName) dName.textContent = nama || '—';
-  if (dSub) dSub.textContent = appState.quiz ? appState.quiz.tipeName : 'Program Diet KEMOENIK';
-}
-
-// TOAST NOTIFICATION
 function showToast(msg) {
   var existing = document.getElementById('appToast');
   if (existing) existing.remove();
@@ -206,7 +284,7 @@ function showToast(msg) {
   }, 3000);
 }
 
-// ESCAPE HTML
+// ── UTILITY: escape HTML untuk cegah XSS ────────────────────
 function escHtml(str) {
   if (!str) return '';
   return String(str)
@@ -217,7 +295,7 @@ function escHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-// SAFE HTML SETTER
+// setSafeHTML: bersihkan innerHTML via DOM API (untuk konten dinamis kompleks)
 function setSafeHTML(el, html) {
   if (!el) return;
   el.innerHTML = '';
@@ -225,83 +303,27 @@ function setSafeHTML(el, html) {
   tmp.innerHTML = html;
   while (tmp.firstChild) el.appendChild(tmp.firstChild);
 }
+function openBeli() { openPanel('modalBeli'); }
+function openFaq() { go('home'); setTimeout(function(){ document.getElementById('faqHomeSection').scrollIntoView({behavior:'smooth'}); }, 200); }
 
-// GET TODAY STRING
-function getTodayStr() { 
-  return new Date().toISOString().split('T')[0]; 
-}
-
-// SET MISSION MODE
-function setMissionMode(mode) {
-  var normalSet = document.getElementById('misiNormal');
-  var ifSet = document.getElementById('misiIF');
-  var normalBtn = document.getElementById('modeNormal');
-  var ifBtn = document.getElementById('modeIF');
-  
-  if (normalSet) normalSet.classList.remove('show');
-  if (ifSet) ifSet.classList.remove('show');
-  if (normalBtn) normalBtn.classList.remove('on');
-  if (ifBtn) ifBtn.classList.remove('on');
-  
-  if (mode === 'normal') {
-    if (normalSet) normalSet.classList.add('show');
-    if (normalBtn) normalBtn.classList.add('on');
-  } else {
-    if (ifSet) ifSet.classList.add('show');
-    if (ifBtn) ifBtn.classList.add('on');
-  }
-  localStorage.setItem('kemoenik_mission_mode', mode);
-}
-
-// TOGGLE MISSION
-function toggleMission(itemId, checkId) {
-  var item = document.getElementById(itemId);
-  var check = document.getElementById(checkId);
-  if (!item || !check) return;
-  var isDone = item.classList.toggle('done');
-  if (isDone) { 
-    check.classList.add('checked'); 
-    check.textContent = '✓'; 
-  } else { 
-    check.classList.remove('checked'); 
-    check.textContent = ''; 
-  }
-  var saved = JSON.parse(localStorage.getItem('kemoenik_misi_' + getTodayStr()) || '{}');
-  saved[itemId] = isDone;
-  localStorage.setItem('kemoenik_misi_' + getTodayStr(), JSON.stringify(saved));
-}
-
-// LOAD MISSION CHECKED
-function loadMisiChecked() {
-  var saved = JSON.parse(localStorage.getItem('kemoenik_misi_' + getTodayStr()) || '{}');
-  Object.keys(saved).forEach(function(id) {
-    var checkId = id.replace('n','nc').replace('i','ic');
-    var item = document.getElementById(id);
-    var check = document.getElementById(checkId);
-    if (item && check && saved[id]) {
-      item.classList.add('done');
-      check.classList.add('checked');
-      check.textContent = '✓';
-    }
-  });
-  var mode = localStorage.getItem('kemoenik_mission_mode') || 'normal';
-  setMissionMode(mode);
-}
-
-// INIT ON DOM READY
-document.addEventListener('DOMContentLoaded', function() {
-  state.loadFromStorage();
-  if (typeof renderFAQ === 'function') renderFAQ();
-  loadMisiChecked();
-  setInterval(checkAndShowReminder, 60000);
-  setTimeout(checkAndShowReminder, 2000);
+// Close panel on backdrop click
+document.querySelectorAll('.modal-panel').forEach(function(panel){
+  panel.addEventListener('click', function(e){ if(e.target === panel) closePanel(panel.id); });
 });
 
-// ESCAPE KEY HANDLER
-window.addEventListener('keydown', function(e){
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-panel.on').forEach(function(p){ 
-      if (typeof closePanel === 'function') closePanel(p.id); 
-    });
-  }
-});
+// ============================================================
+// ACCORDION
+// ============================================================
+function tog(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('on');
+}
+
+function togFaq(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('on');
+}
+
+// ============================================================
+// RENDER ALL
+// ============================================================
