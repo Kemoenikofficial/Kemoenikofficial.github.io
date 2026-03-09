@@ -104,7 +104,7 @@
         @keyframes spin { to { transform:rotate(360deg); } }
         @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
     </style>
-    <!-- Google Analytics (ganti dengan ID punya Anda) -->
+    <!-- Google Analytics (ganti dengan ID Anda) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -192,7 +192,7 @@
     <script>
         // Konfigurasi
         const CONFIG = {
-            PANDUAN_URL: 'index.html',  // file utama berada di folder yang sama
+            PANDUAN_URL: 'https://kemoenikofficial.github.io/PANDUANKEMOENIK/',
             APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec',
             VOUCHER_DAYS: 7
         };
@@ -248,7 +248,7 @@
                 btn.classList.remove('loading');
 
                 if (data.status === 'SUCCESS' || data.status === 'ACTIVE_SAME_WA') {
-                    // Cek apakah user punya data di localStorage (bukan Firebase)
+                    // Cek apakah user punya data di localStorage
                     const storageKey = `kemoenik_${normalizedWA}`;
                     const existingData = localStorage.getItem(storageKey);
                     const hasExistingData = existingData ? JSON.parse(existingData).kalkulator : false;
