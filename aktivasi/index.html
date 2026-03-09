@@ -7,414 +7,104 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            font-family:'Plus Jakarta Sans',sans-serif;
+            background:linear-gradient(135deg,#e6f4ea 0%,#f5fdf8 60%,#fff 100%);
+            min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px;
         }
-
         .container {
-            background: white;
-            padding: 35px 30px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            background:#fff; padding:35px 30px; border-radius:20px; width:100%; max-width:420px;
+            box-shadow:0 25px 50px rgba(0,0,0,0.15);
         }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .logo img {
-            width: 90px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-
-        .logo h2 {
-            font-size: 22px;
-            font-weight: 800;
-            color: #2E8B35;
-        }
-
-        .logo p {
-            font-size: 14px;
-            color: #6A8870;
-            margin-top: 5px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #3A6040;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-wrapper i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6A8870;
-        }
-
+        .logo { text-align:center; margin-bottom:25px; }
+        .logo img { width:90px; border-radius:50%; margin-bottom:10px; }
+        .logo h2 { font-size:22px; font-weight:800; color:#2E8B35; }
+        .logo p { font-size:14px; color:#6A8870; margin-top:5px; }
+        .form-group { margin-bottom:18px; }
+        .form-group label { font-size:13px; font-weight:600; color:#3A6040; margin-bottom:8px; display:block; }
+        .input-wrapper { position:relative; }
+        .input-wrapper i { position:absolute; left:15px; top:50%; transform:translateY(-50%); color:#6A8870; }
         input {
-            width: 100%;
-            padding: 14px 14px 14px 45px;
-            border-radius: 12px;
-            border: 2px solid #C8E0CC;
-            font-size: 15px;
-            background: #F5F9F6;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: all 0.2s;
+            width:100%; padding:14px 14px 14px 45px; border-radius:12px; border:2px solid #C8E0CC;
+            font-size:15px; background:#F5F9F6; font-family:'Plus Jakarta Sans',sans-serif;
+            transition:all 0.2s;
         }
-
         input:focus {
-            outline: none;
-            border-color: #2E8B35;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(46, 139, 53, 0.1);
+            outline:none; border-color:#2E8B35; background:#fff; box-shadow:0 0 0 4px rgba(46,139,53,0.1);
         }
-
         button {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #2E8B35 0%, #1E6B24 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            margin-top: 10px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            width:100%; padding:16px; background:linear-gradient(135deg,#2E8B35 0%,#1E6B24 100%);
+            color:#fff; border:none; border-radius:12px; font-size:16px; font-weight:700; margin-top:10px;
+            cursor:pointer; transition:transform 0.2s; font-family:'Plus Jakarta Sans',sans-serif;
         }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        button.loading .btn-text {
-            display: none;
-        }
-
+        button:active { transform:scale(0.98); }
+        button.loading .btn-text { display:none; }
         .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: none;
-            margin: 0 auto;
+            width:20px; height:20px; border:3px solid rgba(255,255,255,0.3); border-top-color:#fff;
+            border-radius:50%; animation:spin 1s linear infinite; display:none; margin:0 auto;
         }
-
-        button.loading .spinner {
-            display: block;
-        }
-
-        .result-box {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 12px;
-            color: white;
-            text-align: left;
-            line-height: 1.5;
-        }
-
-        .success {
-            background: linear-gradient(135deg, #2E8B35, #34A03C);
-        }
-
-        .warning {
-            background: linear-gradient(135deg, #E8A020, #C07E10);
-        }
-
-        .error {
-            background: linear-gradient(135deg, #DC2626, #B91C1C);
-        }
-
+        button.loading .spinner { display:block; }
+        .result-box { margin-top:25px; padding:20px; border-radius:12px; color:#fff; text-align:left; line-height:1.5; }
+        .success { background:linear-gradient(135deg,#2E8B35,#34A03C); }
+        .warning { background:linear-gradient(135deg,#E8A020,#C07E10); }
+        .error { background:linear-gradient(135deg,#DC2626,#B91C1C); }
         .btn-lanjut {
-            display: none;
-            margin-top: 15px;
-            text-align: center;
-            padding: 14px;
-            border-radius: 12px;
-            border: 2px solid #2E8B35;
-            color: #2E8B35;
-            text-decoration: none;
-            font-weight: 700;
-            cursor: pointer;
-            background: white;
-            transition: all 0.2s;
+            display:none; margin-top:15px; text-align:center; padding:14px; border-radius:12px;
+            border:2px solid #2E8B35; color:#2E8B35; text-decoration:none; font-weight:700; cursor:pointer;
+            background:#fff; transition:all 0.2s;
         }
-
-        .btn-lanjut:hover {
-            background: #2E8B35;
-            color: white;
-        }
-
-        .privacy-text {
-            font-size: 11px;
-            color: #6A8870;
-            margin-top: 6px;
-            line-height: 1.4;
-            font-style: italic;
-        }
-
-        .faq-section {
-            margin-top: 30px;
-            border-top: 1px solid #C8E0CC;
-            padding-top: 20px;
-        }
-
-        .faq-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #142418;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .accordion {
-            border: 1px solid #C8E0CC;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .accordion-item {
-            border-bottom: 1px solid #C8E0CC;
-        }
-
-        .accordion-item:last-child {
-            border-bottom: none;
-        }
-
+        .btn-lanjut:hover { background:#2E8B35; color:#fff; }
+        .privacy-text { font-size:11px; color:#6A8870; margin-top:6px; line-height:1.4; font-style:italic; }
+        .faq-section { margin-top:30px; border-top:1px solid #C8E0CC; padding-top:20px; }
+        .faq-title { font-size:15px; font-weight:700; color:#142418; margin-bottom:15px; text-align:center; }
+        .accordion { border:1px solid #C8E0CC; border-radius:10px; overflow:hidden; margin-bottom:10px; }
+        .accordion-item { border-bottom:1px solid #C8E0CC; }
+        .accordion-item:last-child { border-bottom:none; }
         .accordion-header {
-            width: 100%;
-            padding: 14px;
-            background: #F5F9F6;
-            border: none;
-            text-align: left;
-            font-size: 13px;
-            font-weight: 600;
-            color: #3A6040;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.3s;
+            width:100%; padding:14px; background:#F5F9F6; border:none; text-align:left; font-size:13px;
+            font-weight:600; color:#3A6040; cursor:pointer; display:flex; justify-content:space-between;
+            align-items:center; transition:background 0.3s;
         }
-
-        .accordion-header:hover {
-            background: #E8F5EB;
-        }
-
-        .accordion-header i {
-            transition: transform 0.3s;
-            color: #2E8B35;
-        }
-
-        .accordion-header.active i {
-            transform: rotate(180deg);
-        }
-
+        .accordion-header:hover { background:#E8F5EB; }
+        .accordion-header i { transition:transform 0.3s; color:#2E8B35; }
+        .accordion-header.active i { transform:rotate(180deg); }
         .accordion-body {
-            padding: 0 15px;
-            max-height: 0;
-            overflow: hidden;
-            background: white;
-            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-            font-size: 13px;
-            color: #3A6040;
-            line-height: 1.6;
+            padding:0 15px; max-height:0; overflow:hidden; background:#fff; transition:max-height 0.3s ease-out;
+            font-size:13px; color:#3A6040; line-height:1.6;
         }
-
-        .accordion-body.show {
-            max-height: 200px;
-            padding: 15px;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
+        .accordion-body.show { max-height:200px; padding:15px; }
+        .social-links { display:flex; justify-content:center; gap:15px; margin-top:15px; }
         .social-links a {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            text-decoration: none;
-            font-size: 13px;
-            color: #3A6040;
-            background: #F5F9F6;
-            padding: 8px 12px;
-            border-radius: 20px;
-            transition: background 0.3s;
+            display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-size:13px;
+            color:#3A6040; background:#F5F9F6; padding:8px 12px; border-radius:20px;
         }
-
-        .social-links a:hover {
-            background: #E8F5EB;
-        }
-
-        .social-links i {
-            font-size: 16px;
-        }
-
+        .social-links a:hover { background:#E8F5EB; }
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(20, 36, 24, 0.6);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            backdrop-filter: blur(6px);
+            display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+            background:rgba(20,36,24,0.6); z-index:1000; justify-content:center; align-items:center;
+            padding:20px; backdrop-filter:blur(6px);
         }
-
         .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            animation: slideUp 0.3s ease;
+            background:#fff; padding:30px; border-radius:20px; max-width:400px; width:100%;
+            text-align:center; animation:slideUp 0.3s ease;
         }
-
-        .modal-icon {
-            font-size: 48px;
-            color: #2E8B35;
-            margin-bottom: 15px;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            color: #142418;
-        }
-
-        .modal-desc {
-            font-size: 14px;
-            color: #6A8870;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
+        .modal-icon { font-size:48px; color:#2E8B35; margin-bottom:15px; }
+        .modal-title { font-size:20px; font-weight:800; margin-bottom:10px; color:#142418; }
+        .modal-desc { font-size:14px; color:#6A8870; margin-bottom:20px; line-height:1.5; }
+        .modal-buttons { display:flex; gap:10px; }
         .modal-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            flex:1; padding:12px; border-radius:10px; border:none; font-size:14px; font-weight:700;
+            cursor:pointer; transition:all 0.3s; font-family:'Plus Jakarta Sans',sans-serif;
         }
-
-        .modal-btn-primary {
-            background: linear-gradient(135deg, #2E8B35, #1E6B24);
-            color: white;
-        }
-
-        .modal-btn-secondary {
-            background: #F5F9F6;
-            color: #3A6040;
-            border: 1px solid #C8E0CC;
-        }
-
-        .cloud-info {
-            margin-top: 20px;
-            background: #E8F5EB;
-            border: 1.5px solid #A8CEB0;
-            border-radius: 12px;
-            padding: 16px;
-        }
-
-        .cloud-info-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .cloud-info-header i {
-            color: #2E8B35;
-            font-size: 20px;
-        }
-
-        .cloud-info-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #1A5C20;
-        }
-
-        .cloud-info-text {
-            font-size: 12px;
-            color: #3A6040;
-            line-height: 1.6;
-        }
-
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 13px;
-            color: #6A8870;
-        }
-
-        .footer a {
-            color: #2E8B35;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .modal-btn-primary { background:linear-gradient(135deg,#2E8B35,#1E6B24); color:#fff; }
+        .modal-btn-secondary { background:#F5F9F6; color:#3A6040; border:1px solid #C8E0CC; }
+        .footer { margin-top:20px; text-align:center; font-size:13px; color:#6A8870; }
+        .footer a { color:#2E8B35; font-weight:600; text-decoration:none; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
     </style>
-    
-    <!-- Google Analytics 4 -->
+    <!-- Google Analytics (ganti dengan ID punya Anda) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -433,30 +123,18 @@
 
         <div class="form-group">
             <label>Nama Lengkap</label>
-            <div class="input-wrapper">
-                <i class="fas fa-user"></i>
-                <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
-            </div>
+            <div class="input-wrapper"><i class="fas fa-user"></i><input type="text" id="nama" placeholder="Masukkan nama lengkap" required></div>
         </div>
 
         <div class="form-group">
             <label>Nomor WhatsApp</label>
-            <div class="input-wrapper">
-                <i class="fab fa-whatsapp"></i>
-                <input type="tel" id="wa" placeholder="Contoh: 08123456789" required>
-            </div>
-            <p class="privacy-text">
-                <i class="fas fa-shield-alt"></i> 
-                "Kami menjamin privasi data Anda sesuai kebijakan Kebijakan Privasi. Nomor WhatsApp hanya digunakan untuk sinkronisasi data diet Anda."
-            </p>
+            <div class="input-wrapper"><i class="fab fa-whatsapp"></i><input type="tel" id="wa" placeholder="Contoh: 08123456789" required></div>
+            <p class="privacy-text"><i class="fas fa-shield-alt"></i> Nomor WA hanya digunakan untuk sinkronisasi data diet Anda.</p>
         </div>
 
         <div class="form-group">
             <label>Kode Konsultasi</label>
-            <div class="input-wrapper">
-                <i class="fas fa-ticket-alt"></i>
-                <input type="text" id="kode" placeholder="Masukkan kode unik" required>
-            </div>
+            <div class="input-wrapper"><i class="fas fa-ticket-alt"></i><input type="text" id="kode" placeholder="Masukkan kode unik" required></div>
         </div>
 
         <button id="btnCek" onclick="cekKode()">
@@ -464,145 +142,63 @@
             <div class="spinner"></div>
         </button>
 
-        <a id="btnLanjut" class="btn-lanjut">
-            <i class="fas fa-book-open"></i> Buka Panduan
-        </a>
+        <a id="btnLanjut" class="btn-lanjut"><i class="fas fa-book-open"></i> Buka Panduan</a>
 
         <div id="result"></div>
-
-        <!-- Cloud Info -->
-        <div class="cloud-info">
-            <div class="cloud-info-header">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <span class="cloud-info-title">✅ Data Kamu Aman di Cloud!</span>
-            </div>
-            <p class="cloud-info-text">
-                Progress diet, evaluasi mingguan, dan timeline kamu tersimpan otomatis di server kami. Ganti HP, hapus cache, atau ganti browser — data tetap aman dan bisa diakses kapanpun dengan nomor WA yang sama.
-            </p>
-        </div>
 
         <!-- FAQ Section -->
         <div class="faq-section">
             <div class="faq-title">Masa Aktif & Data (Sistem Voucher)</div>
-            
             <div class="accordion">
                 <div class="accordion-item">
-                    <button class="accordion-header">
-                        1. Kenapa saya tidak bisa login/terkunci?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="accordion-body">
-                        "Voucher Anda sudah melewati batas 7 hari. Untuk melanjutkan progres dan melihat menu minggu berikutnya, silakan masukkan kode voucher baru dari kemasan KEMOENIK Anda."
-                    </div>
+                    <button class="accordion-header">1. Kenapa saya tidak bisa login/terkunci? <i class="fas fa-chevron-down"></i></button>
+                    <div class="accordion-body">Voucher Anda sudah melewati batas 7 hari. Masukkan kode baru dari kemasan.</div>
                 </div>
-
                 <div class="accordion-item">
-                    <button class="accordion-header">
-                        2. Apakah data berat badan hilang kalau voucher habis?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="accordion-body">
-                        "Tenang Kak! Masukkan Nomor WA yang sama saat aktivasi voucher baru, maka semua riwayat timbangan dan grafik progres Anda akan otomatis muncul kembali."
-                    </div>
+                    <button class="accordion-header">2. Apakah data berat badan hilang kalau voucher habis? <i class="fas fa-chevron-down"></i></button>
+                    <div class="accordion-body">Tenang! Pakai nomor WA yang sama, data lama akan otomatis muncul kembali.</div>
                 </div>
-
                 <div class="accordion-item">
-                    <button class="accordion-header">
-                        3. Boleh pakai No WA berbeda untuk voucher baru?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="accordion-body">
-                        "Disarankan pakai No WA yang sama ya Kak, supaya sistem bisa menarik data lama Kakak dan grafik transformasinya tidak terputus."
-                    </div>
+                    <button class="accordion-header">3. Boleh pakai No WA berbeda untuk voucher baru? <i class="fas fa-chevron-down"></i></button>
+                    <div class="accordion-body">Disarankan pakai WA yang sama agar grafik transformasi tidak terputus.</div>
                 </div>
-
                 <div class="accordion-item">
-                    <button class="accordion-header">
-                        4. Halaman web putih/blank saat scan QR?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="accordion-body">
-                        "Coba bersihkan cache browser atau buka link langsung di Google Chrome. Pastikan izin kamera aktif saat scan QR."
-                    </div>
+                    <button class="accordion-header">4. Halaman web putih/blank saat scan QR? <i class="fas fa-chevron-down"></i></button>
+                    <div class="accordion-body">Bersihkan cache browser atau buka langsung di Google Chrome.</div>
                 </div>
             </div>
-
             <div class="social-links">
-                <a href="https://www.instagram.com/kemoenik26" target="_blank">
-                    <i class="fab fa-instagram"></i> Instagram
-                </a>
-                <a href="https://www.tiktok.com/@kemoenik" target="_blank">
-                    <i class="fab fa-tiktok"></i> TikTok
-                </a>
+                <a href="https://www.instagram.com/kemoenik26" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="https://www.tiktok.com/@kemoenik" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a>
             </div>
         </div>
 
-        <div class="footer">
-            Butuh bantuan? 
-            <a href="https://wa.me/6281546450547?text=Halo%20admin,%20saya%20butuh%20bantuan%20kode%20konsultasi" target="_blank">
-                Hubungi kami
-            </a>
-        </div>
+        <div class="footer">Butuh bantuan? <a href="https://wa.me/6281546450547?text=Halo%20admin,%20saya%20butuh%20bantuan%20kode%20konsultasi" target="_blank">Hubungi kami</a></div>
     </div>
 
     <!-- Modal Pilihan Program -->
     <div id="programChoiceModal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-icon">
-                <i class="fas fa-history"></i>
-            </div>
+            <div class="modal-icon"><i class="fas fa-history"></i></div>
             <div class="modal-title">Data Lama Ditemukan</div>
-            <div class="modal-desc">
-                Nomor WA ini sudah memiliki data program sebelumnya. Apakah Anda ingin melanjutkan program lama atau memulai program baru?
-            </div>
+            <div class="modal-desc">Nomor WA ini sudah memiliki data program sebelumnya. Apakah Anda ingin melanjutkan program lama atau memulai program baru?</div>
             <div class="modal-buttons">
-                <button class="modal-btn modal-btn-secondary" onclick="continueOldProgram()">
-                    Lanjutkan Lama
-                </button>
-                <button class="modal-btn modal-btn-primary" onclick="startNewProgram()">
-                    Mulai Baru
-                </button>
+                <button class="modal-btn modal-btn-secondary" onclick="continueOldProgram()">Lanjutkan Lama</button>
+                <button class="modal-btn modal-btn-primary" onclick="startNewProgram()">Mulai Baru</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK v9 (Modular) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyD6C72QBKT1T7nB_RLxM7Z_Bo7iWSCTtTw",
-            authDomain: "project-panduan-dani.firebaseapp.com",
-            projectId: "project-panduan-dani",
-            storageBucket: "project-panduan-dani.firebasestorage.app",
-            messagingSenderId: "113559517545",
-            appId: "1:113559517545:web:65e0baf79e28acb80a65f8"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Expose ke global scope
-        window.fbApp = app;
-        window.fbDb = db;
-        window.fbSetDoc = setDoc;
-        window.fbGetDoc = getDoc;
-        window.fbDoc = doc;
-        window.fbServerTimestamp = serverTimestamp;
-    </script>
-
     <script>
         // Konfigurasi
         const CONFIG = {
-            PANDUAN_URL: 'https://kemoenikofficial.github.io/PANDUANKEMOENIK/',
+            PANDUAN_URL: 'index.html',  // file utama berada di folder yang sama
             APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec',
             VOUCHER_DAYS: 7
         };
 
-        let tempData = {}; 
+        let tempData = {};
 
-        // Normalisasi nomor WA ke format 628
         function normalizeWA(wa) {
             wa = wa.replace(/\D/g, '');
             if (wa.startsWith('08')) return '62' + wa.substring(1);
@@ -612,205 +208,137 @@
             return wa;
         }
 
-        // Setup Accordion
-        document.querySelectorAll('.accordion-header').forEach(button => {
-            button.addEventListener('click', () => {
-                const accordionBody = button.nextElementSibling;
-                const isActive = button.classList.contains('active');
-
-                document.querySelectorAll('.accordion-body').forEach(body => body.classList.remove('show'));
-                document.querySelectorAll('.accordion-header').forEach(head => head.classList.remove('active'));
-
+        // Accordion
+        document.querySelectorAll('.accordion-header').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const body = btn.nextElementSibling;
+                const isActive = btn.classList.contains('active');
+                document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('show'));
+                document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
                 if (!isActive) {
-                    button.classList.add('active');
-                    accordionBody.classList.add('show');
+                    btn.classList.add('active');
+                    body.classList.add('show');
                 }
             });
         });
 
         async function cekKode() {
-            const nama = document.getElementById("nama").value.trim();
-            const wa = document.getElementById("wa").value.trim();
-            const kode = document.getElementById("kode").value.trim();
-            const btn = document.getElementById("btnCek");
-            const result = document.getElementById("result");
-            const btnLanjut = document.getElementById("btnLanjut");
+            const nama = document.getElementById('nama').value.trim();
+            const wa = document.getElementById('wa').value.trim();
+            const kode = document.getElementById('kode').value.trim();
+            const btn = document.getElementById('btnCek');
+            const result = document.getElementById('result');
+            const btnLanjut = document.getElementById('btnLanjut');
 
-            result.innerHTML = "";
-            btnLanjut.style.display = "none";
+            result.innerHTML = '';
+            btnLanjut.style.display = 'none';
             btnLanjut.onclick = null;
 
-            // Validasi input
-            if (nama.length < 3) return show("error", "Nama minimal 3 karakter");
-            if (wa.replace(/\D/g, '').length < 10) return show("error", "Nomor WA tidak valid");
-            if (kode.length < 6) return show("error", "Kode tidak valid");
+            if (nama.length < 3) return show('error', 'Nama minimal 3 karakter');
+            if (wa.replace(/\D/g,'').length < 10) return show('error', 'Nomor WA tidak valid');
+            if (kode.length < 6) return show('error', 'Kode tidak valid');
 
             const normalizedWA = normalizeWA(wa);
-
-            btn.classList.add("loading");
+            btn.classList.add('loading');
 
             try {
-                // Cek ke Apps Script
                 const response = await fetch(`${CONFIG.APPS_SCRIPT_URL}?action=verify&kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(normalizedWA)}&_=${Date.now()}`);
                 const data = await response.json();
 
-                btn.classList.remove("loading");
+                btn.classList.remove('loading');
 
-                if (data.status === "SUCCESS" || data.status === "ACTIVE_SAME_WA") {
-                    // Cek apakah user punya data di Firebase
-                    const userRef = window.fbDoc(window.fbDb, "users", normalizedWA);
-                    const userSnap = await window.fbGetDoc(userRef);
-                    const hasExistingData = userSnap.exists() && userSnap.data().progress;
+                if (data.status === 'SUCCESS' || data.status === 'ACTIVE_SAME_WA') {
+                    // Cek apakah user punya data di localStorage (bukan Firebase)
+                    const storageKey = `kemoenik_${normalizedWA}`;
+                    const existingData = localStorage.getItem(storageKey);
+                    const hasExistingData = existingData ? JSON.parse(existingData).kalkulator : false;
 
-                    const expDate = formatDate(data.tanggal_expired || new Date(Date.now() + CONFIG.VOUCHER_DAYS * 24 * 60 * 60 * 1000));
-                    const isReturningUser = data.status === "ACTIVE_SAME_WA" || hasExistingData;
+                    const expDate = formatDate(data.tanggal_expired || new Date(Date.now() + CONFIG.VOUCHER_DAYS*24*60*60*1000));
+                    const isReturningUser = data.status === 'ACTIVE_SAME_WA' || hasExistingData;
 
-                    // Simpan ke localStorage (sementara)
+                    // Simpan sementara untuk redirect
                     localStorage.setItem('kemoenik_temp_wa', normalizedWA);
                     localStorage.setItem('kemoenik_temp_voucher', kode);
                     localStorage.setItem('kemoenik_temp_nama', nama);
                     localStorage.setItem('kemoenik_temp_expired', data.tanggal_expired);
 
-                    // Simpan identitas ke Firebase (minimal data)
-                    await window.fbSetDoc(userRef, {
-                        profile: {
-                            nama: nama,
-                            wa: normalizedWA,
-                            voucherAktif: kode,
-                            voucherExpired: data.tanggal_expired,
-                            lastLogin: window.fbServerTimestamp()
-                        }
-                    }, { merge: true });
+                    let welcomeMsg = isReturningUser
+                        ? `Selamat datang kembali, ${nama}! 🌟 Voucher aktif hingga ${expDate}. Data lama akan dilanjutkan.`
+                        : `Selamat datang, ${nama}! 🌟 Voucher aktif hingga ${expDate}. Mari buat program baru.`;
 
-                    // Tampilkan sambutan
-                    let welcomeMsg = "";
-                    if (isReturningUser) {
-                        welcomeMsg = `Selamat datang kembali, ${nama}! 🌟 Voucher Kakak berhasil diaktifkan (Berlaku hingga: ${expDate}). Kami sudah menarik data diet Kakak sebelumnya. Mari lanjut ke target minggu ini.`;
-                    } else {
-                        welcomeMsg = `Selamat datang, ${nama}! 🌟 Voucher Kakak berhasil diaktifkan (Berlaku hingga: ${expDate}). Mari buat program diet bertarget mingguan.`;
-                    }
-
-                    show("success", welcomeMsg);
+                    show('success', welcomeMsg);
                     setupPanduanButton(normalizedWA, kode, isReturningUser);
 
-                    // Track GA4
                     gtag('event', 'voucher_activated', {
-                        'event_category': 'engagement',
-                        'event_label': isReturningUser ? 'returning_user' : 'new_user',
-                        'value': 1
+                        event_category: 'engagement',
+                        event_label: isReturningUser ? 'returning_user' : 'new_user'
                     });
 
-                } else if (data.status === "ACTIVE_DIFFERENT_WA") {
-                    show("error", "Kode ini sudah digunakan oleh nomor WA lain.");
-                } else if (data.status === "EXPIRED") {
-                    show("warning", "Kode sudah expired. Silakan gunakan kode baru.");
-                } else if (data.status === "INVALID") {
-                    show("error", "Kode tidak ditemukan di sistem.");
+                } else if (data.status === 'ACTIVE_DIFFERENT_WA') {
+                    show('error', 'Kode ini sudah digunakan oleh nomor WA lain.');
+                } else if (data.status === 'EXPIRED') {
+                    show('warning', 'Kode sudah expired. Gunakan kode baru.');
+                } else if (data.status === 'INVALID') {
+                    show('error', 'Kode tidak ditemukan di sistem.');
                 } else {
-                    show("error", "Terjadi kesalahan. Silakan coba lagi.");
+                    show('error', 'Terjadi kesalahan. Coba lagi.');
                 }
 
-            } catch (error) {
-                btn.classList.remove("loading");
-                show("error", "Gagal terhubung ke server. Cek koneksi internet.");
-                console.error(error);
+            } catch (e) {
+                btn.classList.remove('loading');
+                show('error', 'Gagal terhubung ke server. Cek koneksi.');
+                console.error(e);
             }
         }
 
         function setupPanduanButton(wa, kode, isReturningUser) {
-            const btnLanjut = document.getElementById("btnLanjut");
-            btnLanjut.style.display = "block";
-
-            btnLanjut.onclick = function() {
+            const btn = document.getElementById('btnLanjut');
+            btn.style.display = 'block';
+            btn.onclick = function() {
                 if (isReturningUser) {
-                    // Tampilkan modal pilihan
-                    document.getElementById("programChoiceModal").style.display = "flex";
+                    document.getElementById('programChoiceModal').style.display = 'flex';
                 } else {
-                    // User baru, langsung redirect
                     redirectToPanduan(wa, kode, 'new');
                 }
             };
         }
 
-        async function continueOldProgram() {
-            document.getElementById("programChoiceModal").style.display = "none";
+        function continueOldProgram() {
+            document.getElementById('programChoiceModal').style.display = 'none';
             const wa = localStorage.getItem('kemoenik_temp_wa');
             const kode = localStorage.getItem('kemoenik_temp_voucher');
-            
-            // Update flag di Firebase
-            const userRef = window.fbDoc(window.fbDb, "users", wa);
-            await window.fbSetDoc(userRef, {
-                profile: {
-                    programChoice: 'continue',
-                    lastActive: window.fbServerTimestamp()
-                }
-            }, { merge: true });
-
             redirectToPanduan(wa, kode, 'continue');
         }
 
-        async function startNewProgram() {
-            document.getElementById("programChoiceModal").style.display = "none";
+        function startNewProgram() {
+            document.getElementById('programChoiceModal').style.display = 'none';
             const wa = localStorage.getItem('kemoenik_temp_wa');
             const kode = localStorage.getItem('kemoenik_temp_voucher');
-
-            // Reset data progress tapi keep profile
-            const userRef = window.fbDoc(window.fbDb, "users", wa);
-            const userSnap = await window.fbGetDoc(userRef);
-            const oldProfile = userSnap.exists() ? userSnap.data().profile : {};
-
-            await window.fbSetDoc(userRef, {
-                profile: {
-                    ...oldProfile,
-                    programChoice: 'new',
-                    resetAt: window.fbServerTimestamp(),
-                    lastActive: window.fbServerTimestamp()
-                },
-                // Reset data penting lainnya
-                metabolism: null,
-                progress: null,
-                weeklyHistory: [],
-                missions: null,
-                consumption: null,
-                menuHarian: null
-            });
-
+            // Hapus data lama di localStorage (akan dibuat baru saat redirect)
+            localStorage.removeItem(`kemoenik_${wa}`);
             redirectToPanduan(wa, kode, 'new');
         }
 
         function redirectToPanduan(wa, voucher, mode) {
-            // Bersihkan localStorage temp
+            // Bersihkan temporary
             localStorage.removeItem('kemoenik_temp_wa');
             localStorage.removeItem('kemoenik_temp_voucher');
             localStorage.removeItem('kemoenik_temp_nama');
             localStorage.removeItem('kemoenik_temp_expired');
 
-            // Redirect dengan params
-            const params = new URLSearchParams({
-                wa: wa,
-                voucher: voucher,
-                mode: mode,
-                t: Date.now()
-            });
-
+            const params = new URLSearchParams({ wa, voucher, mode, t: Date.now() });
             window.location.href = `${CONFIG.PANDUAN_URL}?${params.toString()}`;
         }
 
         function formatDate(dateStr) {
             if (!dateStr) return '-';
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
+            return new Date(dateStr).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
         }
 
         function show(type, msg) {
-            document.getElementById("result").innerHTML = `<div class="result-box ${type}">${msg}</div>`;
+            document.getElementById('result').innerHTML = `<div class="result-box ${type}">${msg}</div>`;
         }
 
-        // Expose fungsi ke global untuk onclick
         window.cekKode = cekKode;
         window.continueOldProgram = continueOldProgram;
         window.startNewProgram = startNewProgram;
