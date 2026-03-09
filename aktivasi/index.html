@@ -320,6 +320,12 @@
         }
 
         function redirectToPanduan(wa, voucher, mode) {
+             if (!wa || wa === 'null' || wa === 'undefined') {
+                 wa = localStorage.getItem('kemoenik_temp_wa') || '';
+             }
+             if (!voucher || voucher === 'null' || voucher === 'undefined') {
+                 voucher = localStorage.getItem('kemoenik_temp_voucher') || '';
+            }
             // Bersihkan temporary
             localStorage.removeItem('kemoenik_temp_wa');
             localStorage.removeItem('kemoenik_temp_voucher');
