@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KEMOENIK - Panduan Diet Personal</title>
-    <!-- Google Analytics (ganti dengan ID Anda) -->
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ============================================================
-           KEMOENIK — PREMIUM DESIGN SYSTEM v3 (Ringkas)
+           KEMOENIK — PREMIUM DESIGN SYSTEM
            ============================================================ */
         :root {
             --bg: #F4F6F3;
@@ -48,10 +48,11 @@
 
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         body { font-family:var(--font-body); background:var(--bg); color:var(--text); font-size:14px; line-height:1.55; min-height:100vh; display:flex; align-items:center; justify-content:center; }
-        #app { width:100%; max-width:430px; margin:0 auto; background:var(--bg); min-height:100vh; position:relative; overflow-x:hidden; }
+        #app { width:100%; max-width:430px; margin:0 auto; background:var(--bg); min-height:100vh; position:relative; overflow-x:hidden; display:flex; flex-direction:column; }
 
         /* ACCESS SCREEN */
-        #accessScreen { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:9999; flex-direction:column; padding:40px 32px; text-align:center; }
+        #accessScreen { position:fixed; inset:0; background:var(--bg); display:none; align-items:center; justify-content:center; z-index:9999; flex-direction:column; padding:40px 32px; text-align:center; }
+        #accessScreen.show { display:flex; }
         .as-logo { font-family:var(--font-display); font-size:36px; font-weight:700; color:var(--green2); margin-bottom:8px; }
         .as-logo span { color:var(--gold); }
         .as-icon { font-size:52px; margin-bottom:24px; }
@@ -93,10 +94,17 @@
         .hero-name span { color:var(--gold2); }
         .hero-badge { display:flex; align-items:center; gap:5px; background:rgba(201,168,106,0.12); border:1px solid rgba(201,168,106,0.35); padding:7px 12px; border-radius:30px; font-size:11px; font-weight:600; color:var(--gold2); }
         .stats-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding-bottom:24px; }
-        .stat-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 12px; box-shadow:var(--shadow-sm); }
+        .stat-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 12px; box-shadow:var(--shadow-sm); position:relative; }
         .stat-card.gold::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--gold), transparent); border-radius:0 0 var(--r-md) var(--r-md); }
         .sc-val { font-family:var(--font-display); font-size:20px; font-weight:700; color:var(--green2); line-height:1; margin-bottom:5px; }
         .sc-key { font-size:9px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:1.2px; }
+
+        /* ESTIMASI PANEL */
+        .estimasi-panel { background:var(--card); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:14px 20px; display:flex; }
+        .est-item { flex:1; text-align:center; border-right:1px solid var(--border); }
+        .est-item:last-child { border-right:none; }
+        .est-val { font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--green2); line-height:1.2; margin-bottom:3px; }
+        .est-key { font-size:9px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.8px; }
 
         /* PILL NAV */
         .pill-wrap { background:var(--surface); border-bottom:1px solid var(--border); padding:0 20px; position:sticky; top:0; z-index:5; display:flex; overflow-x:auto; }
@@ -161,6 +169,9 @@
         .mission-tag { font-size:9px; font-weight:700; padding:3px 8px; border-radius:6px; }
         .tag-green { background:rgba(46,125,91,0.10); color:var(--green); }
         .tag-gold { background:rgba(201,168,106,0.15); color:var(--gold2); }
+        .tag-blue { background:rgba(37,99,235,0.08); color:#2563EB; }
+        .tag-red { background:rgba(192,57,43,0.08); color:#C0392B; }
+        .tag-gray { background:var(--card2); color:var(--text3); }
 
         /* TIP CARD */
         .tip-card-home { background:var(--card); border:1px solid var(--border); border-left:3px solid var(--gold); border-radius:var(--r-md); padding:16px 18px; display:flex; gap:14px; margin-bottom:18px; }
@@ -169,7 +180,7 @@
         .tip-text { font-size:12px; color:var(--text2); line-height:1.75; }
 
         /* REMINDER */
-        .reminder-list { display:flex; flex-direction:column; }
+        .reminder-list { display:flex; flex-direction:column; margin-bottom:4px; }
         .reminder-item { display:flex; gap:12px; align-items:stretch; }
         .rem-time-wrap { width:44px; flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; padding-top:14px; }
         .rem-time { font-size:12px; font-weight:700; color:var(--text3); }
@@ -187,43 +198,6 @@
         .rem-sub { font-size:11px; color:var(--text3); margin-top:2px; }
         .rem-ping { position:absolute; top:12px; right:12px; width:7px; height:7px; border-radius:50%; background:var(--gold); animation:ping 1.5s infinite; }
         @keyframes ping { 0%{box-shadow:0 0 0 0 rgba(201,168,106,0.6)} 70%{box-shadow:0 0 0 8px rgba(201,168,106,0)} 100%{box-shadow:0 0 0 0 rgba(201,168,106,0)} }
-
-        /* BOTTOM NAV */
-        #bnav { height:64px; background:var(--surface); border-top:1px solid var(--border); display:flex; align-items:stretch; flex-shrink:0; }
-        .bn { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; position:relative; }
-        .bn-ico { font-size:20px; line-height:1; height:22px; color:var(--text3); }
-        .bn.on .bn-ico { color:var(--green2); }
-        .bn-lbl { font-size:9px; font-weight:600; color:var(--text3); text-transform:uppercase; }
-        .bn.on .bn-lbl { color:var(--green2); }
-        .bn.on::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:28px; height:2.5px; background:var(--green); border-radius:0 0 4px 4px; }
-
-        /* MODAL PANEL */
-        .modal-panel { display:none; position:fixed; inset:0; background:rgba(10,25,15,0.55); z-index:200; align-items:flex-end; justify-content:center; backdrop-filter:blur(5px); }
-        .modal-panel.on { display:flex; }
-        .modal-sheet { background:var(--surface); border-radius:var(--r-xl) var(--r-xl) 0 0; width:100%; max-width:430px; max-height:90vh; overflow-y:auto; padding:0 0 36px; animation:slideUp 0.28s ease; }
-        @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-        .ms-pull { width:32px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 0; }
-        .ms-head { padding:22px 22px 0; }
-        .ms-title { font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--text); margin-bottom:4px; }
-        .ms-sub { font-size:12px; color:var(--text3); }
-        .ms-body { padding:16px 20px 0; }
-
-        /* FORMS */
-        .form-group { margin-bottom:18px; }
-        .form-label { display:block; font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-bottom:7px; }
-        .form-input { width:100%; padding:13px 15px; font-size:14px; background:var(--offwhite); border:1.5px solid var(--border); border-radius:12px; color:var(--text); }
-        .form-input:focus { outline:none; border-color:var(--green); }
-        select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A9080' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:36px; }
-        .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-        .btn-primary { width:100%; padding:15px; background:linear-gradient(135deg, var(--green), var(--green2)); color:#FFF; border:none; border-radius:var(--r-md); font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
-        .btn-outline { width:100%; padding:13px; background:var(--white); border:1.5px solid #C5D5C1; color:var(--green2); border-radius:var(--r-md); font-size:13px; font-weight:600; cursor:pointer; }
-
-        /* SHOP */
-        .shop-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
-        .shop-btn { padding:14px 10px; border-radius:var(--r-md); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; gap:7px; text-decoration:none; color:white; }
-        .shop-shopee { background:#EE4D2D; }
-        .shop-tiktok { background:#111; }
-        .shop-warning { background:#FEE2E2; border:1px solid #FECACA; color:#991B1B; padding:10px 12px; border-radius:10px; font-size:12px; font-weight:600; text-align:center; margin-top:8px; }
 
         /* FAQ */
         .faq-section { margin-top:8px; }
@@ -249,51 +223,53 @@
         .acc.on .acc-body { display:block; }
         .ph { color:var(--text3); font-size:12px; padding:20px 0; text-align:center; }
 
-        /* QUIZ */
-        .quiz-progress-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px; margin-bottom:14px; }
-        .quiz-bar-bg { height:6px; background:var(--card2); border-radius:3px; overflow:hidden; margin:8px 0 4px; }
-        .quiz-bar-fill { height:100%; background:linear-gradient(90deg, var(--green), #3A9970); border-radius:3px; transition:width 0.4s; }
-        .quiz-q-body { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; }
-        .quiz-q-num { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
-        .quiz-q-text { font-size:15px; font-weight:600; color:var(--text); line-height:1.55; margin-bottom:18px; }
-        .quiz-option { background:var(--offwhite); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:13px 14px; display:flex; align-items:center; gap:12px; cursor:pointer; margin-bottom:8px; }
-        .quiz-option.selected { background:#EBF5F1; border-color:var(--green); }
-        .quiz-opt-emoji { font-size:20px; flex-shrink:0; }
-        .quiz-opt-text { font-size:13px; font-weight:500; color:var(--text); flex:1; }
-        .quiz-opt-radio { width:18px; height:18px; border-radius:50%; border:1.5px solid #C5D5C1; flex-shrink:0; }
-        .quiz-option.selected .quiz-opt-radio { background:var(--green); border-color:var(--green); }
-        .quiz-nav { display:flex; gap:10px; }
-        .quiz-btn-back { width:44px; height:44px; border-radius:11px; background:var(--offwhite); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text3); flex-shrink:0; }
-        .quiz-btn-next { flex:1; padding:13px; background:var(--green); color:#FFF; border:none; border-radius:11px; font-size:14px; font-weight:700; cursor:pointer; opacity:0.4; }
-        .quiz-btn-next:not(:disabled) { opacity:1; }
+        /* BOTTOM NAV */
+        #bnav { height:64px; background:var(--surface); border-top:1px solid var(--border); display:flex; align-items:stretch; flex-shrink:0; }
+        .bn { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; position:relative; }
+        .bn-ico { font-size:20px; line-height:1; height:22px; color:var(--text3); }
+        .bn.on .bn-ico { color:var(--green2); }
+        .bn-lbl { font-size:9px; font-weight:600; color:var(--text3); text-transform:uppercase; }
+        .bn.on .bn-lbl { color:var(--green2); }
+        .bn.on::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:28px; height:2.5px; background:var(--green); border-radius:0 0 4px 4px; }
 
-        /* QUIZ RESULT */
-        .quiz-result-hero { background:linear-gradient(145deg, var(--green2), var(--green3)); padding:26px 22px; border-radius:var(--r-lg); margin-bottom:14px; color:white; }
-        .qr-badge { font-size:10px; font-weight:700; letter-spacing:2px; color:rgba(255,255,255,0.5); text-transform:uppercase; margin-bottom:6px; }
-        .qr-type { font-family:var(--font-display); font-size:24px; font-weight:600; margin-bottom:4px; }
-        .qr-type em { color:var(--gold); font-style:italic; }
-        .qr-tagline { font-size:12px; opacity:0.9; line-height:1.65; margin-bottom:14px; }
-        .qr-gauge { background:rgba(255,255,255,0.1); border-radius:12px; padding:12px 14px; display:flex; gap:14px; align-items:center; }
-        .qr-circle { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,0.12); border:2px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--gold); }
-        .result-tabs { display:flex; gap:0; background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); margin-bottom:14px; overflow:hidden; }
-        .rt-btn { flex:1; padding:11px 4px; font-size:12px; font-weight:500; color:var(--text3); cursor:pointer; text-align:center; border:none; background:none; border-bottom:2px solid transparent; }
-        .rt-btn.on { color:var(--green2); border-bottom-color:var(--green); background:rgba(46,125,91,0.04); font-weight:700; }
-        .result-tab-panel { display:none; }
-        .result-tab-panel.on { display:block; }
+        /* MODAL PANEL */
+        .modal-panel { display:none; position:fixed; inset:0; background:rgba(10,25,15,0.55); z-index:200; align-items:flex-end; justify-content:center; backdrop-filter:blur(5px); }
+        .modal-panel.on { display:flex; }
+        .modal-sheet { background:var(--surface); border-radius:var(--r-xl) var(--r-xl) 0 0; width:100%; max-width:430px; max-height:90vh; overflow-y:auto; padding:0 0 36px; animation:slideUp 0.28s ease; }
+        @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+        .ms-pull { width:32px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 0; }
+        .ms-head { padding:22px 22px 0; }
+        .ms-title { font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--text); margin-bottom:4px; }
+        .ms-sub { font-size:12px; color:var(--text3); }
+        .ms-body { padding:16px 20px 0; }
+
+        /* FORMS */
+        .form-group { margin-bottom:18px; }
+        .form-label { display:block; font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-bottom:7px; }
+        .form-input { width:100%; padding:13px 15px; font-size:14px; font-family:var(--font-body); background:var(--offwhite); border:1.5px solid var(--border); border-radius:12px; color:var(--text); }
+        .form-input:focus { outline:none; border-color:var(--green); }
+        select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A9080' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:36px; }
+        .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        .btn-primary { width:100%; padding:15px; background:linear-gradient(135deg, var(--green), var(--green2)); color:#FFF; border:none; border-radius:var(--r-md); font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .btn-outline { width:100%; padding:13px; background:var(--white); border:1.5px solid #C5D5C1; color:var(--green2); border-radius:var(--r-md); font-size:13px; font-weight:600; cursor:pointer; }
+
+        /* SHOP */
+        .shop-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+        .shop-btn { padding:14px 10px; border-radius:var(--r-md); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; gap:7px; text-decoration:none; color:white; }
+        .shop-shopee { background:#EE4D2D; }
+        .shop-tiktok { background:#111; }
+        .shop-warning { background:#FEE2E2; border:1px solid #FECACA; color:#991B1B; padding:10px 12px; border-radius:10px; font-size:12px; font-weight:600; text-align:center; margin-top:8px; }
 
         /* UTILITY */
         .text-green { color:var(--green); }
         .text-gold { color:var(--gold2); }
         .text-muted { color:var(--text3); }
-        .fw-700 { font-weight:700; }
-        .mt-12 { margin-top:12px; }
-        .mb-8 { margin-bottom:8px; }
     </style>
 </head>
 <body>
 
 <!-- ACCESS SCREEN -->
-<div id="accessScreen" style="display:none;">
+<div id="accessScreen">
     <div class="as-logo">KEMO<span>ENIK</span></div>
     <div class="as-icon">🔒</div>
     <div class="as-title">Akses Diperlukan</div>
@@ -303,7 +279,7 @@
     </button>
 </div>
 
-<div id="app" style="display:flex;">
+<div id="app">
     <!-- OVERLAY -->
     <div id="overlay" onclick="closeDrawer()"></div>
 
@@ -311,8 +287,8 @@
     <div id="drawer">
         <div class="d-top">
             <div class="d-avatar">🌿</div>
-            <div class="d-name" id="dName">—</div>
-            <div class="d-sub" id="dSub">Program Diet KEMOENIK</div>
+            <div class="d-name" id="dName">Anita</div>
+            <div class="d-sub">Program Diet KEMOENIK</div>
         </div>
         <div class="d-body">
             <div class="d-group">Menu Utama</div>
@@ -342,7 +318,7 @@
     </div>
 
     <div id="content">
-        <!-- HERO -->
+        <!-- HERO SECTION (sesuai screenshot) -->
         <div class="hero">
             <div class="hero-top">
                 <div>
@@ -352,85 +328,98 @@
                 <div class="hero-badge" id="heroBadge">—</div>
             </div>
             <div class="stats-row">
-                <div class="stat-card"><div class="sc-val" id="statKkal">—</div><div class="sc-key">Kkal/Hari</div></div>
-                <div class="stat-card gold"><div class="sc-val" id="statMinggu">—</div><div class="sc-key">Target/Minggu</div></div>
-                <div class="stat-card"><div class="sc-val" id="statMetode">—</div><div class="sc-key">Metode</div></div>
+                <div class="stat-card">
+                    <div class="sc-val" id="statKkal">1.450</div>
+                    <div class="sc-key">Kkal/Hari</div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="sc-val" id="statMinggu">8mg</div>
+                    <div class="sc-key">Target/Minggu</div>
+                </div>
+                <div class="stat-card">
+                    <div class="sc-val" id="statMetode">Standar</div>
+                    <div class="sc-key">Metode</div>
+                </div>
             </div>
         </div>
 
         <!-- ESTIMASI PANEL -->
-        <div class="estimasi-panel" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;">
-            <div class="est-item" style="flex:1;text-align:center;border-right:1px solid var(--border);">
-                <div class="est-val" id="estMinggu" style="font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--green2);">—</div>
-                <div class="est-key" style="font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;">Target/Minggu</div>
+        <div class="estimasi-panel">
+            <div class="est-item">
+                <div class="est-val" id="estMinggu">8 minggu</div>
+                <div class="est-key">Target/Minggu</div>
             </div>
-            <div class="est-item" style="flex:1;text-align:center;border-right:1px solid var(--border);">
-                <div class="est-val" id="estTanggal" style="font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--green2);">—</div>
-                <div class="est-key" style="font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;">Est. Tercapai</div>
+            <div class="est-item">
+                <div class="est-val" id="estTanggal">12 Jun 2025</div>
+                <div class="est-key">Est. Tercapai</div>
             </div>
-            <div class="est-item" style="flex:1;text-align:center;">
-                <div class="est-val" id="estLingkar" style="font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--green2);">—</div>
-                <div class="est-key" style="font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;">Est. Lingkar Perut</div>
+            <div class="est-item">
+                <div class="est-val" id="estLingkar">72 cm</div>
+                <div class="est-key">Est. Lingkar Perut</div>
             </div>
         </div>
 
-        <!-- PILL NAV -->
+        <!-- PILL NAV (sesuai screenshot: HOME PROFIL TIPS PROGRAM KUIS) -->
         <div class="pill-wrap">
-            <button class="pill on" onclick="go('home')">Home</button>
-            <button class="pill" onclick="go('profil')">Profil</button>
-            <button class="pill" onclick="go('tips')">Tips Diet</button>
-            <button class="pill" onclick="go('program')">Program</button>
+            <button class="pill on" onclick="go('home')">HOME</button>
+            <button class="pill" onclick="go('profil')">PROFIL</button>
+            <button class="pill" onclick="go('tips')">TIPS</button>
+            <button class="pill" onclick="go('program')">PROGRAM</button>
+            <button class="pill" onclick="go('kuis')">KUIS</button>
         </div>
 
         <!-- ===================== HOME PAGE ===================== -->
         <div class="page on" id="page-home">
+            <!-- Greeting Card -->
             <div class="greeting-card">
                 <div>
-                    <div class="gc-hello">Halo, <span id="userName">—</span>! 👋</div>
-                    <div class="gc-sub" id="greetingDesc">Selamat datang di panduan diet<br><strong>KEMOENIK</strong> — hari ini kita jaga komitmenmu 💪</div>
+                    <div class="gc-hello">Halo, <span id="userName">Anita</span>! 👋</div>
+                    <div class="gc-sub" id="greetingDesc">Selamat datang di panduan diet <strong>KEMOENIK</strong> — hari ini kita jaga komitmenmu 💪</div>
                 </div>
             </div>
 
+            <!-- Progress Card -->
             <div class="sec-title">Progres Program Diet</div>
             <div class="progress-card" onclick="go('program')">
                 <div class="prog-card-top">
                     <div>
                         <div class="pct-label">Hari ini</div>
-                        <div class="pct-day">Hari <span id="progHari">—</span> <span class="pct-of">dari <span id="progTotal">—</span></span></div>
+                        <div class="pct-day">Hari <span id="progHari">3</span> <span class="pct-of">dari <span id="progTotal">56</span></span></div>
                     </div>
-                    <div class="pct-badge" id="progPct">—%</div>
+                    <div class="pct-badge" id="progPct">5%</div>
                 </div>
                 <div class="prog-track">
-                    <div class="prog-fill" id="progFill" style="width:0%"></div>
-                    <div class="prog-thumb" id="progThumb" style="left:0%"></div>
+                    <div class="prog-fill" id="progFill" style="width:5%"></div>
+                    <div class="prog-thumb" id="progThumb" style="left:5%"></div>
                 </div>
                 <div class="prog-labels">
                     <span>Hari 1</span>
-                    <span>Hari <span id="progTotalLabel">—</span></span>
+                    <span>Hari <span id="progTotalLabel">56</span></span>
                 </div>
                 <div class="eval-row">
                     <div class="eval-item">
-                        <div class="eval-val" id="evalMingguLabel">—</div>
+                        <div class="eval-val" id="evalMingguLabel">Minggu 1</div>
                         <div class="eval-key">Periode</div>
                     </div>
                     <div class="eval-div"></div>
                     <div class="eval-item">
-                        <div class="eval-val" id="evalPenurunan" style="color:var(--green);">— kg</div>
+                        <div class="eval-val" id="evalPenurunan" style="color:var(--green);">-1.2 kg</div>
                         <div class="eval-key">Akumulasi</div>
                     </div>
                     <div class="eval-div"></div>
                     <div class="eval-item">
-                        <div class="eval-val" id="evalBerat">— kg</div>
+                        <div class="eval-val" id="evalBerat">63.8 kg</div>
                         <div class="eval-key">Berat skrg</div>
                     </div>
                     <div class="eval-div"></div>
                     <div class="eval-item">
-                        <div class="eval-val" id="evalTarget" style="color:var(--text3);">— kg</div>
+                        <div class="eval-val" id="evalTarget" style="color:var(--text3);">55 kg</div>
                         <div class="eval-key">Target</div>
                     </div>
                 </div>
             </div>
 
+            <!-- Shortcut Grid -->
             <div class="shortcut-grid">
                 <div class="sc-card" onclick="go('kuis')">
                     <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">
@@ -442,7 +431,7 @@
                 </div>
                 <div class="sc-card" onclick="openPanel('panelKalkulator')">
                     <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#DCFCE7,#A7F3D0);">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/></svg>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/></svg>
                     </div>
                     <div class="sc-card-name">Kalkulator</div>
                     <div class="sc-card-sub">Hitung kalori & target dietmu</div>
@@ -466,6 +455,7 @@
                 </div>
             </div>
 
+            <!-- Misi Hari Ini -->
             <div class="sec-title-row">
                 <div class="sec-title" style="margin-bottom:0;">Misi Hari Ini</div>
                 <div class="sec-link" onclick="go('program')">Lihat semua ›</div>
@@ -497,24 +487,10 @@
                     <div class="mission-text"><div class="mission-name">Mulai Puasa 16 Jam</div><div class="mission-sub">Hanya air putih</div></div>
                     <div class="mission-tag tag-red">Puasa</div>
                 </div>
-                <div class="mission-item" id="i2" onclick="toggleMission('i2','ic2')">
-                    <div class="mission-check" id="ic2"></div>
-                    <div class="mission-text"><div class="mission-name">Olahraga Pagi (saat puasa)</div><div class="mission-sub">Jalan kaki 30 menit</div></div>
-                    <div class="mission-tag tag-blue">IF+Kardio</div>
-                </div>
             </div>
 
+            <!-- Tips Hari Ini -->
             <div class="sec-title-row" style="margin-top:20px;">
-                <div class="sec-title" style="margin-bottom:0;">Jadwal Olahraga Hari Ini</div>
-                <div class="sec-link" onclick="openPanel('panelJadwalOlahraga')">Lihat semua ›</div>
-            </div>
-            <div id="homeJadwalWrap" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:14px;">
-                <div id="homeJadwalContent" style="padding:14px 16px;">
-                    <!-- diisi JS -->
-                </div>
-            </div>
-
-            <div class="sec-title-row" style="margin-top:4px;">
                 <div class="sec-title" style="margin-bottom:0;">Tips Hari Ini</div>
                 <div class="sec-link" onclick="go('tips')">Lihat semua ›</div>
             </div>
@@ -522,10 +498,11 @@
                 <div class="tip-ico">💡</div>
                 <div>
                     <div class="tip-label">Reminder Diet</div>
-                    <div class="tip-text" id="dailyTipText">Minum KEMOENIK sesudah makan. Konsistensi adalah kunci!</div>
+                    <div class="tip-text" id="dailyTipText">Minum KEMOENIK sesudah makan untuk penyerapan optimal. Konsistensi adalah kunci!</div>
                 </div>
             </div>
 
+            <!-- Reminder Konsumsi -->
             <div class="sec-title">Reminder Konsumsi</div>
             <div class="reminder-list">
                 <div class="reminder-item">
@@ -547,15 +524,17 @@
                 </div>
             </div>
 
+            <!-- FAQ Section -->
             <div style="margin-top:24px;" id="faqHomeSection">
                 <div class="sec-title-row">
                     <div class="sec-title" style="margin-bottom:0;">FAQ — Pertanyaan Umum</div>
                 </div>
                 <div class="faq-section" id="faqContainer">
-                    <!-- Diisi dari JS -->
+                    <!-- Diisi JS -->
                 </div>
             </div>
 
+            <!-- Belanja -->
             <div style="background:linear-gradient(135deg,#FFF7ED,#FEF2F2);border:1px solid #FED7AA;border-radius:16px;padding:20px;margin-top:16px;">
                 <div style="font-size:13px;font-weight:700;color:#9A3412;text-align:center;margin-bottom:14px;">🛒 Stok Kapsul Menipis? Jangan Sampai Kehabisan!</div>
                 <div class="shop-grid">
@@ -589,17 +568,6 @@
                     </div>
                     <div class="acc-body" id="traitBarContent"><div class="ph">—</div></div>
                 </div>
-                <div class="acc" id="acc-karakter">
-                    <div class="acc-hd" onclick="tog('acc-karakter')">
-                        <div class="acc-icon" style="background:rgba(46,139,53,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2"><path d="M2 15c6.667-6 13.333 0 20-6M2 9c6.667 6 13.333 0 20 6"/></svg></div>
-                        <div class="acc-info">
-                            <div class="acc-title">Tipe & Karakteristik</div>
-                            <div class="acc-sub" id="tipeKarakterSub">Tipe metabolismemu</div>
-                        </div>
-                        <div class="acc-toggle">+</div>
-                    </div>
-                    <div class="acc-body" id="tipeKarakterContent"><div class="ph">—</div></div>
-                </div>
             </div>
         </div>
 
@@ -620,39 +588,17 @@
                     </div>
                 </div>
             </div>
-            <div class="acc" id="acc-minum">
-                <div class="acc-hd" onclick="tog('acc-minum')">
-                    <div class="acc-icon" style="background:rgba(46,139,53,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2"><path d="M12 22V12M12 12C12 7 7 3 2 4c1 4 4 7 10 8z"/></svg></div>
-                    <div class="acc-info">
-                        <div class="acc-title">Cara Minum KEMOENIK</div>
-                        <div class="acc-sub">Jadwal konsumsi optimal</div>
-                    </div>
-                    <div class="acc-toggle">+</div>
-                </div>
-                <div class="acc-body">
-                    <div style="background:var(--green);border-radius:12px;padding:14px 16px;color:white;">
-                        <div style="font-size:12px;line-height:1.7;">Minum KEMOENIK sesudah makan untuk penyerapan optimal. Konsumsi rutin 1–2x sehari.</div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- ===================== PROGRAM PAGE ===================== -->
         <div class="page" id="page-program">
             <div class="prog-banner" style="background:linear-gradient(145deg, var(--green2) 0%, var(--green3) 100%);border-radius:var(--r-xl);padding:22px;color:white;">
                 <div class="pb-label" style="font-size:10px;font-weight:600;letter-spacing:2px;opacity:0.7;">Program Diet Kamu</div>
-                <div class="pb-name" id="progNama" style="font-family:var(--font-display);font-size:22px;font-weight:600;">—</div>
-                <div class="pb-desc" id="progDesc" style="font-size:12px;opacity:0.8;">Generate kalkulator untuk memulai program</div>
-            </div>
-            <div class="prev-list" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);margin-top:16px;">
-                <div class="prev-item" onclick="openPanel('panelKalkulator')" style="display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border);">
-                    <div class="pi-ico" style="width:40px;height:40px;border-radius:12px;background:rgba(46,125,91,0.09);display:flex;align-items:center;justify-content:center;">⚖️</div>
-                    <div><div class="pi-name" style="font-size:13px;font-weight:600;">Kalkulasi Kalori Personal</div><div class="pi-sub" style="font-size:11px;color:var(--text3);">Hitung kebutuhan kalori & target mingguanmu</div></div>
-                    <span class="pi-arr" style="margin-left:auto;font-size:18px;">›</span>
-                </div>
+                <div class="pb-name" id="progNama">Anita — Seimbang</div>
+                <div class="pb-desc" id="progDesc">Target: 55 kg</div>
             </div>
             <button class="btn-primary" style="margin-top:16px;" onclick="openPanel('panelKalkulator')">
-                <i class="fas fa-calculator" style="margin-right:8px;"></i>Mulai / Update Program Diet
+                <i class="fas fa-calculator"></i> Mulai / Update Program Diet
             </button>
         </div>
 
@@ -687,29 +633,25 @@
             <div id="quizResult" style="display:none;">
                 <div class="quiz-result-hero">
                     <div class="qr-badge">PROFIL METABOLISME</div>
-                    <div class="qr-type" id="qrTypeName">Tipe <em>—</em></div>
-                    <div class="qr-tagline" id="qrTagline">—</div>
+                    <div class="qr-type" id="qrTypeName">Tipe <em>Seimbang</em></div>
+                    <div class="qr-tagline" id="qrTagline">Tubuhmu sudah baik, kuncinya konsistensi!</div>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px;">
-                    <button class="btn-primary" onclick="selesaiQuiz()"><i class="fas fa-rocket"></i> Mulai Program Diet Saya!</button>
-                    <button class="btn-outline" onclick="ulangQuiz()">Ulangi Quiz</button>
-                </div>
+                <button class="btn-primary" style="margin-top:14px;" onclick="selesaiQuiz()"><i class="fas fa-rocket"></i> Mulai Program Diet Saya!</button>
             </div>
         </div>
     </div>
 
-    <!-- BOTTOM NAV -->
+    <!-- BOTTOM NAV (sesuai screenshot: HOME PROFIL TIPS PROGRAM KUIS) -->
     <div id="bnav">
-        <div class="bn on" id="bn-home" onclick="go('home')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="bn-lbl">Home</div></div>
-        <div class="bn" id="bn-profil" onclick="go('profil')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="bn-lbl">Profil</div></div>
-        <div class="bn" id="bn-tips" onclick="go('tips')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="bn-lbl">Tips</div></div>
-        <div class="bn" id="bn-program" onclick="go('program')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg></div><div class="bn-lbl">Program</div></div>
-        <div class="bn" id="bn-kuis" onclick="go('kuis')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="bn-lbl">Kuis</div></div>
+        <div class="bn on" id="bn-home" onclick="go('home')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="bn-lbl">HOME</div></div>
+        <div class="bn" id="bn-profil" onclick="go('profil')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="bn-lbl">PROFIL</div></div>
+        <div class="bn" id="bn-tips" onclick="go('tips')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="bn-lbl">TIPS</div></div>
+        <div class="bn" id="bn-program" onclick="go('program')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg></div><div class="bn-lbl">PROGRAM</div></div>
+        <div class="bn" id="bn-kuis" onclick="go('kuis')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="bn-lbl">KUIS</div></div>
     </div>
 </div>
 
-<!-- ===================== MODALS ===================== -->
-<!-- PANEL KALKULATOR -->
+<!-- MODAL KALKULATOR -->
 <div class="modal-panel" id="panelKalkulator">
     <div class="modal-sheet">
         <div class="ms-pull"></div>
@@ -749,7 +691,6 @@
                 <div class="form-group">
                     <label class="form-label">Aktivitas Harian</label>
                     <select class="form-input" id="inputAktivitas">
-                        <option value="">— Pilih Level Aktivitas —</option>
                         <option value="1.2">Tidak Aktif</option>
                         <option value="1.375" selected>Ringan (1–2x Olahraga)</option>
                         <option value="1.55">Sedang (3–5x Olahraga)</option>
@@ -764,9 +705,9 @@
                     <div class="form-group">
                         <label class="form-label">Kecepatan Diet</label>
                         <select class="form-input" id="inputMetode">
-                            <option value="ringan">Ringan (300 kkal defisit)</option>
-                            <option value="standar" selected>Standar (500 kkal defisit)</option>
-                            <option value="agresif">Agresif (700 kkal defisit)</option>
+                            <option value="ringan">Ringan (300 kkal)</option>
+                            <option value="standar" selected>Standar (500 kkal)</option>
+                            <option value="agresif">Agresif (700 kkal)</option>
                         </select>
                     </div>
                 </div>
@@ -777,9 +718,9 @@
             <div id="hasilKalkulator" style="display:none;margin-top:16px;">
                 <div style="background:linear-gradient(135deg,var(--green),var(--green3));border-radius:16px;padding:18px;color:white;">
                     <div style="font-size:11px;opacity:0.7;margin-bottom:6px;">Hasil Kalkulasi</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
-                        <div><div style="font-size:22px;font-weight:800;" id="hasilKkal">—</div><div style="font-size:11px;">kkal/hari</div></div>
-                        <div><div style="font-size:22px;font-weight:800;" id="hasilMinggu">—</div><div style="font-size:11px;">minggu</div></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                        <div><div style="font-size:22px;font-weight:800;" id="hasilKkal">1.450</div><div>kkal/hari</div></div>
+                        <div><div style="font-size:22px;font-weight:800;" id="hasilMinggu">8 minggu</div><div>durasi</div></div>
                     </div>
                 </div>
                 <button class="btn-primary" style="margin-top:14px;" onclick="simpanKalkulator()">
@@ -787,28 +728,7 @@
                 </button>
             </div>
         </div>
-        <div style="height:16px;"></div>
-        <div style="padding:0 20px;"><button class="btn-outline" onclick="closePanel('panelKalkulator')">Tutup</button></div>
-    </div>
-</div>
-
-<!-- PANEL JADWAL OLAHRAGA -->
-<div class="modal-panel" id="panelJadwalOlahraga">
-    <div class="modal-sheet">
-        <div class="ms-pull"></div>
-        <div class="ms-head">
-            <div class="ms-title">🏃 Jadwal Olahraga</div>
-            <div class="ms-sub">Program olahraga sesuai tipe metabolismemu</div>
-        </div>
-        <div class="ms-body">
-            <div style="background:var(--offwhite);border-radius:12px;padding:14px;">
-                <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:10px;">📅 Jadwal Mingguan</div>
-                <div id="jadwalNormalList"></div>
-            </div>
-            <button class="btn-primary" style="margin-top:14px;" onclick="closePanel('panelJadwalOlahraga')">
-                Tutup
-            </button>
-        </div>
+        <div style="padding:0 20px;margin-top:16px;"><button class="btn-outline" onclick="closePanel('panelKalkulator')">Tutup</button></div>
     </div>
 </div>
 
@@ -836,22 +756,15 @@
 
 <script>
 // ==========================================
-// DATA DUMMY UNTUK APLIKASI
+// DATA
 // ==========================================
-const dailyActivities = [
-    { id: 'n1', title: 'Bangun & Minum Air', desc: '2 gelas air putih hangat' },
-    { id: 'n2', title: 'Olahraga Pagi', desc: 'Jalan kaki 30 menit' },
-    { id: 'n3', title: 'Minum KEMOENIK Pagi', desc: 'Sesudah sarapan' }
-];
-
 const faqData = [
     { q: 'Kapan hasil mulai terlihat?', a: 'Rata-rata pengguna mulai merasakan badan lebih ringan dalam 7-14 hari.' },
-    { q: 'Apakah boleh minum KEMOENIK saat haid?', a: 'Disarankan jeda di hari 1-3 haid.' },
-    { q: 'Bagaimana kalau saya makan berlebih sehari?', a: 'Tidak masalah, lanjutkan program seperti biasa keesokan harinya.' }
+    { q: 'Apakah boleh minum KEMOENIK saat haid?', a: 'Disarankan jeda di hari 1-3 haid.' }
 ];
 
 // ==========================================
-// FUNGSI UTAMA
+// NAVIGASI
 // ==========================================
 function go(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
@@ -861,9 +774,9 @@ function go(page) {
 
     document.getElementById('page-' + page).classList.add('on');
     
-    const pillMap = {home:0, profil:1, tips:2, program:3};
     const pills = document.querySelectorAll('.pill');
-    if (pillMap[page] !== undefined) pills[pillMap[page]].classList.add('on');
+    const pillIndex = {home:0, profil:1, tips:2, program:3, kuis:4};
+    if (pillIndex[page] !== undefined) pills[pillIndex[page]].classList.add('on');
     
     const bn = document.getElementById('bn-' + page);
     if (bn) bn.classList.add('on');
@@ -882,7 +795,6 @@ function closeDrawer() {
     document.getElementById('drawer').classList.remove('on');
     document.getElementById('overlay').classList.remove('on');
 }
-
 function openPanel(id) {
     document.getElementById(id).classList.add('on');
     document.body.style.overflow = 'hidden';
@@ -894,7 +806,7 @@ function closePanel(id) {
 function openBeli() { openPanel('modalBeli'); }
 
 // ==========================================
-// QUIZ FUNCTIONS
+// QUIZ
 // ==========================================
 let currentQ = 0;
 let selectedAnswers = new Array(15).fill(null);
@@ -904,7 +816,6 @@ function startQuiz() {
     document.getElementById('quizRunning').style.display = 'block';
     renderQuestion();
 }
-
 function renderQuestion() {
     document.getElementById('qNum').textContent = 'PERTANYAAN ' + String(currentQ+1).padStart(2,'0');
     document.getElementById('qText').textContent = 'Apakah Anda sering merasa lapar setelah makan nasi?';
@@ -924,9 +835,7 @@ function renderQuestion() {
     
     document.getElementById('btnBack').style.display = currentQ > 0 ? 'flex' : 'none';
     document.getElementById('btnNext').disabled = false;
-    document.getElementById('btnNext').innerHTML = currentQ === 14 ? 'Lihat Hasil' : 'Lanjut';
 }
-
 function selectAnswer(idx) {
     selectedAnswers[currentQ] = idx;
     document.querySelectorAll('.quiz-option').forEach((opt, i) => {
@@ -934,7 +843,6 @@ function selectAnswer(idx) {
         else opt.classList.remove('selected');
     });
 }
-
 function goNext() {
     if (currentQ < 14) { currentQ++; renderQuestion(); }
     else showResult();
@@ -945,8 +853,6 @@ function goBack() {
 function showResult() {
     document.getElementById('quizRunning').style.display = 'none';
     document.getElementById('quizResult').style.display = 'block';
-    document.getElementById('qrTypeName').innerHTML = 'Tipe <em>Seimbang</em>';
-    document.getElementById('qrTagline').textContent = 'Tubuhmu sudah baik, kuncinya konsistensi!';
 }
 function selesaiQuiz() {
     go('profil');
@@ -962,7 +868,7 @@ function ulangQuiz() {
 }
 
 // ==========================================
-// MISSION FUNCTIONS
+// MISSION
 // ==========================================
 function setMissionMode(mode) {
     document.querySelectorAll('.mission-set').forEach(s => s.classList.remove('show'));
@@ -975,7 +881,6 @@ function setMissionMode(mode) {
         document.getElementById('modeIF').classList.add('on');
     }
 }
-
 function toggleMission(itemId, checkId) {
     const item = document.getElementById(itemId);
     const check = document.getElementById(checkId);
@@ -985,49 +890,36 @@ function toggleMission(itemId, checkId) {
 }
 
 // ==========================================
-// ACCORDION FUNCTIONS
+// ACCORDION
 // ==========================================
 function tog(id) {
     document.getElementById(id).classList.toggle('on');
 }
-
-// ==========================================
-// KALKULATOR FUNCTIONS
-// ==========================================
-function hitungKalkulator() {
-    const nama = document.getElementById('inputNama').value;
-    const berat = parseFloat(document.getElementById('inputBerat').value) || 0;
-    if (!nama || berat < 30) {
-        alert('Lengkapi data dengan benar');
-        return;
-    }
-    
-    document.getElementById('kalkulatorForm').style.display = 'none';
-    document.getElementById('hasilKalkulator').style.display = 'block';
-    document.getElementById('hasilKkal').textContent = '1450';
-    document.getElementById('hasilMinggu').textContent = '8 minggu';
+function togFaq(id) {
+    document.getElementById(id).classList.toggle('on');
 }
 
+// ==========================================
+// KALKULATOR
+// ==========================================
+function hitungKalkulator() {
+    document.getElementById('kalkulatorForm').style.display = 'none';
+    document.getElementById('hasilKalkulator').style.display = 'block';
+}
 function simpanKalkulator() {
     closePanel('panelKalkulator');
     go('home');
     setTimeout(() => {
-        document.getElementById('userName').textContent = document.getElementById('inputNama').value.split(' ')[0];
-        document.getElementById('dName').textContent = document.getElementById('inputNama').value;
-        document.getElementById('statKkal').textContent = '1450';
-        document.getElementById('statMinggu').textContent = '8mg';
-        document.getElementById('progNama').textContent = document.getElementById('inputNama').value.split(' ')[0] + ' — Seimbang';
-        document.getElementById('progDesc').textContent = 'Target: ' + document.getElementById('inputTarget').value + ' kg';
-        document.getElementById('progHari').textContent = '3';
-        document.getElementById('progTotal').textContent = '56';
-        document.getElementById('progPct').textContent = '5%';
-        document.getElementById('progFill').style.width = '5%';
-        document.getElementById('progThumb').style.left = '5%';
+        const nama = document.getElementById('inputNama').value || 'Anita';
+        document.getElementById('userName').textContent = nama.split(' ')[0];
+        document.getElementById('dName').textContent = nama;
+        document.getElementById('progNama').textContent = nama + ' — Seimbang';
+        document.getElementById('progDesc').textContent = 'Target: ' + (document.getElementById('inputTarget').value || '55') + ' kg';
     }, 200);
 }
 
 // ==========================================
-// RENDER FUNCTIONS
+// RENDER FAQ
 // ==========================================
 function renderFAQ() {
     const container = document.getElementById('faqContainer');
@@ -1041,23 +933,6 @@ function renderFAQ() {
     container.innerHTML = html;
 }
 
-function togFaq(id) {
-    document.getElementById(id).classList.toggle('on');
-}
-
-function renderJadwalOlahraga() {
-    const list = document.getElementById('jadwalNormalList');
-    const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-    let html = '';
-    days.forEach(day => {
-        html += '<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);">';
-        html += '<div style="font-size:11px;font-weight:700;color:var(--green);width:50px;">' + day + '</div>';
-        html += '<div style="font-size:12px;">Jalan kaki 30 menit</div>';
-        html += '</div>';
-    });
-    list.innerHTML = html;
-}
-
 // ==========================================
 // INIT
 // ==========================================
@@ -1066,21 +941,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const params = new URLSearchParams(window.location.search);
     const wa = params.get('wa');
     const voucher = params.get('voucher');
-    const mode = params.get('mode');
     
-    // Jika ada parameter, set data user
     if (wa && voucher) {
         localStorage.setItem('kemoenik_wa', wa);
         localStorage.setItem('kemoenik_voucher', voucher);
-        if (mode) localStorage.setItem('kemoenik_mode', mode);
-        
         document.getElementById('accessScreen').style.display = 'none';
         document.getElementById('app').style.display = 'flex';
     } else {
-        // Cek localStorage
         const savedWA = localStorage.getItem('kemoenik_wa');
         const savedVoucher = localStorage.getItem('kemoenik_voucher');
-        
         if (savedWA && savedVoucher) {
             document.getElementById('accessScreen').style.display = 'none';
             document.getElementById('app').style.display = 'flex';
@@ -1092,12 +961,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Render konten
     renderFAQ();
-    renderJadwalOlahraga();
     setMissionMode('normal');
     
-    // Set daily tip
-    const tips = ['Minum KEMOENIK sesudah makan untuk penyerapan optimal.', 'Ganti nasi putih dengan nasi merah.', 'Minum 2 gelas air putih sebelum makan.'];
-    document.getElementById('dailyTipText').textContent = tips[new Date().getDay() % 3];
+    // Set nama default jika ada dari localStorage
+    const savedNama = localStorage.getItem('kemoenik_nama');
+    if (savedNama) {
+        document.getElementById('userName').textContent = savedNama.split(' ')[0];
+        document.getElementById('dName').textContent = savedNama;
+    }
 });
 </script>
 </body>
