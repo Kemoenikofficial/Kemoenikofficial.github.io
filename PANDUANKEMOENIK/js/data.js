@@ -1,509 +1,186 @@
 /* ============================================================
-   KEMOENIK APP v2.0
+   KEMOENIK APP v2.0 - data.js
+   Static data, quiz logic, menu data
    ============================================================ */
 
-/* style.css: Design System v3 — variables, layout, components, animations */
+// OLAHRAGA DATA
+var targetOlahragaData = {
+  ringan: [
+    {hari:'Sen',aktivitas:'Jalan kaki 30 menit'},
+    {hari:'Sel',aktivitas:'Lymphatic 15 menit'},
+    {hari:'Rab',aktivitas:'Istirahat aktif — jalan santai'},
+    {hari:'Kam',aktivitas:'Jalan kaki 30 menit'},
+    {hari:'Jum',aktivitas:'Jumping jack 3 set'},
+    {hari:'Sab',aktivitas:'Jalan kaki 45 menit'},
+    {hari:'Min',aktivitas:'Istirahat total'}
+  ],
+  standar: [
+    {hari:'Sen',aktivitas:'Jalan kaki 30 menit + Jumping jack 3 set'},
+    {hari:'Sel',aktivitas:'Lompat tali 10 menit + Lymphatic 10 menit'},
+    {hari:'Rab',aktivitas:'Jalan kaki 30 menit'},
+    {hari:'Kam',aktivitas:'Jumping jack 4 set + Lompat tali 10 menit'},
+    {hari:'Jum',aktivitas:'Jalan kaki 45 menit + Lymphatic 15 menit'},
+    {hari:'Sab',aktivitas:'Lompat tali 15 menit + Jumping jack 3 set'},
+    {hari:'Min',aktivitas:'Istirahat — Lymphatic sebelum tidur'}
+  ],
+  agresif: [
+    {hari:'Sen',aktivitas:'Lompat tali 15 menit + Jalan kaki 30 menit'},
+    {hari:'Sel',aktivitas:'Jumping jack 5 set + Lymphatic 15 menit'},
+    {hari:'Rab',aktivitas:'Jalan kaki 45 menit + Lompat tali 10 menit'},
+    {hari:'Kam',aktivitas:'Lompat tali 20 menit + Jumping jack 4 set'},
+    {hari:'Jum',aktivitas:'Jalan kaki 60 menit'},
+    {hari:'Sab',aktivitas:'Lompat tali 15 menit + Jumping jack 5 set + Lymphatic'},
+    {hari:'Min',aktivitas:'Jalan kaki santai 30 menit — recovery'}
+  ]
+};
 
-/* ============================================================
-   KEMOENIK — PREMIUM DESIGN SYSTEM v3
-   Brand: Natural · Modern · Premium · Clean · Wellness
-   ============================================================ */
+// FAQ DATA
+var faqData = [
+  {
+    cat: 'Input & Evaluasi Progres',
+    items: [
+      { q: 'Kapan saya harus input berat badan terbaru?', a: 'Setiap minggu akhir setelah kapsul habis ya kak, lebih tepatnya pagi setelah bangun tidur & buang air kecil (jangan lupa untuk mengisi evaluasi mingguannya).' },
+      { q: 'Kok berat badan saya belum turun di grafik?', a: 'Lemak turun bisa jadi massa otot naik, tetap konsisten menjalankan programnya, jangan lupa baca semua panduannya.' },
+      { q: 'Saya salah masukkan angka timbangan, gimana cara ubahnya?', a: 'Semua data bisa di edit dan dapat dihapus melalui tombol edit di riwayat evaluasi. Semangat kak!' }
+    ]
+  },
+  {
+    cat: 'Konsumsi Kapsul & Reaksi Tubuh',
+    items: [
+      { q: 'Kok belum turun di hari ke-5–7?', a: 'Proses detoks tiap orang berbeda-beda ya kak, ada yang cepet ada yang lambat. Yang terpenting ikuti program ini supaya dapat hasil maksimal, semangat kak.' },
+      { q: 'Kapan waktu terbaik minum kapsul KEMOENIK?', a: 'Waktu terbaik adalah sesudah makan ya kak.' },
+      { q: 'Kenapa saya jadi sering buang air kecil?', a: 'Itu reaksi normal dari kandungan Tempuyung yang bersifat diuretik alami untuk membuang kelebihan cairan dan toksin. Pastikan minum air putih 2–3 liter sehari.' },
+      { q: 'BAB jadi lebih lunak, apakah ini diare?', a: 'Bukan diare ya kak, itu efek peluruhan lemak dari kandungan Jati Belanda. Jangan khawatir, tetap semangat dan konsisten.' },
+      { q: 'Lagi haid/menstruasi, boleh tetap minum?', a: 'Sarankan jeda di hari 1–3 ya kak.' }
+    ]
+  },
+  {
+    cat: 'Teknis Menu & Diet',
+    items: [
+      { q: 'Saya alergi/tidak suka menu hari ini, boleh diganti?', a: 'Boleh banget kak, asal defisit kalori ya. Sudah tersedia plan pengantinya di Custom Menu.' },
+      { q: 'Bagaimana kalau ada acara makan (kondangan)?', a: 'Tidak apa kak untuk sekali-kali, asal dibarengi olahraga dan defisit kalori ya. Minum kapsul KEMOENIK sebelum makan pesta agar lemak tidak langsung terserap.' },
+      { q: 'Kalau "cheating" sehari, apakah program gagal?', a: 'Jangan menyerah! Lanjutkan saja program di hari berikutnya. Kapsul KEMOENIK akan membantu, tapi jangan sering-sering ya Kak!' },
+      { q: 'Kenapa disuruh minum air putih terus?', a: 'Untuk menghindari dehidrasi akibat efek detoksifikasi herbal KEMOENIK. Disarankan minum 2 liter/hari disesuaikan dengan aktivitas.' }
+    ]
+  },
+  {
+    cat: 'Aturan Pakai & Kondisi Khusus',
+    items: [
+      { q: 'Boleh minum lebih dari 6 kapsul/hari?', a: 'Tetap mengikuti anjuran 6 kapsul/hari ya kak sesuai panduan.' },
+      { q: 'Boleh saat haid? Aman untuk Busui?', a: 'Untuk haid: jeda saat H1–H3 ya kak. Untuk Busui: kami anjurkan jangan dulu karena KEMOENIK ini peluntur lemak.' },
+      { q: 'Boleh minum bersama obat dokter?', a: 'Boleh kak, sarankan memberi jeda sekitar 30 menit ya.' },
+      { q: 'Apakah bikin ketergantungan atau jantung berdebar?', a: 'KEMOENIK 100% herbal tanpa BKO. Tidak membuat jantung berdebar karena fokus pada metabolisme alami, bukan stimulan kimia.' }
+    ]
+  },
+  {
+    cat: 'Data & Hasil',
+    items: [
+      { q: 'Berapa hari bisa kelihatan hasilnya?', a: 'Setiap metabolisme berbeda-beda, namun rata-rata pengguna mulai merasakan badan lebih ringan dan lingkar perut berkurang dalam 7–14 hari jika mengikuti program.' },
+      { q: 'Apakah setelah berhenti minum BB akan naik (Yoyo Effect)?', a: 'Tidak, asalkan tetap menjaga pola makan sesuai edukasi menu. KEMOENIK membantu mengecilkan lambung secara alami sehingga nafsu makan lebih terkontrol.' },
+      { q: 'Data saya aman tidak?', a: 'Data berat badan dan progres hanya digunakan untuk sistem kalkulator diet personal dan tidak akan disebarluaskan.' }
+    ]
+  }
+];
 
-:root {
-  /* Core Brand */
-  --bg:       #F4F6F3;
-  --surface:  #FFFFFF;
-  --card:     #FFFFFF;
-  --card2:    #EEF3EE;
-
-  /* Deep Forest Green */
-  --green:    #2E7D5B;
-  --green2:   #1F4D3A;
-  --green3:   #163628;
-  --greenlit: #3A9970;
-
-  /* Gold Accent */
-  --gold:     #C9A86A;
-  --gold2:    #A8843F;
-  --goldlit:  #E8D09A;
-
-  /* Borders */
-  --border:   #DDE5DB;
-  --border2:  #C5D5C1;
-
-  /* Typography */
-  --text:     #1A1A1A;
-  --text2:    #2D4A35;
-  --text3:    #7A9080;
-
-  /* Semantic */
-  --white:    #FFFFFF;
-  --offwhite: #F9FBF9;
-  --red:      #C0392B;
-  --blue:     #2563EB;
-  --purple:   #6D28D9;
-
-  /* Typography Scale */
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body:    'Outfit', system-ui, sans-serif;
-
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(20,50,30,0.07);
-  --shadow-md: 0 4px 20px rgba(20,50,30,0.10);
-  --shadow-lg: 0 10px 40px rgba(20,50,30,0.14);
-  --shadow-gold: 0 6px 24px rgba(201,168,106,0.30);
-
-  /* Radius */
-  --r-sm: 12px;
-  --r-md: 16px;
-  --r-lg: 20px;
-  --r-xl: 24px;
+function renderFAQ() {
+  var container = document.getElementById('faqContainer');
+  if (!container) return;
+  var html = '';
+  faqData.forEach(function(cat, catIdx) {
+    html += '<div class="faq-item" id="faqCat' + catIdx + '">';
+    html += '<div class="faq-hd" onclick="togFaq(\'faqCat' + catIdx + '\')">' + cat.cat + '<span class="faq-arr">›</span></div>';
+    html += '<div class="faq-bd">';
+    cat.items.forEach(function(item) {
+      html += '<div class="faq-q">❓ ' + item.q + '</div>';
+      html += '<div class="faq-a">' + item.a + '</div>';
+    });
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html, body { height:100%; overflow:hidden; background:var(--bg); }
-body { font-family:var(--font-body); color:var(--text); font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased; }
-#app { display:flex; flex-direction:column; height:100%; max-width:430px; margin:0 auto; position:relative; overflow:hidden; background:var(--bg); }
+// QUIZ DATA
+var quizQuestions = [
+  { text:"Ketika makan nasi dalam porsi besar (lebih dari 1 centong), apa yang biasanya kamu rasakan?", options:[{emoji:"😴",text:"Langsung mengantuk dan lemas",scores:[3,0,0,1,0,0,0]},{emoji:"😐",text:"Biasa saja, tidak ada efek khusus",scores:[0,0,0,0,0,0,3]},{emoji:"😤",text:"Perut kembung dan tidak nyaman",scores:[0,0,0,0,0,3,0]},{emoji:"⚡",text:"Justru merasa lebih berenergi",scores:[0,1,2,0,0,0,1]}]},
+  { text:"Bagaimana kondisi berat badanmu dalam 6 bulan terakhir?", options:[{emoji:"📈",text:"Naik terus meski tidak makan banyak",scores:[2,2,0,1,1,0,0]},{emoji:"🔄",text:"Naik turun tidak stabil",scores:[1,1,0,0,2,0,1]},{emoji:"➡️",text:"Stagnan, susah turun meski sudah diet",scores:[1,2,0,2,0,0,0]},{emoji:"📉",text:"Bisa turun kalau konsisten diet",scores:[0,0,1,0,0,0,3]}]},
+  { text:"Dimana lemak paling banyak menumpuk di tubuhmu?", options:[{emoji:"🍎",text:"Perut dan pinggang",scores:[2,2,0,1,0,0,0]},{emoji:"🍐",text:"Paha dan pinggul",scores:[1,1,0,1,1,0,0]},{emoji:"📏",text:"Merata di seluruh tubuh",scores:[0,1,0,2,0,0,1]},{emoji:"💪",text:"Lemak sedikit tapi susah berotot",scores:[0,0,3,0,0,0,0]}]},
+  { text:"Bagaimana nafsu makanmu sehari-hari?", options:[{emoji:"🐘",text:"Selalu lapar, sulit kenyang",scores:[1,2,0,1,1,0,0]},{emoji:"⏰",text:"Lapar di jam tertentu saja",scores:[0,0,0,0,0,0,3]},{emoji:"😐",text:"Normal, tidak terlalu lapar",scores:[0,1,1,0,0,1,1]},{emoji:"😤",text:"Sering ngidam makanan manis/asin",scores:[2,0,0,0,2,0,0]}]},
+  { text:"Apa yang terjadi setelah kamu makan makanan manis?", options:[{emoji:"📈",text:"Gula darah naik cepat, lalu drop dan lapar lagi",scores:[3,0,0,0,0,1,0]},{emoji:"😴",text:"Mengantuk dan ingin tidur",scores:[1,1,0,2,0,0,0]},{emoji:"⚡",text:"Merasa berenergi cukup lama",scores:[0,0,1,0,0,0,3]},{emoji:"🤢",text:"Tidak nyaman atau mual",scores:[0,0,0,0,0,3,0]}]},
+  { text:"Bagaimana kualitas tidurmu?", options:[{emoji:"😴",text:"Sering susah tidur atau tidur tidak nyenyak",scores:[0,0,0,0,3,0,0]},{emoji:"🌙",text:"Tidur cukup dan berkualitas",scores:[0,0,0,0,0,0,3]},{emoji:"⏰",text:"Tidur mepet karena aktivitas padat",scores:[0,1,1,0,1,0,0]},{emoji:"💤",text:"Sering tidur berlebihan tapi tetap lelah",scores:[1,1,0,2,0,0,0]}]},
+  { text:"Bagaimana kondisi perutmu sehari-hari?", options:[{emoji:"🎈",text:"Sering kembung walau tidak makan banyak",scores:[0,0,0,0,0,3,0]},{emoji:"😖",text:"Sering sembelit atau susah BAB",scores:[0,0,0,0,0,3,0]},{emoji:"✅",text:"Pencernaan lancar dan normal",scores:[0,0,0,0,0,0,3]},{emoji:"🔄",text:"Kadang bermasalah, kadang tidak",scores:[0,0,0,0,1,1,1]}]},
+  { text:"Bagaimana tubuhmu merespons olahraga kardio?", options:[{emoji:"🔥",text:"Berkeringat banyak tapi BB tidak turun",scores:[1,3,0,0,0,0,0]},{emoji:"💪",text:"Berkeringat dan BB turun",scores:[0,0,0,0,0,0,3]},{emoji:"😓",text:"Cepat lelah, sulit kardio lama",scores:[0,0,0,3,0,0,0]},{emoji:"🏋️",text:"Lebih suka olahraga kekuatan/gym",scores:[0,0,3,0,0,0,0]}]},
+  { text:"Bagaimana distribusi lemak di tubuhmu?", options:[{emoji:"🍎",text:"Banyak di perut (bentuk apel)",scores:[2,2,0,1,0,0,0]},{emoji:"🍐",text:"Banyak di pinggul/paha (bentuk pir)",scores:[1,1,0,1,1,0,0]},{emoji:"📏",text:"Merata di seluruh tubuh",scores:[0,1,0,2,0,0,1]},{emoji:"💪",text:"Lemak sedikit, tapi susah berotot",scores:[0,0,3,0,0,0,0]}]},
+  { text:"Setelah makan makanan berlemak (gorengan, santan)?", options:[{emoji:"🤢",text:"Mual atau tidak nyaman di perut",scores:[0,0,0,0,0,3,0]},{emoji:"😴",text:"Langsung mengantuk dan lemas",scores:[1,2,0,1,0,0,0]},{emoji:"✅",text:"Tidak ada masalah",scores:[0,0,1,0,0,0,3]},{emoji:"⚡",text:"Justru merasa lebih berenergi",scores:[0,1,1,0,0,0,1]}]},
+  { text:"Bagaimana kondisi kulitmu sehari-hari?", options:[{emoji:"🔴",text:"Mudah berjerawat atau kemerahan",scores:[1,0,0,0,1,2,0]},{emoji:"💧",text:"Kering dan kusam",scores:[0,1,0,2,0,1,0]},{emoji:"✨",text:"Normal dan sehat",scores:[0,0,0,0,0,0,3]},{emoji:"🌊",text:"Berminyak terutama di T-zone",scores:[1,0,0,0,2,1,0]}]},
+  { text:"Apa yang terjadi saat kamu skip makan (puasa sebentar)?", options:[{emoji:"😡",text:"Langsung pusing, lemas, dan marah",scores:[2,0,1,0,1,0,0]},{emoji:"💪",text:"Tidak masalah, masih berenergi",scores:[0,2,0,0,0,0,2]},{emoji:"🎯",text:"Justru merasa lebih fokus",scores:[0,3,0,0,0,0,1]},{emoji:"😐",text:"Biasa saja, tidak terlalu terasa",scores:[0,1,0,1,0,0,2]}]},
+  { text:"Bagaimana pola makan idealmu sehari-hari?", options:[{emoji:"🥩",text:"Lebih suka daging & protein, kurang suka karbo",scores:[0,0,3,0,0,0,0]},{emoji:"🥗",text:"Lebih suka sayur & buah, hindari lemak",scores:[0,0,0,0,0,2,1]},{emoji:"🍱",text:"Makan apa saja tapi porsi kecil",scores:[0,0,0,3,0,0,1]},{emoji:"⚖️",text:"Seimbang, semua dimakan secukupnya",scores:[0,0,0,0,0,0,3]}]},
+  { text:"Bagaimana tingkat aktivitas fisikmu sehari-hari?", options:[{emoji:"🪑",text:"Sangat jarang gerak, kerja duduk",scores:[1,2,0,2,0,0,0]},{emoji:"🚶",text:"Kadang jalan kaki, tidak rutin olahraga",scores:[1,1,0,1,1,0,0]},{emoji:"🏃",text:"Olahraga ringan 2-3x seminggu",scores:[0,0,1,0,0,0,2]},{emoji:"💪",text:"Olahraga intens hampir setiap hari",scores:[0,0,3,0,0,0,1]}]},
+  { text:"Apa pengalamanmu dengan program diet sebelumnya?", options:[{emoji:"😤",text:"Sudah coba banyak diet tapi tidak berhasil",scores:[1,2,0,1,1,0,0]},{emoji:"🔄",text:"Berhasil tapi berat balik lagi (yo-yo)",scores:[2,1,0,0,1,0,0]},{emoji:"📈",text:"Belum pernah coba diet serius",scores:[0,0,0,0,2,0,1]},{emoji:"✅",text:"Cukup berhasil kalau konsisten",scores:[0,0,0,0,0,0,3]}]}
+];
 
-/* ── ACCESS SCREEN ────────────────────────────────────── */
-#accessScreen { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:9999; flex-direction:column; padding:40px 32px; text-align:center; }
-.as-logo { font-family:var(--font-display); font-size:36px; font-weight:700; color:var(--green2); margin-bottom:8px; letter-spacing:0.5px; }
-.as-logo span { color:var(--gold); }
-.as-icon { font-size:52px; margin-bottom:24px; }
-.as-title { font-family:var(--font-display); font-size:24px; font-weight:600; color:var(--text); margin-bottom:10px; }
-.as-desc { font-size:13px; color:var(--text3); line-height:1.75; margin-bottom:32px; }
-.as-btn { width:100%; max-width:320px; padding:17px; background:linear-gradient(135deg, var(--green), var(--green2)); color:#FFF; border:none; border-radius:var(--r-lg); font-family:var(--font-body); font-size:15px; font-weight:700; cursor:pointer; letter-spacing:0.3px; box-shadow:var(--shadow-md); }
+var quizTypes = [
+  {id:1,name:"Tipe Nasi Warrior",tagline:"Tubuhmu bereaksi kuat terhadap karbohidrat",emoji:"🍚",color:"#E07B39",bg:"#FEF0E6",textColor:"#7C2D12",metode:"standar",metodeName:"Standar + Kurangi Karbo",skor:78,tips:["Batasi nasi putih max 1 centong per makan","Ganti dengan nasi merah, ubi, atau kentang rebus","Makan karbo hanya di pagi & siang, hindari malam","Perbanyak protein & sayuran di setiap makan","KEMOENIK membantu menstabilkan respons gula darah"],hindari:"Nasi putih, roti putih, minuman manis",anjuran:"Nasi merah, ubi jalar, oatmeal"},
+  {id:2,name:"Tipe Lemak Fighter",tagline:"Tubuhmu butuh dorongan ekstra untuk bakar lemak",emoji:"🔥",color:"#E53E3E",bg:"#FEF2F2",textColor:"#7F1D1D",metode:"agresif",metodeName:"Agresif + Intermittent Fasting 16:8",skor:72,tips:["Terapkan IF 16:8: makan dalam jendela 8 jam saja","Contoh: makan jam 10.00–18.00, puasa sisanya","Fokus pada makanan rendah lemak jenuh","Kardio minimal 30 menit setiap hari","KEMOENIK diminum saat buka puasa untuk efek maksimal"],hindari:"Gorengan, santan, makanan olahan berlemak",anjuran:"Dada ayam, ikan, tempe, sayuran hijau"},
+  {id:3,name:"Tipe Otot Aktif",tagline:"Tubuhmu lebih optimal dengan asupan protein tinggi",emoji:"💪",color:"#3182CE",bg:"#EBF8FF",textColor:"#1E3A5F",metode:"standar",metodeName:"Standar + Tinggi Protein",skor:82,tips:["Target protein 1.8–2.2g per kg berat badan","Makan protein di setiap waktu makan utama","Kombinasikan kardio dengan latihan kekuatan","Konsumsi protein 30 menit setelah olahraga","KEMOENIK membantu pemulihan dan metabolisme optimal"],hindari:"Diet terlalu rendah kalori yang merusak otot",anjuran:"Telur, dada ayam, tempe, ikan, Greek yogurt"},
+  {id:4,name:"Tipe Hemat Energi",tagline:"Metabolismemu bekerja lebih pelan dari rata-rata",emoji:"🐢",color:"#7C3AED",bg:"#F5F3FF",textColor:"#4C1D95",metode:"ringan",metodeName:"Ringan + Konsisten Jangka Panjang",skor:68,tips:["Jangan potong kalori drastis, kurangi perlahan","Defisit kecil (300 kkal) lebih efektif untuk tipe ini","Perbanyak aktivitas ringan: jalan kaki, naik tangga","Makan lebih sering dalam porsi kecil (5–6x sehari)","KEMOENIK membantu meningkatkan metabolisme secara alami"],hindari:"Diet ekstrem atau crash diet",anjuran:"Makanan tinggi serat, protein, dan air"},
+  {id:5,name:"Tipe Mood & Lifestyle",tagline:"Gaya hidupmu sangat mempengaruhi berat badanmu",emoji:"🌙",color:"#D97706",bg:"#FFFBEB",textColor:"#78350F",metode:"ringan",metodeName:"Ringan + Kelola Stres & Tidur",skor:70,tips:["Prioritaskan tidur 7–8 jam per malam","Kelola stres dengan meditasi atau olahraga ringan","Hindari makan larut malam saat stres","Buat rutinitas makan yang teratur setiap hari","KEMOENIK membantu keseimbangan hormonal secara alami"],hindari:"Begadang, makan emosional, kafein berlebih",anjuran:"Pisang, dark chocolate, teh herbal"},
+  {id:6,name:"Tipe Perut Sensitif",tagline:"Sistem pencernaanmu butuh perhatian ekstra",emoji:"🌿",color:"#059669",bg:"#ECFDF5",textColor:"#064E3B",metode:"standar",metodeName:"Standar + Anti Inflamasi",skor:75,tips:["Hindari makanan pemicu: susu, gluten, gorengan","Perbanyak probiotik: yogurt, tempe, kimchi","Makan perlahan dan kunyah hingga halus","Hindari makan terburu-buru atau sambil stres","KEMOENIK dengan herbal alami bantu sehatkan pencernaan"],hindari:"Susu, gorengan, makanan pedas berlebih, gluten",anjuran:"Yogurt, tempe, sayuran rebus, buah non-asam"},
+  {id:7,name:"Tipe Seimbang",tagline:"Tubuhmu sudah baik, kuncinya konsistensi!",emoji:"⚖️",color:"#2D5A3D",bg:"#F0FDF4",textColor:"#14532D",metode:"standar",metodeName:"Standar + Konsistensi",skor:88,tips:["Tubuhmu merespons baik terhadap diet seimbang","Tetap pada defisit kalori yang konsisten setiap hari","Variasikan menu agar tidak bosan","Olahraga kombinasi kardio + kekuatan 3–4x seminggu","KEMOENIK sebagai pendamping untuk hasil lebih optimal"],hindari:"Inkonsistensi dan cheat meal berlebihan",anjuran:"Semua makanan bergizi dalam porsi seimbang"}
+];
 
-/* ── LOADING ──────────────────────────────────────────── */
-#loadingScreen { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:9998; flex-direction:column; gap:20px; }
-.ls-logo { font-family:var(--font-display); font-size:30px; font-weight:600; color:var(--green2); letter-spacing:0.5px; }
-.ls-logo span { color:var(--gold); }
-.ls-spin { width:32px; height:32px; border:2.5px solid var(--border2); border-top-color:var(--green); border-radius:50%; animation:spin 0.8s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
+// MENU HARIAN DATA
+var menuHarianData = [
+  { time:'07:00', label:'Sarapan', menu:'2 Telur Rebus + 1 Pisang / Ubi', cal:220, icon:'🍳' },
+  { time:'10:00', label:'Snack Pagi', menu:'Buah segar (jeruk/pepaya) + kacang', cal:120, icon:'🍊' },
+  { time:'12:00', label:'Makan Siang', menu:'Nasi ½ porsi + Lauk protein + Sayuran', cal:450, icon:'🍱' },
+  { time:'15:00', label:'Snack Sore', menu:'Pisang / Singkong rebus / Yogurt', cal:130, icon:'🍌' },
+  { time:'18:00', label:'Makan Malam', menu:'Ikan/Ayam bakar + Sayuran + Sedikit nasi', cal:380, icon:'🍽️' }
+];
 
-/* ── OVERLAY ──────────────────────────────────────────── */
-#overlay { position:absolute; inset:0; background:rgba(15,30,20,0.55); z-index:100; opacity:0; pointer-events:none; transition:opacity 0.28s; backdrop-filter:blur(6px); }
-#overlay.on { opacity:1; pointer-events:all; }
-
-/* ── DRAWER ───────────────────────────────────────────── */
-#drawer { position:absolute; top:0; left:0; bottom:0; width:276px; background:var(--surface); border-right:1px solid var(--border); z-index:101; transform:translateX(-100%); transition:transform 0.32s cubic-bezier(.4,0,.2,1); display:flex; flex-direction:column; box-shadow:12px 0 40px rgba(15,30,20,0.15); }
-#drawer.on { transform:translateX(0); }
-.d-top { padding:56px 20px 22px; background:linear-gradient(160deg, var(--green2) 0%, var(--green3) 100%); border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0; position:relative; overflow:hidden; }
-.d-top::after { content:''; position:absolute; top:-50px; right:-50px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(201,168,106,0.25) 0%, transparent 65%); }
-.d-avatar { width:48px; height:48px; border-radius:14px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:14px; border:1px solid rgba(255,255,255,0.25); backdrop-filter:blur(4px); }
-.d-name { font-family:var(--font-display); font-size:18px; font-weight:600; color:#FFF; margin-bottom:3px; }
-.d-sub { font-size:11px; color:rgba(255,255,255,0.55); letter-spacing:0.2px; }
-.d-body { flex:1; padding:8px; overflow-y:auto; }
-.d-group { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--text3); padding:14px 12px 6px; }
-.d-item { display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:10px; font-size:13px; font-weight:500; color:var(--text2); cursor:pointer; margin-bottom:1px; transition:all 0.15s; }
-.d-item:active { background:var(--card2); }
-.d-item.on { color:var(--green); background:rgba(46,125,91,0.1); font-weight:600; }
-.d-ico { width:24px; text-align:center; font-size:16px; display:flex; align-items:center; justify-content:center; }
-.d-sep { height:1px; background:var(--border); margin:8px 12px; }
-
-/* ── TOPBAR ───────────────────────────────────────────── */
-#topbar { height:58px; display:flex; align-items:center; justify-content:space-between; padding:0 18px; background:var(--surface); border-bottom:1px solid var(--border); flex-shrink:0; z-index:10; box-shadow:0 1px 0 var(--border); }
-.tb-btn { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:var(--offwhite); border:1px solid var(--border); transition:all 0.15s; color:var(--text2); }
-.tb-btn:active { background:var(--card2); }
-.tb-logo { font-family:var(--font-display); font-size:20px; font-weight:700; color:var(--green2); letter-spacing:1px; }
-.tb-logo span { color:var(--gold); }
-
-/* ── CONTENT ──────────────────────────────────────────── */
-#content { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
-#content::-webkit-scrollbar { display:none; }
-
-/* ── HERO SECTION ─────────────────────────────────────── */
-.hero { padding:24px 20px 0; background:#F4F6F3; position:relative; overflow:hidden; }
-.hero::before { content:''; position:absolute; inset:0; background:linear-gradient(160deg, rgba(46,125,91,0.08) 0%, rgba(201,168,106,0.04) 50%, transparent 100%); pointer-events:none; }
-.hero-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; position:relative; }
-.hero-greeting { font-size:11px; font-weight:600; color:var(--green); margin-bottom:5px; text-transform:uppercase; letter-spacing:1.5px; }
-.hero-name { font-family:var(--font-display); font-size:30px; font-weight:600; color:var(--green2); letter-spacing:-0.3px; line-height:1.1; }
-.hero-name span { color:var(--gold2); }
-.hero-badge { display:flex; align-items:center; gap:5px; background:rgba(201,168,106,0.12); border:1px solid rgba(201,168,106,0.35); padding:7px 12px; border-radius:30px; font-size:11px; font-weight:600; color:var(--gold2); white-space:nowrap; flex-shrink:0; }
-.hero-badge::before { content:'●'; font-size:5px; animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
-
-.stats-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding-bottom:24px; position:relative; }
-.stat-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 12px; position:relative; overflow:hidden; box-shadow:var(--shadow-sm); }
-.stat-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--green), transparent); border-radius:0 0 var(--r-md) var(--r-md); }
-.stat-card.gold::after { background:linear-gradient(90deg, var(--gold), transparent); }
-.sc-val { font-family:var(--font-display); font-size:20px; font-weight:700; color:var(--green2); line-height:1; margin-bottom:5px; }
-.sc-key { font-size:9px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:1.2px; }
-
-/* ── ESTIMASI PANEL ───────────────────────────────────── */
-.estimasi-panel { background:var(--card); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:14px 20px; display:flex; gap:0; }
-.est-item { flex:1; text-align:center; padding:0 6px; border-right:1px solid var(--border); }
-.est-item:last-child { border-right:none; }
-.est-val { font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--green2); line-height:1.2; margin-bottom:3px; }
-.est-key { font-size:9px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.8px; }
-.est-note { font-size:9px; color:var(--text3); margin-top:2px; }
-
-/* ── PILL NAV ─────────────────────────────────────────── */
-.pill-wrap { background:var(--surface); border-bottom:1px solid var(--border); padding:0 20px; position:sticky; top:0; z-index:5; display:flex; overflow-x:auto; scrollbar-width:none; }
-.pill-wrap::-webkit-scrollbar { display:none; }
-.pill { padding:14px 4px; margin-right:22px; font-size:13px; font-weight:500; color:var(--text3); cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; transition:all 0.2s; background:none; border-top:none; border-left:none; border-right:none; font-family:var(--font-body); flex-shrink:0; }
-.pill.on { color:var(--green2); border-bottom-color:var(--green); font-weight:700; }
-
-/* ── PAGES ────────────────────────────────────────────── */
-.page { display:none; padding:20px 16px 24px; }
-.page.on { display:block; animation:fadeUp 0.22s ease; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-
-/* ── COMMON ───────────────────────────────────────────── */
-.sec-title { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:12px; }
-.sec-title-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-.sec-link { font-size:12px; font-weight:600; color:var(--green); cursor:pointer; letter-spacing:0.2px; }
-
-/* ── GREETING CARD ────────────────────────────────────── */
-.greeting-card { background:linear-gradient(145deg, var(--green2) 0%, var(--green3) 100%); border-radius:var(--r-xl); padding:20px 22px; margin-bottom:18px; position:relative; overflow:hidden; box-shadow:var(--shadow-md); }
-.greeting-card::before { content:''; position:absolute; top:-40px; right:-40px; width:150px; height:150px; border-radius:50%; background:radial-gradient(circle, rgba(201,168,106,0.22), transparent 65%); }
-.greeting-card::after { content:''; position:absolute; bottom:-30px; left:-20px; width:100px; height:100px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,0.05), transparent 65%); }
-.gc-hello { font-family:var(--font-display); font-size:20px; font-weight:600; color:#FFF; margin-bottom:6px; position:relative; }
-.gc-hello span { color:var(--goldlit); }
-.gc-sub { font-size:12px; color:rgba(255,255,255,0.68); line-height:1.7; position:relative; }
-.gc-sub strong { color:rgba(194,232,198,0.9); }
-
-/* ── PROGRESS CARD ────────────────────────────────────── */
-.progress-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-xl); padding:20px; margin-bottom:18px; cursor:pointer; transition:all 0.2s; box-shadow:var(--shadow-sm); }
-.progress-card:active { transform:scale(0.99); background:var(--offwhite); }
-.prog-card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; }
-.pct-label { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:4px; }
-.pct-day { font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--green2); letter-spacing:-0.3px; }
-.pct-of { font-size:13px; font-weight:400; color:var(--text3); }
-.pct-badge { background:rgba(46,125,91,0.1); border:1px solid rgba(46,125,91,0.2); color:var(--green); font-size:13px; font-weight:700; padding:7px 13px; border-radius:12px; font-family:var(--font-display); }
-.prog-track { height:6px; background:var(--card2); border-radius:3px; position:relative; margin-bottom:8px; }
-.prog-fill { height:100%; border-radius:3px; background:linear-gradient(90deg, var(--green), var(--greenlit)); transition:width 1.2s cubic-bezier(.4,0,.2,1); position:absolute; top:0; left:0; }
-.prog-thumb { width:14px; height:14px; border-radius:50%; background:var(--white); border:2px solid var(--green); position:absolute; top:-4px; transform:translateX(-50%); transition:left 1.2s cubic-bezier(.4,0,.2,1); box-shadow:0 0 10px rgba(46,125,91,0.4); }
-.prog-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--text3); margin-bottom:14px; }
-.eval-row { display:flex; padding-top:16px; border-top:1px solid var(--border); }
-.eval-item { flex:1; text-align:center; }
-.eval-val { font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--green2); }
-.eval-key { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-top:3px; }
-.eval-div { width:1px; background:var(--border); }
-
-/* ── MISSION ──────────────────────────────────────────── */
-.mission-list { display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
-.mission-set { display:none; flex-direction:column; gap:8px; }
-.mission-set.show { display:flex; }
-.mission-mode-bar { display:flex; gap:8px; margin-bottom:14px; background:var(--offwhite); border:1px solid var(--border); border-radius:var(--r-md); padding:4px; }
-.mm-btn { flex:1; padding:8px; border-radius:10px; font-size:12px; font-weight:600; text-align:center; cursor:pointer; border:none; color:var(--text3); background:transparent; transition:all 0.2s; font-family:var(--font-body); }
-.mm-btn.on { background:var(--card); color:var(--green2); box-shadow:var(--shadow-sm); font-weight:700; }
-.mission-item { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:all 0.18s; box-shadow:var(--shadow-sm); }
-.mission-item:active { background:var(--offwhite); transform:scale(0.99); }
-.mission-item.done { opacity:0.45; }
-.mission-check { width:24px; height:24px; border-radius:8px; border:1.5px solid var(--border2); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; transition:all 0.2s; }
-.mission-check.checked { background:var(--green); border-color:var(--green); color:white; }
-.mission-text { flex:1; }
-.mission-name { font-size:13px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:0; }
-.mission-sub { font-size:11px; color:var(--text3); margin-top:2px; }
-.mission-tag { font-size:9px; font-weight:700; padding:3px 8px; border-radius:6px; letter-spacing:0.5px; white-space:nowrap; flex-shrink:0; }
-.tag-green { background:rgba(46,125,91,0.10); color:var(--green); }
-.tag-gold  { background:rgba(201,168,106,0.15); color:var(--gold2); }
-.tag-gray  { background:var(--card2); color:var(--text3); }
-.tag-blue  { background:rgba(37,99,235,0.08); color:#2563EB; }
-.tag-red   { background:rgba(192,57,43,0.08); color:#C0392B; }
-
-/* ── TIP CARD ─────────────────────────────────────────── */
-.tip-card-home { background:var(--card); border:1px solid var(--border); border-left:3px solid var(--gold); border-radius:var(--r-md); padding:16px 18px; display:flex; gap:14px; margin-bottom:18px; box-shadow:var(--shadow-sm); }
-.tip-ico { font-size:20px; flex-shrink:0; margin-top:1px; }
-.tip-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold2); margin-bottom:5px; }
-.tip-text { font-size:12px; color:var(--text2); line-height:1.75; }
-
-/* ── REMINDER ─────────────────────────────────────────── */
-.reminder-list { display:flex; flex-direction:column; margin-bottom:4px; }
-.reminder-item { display:flex; gap:12px; align-items:stretch; }
-.rem-time-wrap { width:44px; flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; padding-top:14px; }
-.rem-time { font-size:12px; font-weight:700; color:var(--text3); }
-.rem-time-sub { font-size:9px; color:var(--text3); margin-top:2px; }
-.rem-line-wrap { display:flex; flex-direction:column; align-items:center; padding:14px 0 0; flex-shrink:0; }
-.rem-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-.done-dot { background:var(--green); opacity:0.35; }
-.active-dot { background:var(--gold); box-shadow:0 0 8px rgba(201,168,106,0.5); }
-.rem-line { flex:1; width:1px; background:var(--border); margin-top:4px; min-height:20px; }
-.rem-card { flex:1; border-radius:var(--r-md); padding:14px 16px; display:flex; align-items:center; gap:12px; margin-bottom:10px; position:relative; }
-.done-card { background:var(--offwhite); border:1px solid var(--border); opacity:0.65; }
-.active-card { background:rgba(201,168,106,0.07); border:1px solid rgba(201,168,106,0.25); }
-.rem-ico { font-size:20px; flex-shrink:0; }
-.rem-name { font-size:13px; font-weight:600; color:var(--text); }
-.rem-sub { font-size:11px; color:var(--text3); margin-top:2px; }
-.rem-ping { position:absolute; top:12px; right:12px; width:7px; height:7px; border-radius:50%; background:var(--gold); animation:ping 1.5s infinite; }
-@keyframes ping { 0%{box-shadow:0 0 0 0 rgba(201,168,106,0.6)} 70%{box-shadow:0 0 0 8px rgba(201,168,106,0)} 100%{box-shadow:0 0 0 0 rgba(201,168,106,0)} }
-
-/* ── FAQ ──────────────────────────────────────────────── */
-.faq-section { margin-top:8px; }
-.faq-item { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); margin-bottom:8px; overflow:hidden; box-shadow:var(--shadow-sm); }
-.faq-hd { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; cursor:pointer; font-size:13px; font-weight:600; color:var(--text2); transition:background 0.15s; }
-.faq-hd:active { background:var(--offwhite); }
-.faq-arr { font-size:18px; color:var(--text3); transition:transform 0.25s; }
-.faq-item.on .faq-arr { transform:rotate(90deg); color:var(--green); }
-.faq-bd { display:none; padding:0 16px 16px; border-top:1px solid var(--border); }
-.faq-item.on .faq-bd { display:block; animation:fadeUp 0.2s ease; }
-.faq-q { font-size:12px; font-weight:600; color:var(--green2); margin-bottom:4px; margin-top:12px; }
-.faq-a { font-size:12px; color:var(--text3); line-height:1.75; }
-
-/* ── ACCORDION ────────────────────────────────────────── */
-.acc { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); margin-bottom:10px; overflow:hidden; box-shadow:var(--shadow-sm); }
-.acc-hd { display:flex; align-items:center; gap:14px; padding:16px 18px; cursor:pointer; transition:background 0.15s; user-select:none; }
-.acc-hd:active { background:var(--offwhite); }
-.acc-icon { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
-.acc-info { flex:1; }
-.acc-title { font-size:13px; font-weight:600; color:var(--text); }
-.acc-sub { font-size:11px; color:var(--text3); margin-top:2px; }
-.acc-toggle { width:28px; height:28px; border-radius:8px; background:var(--offwhite); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--text3); transition:all 0.25s; flex-shrink:0; }
-.acc.on .acc-toggle { transform:rotate(45deg); color:var(--green); background:rgba(46,125,91,0.1); border-color:rgba(46,125,91,0.3); }
-.acc-body { display:none; padding:0 18px 18px; border-top:1px solid var(--border); }
-.acc.on .acc-body { display:block; animation:fadeUp 0.22s ease; }
-.ph { color:var(--text3); font-size:12px; padding:20px 0; text-align:center; }
-
-/* ── SCORE RING ───────────────────────────────────────── */
-.score-block { padding:20px 0 8px; display:flex; flex-direction:column; align-items:center; }
-.score-ring-wrap { position:relative; width:140px; height:140px; margin-bottom:18px; }
-.score-ring-wrap svg { width:100%; height:100%; transform:rotate(-90deg); }
-.sr-bg { fill:none; stroke:var(--border2); stroke-width:8; }
-.sr-fill { fill:none; stroke:url(#sg); stroke-width:8; stroke-linecap:round; stroke-dasharray:326; stroke-dashoffset:326; transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1); }
-.score-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.score-pct { font-family:var(--font-display); font-size:34px; font-weight:700; color:var(--green2); line-height:1; }
-.score-lbl { font-size:9px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:1.2px; margin-top:4px; }
-.score-desc { font-size:12px; color:var(--text2); text-align:center; line-height:1.75; max-width:260px; }
-
-/* ── TRAIT BAR ────────────────────────────────────────── */
-.trait-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:18px; margin-bottom:12px; box-shadow:var(--shadow-sm); }
-.trait-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-.trait-name { font-size:13px; font-weight:600; color:var(--text); }
-.trait-badge { font-size:10px; font-weight:700; padding:3px 10px; border-radius:20px; }
-.badge-optimal { background:#DCFCE7; color:#15803D; }
-.badge-perlu { background:#FEF9C3; color:#854D0E; }
-.badge-tinggi { background:#FEE2E2; color:#991B1B; }
-.trait-bar-bg { position:relative; height:6px; background:var(--card2); border-radius:3px; margin-bottom:8px; overflow:visible; }
-.trait-bar-marker { position:absolute; width:13px; height:13px; background:var(--green); border-radius:50%; top:-3.5px; transform:translateX(-50%); border:2px solid #FFF; box-shadow:0 1px 4px rgba(0,0,0,0.15); transition:left 1s ease; }
-.trait-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--text3); margin-bottom:8px; }
-.trait-desc { font-size:12px; color:var(--text3); line-height:1.7; }
-
-/* ── PROGRAM BANNER ───────────────────────────────────── */
-.prog-banner { background:linear-gradient(145deg, var(--green2) 0%, var(--green3) 100%); border-radius:var(--r-xl); padding:22px; margin-bottom:16px; position:relative; overflow:hidden; box-shadow:var(--shadow-md); }
-.prog-banner::before { content:''; position:absolute; top:-50px; right:-50px; width:150px; height:150px; border-radius:50%; background:radial-gradient(circle, rgba(201,168,106,0.28), transparent 65%); }
-.pb-label { font-size:10px; font-weight:600; letter-spacing:2px; color:rgba(255,255,255,0.5); text-transform:uppercase; margin-bottom:8px; }
-.pb-name { font-family:var(--font-display); font-size:22px; font-weight:600; color:#FFF; letter-spacing:-0.2px; margin-bottom:4px; position:relative; }
-.pb-desc { font-size:12px; color:rgba(255,255,255,0.6); position:relative; }
-.prev-list { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); margin-bottom:16px; overflow:hidden; box-shadow:var(--shadow-sm); }
-.prev-item { display:flex; align-items:center; gap:14px; padding:15px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; }
-.prev-item:last-child { border-bottom:none; }
-.prev-item:active { background:var(--offwhite); }
-.pi-ico { width:40px; height:40px; border-radius:12px; background:rgba(46,125,91,0.09); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.pi-name { font-size:13px; font-weight:600; color:var(--text); }
-.pi-sub { font-size:11px; color:var(--text3); margin-top:2px; }
-.pi-arr { margin-left:auto; color:var(--text3); font-size:18px; }
-.cta-btn { width:100%; padding:17px; background:linear-gradient(135deg, var(--gold), var(--gold2)); color:#FFF; border:none; border-radius:var(--r-lg); font-family:var(--font-body); font-size:15px; font-weight:700; cursor:pointer; letter-spacing:0.2px; box-shadow:var(--shadow-gold); transition:all 0.2s; }
-.cta-btn:active { transform:scale(0.98); opacity:0.9; }
-.cta-note { font-size:11px; color:var(--text3); text-align:center; margin-top:10px; }
-
-/* ── SHORTCUT GRID ────────────────────────────────────── */
-.shortcut-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
-.sc-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:18px 16px; cursor:pointer; transition:all 0.2s; position:relative; overflow:hidden; box-shadow:var(--shadow-sm); }
-.sc-card:active { background:var(--offwhite); transform:scale(0.97); }
-.sc-card.green-fill { background:linear-gradient(145deg, var(--green2), var(--green3)); border-color:transparent; }
-.sc-card.green-fill .sc-card-name { color:#FFF; }
-.sc-card.green-fill .sc-card-sub { color:rgba(255,255,255,0.55); }
-.sc-card-ico { font-size:22px; margin-bottom:10px; }
-.sc-card-ico-wrap { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:10px; }
-@keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(14px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
-.sc-card-name { font-size:13px; font-weight:700; color:var(--text); letter-spacing:-0.1px; }
-.sc-card-sub { font-size:11px; color:var(--text3); margin-top:3px; line-height:1.5; }
-.sc-card-arr { position:absolute; bottom:14px; right:14px; color:var(--text3); font-size:14px; }
-.sc-card.green-fill .sc-card-arr { color:rgba(255,255,255,0.3); }
-
-/* ── BOTTOM NAV ───────────────────────────────────────── */
-#bnav { height:64px; background:var(--surface); border-top:1px solid var(--border); display:flex; align-items:stretch; flex-shrink:0; box-shadow:0 -2px 20px rgba(20,50,30,0.06); }
-.bn { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; transition:all 0.18s; position:relative; }
-.bn:active { background:var(--offwhite); }
-.bn-ico { font-size:20px; line-height:1; display:flex; align-items:center; justify-content:center; height:22px; color:var(--text3); transition:color 0.2s; }
-.bn.on .bn-ico { color:var(--green2); }
-.bn-lbl { font-size:9px; font-weight:600; color:var(--text3); letter-spacing:0.5px; text-transform:uppercase; transition:color 0.2s; }
-.bn.on .bn-lbl { color:var(--green2); }
-.bn.on::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:28px; height:2.5px; background:var(--green); border-radius:0 0 4px 4px; }
-
-/* ── MODAL PANEL ──────────────────────────────────────── */
-.modal-panel { display:none; position:fixed; inset:0; background:rgba(10,25,15,0.55); z-index:200; align-items:flex-end; justify-content:center; backdrop-filter:blur(5px); }
-.modal-panel.on { display:flex; }
-.modal-sheet { background:var(--surface); border-radius:var(--r-xl) var(--r-xl) 0 0; width:100%; max-width:430px; max-height:90vh; overflow-y:auto; padding:0 0 36px; animation:slideUp 0.28s ease; }
-@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-.ms-pull { width:32px; height:4px; background:var(--border); border-radius:2px; margin:12px auto 0; }
-.ms-head { padding:22px 22px 0; }
-.ms-title { font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--text); margin-bottom:4px; }
-.ms-sub { font-size:12px; color:var(--text3); }
-.ms-body { padding:16px 20px 0; }
-
-/* ── FORMS ────────────────────────────────────────────── */
-.form-group { margin-bottom:18px; }
-.form-label { display:block; font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-bottom:7px; }
-.form-input { width:100%; padding:13px 15px; font-size:14px; font-family:var(--font-body); background:var(--offwhite); border:1.5px solid var(--border); border-radius:var(--r-sm); color:var(--text); transition:all 0.2s; }
-.form-input:focus { outline:none; background:var(--white); border-color:var(--green); box-shadow:0 0 0 3px rgba(46,125,91,0.1); }
-select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A9080' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; background-color:var(--offwhite); cursor:pointer; padding-right:36px; }
-.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.btn-primary { width:100%; padding:15px; background:linear-gradient(135deg, var(--green), var(--green2)); color:#FFF; border:none; border-radius:var(--r-md); font-family:var(--font-body); font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; letter-spacing:0.2px; box-shadow:var(--shadow-sm); }
-.btn-primary:active { transform:scale(0.98); }
-.btn-outline { width:100%; padding:13px; background:var(--white); border:1.5px solid var(--border2); color:var(--green2); border-radius:var(--r-md); font-family:var(--font-body); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; }
-.btn-outline:active { background:var(--offwhite); }
-
-/* ── TIMELINE ─────────────────────────────────────────── */
-.timeline { margin-top:16px; }
-.tl-item { display:flex; gap:14px; padding-bottom:20px; position:relative; }
-.tl-item::before { content:''; position:absolute; left:16px; top:32px; bottom:0; width:1px; background:var(--border); }
-.tl-item:last-child::before { display:none; }
-.tl-dot { width:33px; height:33px; border-radius:50%; background:var(--card2); border:1.5px solid var(--border2); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--text3); flex-shrink:0; z-index:1; }
-.tl-dot.active { background:var(--gold); border-color:var(--gold2); color:#FFF; }
-.tl-dot.done { background:var(--green); border-color:var(--green2); color:#FFF; }
-.tl-content { flex:1; }
-.tl-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
-.tl-desc { font-size:12px; color:var(--text3); line-height:1.65; }
-
-/* ── MEAL CARD ────────────────────────────────────────── */
-.meal-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px; display:flex; gap:14px; align-items:center; margin-bottom:10px; transition:all 0.15s; box-shadow:var(--shadow-sm); }
-.meal-card:active { background:var(--offwhite); }
-.meal-time-box { width:54px; height:54px; background:var(--offwhite); border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid var(--border); flex-shrink:0; }
-.meal-time-label { font-size:9px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; }
-.meal-time-value { font-family:var(--font-display); font-size:17px; font-weight:700; color:var(--green2); }
-.meal-content { flex:1; }
-.meal-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:3px; }
-.meal-desc { font-size:11px; color:var(--text3); line-height:1.55; }
-.meal-cal { font-size:13px; font-weight:700; color:var(--green); white-space:nowrap; }
-
-/* ── MENU ─────────────────────────────────────────────── */
-.menu-tabs-wrap { display:flex; gap:6px; margin-bottom:14px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; }
-.menu-tabs-wrap::-webkit-scrollbar { display:none; }
-.menu-tab-btn { padding:8px 16px; background:var(--white); border:1.5px solid var(--border); border-radius:20px; font-size:12px; font-weight:600; color:var(--text3); cursor:pointer; white-space:nowrap; transition:all 0.18s; font-family:var(--font-body); }
-.menu-tab-btn.on { background:var(--green2); border-color:var(--green2); color:#FFF; }
-.menu-table-wrap { overflow-x:auto; margin-bottom:14px; border-radius:12px; border:1px solid var(--border); }
-.menu-table { width:100%; border-collapse:collapse; font-size:11px; min-width:560px; }
-.menu-table th { background:var(--green2); color:#FFF; padding:10px 8px; text-align:left; font-size:11px; font-weight:600; }
-.menu-table td { padding:9px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
-.menu-table tr:nth-child(even) td { background:var(--offwhite); }
-
-/* ── EVAL FORM ────────────────────────────────────────── */
-.eval-form-card { background:var(--offwhite); border:1px solid var(--border); border-radius:var(--r-md); padding:16px; margin-bottom:14px; }
-.condition-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0; }
-.cond-item { background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:10px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; transition:all 0.18s; }
-.cond-item.checked { background:#ECFDF5; border-color:var(--green); }
-.cond-check { width:18px; height:18px; border:1.5px solid var(--border2); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; }
-.cond-item.checked .cond-check { background:var(--green); border-color:var(--green); color:#FFF; }
-.cond-text { font-size:12px; font-weight:500; }
-
-/* ── HISTORY ──────────────────────────────────────────── */
-.hist-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:16px; margin-bottom:10px; box-shadow:var(--shadow-sm); }
-.hist-week { font-size:12px; font-weight:700; color:var(--green); }
-.hist-date { font-size:11px; color:var(--text3); }
-.hist-vals { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; text-align:center; margin:10px 0; }
-.hv-label { font-size:10px; color:var(--text3); }
-.hv-val { font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--text); }
-
-/* ── QUIZ ─────────────────────────────────────────────── */
-.quiz-progress-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:14px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
-.quiz-bar-bg { height:6px; background:var(--card2); border-radius:3px; overflow:hidden; margin:8px 0 4px; }
-.quiz-bar-fill { height:100%; background:linear-gradient(90deg, var(--green), var(--greenlit)); border-radius:3px; transition:width 0.4s ease; }
-.quiz-q-body { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; margin-bottom:14px; animation:fadeUp 0.3s ease; box-shadow:var(--shadow-sm); }
-.quiz-q-num { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
-.quiz-q-text { font-size:15px; font-weight:600; color:var(--text); line-height:1.55; margin-bottom:18px; }
-.quiz-option { background:var(--offwhite); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:13px 14px; display:flex; align-items:center; gap:12px; cursor:pointer; margin-bottom:8px; transition:all 0.18s; }
-.quiz-option:active { background:var(--card2); }
-.quiz-option.selected { background:#EBF5F1; border-color:var(--green); }
-.quiz-opt-emoji { font-size:20px; flex-shrink:0; }
-.quiz-opt-text { font-size:13px; font-weight:500; color:var(--text); flex:1; }
-.quiz-opt-radio { width:18px; height:18px; border-radius:50%; border:1.5px solid var(--border2); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-.quiz-option.selected .quiz-opt-radio { background:var(--green); border-color:var(--green); }
-.quiz-option.selected .quiz-opt-radio::after { content:''; width:7px; height:7px; border-radius:50%; background:#FFF; }
-.quiz-nav { display:flex; gap:10px; }
-.quiz-btn-back { width:44px; height:44px; border-radius:11px; background:var(--offwhite); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text3); flex-shrink:0; }
-.quiz-btn-next { flex:1; padding:13px; background:var(--green); color:#FFF; border:none; border-radius:11px; font-family:var(--font-body); font-size:14px; font-weight:700; cursor:pointer; opacity:0.4; }
-.quiz-btn-next:not(:disabled) { opacity:1; }
-
-/* ── QUIZ RESULT ──────────────────────────────────────── */
-.quiz-result-hero { background:linear-gradient(145deg, var(--green2), var(--green3)); padding:26px 22px; border-radius:var(--r-lg); margin-bottom:14px; position:relative; overflow:hidden; box-shadow:var(--shadow-md); }
-.qr-badge { font-size:10px; font-weight:700; letter-spacing:2px; color:rgba(255,255,255,0.5); text-transform:uppercase; margin-bottom:6px; }
-.qr-type { font-family:var(--font-display); font-size:24px; font-weight:600; color:#FFF; margin-bottom:4px; }
-.qr-type em { color:var(--goldlit); font-style:italic; }
-.qr-tagline { font-size:12px; color:rgba(255,255,255,0.7); line-height:1.65; margin-bottom:14px; }
-.qr-gauge { background:rgba(255,255,255,0.1); border-radius:12px; padding:12px 14px; display:flex; gap:14px; align-items:center; border:1px solid rgba(255,255,255,0.12); }
-.qr-circle { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,0.12); border:2px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--goldlit); flex-shrink:0; }
-.qr-gauge-info { flex:1; }
-.qr-gauge-title { font-size:10px; color:rgba(255,255,255,0.5); margin-bottom:3px; }
-.qr-gauge-metode { font-size:13px; font-weight:600; color:#FFF; margin-bottom:6px; }
-.qr-gauge-bar-bg { height:5px; background:rgba(255,255,255,0.15); border-radius:3px; overflow:hidden; }
-.qr-gauge-bar-fill { height:100%; background:var(--gold); border-radius:3px; transition:width 1s ease; }
-
-/* ── RESULT TABS ──────────────────────────────────────── */
-.result-tabs { display:flex; gap:0; background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); margin-bottom:14px; overflow:hidden; box-shadow:var(--shadow-sm); }
-.rt-btn { flex:1; padding:11px 4px; font-size:12px; font-weight:500; color:var(--text3); cursor:pointer; text-align:center; border:none; background:none; font-family:var(--font-body); border-bottom:2px solid transparent; transition:all 0.18s; }
-.rt-btn.on { color:var(--green2); border-bottom-color:var(--green); background:rgba(46,125,91,0.04); font-weight:700; }
-.result-tab-panel { display:none; }
-.result-tab-panel.on { display:block; animation:fadeUp 0.22s ease; }
-
-/* ── SHOP ─────────────────────────────────────────────── */
-.shop-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
-.shop-btn { padding:14px 10px; border-radius:var(--r-md); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; gap:7px; text-decoration:none; color:white; transition:all 0.18s; }
-.shop-btn:active { transform:scale(0.97); }
-.shop-shopee { background:#EE4D2D; }
-.shop-tiktok { background:#111; }
-.shop-warning { background:#FEE2E2; border:1px solid #FECACA; color:#991B1B; padding:10px 12px; border-radius:10px; font-size:12px; font-weight:600; text-align:center; margin-top:8px; }
-
-/* ── NOTIFICATION BANNER ──────────────────────────────── */
-.notif-banner { background:#FFFDF5; border:1px solid rgba(201,168,106,0.4); border-left:3px solid var(--gold); border-radius:var(--r-sm); padding:12px 14px; margin-bottom:16px; display:flex; gap:12px; align-items:flex-start; }
-.notif-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
-.notif-text { font-size:12px; color:var(--gold2); font-weight:500; flex:1; line-height:1.65; }
-.notif-close { width:24px; height:24px; border-radius:6px; background:rgba(201,168,106,0.12); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--gold2); flex-shrink:0; }
-
-/* ── HERBAL CARD ──────────────────────────────────────── */
-.herbal-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:16px; margin-bottom:10px; display:flex; gap:14px; align-items:flex-start; box-shadow:var(--shadow-sm); }
-.herbal-ico { font-size:26px; flex-shrink:0; }
-.herbal-name { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
-.herbal-sci { font-size:10px; color:var(--text3); font-style:italic; margin-bottom:4px; }
-.herbal-benefit { font-size:12px; font-weight:600; color:var(--green2); margin-bottom:6px; }
-.herbal-desc { font-size:12px; color:var(--text3); line-height:1.65; }
-.herbal-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
-.h-tag { font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; background:#DCFCE7; color:#15803D; }
-.herbal-badge { font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; align-self:flex-start; flex-shrink:0; }
-
-/* ── JADWAL ───────────────────────────────────────────── */
-.jadwal-item { display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
-.jadwal-item:last-child { border-bottom:none; }
-.jadwal-time { font-size:11px; font-weight:700; width:44px; flex-shrink:0; padding-top:2px; }
-.jadwal-content { flex:1; }
-.jadwal-title { font-size:13px; font-weight:600; margin-bottom:2px; }
-.jadwal-sub { font-size:11px; color:var(--text3); }
-
-/* ── CUSTOM MENU ──────────────────────────────────────── */
-.cm-food-item { background:var(--offwhite); border:1.5px solid var(--border); border-radius:10px; padding:10px 12px; cursor:pointer; transition:all 0.18s; position:relative; }
-.cm-food-item.cm-selected { background:var(--green2); border-color:var(--green); color:#FFF; }
-.cm-food-item .cm-check { position:absolute; top:6px; right:6px; width:16px; height:16px; background:#FFF; border-radius:50%; display:none; align-items:center; justify-content:center; font-size:8px; color:var(--green); font-weight:700; }
-.cm-food-item.cm-selected .cm-check { display:flex; }
-.cm-food-item .cm-name { font-size:12px; font-weight:600; margin-bottom:2px; }
-.cm-food-item .cm-cal { font-size:10px; opacity:0.75; }
-.cm-food-item.cm-selected .cm-name,
-.cm-food-item.cm-selected .cm-cal { color:#FFF; }
-.cm-selected-item { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:10px; margin-bottom:8px; }
-.cm-qty-row { display:flex; align-items:center; gap:6px; margin-top:6px; }
-.cm-qty-input { width:52px; padding:4px 6px; border:1px solid var(--border); border-radius:6px; text-align:center; font-size:12px; font-family:var(--font-body); }
-.cm-remove-btn { width:22px; height:22px; border-radius:50%; background:#C0392B; border:none; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:9px; margin-left:auto; }
-
-/* ── MISC ─────────────────────────────────────────────── */
-.info-box { background:var(--offwhite); border:1px solid var(--border); border-radius:var(--r-sm); padding:14px; font-size:12px; color:var(--text3); line-height:1.75; margin-bottom:12px; }
-.info-box strong { color:var(--green2); }
-.divider { height:1px; background:var(--border); margin:16px 0; }
-.text-green { color:var(--green); }
-.text-gold { color:var(--gold2); }
-.text-muted { color:var(--text3); }
-.fw-700 { font-weight:700; }
-.fs-12 { font-size:12px; }
-.fs-13 { font-size:13px; }
-.mt-4 { margin-top:4px; }
-.mt-8 { margin-top:8px; }
-.mt-12 { margin-top:12px; }
-.mt-16 { margin-top:16px; }
-.mb-4 { margin-bottom:4px; }
-.mb-8 { margin-bottom:8px; }
-.mb-12 { margin-bottom:12px; }
-
-/* In-App Reminder Animation */
-@keyframes slideDown {
-  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
+// CUSTOM MENU DATABASE
+var cmFoodDatabase = [
+  {id:1,name:"Telur Ayam",category:"protein-hewani",unit:"butir",baseCal:78,baseAmount:1},
+  {id:2,name:"Dada Ayam (Rebus)",category:"protein-hewani",unit:"gram",baseCal:165,baseAmount:100},
+  {id:3,name:"Dada Ayam (Goreng)",category:"protein-hewani",unit:"gram",baseCal:220,baseAmount:100},
+  {id:4,name:"Ikan Kembung (Rebus)",category:"protein-hewani",unit:"gram",baseCal:167,baseAmount:100},
+  {id:5,name:"Ikan Salmon",category:"protein-hewani",unit:"gram",baseCal:208,baseAmount:100},
+  {id:6,name:"Ikan Tuna (Kaleng)",category:"protein-hewani",unit:"gram",baseCal:116,baseAmount:100},
+  {id:7,name:"Udang (Rebus)",category:"protein-hewani",unit:"gram",baseCal:106,baseAmount:100},
+  {id:8,name:"Daging Sapi (Rebus)",category:"protein-hewani",unit:"gram",baseCal:250,baseAmount:100},
+  {id:9,name:"Tempe (Rebus)",category:"protein-nabati",unit:"gram",baseCal:192,baseAmount:100},
+  {id:10,name:"Tempe (Goreng)",category:"protein-nabati",unit:"gram",baseCal:280,baseAmount:100},
+  {id:11,name:"Tahu Putih",category:"protein-nabati",unit:"gram",baseCal:68,baseAmount:100},
+  {id:12,name:"Tahu Goreng",category:"protein-nabati",unit:"gram",baseCal:200,baseAmount:100},
+  {id:13,name:"Edamame",category:"protein-nabati",unit:"gram",baseCal:121,baseAmount:100},
+  {id:14,name:"Kacang Hijau",category:"protein-nabati",unit:"gram",baseCal:105,baseAmount:100},
+  {id:15,name:"Nasi Putih",category:"karbohidrat",unit:"gram",baseCal:130,baseAmount:100},
+  {id:16,name:"Nasi Merah",category:"karbohidrat",unit:"gram",baseCal:111,baseAmount:100},
+  {id:17,name:"Kentang (Rebus)",category:"karbohidrat",unit:"gram",baseCal:87,baseAmount:100},
+  {id:18,name:"Ubi Jalar (Rebus)",category:"karbohidrat",unit:"gram",baseCal:90,baseAmount:100},
+  {id:19,name:"Oatmeal",category:"karbohidrat",unit:"gram",baseCal:68,baseAmount:100},
+  {id:20,name:"Roti Gandum",category:"karbohidrat",unit:"iris",baseCal:74,baseAmount:1},
+  {id:21,name:"Alpukat",category:"lemak",unit:"gram",baseCal:160,baseAmount:100},
+  {id:22,name:"Minyak Zaitun",category:"lemak",unit:"sdm",baseCal:119,baseAmount:1},
+  {id:23,name:"Keju Cheddar",category:"lemak",unit:"gram",baseCal:402,baseAmount:100},
+  {id:24,name:"Bayam (Rebus)",category:"sayuran",unit:"gram",baseCal:23,baseAmount:100},
+  {id:25,name:"Brokoli (Rebus)",category:"sayuran",unit:"gram",baseCal:35,baseAmount:100},
+  {id:26,name:"Wortel (Rebus)",category:"sayuran",unit:"gram",baseCal:35,baseAmount:100},
+  {id:27,name:"Kangkung (Tumis)",category:"sayuran",unit:"gram",baseCal:50,baseAmount:100},
+  {id:28,name:"Tomat",category:"sayuran",unit:"gram",baseCal:18,baseAmount:100},
+  {id:29,name:"Mentimun",category:"sayuran",unit:"gram",baseCal:15,baseAmount:100},
+  {id:30,name:"Jamur (Tumis)",category:"sayuran",unit:"gram",baseCal:40,baseAmount:100},
+  {id:31,name:"Pisang",category:"buah",unit:"buah",baseCal:105,baseAmount:1},
+  {id:32,name:"Apel",category:"buah",unit:"buah",baseCal:95,baseAmount:1},
+  {id:33,name:"Jeruk",category:"buah",unit:"buah",baseCal:62,baseAmount:1},
+  {id:34,name:"Semangka",category:"buah",unit:"gram",baseCal:30,baseAmount:100},
+  {id:35,name:"Pepaya",category:"buah",unit:"gram",baseCal:43,baseAmount:100},
+  {id:36,name:"Mangga",category:"buah",unit:"gram",baseCal:60,baseAmount:100},
+  {id:37,name:"Susu Low Fat",category:"susu",unit:"ml",baseCal:42,baseAmount:100},
+  {id:38,name:"Yogurt Plain",category:"susu",unit:"gram",baseCal:59,baseAmount:100},
+  {id:39,name:"Greek Yogurt",category:"susu",unit:"gram",baseCal:59,baseAmount:100},
+  {id:40,name:"Almond",category:"kacang-biji",unit:"gram",baseCal:579,baseAmount:100},
+  {id:41,name:"Kacang Tanah",category:"kacang-biji",unit:"gram",baseCal:567,baseAmount:100},
+  {id:42,name:"Chia Seed",category:"kacang-biji",unit:"sdm",baseCal:60,baseAmount:1},
+  {id:43,name:"Protein Whey",category:"diet",unit:"sendok",baseCal:120,baseAmount:1},
+  {id:44,name:"Psyllium Husk",category:"diet",unit:"sdm",baseCal:20,baseAmount:1}
+];
