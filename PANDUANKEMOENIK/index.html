@@ -2629,5 +2629,27 @@
 <script src="js/utils.js"></script>
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>
+<script>
+(function() {
+    var params = new URLSearchParams(window.location.search);
+    var wa = params.get('wa');
+    var voucher = params.get('voucher');
+    var accessScreen = document.getElementById('accessScreen');
+    var loadingScreen = document.getElementById('loadingScreen');
+    var app = document.getElementById('app');
+
+    if (wa && voucher) {
+        // Parameter ditemukan, sembunyikan access screen
+        if (accessScreen) accessScreen.style.display = 'none';
+        if (loadingScreen) loadingScreen.style.display = 'flex';
+        if (app) app.style.display = 'flex'; // nanti akan diatur ulang oleh app.js
+    } else {
+        // Tidak ada parameter, tampilkan access screen
+        if (accessScreen) accessScreen.style.display = 'flex';
+        if (loadingScreen) loadingScreen.style.display = 'none';
+        if (app) app.style.display = 'none';
+    }
+})();
+</script>
 </body>
 </html>
