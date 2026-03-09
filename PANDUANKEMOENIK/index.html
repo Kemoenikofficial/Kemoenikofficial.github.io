@@ -2667,32 +2667,5 @@
 <script src="js/utils.js"></script>
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>
-<script>
-<script>
-(function() {
-    // Baca parameter dari URL
-    var params = new URLSearchParams(window.location.search);
-    var wa = params.get('wa');
-    var voucher = params.get('voucher');
-    
-    // Cari elemen penting
-    var accessScreen = document.getElementById('accessScreen');
-    var loadingScreen = document.getElementById('loadingScreen');
-    var app = document.getElementById('app');
-
-    // Jika WA dan voucher ada (tidak null/kosong), user sudah login
-    if (wa && voucher && wa !== 'null' && voucher !== 'null' && wa !== '' && voucher !== '') {
-        console.log('Fallback: Parameter ditemukan, menyembunyikan access screen');
-        if (accessScreen) accessScreen.style.display = 'none';
-        if (loadingScreen) loadingScreen.style.display = 'flex'; // Tampilkan loading
-        if (app) app.style.display = 'flex'; // Tampilkan app (nanti diatur ulang oleh app.js)
-    } else {
-        console.log('Fallback: Tidak ada parameter, tampilkan access screen');
-        if (accessScreen) accessScreen.style.display = 'flex';
-        if (loadingScreen) loadingScreen.style.display = 'none';
-        if (app) app.style.display = 'none';
-    }
-})();
-</script>
 </body>
 </html>
