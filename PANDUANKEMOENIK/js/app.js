@@ -76,7 +76,7 @@ function showVoucherExpiredBlock(message) {
   document.body.insertAdjacentHTML('beforeend', blockHTML);
 }
 
-async function initApp() {
+function initApp() {
   try {
     var wa = getQueryParam('wa') || localStorage.getItem('kemoenik_wa') || '';
     var mode = getQueryParam('mode') || 'continue';
@@ -91,7 +91,7 @@ async function initApp() {
     localStorage.setItem('kemoenik_mode', mode);
 
     document.getElementById('accessScreen').style.display = 'none';
-    document.getElementById('loadingScreen').style.display = 'flex';
+    document.getElementById('loadingScreen').style.display = 'none';
 
     // Load data dari localStorage (per WA)
     var userData = normalizedWA ? lsLoadAll(normalizedWA) : null;
