@@ -3,31 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script>
-    (function() {
-        var params = new URLSearchParams(window.location.search);
-        var wa = params.get('wa');
-        var voucher = params.get('voucher');
-        if (wa && voucher && wa !== 'null' && voucher !== 'null' && wa !== '' && voucher !== '') {
-            document.addEventListener('DOMContentLoaded', function() {
-                var accessScreen = document.getElementById('accessScreen');
-                var loadingScreen = document.getElementById('loadingScreen');
-                var app = document.getElementById('app');
-                if (accessScreen) accessScreen.style.display = 'none';
-                if (loadingScreen) loadingScreen.style.display = 'flex';
-                if (app) app.style.display = 'flex';
-            });
-        }
-    })();
-    </script>
     <title>KEMOENIK - Panduan Diet Personal</title>
-    <!-- Google Analytics (ganti dengan ID Anda) --><!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KEMOENIK - Panduan Diet Personal</title>
-    <!-- Google Analytics (ganti dengan ID Anda) -->
+    
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -35,6 +13,7 @@
         gtag('js', new Date());
         gtag('config', 'G-XXXXXXXXXX');
     </script>
+    
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,9 +21,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- CSS Utama -->
     <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Script untuk cek akses -->
+    <script>
+    (function() {
+        var params = new URLSearchParams(window.location.search);
+        var wa = params.get('wa');
+        var voucher = params.get('voucher');
+        
+        // Simpan ke localStorage jika ada parameter
+        if (wa && voucher && wa !== 'null' && voucher !== 'null' && wa !== '' && voucher !== '') {
+            localStorage.setItem('kemoenik_wa', wa);
+            localStorage.setItem('kemoenik_voucher', voucher);
+            localStorage.setItem('kemoenik_login_time', Date.now());
+        }
+        
+        // Cek akses: dari parameter URL atau localStorage
+        var hasAccess = (wa && voucher && wa !== 'null' && voucher !== 'null') || 
+                       (localStorage.getItem('kemoenik_wa') && localStorage.getItem('kemoenik_voucher'));
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var accessScreen = document.getElementById('accessScreen');
+            var loadingScreen = document.getElementById('loadingScreen');
+            var app = document.getElementById('app');
+            
+            if (!hasAccess) {
+                // Tidak ada akses - tampilkan layar verifikasi
+                if (accessScreen) accessScreen.style.display = 'flex';
+                if (loadingScreen) loadingScreen.style.display = 'none';
+                if (app) app.style.display = 'none';
+            } else {
+                // Ada akses - tampilkan aplikasi
+                if (accessScreen) accessScreen.style.display = 'none';
+                if (loadingScreen) loadingScreen.style.display = 'flex';
+                if (app) app.style.display = 'flex';
+                
+                // Setelah load selesai, sembunyikan loading
+                setTimeout(function() {
+                    if (loadingScreen) loadingScreen.style.display = 'none';
+                }, 1500);
+            }
+        });
+    })();
+    </script>
 </head>
 <body>
-
 <!-- ACCESS SCREEN (ditampilkan jika tidak ada parameter WA) -->
 <div id="accessScreen">
     <div class="as-logo">KEMO<span>ENIK</span></div>
