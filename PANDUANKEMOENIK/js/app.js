@@ -1674,7 +1674,7 @@ window.toggleMisi = toggleMisi;
 
 
 // ============================================================
-// renderStatusIndikator — indikator aktif di topbar & bottom nav & profil
+// FUNGSI BARU: renderStatusIndikator — indikator aktif di topbar & bottom nav & profil
 // ============================================================
 function renderStatusIndikator() {
   var hasKalkulator = !!(appState.kalkulator && appState.kalkulator.dietCal);
@@ -1716,23 +1716,23 @@ function renderStatusIndikator() {
 }
 
 // ============================================================
-// renderMakroShortcut — tampilkan P/L/K di shortcut home
+// FUNGSI BARU: renderMakroShortcut — tampilkan P/L/K di shortcut home (DIPERBAIKI)
 // ============================================================
 function renderMakroShortcut() {
-  var container = document.getElementById('shortcutMakro');
-  if (!container) return;
-  var k = appState.kalkulator;
-  if (!k || !k.dietCal || !k.berat) {
-    container.innerHTML = '<div style="font-size:10px;color:var(--text3);text-align:center;line-height:1.5;">Isi<br>kalkulator</div>';
-    return;
-  }
-  var proteinMult = k.metode === 'ringan' ? 1.8 : k.metode === 'agresif' ? 2.2 : 2.0;
-  var lemakMult   = k.metode === 'ringan' ? 0.9 : k.metode === 'agresif' ? 0.7 : 0.8;
-  var protein = (k.makro && k.makro.protein) ? k.makro.protein : Math.round(k.berat * proteinMult);
-  var lemak   = (k.makro && k.makro.lemak)   ? k.makro.lemak   : Math.round(k.berat * lemakMult);
-  var karbo   = (k.makro && k.makro.karbo)   ? k.makro.karbo   : Math.max(0, Math.round((k.dietCal - (protein * 4 + lemak * 9)) / 4));
-  container.innerHTML =
-    '<div style="font-size:11px;font-weight:800;color:#10B981;margin-bottom:1px;">P: ' + protein + 'g</div>' +
-    '<div style="font-size:11px;font-weight:800;color:#D97706;margin-bottom:1px;">L: ' + lemak   + 'g</div>' +
-    '<div style="font-size:11px;font-weight:800;color:#3B82F6;">K: ' + karbo   + 'g</div>';
+    var container = document.getElementById('shortcutMakro');
+    if (!container) return;
+    var k = appState.kalkulator;
+    if (!k || !k.dietCal || !k.berat) {
+        container.innerHTML = '<div style="font-size:10px;color:var(--text3);text-align:center;line-height:1.5;">Isi<br>kalkulator</div>';
+        return;
+    }
+    var proteinMult = k.metode === 'ringan' ? 1.8 : k.metode === 'agresif' ? 2.2 : 2.0;
+    var lemakMult = k.metode === 'ringan' ? 0.9 : k.metode === 'agresif' ? 0.7 : 0.8;
+    var protein = (k.makro && k.makro.protein) ? k.makro.protein : Math.round(k.berat * proteinMult);
+    var lemak = (k.makro && k.makro.lemak) ? k.makro.lemak : Math.round(k.berat * lemakMult);
+    var karbo = (k.makro && k.makro.karbo) ? k.makro.karbo : Math.max(0, Math.round((k.dietCal - (protein * 4 + lemak * 9)) / 4));
+    container.innerHTML =
+        '<div style="font-size:11px;font-weight:800;color:#10B981;margin-bottom:1px;">P: ' + protein + 'g</div>' +
+        '<div style="font-size:11px;font-weight:800;color:#D97706;margin-bottom:1px;">L: ' + lemak   + 'g</div>' +
+        '<div style="font-size:11px;font-weight:800;color:#3B82F6;">K: ' + karbo   + 'g</div>';
 }
