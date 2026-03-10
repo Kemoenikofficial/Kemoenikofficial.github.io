@@ -195,6 +195,7 @@ function renderAll() {
   renderStatusIndikator();
   renderMakroShortcut();
   renderMisiByProgram();
+  renderJadwalCeklis();
 
   var kuisNotif = document.getElementById('kuisFirstNotif');
   if (kuisNotif) kuisNotif.style.display = appState.quiz ? 'none' : 'flex';
@@ -229,10 +230,13 @@ function renderHomeStats() {
 
   if (k) {
     document.getElementById('statKkal').textContent = k.dietCal ? Math.round(k.dietCal).toLocaleString('id') : '—';
-    document.getElementById('statMinggu').textContent = k.targetMinggu ? k.targetMinggu + 'mg' : '—';
+    // statMinggu sudah diganti statSkor di header (tidak perlu set)
     document.getElementById('estMinggu').textContent = k.targetMinggu ? k.targetMinggu + ' minggu' : '—';
     document.getElementById('estTanggal').textContent = k.estTanggal || '—';
-    document.getElementById('estLingkar').textContent = k.estLingkar ? k.estLingkar + ' cm' : '—';
+    // estLingkar simpan sebagai estimasi hasil akhir, tampilkan selisih dari berat awal
+    var selisihKg = k.berat && k.target ? (parseFloat(k.berat) - parseFloat(k.target)) : 0;
+    var penguranganLingkar = selisihKg > 0 ? (selisihKg * 1.5).toFixed(1) : 0;
+    document.getElementById('estLingkar').textContent = penguranganLingkar > 0 ? '-' + penguranganLingkar + ' cm' : (k.estLingkar ? k.estLingkar + ' cm' : '—');
 
     var startDisplay = k.startDateDisplay || k.startDate || '';
     if (!k.startDateDisplay && k.startDateISO) {
@@ -675,11 +679,27 @@ function hitungKalkulator() {
     String(today.getDate()).padStart(2, '0');
   var startDateDisplay = today.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
 
+  // Hitung Makronutrisi (formula CALFATLOSS)
+  var proteinMult = metode === 'ringan' ? 1.8 : metode === 'agresif' ? 2.2 : 2.0;
+  var lemakMult = metode === 'ringan' ? 0.9 : metode === 'agresif' ? 0.7 : 0.8;
+  var macroProtein = Math.round(berat * proteinMult);
+  var macroLemak = Math.round(berat * lemakMult);
+  var macroKarbo = Math.max(0, Math.round((dietCal - (macroProtein * 4 + macroLemak * 9)) / 4));
+
   window._tempKalData = {
     nama: nama.replace(/[<>"'&]/g, ''), gender, usia, berat, tinggi, aktivitas: parseFloat(aktivitas), target, metode,
     dietCal, targetMinggu, estTanggal, estLingkar, bmr: Math.round(bmr), tdee, defisit,
-    startDate: startDateISO, startDateISO, startDateDisplay
+    startDate: startDateISO, startDateISO, startDateDisplay,
+    makro: { protein: macroProtein, lemak: macroLemak, karbo: macroKarbo }
   };
+
+  // Tampilkan makro di hasil kalkulator
+  var mkProteinEl = document.getElementById('hasilProtein');
+  var mkLemakEl = document.getElementById('hasilLemak');
+  var mkKarboEl = document.getElementById('hasilKarbo');
+  if (mkProteinEl) mkProteinEl.textContent = macroProtein + 'g';
+  if (mkLemakEl) mkLemakEl.textContent = macroLemak + 'g';
+  if (mkKarboEl) mkKarboEl.textContent = macroKarbo + 'g';
 }
 
 async function simpanKalkulator(btnEl) {
@@ -702,11 +722,6 @@ async function simpanKalkulator(btnEl) {
     }
 
     var check = await DataService.saveKalkulator(wa, data);
-    if (!check.success && check.reason === "exists") {
-      showToast('Kalkulator sudah pernah diisi. Gunakan tombol Reset untuk mengulang.');
-      if (btnEl) { btnEl.innerHTML = origHtml; btnEl.disabled = false; }
-      return;
-    }
     if (!check.success) throw new Error("Save failed");
 
     state.set('kalkulator', data);
@@ -1040,10 +1055,6 @@ async function selesaiQuiz() {
       skor: finalResult.skor, tipe_emoji: finalResult.emoji
     };
     var check = await DataService.saveQuiz(wa, qData);
-    if (!check.success && check.reason === "exists") {
-      showToast('Kuis sudah pernah diisi. Gunakan tombol Reset Quiz untuk mengulang.');
-      return;
-    }
     if (!check.success) throw new Error("Save failed");
 
     state.set('quiz', qData);
@@ -1391,19 +1402,63 @@ window.resetAndEditQuiz = resetAndEditQuiz;
 // FUNGSI BARU: Render Konten Tips Diet
 // ============================================================
 function renderTipsKonten() {
-  var container = document.getElementById('tipsKontenContainer');
-  if (!container || typeof tipsKontenData === 'undefined') return;
-  var html = '';
+  if (typeof tipsKontenData === 'undefined') return;
+
+  // Map tipsKontenData id ke accordion yang ada di INDEX
+  var accMap = {
+    'defisit':   'acc-defisit',
+    'pola-makan':'acc-gula',      // ganti konten accordion gula dengan pola makan
+    'if-puasa':  'acc-if',
+    'olahraga-tips': 'acc-ola',
+    'air-putih': 'acc-minum'
+  };
+
   tipsKontenData.forEach(function(tips) {
-    html += '<div style="background:' + tips.bgWarna + ';border-radius:14px;padding:16px;margin-bottom:12px;">';
-    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">';
-    html += '<div style="font-size:24px;">' + tips.icon + '</div>';
-    html += '<div style="font-size:14px;font-weight:700;color:' + tips.warna + ';">' + tips.judul + '</div>';
-    html += '</div>';
+    var accId = accMap[tips.id];
+    if (!accId) return;
+    var acc = document.getElementById(accId);
+    if (!acc) return;
+
+    // Update judul di header accordion
+    var titleEl = acc.querySelector('.acc-title');
+    var subEl = acc.querySelector('.acc-sub');
+    if (titleEl) titleEl.textContent = tips.judul;
+    if (subEl) subEl.textContent = tips.konten[0] ? tips.konten[0].substring(0, 60) + '...' : '';
+
+    // Isi body accordion
+    var bodyEl = acc.querySelector('.acc-body');
+    if (!bodyEl) return;
+    var html = '<div style="padding:4px 0;">';
     tips.konten.forEach(function(poin) {
-      html += '<div class="tips-konten-poin">' + poin + '</div>';
+      html += '<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;color:var(--text);">';
+      html += '<span style="color:' + tips.warna + ';flex-shrink:0;margin-top:1px;">•</span>';
+      html += '<span>' + poin + '</span>';
+      html += '</div>';
     });
     html += '</div>';
+    setSafeHTML(bodyEl, html);
+  });
+
+  // Accordion tambahan: tampilkan tips yang tidak ada di accMap di tipsKontenContainer
+  var container = document.getElementById('tipsKontenContainer');
+  if (!container) return;
+  var unmappedIds = ['lymphatic', 'tidur', 'waktu-makan'];
+  var html = '';
+  tipsKontenData.forEach(function(tips) {
+    if (unmappedIds.indexOf(tips.id) === -1) return;
+    html += '<div class="acc" style="margin-bottom:10px;">';
+    html += '<div style="background:' + tips.bgWarna + ';border-radius:12px;padding:14px 16px;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">';
+    html += '<div style="display:flex;align-items:center;gap:10px;">';
+    html += '<span style="font-size:20px;">' + tips.icon + '</span>';
+    html += '<div style="flex:1;font-size:13px;font-weight:700;color:' + tips.warna + ';">' + tips.judul + '</div>';
+    html += '<span style="color:' + tips.warna + ';font-size:18px;font-weight:300;">+</span>';
+    html += '</div></div>';
+    html += '<div style="display:none;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;">';
+    tips.konten.forEach(function(poin) {
+      html += '<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;">';
+      html += '<span style="color:' + tips.warna + ';flex-shrink:0;">•</span><span>' + poin + '</span></div>';
+    });
+    html += '</div></div>';
   });
   setSafeHTML(container, html);
 }
@@ -1412,17 +1467,24 @@ function renderTipsKonten() {
 // FUNGSI BARU: Render Status Indikator Header
 // ============================================================
 function renderStatusIndikator() {
-  var el = document.getElementById('statusIndikator');
-  if (!el) return;
   var hasKalkulator = !!(appState.kalkulator && appState.kalkulator.dietCal);
   var hasQuiz = !!(appState.quiz && appState.quiz.tipe);
   var isActive = hasKalkulator && hasQuiz;
   var isPartial = hasKalkulator || hasQuiz;
   var warna = isActive ? '#10B981' : (isPartial ? '#F59E0B' : '#9CA3AF');
-  var label = isActive ? '✓ Aktif' : (isPartial ? '⚡ Sebagian' : '○ Setup Dulu');
-  el.innerHTML = '<div class="status-badge-pill" style="border:1px solid ' + warna + ';">' +
-    '<div class="status-dot-pill" style="background:' + warna + ';"></div>' +
-    '<span style="color:' + warna + ';">' + label + '</span></div>';
+  var label = isActive ? '✓ Program Aktif' : (isPartial ? '⚡ Setup Sebagian' : '○ Belum Setup');
+
+  // Badge di header home
+  var el = document.getElementById('statusIndikator');
+  if (el) {
+    el.innerHTML = '<div class="status-badge-pill" style="border:1px solid ' + warna + ';">' +
+      '<div class="status-dot-pill" style="background:' + warna + ';"></div>' +
+      '<span style="color:' + warna + ';">' + label + '</span></div>';
+  }
+
+  // Dot kecil di ikon Kuis bottom nav (indikator program aktif/tidak)
+  var dot = document.getElementById('statusDot');
+  if (dot) dot.style.background = warna;
 }
 
 // ============================================================
@@ -1433,16 +1495,19 @@ function renderMakroShortcut() {
   if (!container) return;
   var k = appState.kalkulator;
   if (!k || !k.dietCal || !k.berat) {
-    container.innerHTML = '<div style="font-size:10px;color:var(--text3);text-align:center;">Isi kalkulator dulu</div>';
+    container.innerHTML = '<div style="font-size:10px;color:var(--text3);text-align:center;line-height:1.4;">Isi<br>kalkulator</div>';
     return;
   }
-  var protein = Math.round(k.berat * 2);
-  var lemak = Math.round(k.berat * 0.8);
-  var karbo = Math.max(0, Math.round((k.dietCal - (protein * 4 + lemak * 9)) / 4));
+  // Gunakan data makro tersimpan dari CALFATLOSS, fallback ke kalkulasi
+  var proteinMult = k.metode === 'ringan' ? 1.8 : k.metode === 'agresif' ? 2.2 : 2.0;
+  var lemakMult = k.metode === 'ringan' ? 0.9 : k.metode === 'agresif' ? 0.7 : 0.8;
+  var protein = (k.makro && k.makro.protein) ? k.makro.protein : Math.round(k.berat * proteinMult);
+  var lemak = (k.makro && k.makro.lemak) ? k.makro.lemak : Math.round(k.berat * lemakMult);
+  var karbo = (k.makro && k.makro.karbo) ? k.makro.karbo : Math.max(0, Math.round((k.dietCal - (protein * 4 + lemak * 9)) / 4));
   container.innerHTML =
-    '<div class="makro-sc-row" style="color:var(--green);">P: ' + protein + 'g</div>' +
-    '<div class="makro-sc-row" style="color:#D97706;">L: ' + lemak + 'g</div>' +
-    '<div class="makro-sc-row" style="color:#7EA88A;">K: ' + karbo + 'g</div>';
+    '<div class="makro-sc-row" style="color:#10B981;font-weight:800;">P: ' + protein + 'g</div>' +
+    '<div class="makro-sc-row" style="color:#D97706;font-weight:800;">L: ' + lemak + 'g</div>' +
+    '<div class="makro-sc-row" style="color:#7EA88A;font-weight:800;">K: ' + karbo + 'g</div>';
 }
 
 // ============================================================
@@ -1533,10 +1598,50 @@ function pilihProgramHome(pilihan) {
   }
   renderHomeJadwal();
   renderMisiByProgram();
+  renderJadwalCeklis();
   showToast(pilihan === 'if' ? '🌙 Program IF 16:8 dipilih!' : '💪 Program Normal dipilih!');
 }
 window.pilihProgramHome = pilihProgramHome;
 
+
+// ============================================================
+// FUNGSI BARU: Jadwal Olahraga dengan Ceklis (terpisah dari Misi)
+// ============================================================
+function renderJadwalCeklis() {
+  var container = document.getElementById('jadwalCeklisContainer');
+  if (!container) return;
+
+  var programPilihan = localStorage.getItem('kemoenik_program_pilihan') || 'normal';
+  var metode = programPilihan === 'if' ? 'if'
+    : ((appState.quiz && appState.quiz.metode) ? appState.quiz.metode : 'standar');
+  var jadwal = targetOlahragaData[metode] || targetOlahragaData.standar;
+
+  var hariIdx = new Date().getDay(); // 0=Sun
+  var hariMap = [6,0,1,2,3,4,5];    // Sun→index6, Mon→0, ...
+  var todayJadwal = jadwal[hariMap[hariIdx]];
+  var todayKey = new Date().toDateString();
+
+  if (!todayJadwal) { container.innerHTML = ''; return; }
+
+  var isRest = todayJadwal.aktivitas.indexOf('Istirahat') !== -1 || todayJadwal.aktivitas.indexOf('recovery') !== -1;
+  var misiKey = 'olahraga_' + todayKey;
+  var checked = appState.misiChecked && appState.misiChecked[misiKey];
+
+  var warna = isRest ? '#9CA3AF' : '#2563EB';
+  var bgWarna = isRest ? '#F9FAFB' : '#EFF6FF';
+  var icon = isRest ? '😴' : '🏃';
+
+  var html = '<div style="background:' + bgWarna + ';border:1.5px solid ' + (checked ? '#10B981' : warna) + ';border-radius:12px;padding:12px 14px;">';
+  html += '<div style="font-size:11px;font-weight:700;color:' + warna + ';margin-bottom:6px;">' + icon + ' OLAHRAGA HARI INI</div>';
+  html += '<div class="mission-item" onclick="toggleMisi('' + misiKey + '', this)" style="padding:0;border:none;">';
+  html += '<div class="mission-check' + (checked ? ' checked' : '') + '">';
+  if (checked) html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+  html += '</div>';
+  html += '<div class="mission-text' + (checked ? ' done' : '') + '" style="font-size:13px;font-weight:600;">' + todayJadwal.aktivitas + '</div>';
+  html += '</div></div>';
+
+  setSafeHTML(container, html);
+}
 // ============================================================
 // FUNGSI BARU: Render Misi berdasarkan program
 // ============================================================
