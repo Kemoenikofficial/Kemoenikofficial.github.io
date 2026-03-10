@@ -109,9 +109,7 @@ const DataService = {
 
   async saveKalkulator(wa, kalkulatorData) {
     const userData = this.loadUserData(wa) || {};
-    if (userData.kalkulator && userData.kalkulator.dietCal) {
-      return { success: false, reason: "exists" };
-    }
+    // Selalu overwrite — izinkan update/re-generate kalkulator
     userData.kalkulator = { ...kalkulatorData, savedAt: new Date().toISOString() };
     this.saveUserData(wa, userData);
     return { success: true };
@@ -119,10 +117,12 @@ const DataService = {
 
   async saveQuiz(wa, quizData) {
     const userData = this.loadUserData(wa) || {};
-    if (userData.quiz && userData.quiz.tipe) {
-      return { success: false, reason: "exists" };
+    // Selalu overwrite — edit quiz diizinkan
+    if (quizData === null) {
+      userData.quiz = null;
+    } else {
+      userData.quiz = { ...quizData, savedAt: new Date().toISOString() };
     }
-    userData.quiz = { ...quizData, savedAt: new Date().toISOString() };
     this.saveUserData(wa, userData);
     return { success: true };
   },
