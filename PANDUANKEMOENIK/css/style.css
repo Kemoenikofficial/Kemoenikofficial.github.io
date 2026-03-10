@@ -466,3 +466,179 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
 .mb-4 { margin-bottom:4px; }
 .mb-8 { margin-bottom:8px; }
 .mb-12 { margin-bottom:12px; }
+
+/* ============================================================
+   TAMBAHAN: Tips Konten Cards
+   ============================================================ */
+.tips-konten-card {
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.tips-konten-judul {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tips-konten-poin {
+  font-size: 12px;
+  line-height: 1.7;
+  margin-bottom: 6px;
+  padding-left: 14px;
+  position: relative;
+  color: #374151;
+}
+.tips-konten-poin::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+}
+
+/* ============================================================
+   TAMBAHAN: Status Indikator Header
+   ============================================================ */
+#statusIndikator {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+.status-badge-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: default;
+}
+.status-dot-pill {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+/* ============================================================
+   TAMBAHAN: Program Selector di Home (Normal / IF)
+   ============================================================ */
+.prog-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.prog-selector-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+  border: 2px solid transparent;
+}
+.prog-selector-btn.active {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+.prog-selector-btn.inactive {
+  background: var(--white);
+  color: var(--text3);
+  border-color: var(--border);
+}
+
+/* ============================================================
+   TAMBAHAN: Start/Stop Program Button Area
+   ============================================================ */
+#progStartStopContainer {
+  margin-top: 10px;
+}
+.prog-action-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  border: none;
+  transition: all 0.2s;
+}
+.prog-action-btn.start {
+  background: var(--green);
+  color: white;
+}
+.prog-action-btn.stop {
+  background: #FEF2F2;
+  border: 2px solid #FECACA;
+  color: #DC2626;
+}
+.prog-action-row {
+  display: flex;
+  gap: 8px;
+}
+.prog-action-row .prog-action-btn {
+  flex: 1;
+}
+
+/* ============================================================
+   TAMBAHAN: Makronutrisi Shortcut Card
+   ============================================================ */
+.makro-sc-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+.makro-sc-row {
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ============================================================
+   TAMBAHAN: Misi Item Enhanced
+   ============================================================ */
+.mission-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.mission-item:last-child {
+  border-bottom: none;
+}
+.mission-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 2px solid var(--border2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  margin-top: 1px;
+}
+.mission-check.checked {
+  background: var(--green);
+  border-color: var(--green);
+}
+.mission-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  flex: 1;
+}
+.mission-text.done {
+  text-decoration: line-through;
+  color: var(--text3);
+}
