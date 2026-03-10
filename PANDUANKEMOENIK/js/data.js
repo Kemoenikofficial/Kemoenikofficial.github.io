@@ -1,622 +1,419 @@
 // ============================================================
-// DATA STATIS DAN LAYANAN PENYIMPANAN - KEMOENIK
+// DATA STATIS UNTUK APLIKASI KEMOENIK
 // ============================================================
 
-// ========== STATE GLOBAL ==========
-var appState = {}; // akan diisi oleh state dan localStorage
+// URL halaman aktivitas
+const APP_URL = 'https://kemoenikofficial.github.io/aktivitas/';
 
-var state = {
-    data: {},
-    set: function(key, val) {
-        var parts = key.split('.');
-        var obj = this.data;
-        for (var i = 0; i < parts.length - 1; i++) {
-            var part = parts[i];
-            if (!obj[part]) obj[part] = {};
-            obj = obj[part];
-        }
-        obj[parts[parts.length - 1]] = val;
-        // update appState juga agar sinkron
-        window.appState = this.data;
-    },
-    get: function(key) {
-        var parts = key.split('.');
-        var obj = this.data;
-        for (var i = 0; i < parts.length; i++) {
-            if (obj[parts[i]] === undefined) return undefined;
-            obj = obj[parts[i]];
-        }
-        return obj;
-    },
-    _persist: function() {
-        localStorage.setItem('kemoenik_appState', JSON.stringify(this.data));
-    }
-};
-
-// Muat state dari localStorage jika ada
-try {
-    var saved = localStorage.getItem('kemoenik_appState');
-    if (saved) {
-        state.data = JSON.parse(saved);
-        appState = state.data;
-    }
-} catch(e) {}
-
-// ========== DATA QUIZ ==========
-var quizTypes = [
-    {
-        id: 0,
-        name: 'Tipe Cepat',
-        metode: 'agresif',
-        metodeName: 'Agresif + IF',
-        tagline: 'Metabolisme cepat, mudah lapar',
-        skor: 88,
-        emoji: '⚡',
-        bg: '#FEF3C7',
-        textColor: '#92400E',
-        tips: [
-            'Konsumsi protein tinggi untuk menjaga kenyang lebih lama',
-            'Olahraga intensitas tinggi 3-4x seminggu',
-            'Hindari karbohidrat sederhana'
-        ],
-        hindari: 'Gula, makanan olahan, karbohidrat simple',
-        anjuran: 'Protein tanpa lemak, sayuran tinggi serat, lemak sehat'
-    },
-    {
-        id: 1,
-        name: 'Tipe Lambat',
-        metode: 'ringan',
-        metodeName: 'Ringan',
-        tagline: 'Metabolisme cenderung lambat, mudah menyimpan lemak',
-        skor: 82,
-        emoji: '🐢',
-        bg: '#E0F2FE',
-        textColor: '#0369A1',
-        tips: [
-            'Makan dalam porsi kecil tapi sering',
-            'Fokus pada makanan termogenik (cabai, jahe)',
-            'Hindari makan malam berat'
-        ],
-        hindari: 'Makanan berlemak tinggi, gorengan',
-        anjuran: 'Protein tanpa lemak, sayuran, karbohidrat kompleks'
-    },
-    {
-        id: 2,
-        name: 'Tipe Seimbang',
-        metode: 'standar',
-        metodeName: 'Standar',
-        tagline: 'Metabolisme normal, responsif terhadap diet',
-        skor: 85,
-        emoji: '⚖️',
-        bg: '#DCFCE7',
-        textColor: '#166534',
-        tips: [
-            'Makan teratur dengan porsi seimbang',
-            'Kombinasi cardio dan strength training',
-            'Batasi gula tambahan'
-        ],
-        hindari: 'Makanan cepat saji, minuman manis',
-        anjuran: 'Makanan utuh, protein tanpa lemak, sayur'
-    },
-    {
-        id: 3,
-        name: 'Tipe Insulin Resisten',
-        metode: 'agresif',
-        metodeName: 'Agresif + IF',
-        tagline: 'Sulit mengontrol gula darah, mudah lapar',
-        skor: 90,
-        emoji: '🩸',
-        bg: '#FEE2E2',
-        textColor: '#991B1B',
-        tips: [
-            'Batasi karbohidrat, pilih yang rendah glikemik',
-            'Olahraga rutin untuk sensitivitas insulin',
-            'IF 16:8 sangat direkomendasikan'
-        ],
-        hindari: 'Nasi putih, roti putih, gula',
-        anjuran: 'Protein tanpa lemak, sayuran non-starch, lemak sehat'
-    },
-    {
-        id: 4,
-        name: 'Tipe Hormonal',
-        metode: 'standar',
-        metodeName: 'Standar',
-        tagline: 'Dipengaruhi siklus hormonal, mudah retensi air',
-        skor: 78,
-        emoji: '🌸',
-        bg: '#FCE7F3',
-        textColor: '#9D174D',
-        tips: [
-            'Kurangi garam untuk mengurangi retensi air',
-            'Tingkatkan magnesium (kacang, biji)',
-            'Olahraga ringan saat PMS'
-        ],
-        hindari: 'Makanan asin, kafein berlebih',
-        anjuran: 'Makanan kaya magnesium, air putih cukup'
-    },
-    {
-        id: 5,
-        name: 'Tipe Aktif',
-        metode: 'standar',
-        metodeName: 'Standar',
-        tagline: 'Aktif bergerak, butuh asupan lebih',
-        skor: 86,
-        emoji: '🏃',
-        bg: '#E0F2FE',
-        textColor: '#0369A1',
-        tips: [
-            'Pastikan asupan protein cukup untuk pemulihan',
-            'Makan sebelum dan sesudah olahraga',
-            'Jangan takut karbohidrat kompleks'
-        ],
-        hindari: 'Diet sangat rendah kalori',
-        anjuran: 'Karbohidrat kompleks, protein tanpa lemak'
-    },
-    {
-        id: 6,
-        name: 'Tipe Stres',
-        metode: 'ringan',
-        metodeName: 'Ringan',
-        tagline: 'Stres mempengaruhi metabolisme, mudah lapar emosional',
-        skor: 80,
-        emoji: '😮‍💨',
-        bg: '#FEF9C3',
-        textColor: '#854D0E',
-        tips: [
-            'Fokus pada makanan penenang (teh herbal, dark chocolate)',
-            'Olahraga ringan seperti yoga',
-            'Hindari stres eating dengan mindful eating'
-        ],
-        hindari: 'Makanan tinggi gula, kafein',
-        anjuran: 'Makanan kaya magnesium, protein, sayur'
-    }
-];
-
-var traitDataByType = {
-    0: [ // Tipe Cepat
-        { name: 'Kecepatan Metabolisme', pct: 85, badge: 'Cepat', badgeClass: 'badge-tinggi', labels: ['Lambat', 'Sedang', 'Cepat'], desc: 'Metabolisme basal tinggi, cepat lapar, butuh asupan sering.' },
-        { name: 'Sensitivitas Insulin', pct: 70, badge: 'Baik', badgeClass: 'badge-optimal', labels: ['Resisten', 'Normal', 'Sensitif'], desc: 'Insulin cukup sensitif, karbohidrat dapat ditoleransi dengan baik.' },
-        { name: 'Kecenderungan Lapar', pct: 80, badge: 'Sering Lapar', badgeClass: 'badge-tinggi', labels: ['Jarang', 'Normal', 'Sering'], desc: 'Cenderung cepat lapar, perlu ngemil sehat.' },
-        { name: 'Respon Olahraga', pct: 75, badge: 'Responsif', badgeClass: 'badge-optimal', labels: ['Lambat', 'Sedang', 'Responsif'], desc: 'Respon baik terhadap olahraga intensitas tinggi.' },
-        { name: 'Retensi Air', pct: 30, badge: 'Rendah', badgeClass: 'badge-perlu', labels: ['Rendah', 'Sedang', 'Tinggi'], desc: 'Tidak mudah retensi air.' }
-    ],
-    1: [ // Tipe Lambat
-        { name: 'Kecepatan Metabolisme', pct: 30, badge: 'Lambat', badgeClass: 'badge-perlu', labels: ['Lambat', 'Sedang', 'Cepat'], desc: 'Metabolisme basal rendah, mudah menyimpan lemak.' },
-        { name: 'Sensitivitas Insulin', pct: 45, badge: 'Normal', badgeClass: 'badge-optimal', labels: ['Resisten', 'Normal', 'Sensitif'], desc: 'Sensitivitas insulin cukup, perlu jaga asupan karbo.' },
-        { name: 'Kecenderungan Lapar', pct: 40, badge: 'Normal', badgeClass: 'badge-optimal', labels: ['Jarang', 'Normal', 'Sering'], desc: 'Lapar terkontrol, mudah kenyang.' },
-        { name: 'Respon Olahraga', pct: 50, badge: 'Sedang', badgeClass: 'badge-optimal', labels: ['Lambat', 'Sedang', 'Responsif'], desc: 'Respon olahraga sedang, perlu konsistensi.' },
-        { name: 'Retensi Air', pct: 60, badge: 'Sedang', badgeClass: 'badge-optimal', labels: ['Rendah', 'Sedang', 'Tinggi'], desc: 'Kadang retensi air, kurangi garam.' }
-    ],
-    2: [ // Tipe Seimbang
-        { name: 'Kecepatan Metabolisme', pct: 60, badge: 'Sedang', badgeClass: 'badge-optimal', labels: ['Lambat', 'Sedang', 'Cepat'], desc: 'Metabolisme normal, responsif terhadap diet.' },
-        { name: 'Sensitivitas Insulin', pct: 65, badge: 'Baik', badgeClass: 'badge-optimal', labels: ['Resisten', 'Normal', 'Sensitif'], desc: 'Insulin sensitif, karbo dapat diatur.' },
-        { name: 'Kecenderungan Lapar', pct: 50, badge: 'Normal', badgeClass: 'badge-optimal', labels: ['Jarang', 'Normal', 'Sering'], desc: 'Lapar normal, mudah dikontrol.' },
-        { name: 'Respon Olahraga', pct: 70, badge: 'Responsif', badgeClass: 'badge-optimal', labels: ['Lambat', 'Sedang', 'Responsif'], desc: 'Respon baik terhadap olahraga teratur.' },
-        { name: 'Retensi Air', pct: 40, badge: 'Rendah', badgeClass: 'badge-perlu', labels: ['Rendah', 'Sedang', 'Tinggi'], desc: 'Tidak mudah retensi air.' }
-    ],
-    // Tambahkan untuk tipe lainnya sesuai kebutuhan (3-6) dengan data dummy
-    3: [ // Tipe Insulin Resisten
-        { name: 'Kecepatan Metabolisme', pct: 50, badge: 'Sedang', badgeClass: 'badge-optimal', labels: ['Lambat', 'Sedang', 'Cepat'], desc: 'Metabolisme sedang, tapi sensitivitas insulin rendah.' },
-        { name: 'Sensitivitas Insulin', pct: 20, badge: 'Resisten', badgeClass: 'badge-perlu', labels: ['Resisten', 'Normal', 'Sensitif'], desc: 'Insulin resisten, perlu batasi karbo.' },
-        { name: 'Kecenderungan Lapar', pct: 80, badge: 'Sering', badgeClass: 'badge-tinggi', labels: ['Jarang', 'Normal', 'Sering'], desc: 'Cepat lapar karena fluktuasi gula darah.' },
-        { name: 'Respon Olahraga', pct: 60, badge: 'Sedang', badgeClass: 'badge-optimal', labels: ['Lambat', 'Sedang', 'Responsif'], desc: 'Respon olahraga sedang, perlu konsisten.' },
-        { name: 'Retensi Air', pct: 50, badge: 'Sedang', badgeClass: 'badge-optimal', labels: ['Rendah', 'Sedang', 'Tinggi'], desc: 'Kadang retensi air.' }
-    ],
-    4: [ // Tipe Hormonal
-        { name: 'Kecepatan Metabolisme', pct: 55, badge: 'Sedang', badgeClass: 'badge-optimal', labels: ['Lambat', 'Sedang', 'Cepat'], desc: 'Metabolisme fluktuatif tergantung siklus.' },
-        { name: 'Sensitivitas Insulin', pct: 60, badge: 'Normal', badgeClass: 'badge-optimal', labels: ['Resisten', 'Normal', 'Sensitif'], desc: 'Insulin normal, tapi bisa berubah saat PMS.' },
-        { name: 'Kecenderungan Lapar', pct: 70, badge: 'Sering', badgeClass: 'badge-tinggi', labels: ['Jarang', 'Normal', 'Sering'], desc: 'Lapar meningkat menjelang menstruasi.' },
-        { name: 'Respon Olahraga', pct: 65, badge: 'Sedang', badgeClass: 'badge-optimal', labels: ['Lambat', 'Sedang', 'Responsif'], desc: 'Respon baik, tapi butuh variasi.' },
-        { name: 'Retensi Air', pct: 80, badge: 'Tinggi', badgeClass: 'badge-tinggi', labels: ['Rendah', 'Sedang', 'Tinggi'], desc: 'Mudah retensi air saat PMS.' }
-    ],
-    5: [ // Tipe Aktif
-        { name: 'Kecepatan Metabolisme', pct: 80, badge: 'Cepat', badgeClass: 'badge-tinggi', labels: ['Lambat', 'Sedang', 'Cepat'], desc: 'Metabolisme tinggi karena aktivitas fisik.' },
-        { name: 'Sensitivitas Insulin', pct: 75, badge: 'Baik', badgeClass: 'badge-optimal', labels: ['Resisten', 'Normal', 'Sensitif'], desc: 'Insulin sensitif, karbo cepat terpakai.' },
-        { name: 'Kecenderungan Lapar', pct: 70, badge: 'Sering', badgeClass: 'badge-tinggi', labels: ['Jarang', 'Normal', 'Sering'], desc: 'Sering lapar karena energi terbakar.' },
-        { name: 'Respon Olahraga', pct: 90, badge: 'Sangat Responsif', badgeClass: 'badge-tinggi', labels: ['Lambat', 'Sedang', 'Responsif'], desc: 'Respon sangat baik terhadap olahraga.' },
-        { name: 'Retensi Air', pct: 30, badge: 'Rendah', badgeClass: 'badge-perlu', labels: ['Rendah', 'Sedang', 'Tinggi'], desc: 'Minim retensi air.' }
-    ],
-    6: [ // Tipe Stres
-        { name: 'Kecepatan Metabolisme', pct: 45, badge: 'Lambat', badgeClass: 'badge-perlu', labels: ['Lambat', 'Sedang', 'Cepat'], desc: 'Stres memperlambat metabolisme.' },
-        { name: 'Sensitivitas Insulin', pct: 50, badge: 'Normal', badgeClass: 'badge-optimal', labels: ['Resisten', 'Normal', 'Sensitif'], desc: 'Sensitivitas insulin menurun saat stres.' },
-        { name: 'Kecenderungan Lapar', pct: 85, badge: 'Sangat Sering', badgeClass: 'badge-tinggi', labels: ['Jarang', 'Normal', 'Sering'], desc: 'Lapar emosional karena stres.' },
-        { name: 'Respon Olahraga', pct: 40, badge: 'Lambat', badgeClass: 'badge-perlu', labels: ['Lambat', 'Sedang', 'Responsif'], desc: 'Stres mengurangi efektivitas olahraga.' },
-        { name: 'Retensi Air', pct: 60, badge: 'Sedang', badgeClass: 'badge-optimal', labels: ['Rendah', 'Sedang', 'Tinggi'], desc: 'Cenderung retensi air saat stres.' }
+// Data FAQ
+const faqData = [
+  {
+    cat: 'Input & Evaluasi Progres',
+    items: [
+      { q: 'Kapan saya harus input berat badan terbaru?', a: 'Setiap minggu akhir setelah kapsul habis ya kak, lebih tepatnya pagi setelah bangun tidur & buang air kecil (jangan lupa untuk mengisi evaluasi mingguannya).' },
+      { q: 'Kok berat badan saya belum turun di grafik?', a: 'Lemak turun bisa jadi massa otot naik, tetap konsisten menjalankan programnya, jangan lupa baca semua panduannya.' },
+      { q: 'Saya salah masukkan angka timbangan, gimana cara ubahnya?', a: 'Semua data bisa di edit dan dapat dihapus melalui tombol edit di riwayat evaluasi. Semangat kak!' }
     ]
-};
-
-// ========== DATA OLAHRAGA DENGAN MANFAAT ==========
-var targetOlahragaData = {
-    standar: [
-        { hari: 'Senin', aktivitas: 'Jalan cepat 30 menit', manfaat: 'Meningkatkan sirkulasi, membakar ~150 kkal, baik untuk jantung.' },
-        { hari: 'Selasa', aktivitas: 'Lymphatic Drainage 15 menit + Jumping Jack 2 set', manfaat: 'Mengurangi kembung, melancarkan aliran getah bening, membakar ~50 kkal.' },
-        { hari: 'Rabu', aktivitas: 'Istirahat / recovery', manfaat: 'Pemulihan otot, kurangi stres, cukup lakukan peregangan ringan.' },
-        { hari: 'Kamis', aktivitas: 'Full Body Stretch 20 menit', manfaat: 'Meningkatkan fleksibilitas, relaksasi, mengurangi nyeri otot.' },
-        { hari: 'Jumat', aktivitas: 'Cardio ringan 20 menit (lari di tempat, skipping)', manfaat: 'Membakar kalori, meningkatkan daya tahan kardio.' },
-        { hari: 'Sabtu', aktivitas: 'Yoga 30 menit', manfaat: 'Menguatkan otot, menenangkan pikiran, membakar ~100 kkal.' },
-        { hari: 'Minggu', aktivitas: 'Jalan santai 30 menit', manfaat: 'Aktivitas ringan, tetap bergerak, baik untuk recovery.' }
-    ],
-    agresif: [
-        { hari: 'Senin', aktivitas: 'HIIT 20 menit + lari 15 menit', manfaat: 'Pembakaran lemak maksimal, afterburn effect.' },
-        { hari: 'Selasa', aktivitas: 'Angkat beban 30 menit', manfaat: 'Membangun otot, meningkatkan metabolisme basal.' },
-        { hari: 'Rabu', aktivitas: 'Lymphatic Drainage + Yoga 20 menit', manfaat: 'Pemulihan aktif, melancarkan sirkulasi.' },
-        { hari: 'Kamis', aktivitas: 'Cardio 30 menit (lari, bersepeda)', manfaat: 'Membakar kalori, meningkatkan stamina.' },
-        { hari: 'Jumat', aktivitas: 'Full Body Strength 30 menit', manfaat: 'Menguatkan otot, membentuk tubuh.' },
-        { hari: 'Sabtu', aktivitas: 'HIIT 20 menit + core workout', manfaat: 'Membakar lemak, menguatkan perut.' },
-        { hari: 'Minggu', aktivitas: 'Istirahat aktif (jalan kaki)', manfaat: 'Pemulihan, tetap bergerak.' }
-    ],
-    ringan: [
-        { hari: 'Senin', aktivitas: 'Jalan kaki 30 menit', manfaat: 'Aktivitas ringan, baik untuk pemula.' },
-        { hari: 'Selasa', aktivitas: 'Lymphatic Drainage 15 menit', manfaat: 'Melancarkan sirkulasi, mengurangi kembung.' },
-        { hari: 'Rabu', aktivitas: 'Istirahat', manfaat: 'Pemulihan total.' },
-        { hari: 'Kamis', aktivitas: 'Yoga 20 menit', manfaat: 'Relaksasi, meningkatkan fleksibilitas.' },
-        { hari: 'Jumat', aktivitas: 'Jalan cepat 20 menit', manfaat: 'Membakar kalori ringan.' },
-        { hari: 'Sabtu', aktivitas: 'Peregangan 15 menit', manfaat: 'Melemaskan otot.' },
-        { hari: 'Minggu', aktivitas: 'Istirahat', manfaat: 'Recovery.' }
-    ],
-    if: [
-        { hari: 'Senin', aktivitas: 'Jalan cepat saat puasa 30 menit', manfaat: 'Maksimalkan pembakaran lemak (fasted cardio).' },
-        { hari: 'Selasa', aktivitas: 'Lymphatic Drainage 15 menit', manfaat: 'Lancarkan sirkulasi, kurangi kembung.' },
-        { hari: 'Rabu', aktivitas: 'Istirahat', manfaat: 'Pemulihan, jaga puasa.' },
-        { hari: 'Kamis', aktivitas: 'Jumping Jack 3 set + squat', manfaat: 'Tingkatkan metabolisme, bakar kalori.' },
-        { hari: 'Jumat', aktivitas: 'Yoga ringan 20 menit', manfaat: 'Relaksasi, jaga keseimbangan.' },
-        { hari: 'Sabtu', aktivitas: 'Cardio 20 menit (lari di tempat)', manfaat: 'Bakar lemak, tingkatkan stamina.' },
-        { hari: 'Minggu', aktivitas: 'Jalan kaki 30 menit', manfaat: 'Aktivitas ringan, tetap bergerak.' }
+  },
+  {
+    cat: 'Konsumsi Kapsul & Reaksi Tubuh',
+    items: [
+      { q: 'Kok belum turun di hari ke-5–7?', a: 'Proses detoks tiap orang berbeda-beda ya kak, ada yang cepet ada yang lambat. Yang terpenting ikuti program ini supaya dapat hasil maksimal, semangat kak.' },
+      { q: 'Kapan waktu terbaik minum kapsul KEMOENIK?', a: 'Waktu terbaik adalah sesudah makan ya kak.' },
+      { q: 'Kenapa saya jadi sering buang air kecil?', a: 'Itu reaksi normal dari kandungan Tempuyung yang bersifat diuretik alami untuk membuang kelebihan cairan dan toksin. Pastikan minum air putih 2–3 liter sehari.' },
+      { q: 'BAB jadi lebih lunak, apakah ini diare?', a: 'Bukan diare ya kak, itu efek peluruhan lemak dari kandungan Jati Belanda. Jangan khawatir, tetap semangat dan konsisten.' },
+      { q: 'Lagi haid/menstruasi, boleh tetap minum?', a: 'Sarankan jeda di hari 1–3 ya kak.' }
     ]
+  },
+  {
+    cat: 'Teknis Menu & Diet',
+    items: [
+      { q: 'Saya alergi/tidak suka menu hari ini, boleh diganti?', a: 'Boleh banget kak, asal defisit kalori ya. Sudah tersedia plan pengantinya di Custom Menu.' },
+      { q: 'Bagaimana kalau ada acara makan (kondangan)?', a: 'Tidak apa kak untuk sekali-kali, asal dibarengi olahraga dan defisit kalori ya. Minum kapsul KEMOENIK sebelum makan pesta agar lemak tidak langsung terserap.' },
+      { q: 'Kalau "cheating" sehari, apakah program gagal?', a: 'Jangan menyerah! Lanjutkan saja program di hari berikutnya. Kapsul KEMOENIK akan membantu, tapi jangan sering-sering ya Kak!' },
+      { q: 'Kenapa disuruh minum air putih terus?', a: 'Untuk menghindari dehidrasi akibat efek detoksifikasi herbal KEMOENIK. Disarankan minum 2 liter/hari disesuaikan dengan aktivitas.' }
+    ]
+  },
+  {
+    cat: 'Aturan Pakai & Kondisi Khusus',
+    items: [
+      { q: 'Boleh minum lebih dari 6 kapsul/hari?', a: 'Tetap mengikuti anjuran 6 kapsul/hari ya kak sesuai panduan.' },
+      { q: 'Boleh saat haid? Aman untuk Busui?', a: 'Untuk haid: jeda saat H1–H3 ya kak. Untuk Busui: kami anjurkan jangan dulu karena KEMOENIK ini peluntur lemak.' },
+      { q: 'Boleh minum bersama obat dokter?', a: 'Boleh kak, sarankan memberi jeda sekitar 30 menit ya.' },
+      { q: 'Apakah bikin ketergantungan atau jantung berdebar?', a: 'KEMOENIK 100% herbal tanpa BKO. Tidak membuat jantung berdebar karena fokus pada metabolisme alami, bukan stimulan kimia.' }
+    ]
+  },
+  {
+    cat: 'Data & Hasil',
+    items: [
+      { q: 'Berapa hari bisa kelihatan hasilnya?', a: 'Setiap metabolisme berbeda-beda, namun rata-rata pengguna mulai merasakan badan lebih ringan dan lingkar perut berkurang dalam 7–14 hari jika mengikuti program.' },
+      { q: 'Apakah setelah berhenti minum BB akan naik (Yoyo Effect)?', a: 'Tidak, asalkan tetap menjaga pola makan sesuai edukasi menu. KEMOENIK membantu mengecilkan lambung secara alami sehingga nafsu makan lebih terkontrol.' },
+      { q: 'Data saya aman tidak?', a: 'Data berat badan dan progres hanya digunakan untuk sistem kalkulator diet personal dan tidak akan disebarluaskan.' }
+    ]
+  }
+];
+
+// ============================================================
+// Data Olahraga — DITAMBAHKAN properti MANFAAT untuk setiap aktivitas
+// ============================================================
+const targetOlahragaData = {
+  ringan: [
+    {hari:'Sen', aktivitas:'Jalan kaki 30 menit', manfaat: 'Meningkatkan sirkulasi, membakar ~100 kkal, baik untuk pemula.'},
+    {hari:'Sel', aktivitas:'Lymphatic 15 menit', manfaat: 'Melancarkan aliran getah bening, mengurangi kembung.'},
+    {hari:'Rab', aktivitas:'Istirahat aktif — jalan santai', manfaat: 'Pemulihan aktif, tetap bergerak ringan.'},
+    {hari:'Kam', aktivitas:'Jalan kaki 30 menit', manfaat: 'Membakar kalori, menjaga kebugaran.'},
+    {hari:'Jum', aktivitas:'Jumping jack 3 set', manfaat: 'Meningkatkan detak jantung, membakar ~50 kkal.'},
+    {hari:'Sab', aktivitas:'Jalan kaki 45 menit', manfaat: 'Kardio ringan, bakar lemak lebih banyak.'},
+    {hari:'Min', aktivitas:'Istirahat total', manfaat: 'Recovery penuh, jangan lupa minum air.'}
+  ],
+  standar: [
+    {hari:'Sen', aktivitas:'Jalan kaki 30 menit + Jumping jack 3 set', manfaat: 'Kombinasi kardio, bakar ~150 kkal, tingkatkan metabolisme.'},
+    {hari:'Sel', aktivitas:'Lompat tali 10 menit + Lymphatic 10 menit', manfaat: 'Bakar kalori cepat + lancarkan sirkulasi.'},
+    {hari:'Rab', aktivitas:'Jalan kaki 30 menit', manfaat: 'Aktivitas ringan, jaga konsistensi.'},
+    {hari:'Kam', aktivitas:'Jumping jack 4 set + Lompat tali 10 menit', manfaat: 'Tingkatkan intensitas, bakar ~200 kkal.'},
+    {hari:'Jum', aktivitas:'Jalan kaki 45 menit + Lymphatic 15 menit', manfaat: 'Kardio + pemulihan, optimal untuk akhir pekan.'},
+    {hari:'Sab', aktivitas:'Lompat tali 15 menit + Jumping jack 3 set', manfaat: 'Sesi pembakaran lemak intensif.'},
+    {hari:'Min', aktivitas:'Istirahat — Lymphatic sebelum tidur', manfaat: 'Pemulihan, bantu detoksifikasi.'}
+  ],
+  agresif: [
+    {hari:'Sen', aktivitas:'Lompat tali 15 menit + Jalan kaki 30 menit', manfaat: 'Kombinasi intensif, bakar ~250 kkal.'},
+    {hari:'Sel', aktivitas:'Jumping jack 5 set + Lymphatic 15 menit', manfaat: 'Tingkatkan metabolisme, bakar lemak.'},
+    {hari:'Rab', aktivitas:'Jalan kaki 45 menit + Lompat tali 10 menit', manfaat: 'Kardio panjang + akselerasi.'},
+    {hari:'Kam', aktivitas:'Lompat tali 20 menit + Jumping jack 4 set', manfaat: 'Sesi tinggi, bakar kalori maksimal.'},
+    {hari:'Jum', aktivitas:'Jalan kaki 60 menit', manfaat: 'Kardio endurance, bakar lemak tahan lama.'},
+    {hari:'Sab', aktivitas:'Lompat tali 15 menit + Jumping jack 5 set + Lymphatic', manfaat: 'Full combo, hasil maksimal.'},
+    {hari:'Min', aktivitas:'Jalan kaki santai 30 menit — recovery', manfaat: 'Aktif recovery, jaga metabolisme.'}
+  ],
+  // Jadwal khusus untuk Program IF 16:8
+  if: [
+    {hari:'Sen', aktivitas:'Jalan kaki 30 menit (dalam jendela makan)', manfaat: 'Kardio ringan saat puasa? Sebaiknya di jendela makan.'},
+    {hari:'Sel', aktivitas:'Lymphatic Drainage 15 menit + Jumping Jack 2 set', manfaat: 'Lancarkan sirkulasi, bakar lemak.'},
+    {hari:'Rab', aktivitas:'Istirahat — Jalan santai 20 menit', manfaat: 'Pemulihan, tetap aktif.'},
+    {hari:'Kam', aktivitas:'Lompat Tali 10 menit + Jalan kaki 20 menit', manfaat: 'Kombinasi kardio, bakar ~150 kkal.'},
+    {hari:'Jum', aktivitas:'Jumping Jack 4 set + Lymphatic 10 menit', manfaat: 'Tingkatkan metabolisme, relaksasi.'},
+    {hari:'Sab', aktivitas:'Jalan kaki 45 menit', manfaat: 'Kardio panjang, optimal di akhir pekan.'},
+    {hari:'Min', aktivitas:'Istirahat — Lymphatic sebelum tidur', manfaat: 'Pemulihan, bantu detoks.'}
+  ]
 };
 
-// ========== DATA FAQ ==========
-var faqData = [
-    {
-        cat: 'Produk KEMOENIK',
-        items: [
-            { q: 'Apa itu KEMOENIK?', a: 'KEMOENIK adalah suplemen herbal berbahan alami (teh hijau, jati belanda, kemuning, temulawak, tempuyung) yang membantu proses diet dengan cara membakar lemak, mengontrol nafsu makan, dan melancarkan metabolisme.' },
-            { q: 'Bagaimana cara minum KEMOENIK?', a: 'Minum 3 kapsul pada pagi hari setelah sarapan, dan 3 kapsul pada sore/malam setelah makan. Gunakan air hangat untuk hasil optimal.' },
-            { q: 'Apakah ada efek samping?', a: 'KEMOENIK terbuat dari bahan alami dan umumnya aman dikonsumsi. Namun, bagi yang memiliki kondisi medis tertentu, disarankan konsultasi dengan dokter terlebih dahulu.' },
-            { q: 'Berapa lama 1 box habis?', a: '1 box berisi 60 kapsul, cukup untuk 10 hari (6 kapsul per hari).' }
-        ]
-    },
-    {
-        cat: 'Program Diet',
-        items: [
-            { q: 'Apakah saya harus olahraga?', a: 'Olahraga akan mempercepat hasil, tetapi tidak wajib. Yang terpenting adalah konsistensi minum KEMOENIK dan menjaga defisit kalori.' },
-            { q: 'Bolehkah saya tetap makan nasi?', a: 'Boleh, tetapi pilih nasi merah atau batasi porsinya. Kunci diet adalah defisit kalori, bukan menghilangkan karbohidrat sepenuhnya.' },
-            { q: 'Bagaimana jika saya lupa minum?', a: 'Jika lupa, segera minum begitu ingat. Jangan menggandakan dosis di waktu berikutnya.' },
-            { q: 'Kapan hasil mulai terlihat?', a: 'Biasanya dalam 1-2 minggu pertama, Anda akan merasakan perubahan seperti badan lebih ringan, BAB lancar, dan nafsu makan terkontrol. Penurunan berat bervariasi tergantung konsistensi.' }
-        ]
-    },
-    {
-        cat: 'Teknis Aplikasi',
-        items: [
-            { q: 'Bagaimana cara mengisi kalkulator?', a: 'Masuk ke menu Program, lalu klik "Kalkulasi Kalori Personal". Isi data diri dan target, lalu klik Generate. Simpan untuk mengaktifkan program.' },
-            { q: 'Apa itu skor akurasi?', a: 'Skor akurasi adalah persentase kecocokan metode diet yang direkomendasikan dengan profil metabolisme Anda, berdasarkan hasil kuis.' },
-            { q: 'Bagaimana cara mereset program?', a: 'Di halaman Program, klik tombol "Mulai Ulang" atau "Berhenti" untuk mereset timeline. Untuk mereset kalkulator, buka panel kalkulator dan klik tombol Reset.' }
-        ]
-    }
+// ============================================================
+// Data Menu Harian — Sudah lengkap dengan kalori fixed
+// ============================================================
+const menuHarianData = [
+  {
+    time: '06:30',
+    label: 'Sebelum Sarapan',
+    menu: 'Minum KEMOENIK 3 kapsul + 1 gelas air putih hangat',
+    cal: 0,
+    icon: '💊',
+    note: 'Minum kapsul sesudah bangun tidur sebelum makan'
+  },
+  {
+    time: '07:00',
+    label: 'Sarapan',
+    menu: '2 Telur Rebus + 1 potong Ubi Jalar Rebus (150g) + 1 gelas air putih',
+    cal: 280,
+    icon: '🍳',
+    note: 'Protein + karbohidrat kompleks untuk energi pagi'
+  },
+  {
+    time: '10:00',
+    label: 'Snack Pagi',
+    menu: '1 buah Pisang sedang ATAU 1 buah Jeruk + 10 butir Almond',
+    cal: 160,
+    icon: '🍌',
+    note: 'Camilan sehat untuk jaga energi'
+  },
+  {
+    time: '12:00',
+    label: 'Makan Siang',
+    menu: 'Nasi Merah ½ porsi (100g) + Dada Ayam Rebus (100g) + Tumis Sayuran + Tempe Rebus 1 potong',
+    cal: 450,
+    icon: '🍱',
+    note: 'Porsi seimbang — karbohidrat + protein + serat'
+  },
+  {
+    time: '15:00',
+    label: 'Snack Sore',
+    menu: 'Yogurt Plain 150g ATAU Singkong Rebus 150g',
+    cal: 130,
+    icon: '🥛',
+    note: 'Pilih salah satu sesuai selera'
+  },
+  {
+    time: '17:30',
+    label: 'Sebelum Makan Malam',
+    menu: 'Minum KEMOENIK 3 kapsul + 2 gelas air putih',
+    cal: 0,
+    icon: '💊',
+    note: 'Minum setelah snack sore / sebelum makan malam'
+  },
+  {
+    time: '18:00',
+    label: 'Makan Malam',
+    menu: 'Ikan Kembung/Ayam Bakar + Tumis Bayam/Kangkung + Sedikit Nasi Merah (50g) atau tanpa nasi',
+    cal: 380,
+    icon: '🍽️',
+    note: 'Hindari karbohidrat berlebih di malam hari'
+  },
+  {
+    time: '20:00',
+    label: 'Malam (Opsional)',
+    menu: 'Air putih / Teh Herbal tanpa gula',
+    cal: 0,
+    icon: '🍵',
+    note: 'Jangan makan berat setelah jam 7 malam'
+  }
+];
+// Total kalori makan: ~1400 kkal/hari (sesuai target diet defisit)
+// Kalori ini TETAP (fixed) — tidak berubah meskipun hasil kalkulator user berbeda
+
+// ============================================================
+// Database Custom Menu — TIDAK DIUBAH
+// ============================================================
+const cmFoodDatabase = [
+  {id:1, name:"Telur Ayam", category:"protein-hewani", unit:"butir", baseCal:78, baseAmount:1},
+  {id:2, name:"Dada Ayam (Rebus)", category:"protein-hewani", unit:"gram", baseCal:165, baseAmount:100},
+  {id:3, name:"Dada Ayam (Goreng)", category:"protein-hewani", unit:"gram", baseCal:220, baseAmount:100},
+  {id:4, name:"Ikan Kembung (Rebus)", category:"protein-hewani", unit:"gram", baseCal:167, baseAmount:100},
+  {id:5, name:"Ikan Salmon", category:"protein-hewani", unit:"gram", baseCal:208, baseAmount:100},
+  {id:6, name:"Ikan Tuna (Kaleng)", category:"protein-hewani", unit:"gram", baseCal:116, baseAmount:100},
+  {id:7, name:"Udang (Rebus)", category:"protein-hewani", unit:"gram", baseCal:106, baseAmount:100},
+  {id:8, name:"Daging Sapi (Rebus)", category:"protein-hewani", unit:"gram", baseCal:250, baseAmount:100},
+  {id:9, name:"Tempe (Rebus)", category:"protein-nabati", unit:"gram", baseCal:192, baseAmount:100},
+  {id:10, name:"Tempe (Goreng)", category:"protein-nabati", unit:"gram", baseCal:280, baseAmount:100},
+  {id:11, name:"Tahu Putih", category:"protein-nabati", unit:"gram", baseCal:68, baseAmount:100},
+  {id:12, name:"Tahu Goreng", category:"protein-nabati", unit:"gram", baseCal:200, baseAmount:100},
+  {id:13, name:"Edamame", category:"protein-nabati", unit:"gram", baseCal:121, baseAmount:100},
+  {id:14, name:"Kacang Hijau", category:"protein-nabati", unit:"gram", baseCal:105, baseAmount:100},
+  {id:15, name:"Nasi Putih", category:"karbohidrat", unit:"gram", baseCal:130, baseAmount:100},
+  {id:16, name:"Nasi Merah", category:"karbohidrat", unit:"gram", baseCal:111, baseAmount:100},
+  {id:17, name:"Kentang (Rebus)", category:"karbohidrat", unit:"gram", baseCal:87, baseAmount:100},
+  {id:18, name:"Ubi Jalar (Rebus)", category:"karbohidrat", unit:"gram", baseCal:90, baseAmount:100},
+  {id:19, name:"Oatmeal", category:"karbohidrat", unit:"gram", baseCal:68, baseAmount:100},
+  {id:20, name:"Roti Gandum", category:"karbohidrat", unit:"iris", baseCal:74, baseAmount:1},
+  {id:21, name:"Alpukat", category:"lemak", unit:"gram", baseCal:160, baseAmount:100},
+  {id:22, name:"Minyak Zaitun", category:"lemak", unit:"sdm", baseCal:119, baseAmount:1},
+  {id:23, name:"Keju Cheddar", category:"lemak", unit:"gram", baseCal:402, baseAmount:100},
+  {id:24, name:"Bayam (Rebus)", category:"sayuran", unit:"gram", baseCal:23, baseAmount:100},
+  {id:25, name:"Brokoli (Rebus)", category:"sayuran", unit:"gram", baseCal:35, baseAmount:100},
+  {id:26, name:"Wortel (Rebus)", category:"sayuran", unit:"gram", baseCal:35, baseAmount:100},
+  {id:27, name:"Kangkung (Tumis)", category:"sayuran", unit:"gram", baseCal:50, baseAmount:100},
+  {id:28, name:"Tomat", category:"sayuran", unit:"gram", baseCal:18, baseAmount:100},
+  {id:29, name:"Mentimun", category:"sayuran", unit:"gram", baseCal:15, baseAmount:100},
+  {id:30, name:"Jamur (Tumis)", category:"sayuran", unit:"gram", baseCal:40, baseAmount:100},
+  {id:31, name:"Pisang", category:"buah", unit:"buah", baseCal:105, baseAmount:1},
+  {id:32, name:"Apel", category:"buah", unit:"buah", baseCal:95, baseAmount:1},
+  {id:33, name:"Jeruk", category:"buah", unit:"buah", baseCal:62, baseAmount:1},
+  {id:34, name:"Semangka", category:"buah", unit:"gram", baseCal:30, baseAmount:100},
+  {id:35, name:"Pepaya", category:"buah", unit:"gram", baseCal:43, baseAmount:100},
+  {id:36, name:"Mangga", category:"buah", unit:"gram", baseCal:60, baseAmount:100},
+  {id:37, name:"Susu Low Fat", category:"susu", unit:"ml", baseCal:42, baseAmount:100},
+  {id:38, name:"Yogurt Plain", category:"susu", unit:"gram", baseCal:59, baseAmount:100},
+  {id:39, name:"Greek Yogurt", category:"susu", unit:"gram", baseCal:59, baseAmount:100},
+  {id:40, name:"Almond", category:"kacang-biji", unit:"gram", baseCal:579, baseAmount:100},
+  {id:41, name:"Kacang Tanah", category:"kacang-biji", unit:"gram", baseCal:567, baseAmount:100},
+  {id:42, name:"Chia Seed", category:"kacang-biji", unit:"sdm", baseCal:60, baseAmount:1},
+  {id:43, name:"Protein Whey", category:"diet", unit:"sendok", baseCal:120, baseAmount:1},
+  {id:44, name:"Psyllium Husk", category:"diet", unit:"sdm", baseCal:20, baseAmount:1}
 ];
 
-// ========== DATA MENU HARIAN ==========
-var menuHarianData = [
-    { time: '07.00', icon: '🍳', label: 'Sarapan', menu: '2 telur rebus + 1 pisang + segelas air putih', cal: 350 },
-    { time: '10.00', icon: '🍎', label: 'Snack Pagi', menu: 'Apel + 10 butir almond', cal: 150 },
-    { time: '12.30', icon: '🍚', label: 'Makan Siang', menu: 'Nasi merah 100g + dada ayam 100g + sayur bayam', cal: 500 },
-    { time: '16.00', icon: '🥗', label: 'Snack Sore', menu: 'Yogurt plain + granola', cal: 200 },
-    { time: '19.00', icon: '🥘', label: 'Makan Malam', menu: 'Ikan bakar 100g + tumis brokoli + kentang rebus 1', cal: 400 }
-];
-
-// ========== DATABASE CUSTOM MENU ==========
-var cmFoodDatabase = [
-    { id: 1, name: 'Telur Rebus', category: 'protein-hewani', baseCal: 70, baseAmount: 1, unit: 'butir' },
-    { id: 2, name: 'Dada Ayam Fillet', category: 'protein-hewani', baseCal: 165, baseAmount: 100, unit: 'g' },
-    { id: 3, name: 'Ikan Kembung', category: 'protein-hewani', baseCal: 120, baseAmount: 100, unit: 'g' },
-    { id: 4, name: 'Tahu Putih', category: 'protein-nabati', baseCal: 80, baseAmount: 100, unit: 'g' },
-    { id: 5, name: 'Tempe', category: 'protein-nabati', baseCal: 150, baseAmount: 100, unit: 'g' },
-    { id: 6, name: 'Nasi Putih', category: 'karbohidrat', baseCal: 175, baseAmount: 100, unit: 'g' },
-    { id: 7, name: 'Nasi Merah', category: 'karbohidrat', baseCal: 165, baseAmount: 100, unit: 'g' },
-    { id: 8, name: 'Kentang Rebus', category: 'karbohidrat', baseCal: 87, baseAmount: 100, unit: 'g' },
-    { id: 9, name: 'Ubi Rebus', category: 'karbohidrat', baseCal: 100, baseAmount: 100, unit: 'g' },
-    { id: 10, name: 'Brokoli', category: 'sayuran', baseCal: 34, baseAmount: 100, unit: 'g' },
-    { id: 11, name: 'Bayam', category: 'sayuran', baseCal: 23, baseAmount: 100, unit: 'g' },
-    { id: 12, name: 'Wortel', category: 'sayuran', baseCal: 41, baseAmount: 100, unit: 'g' },
-    { id: 13, name: 'Pisang', category: 'buah', baseCal: 105, baseAmount: 1, unit: 'buah' },
-    { id: 14, name: 'Apel', category: 'buah', baseCal: 95, baseAmount: 1, unit: 'buah' },
-    { id: 15, name: 'Alpukat', category: 'buah', baseCal: 160, baseAmount: 0.5, unit: 'buah' },
-    { id: 16, name: 'Minyak Zaitun', category: 'lemak', baseCal: 120, baseAmount: 1, unit: 'sdm' },
-    { id: 17, name: 'Kacang Almond', category: 'lemak', baseCal: 160, baseAmount: 10, unit: 'butir' }
-];
-
-// ========== DATA TIPS KONTEN ==========
-var tipsKontenData = [
-    {
-        id: 'defisit',
-        judul: 'Defisit Kalori',
-        konten: [
-            'Defisit kalori adalah kunci utama menurunkan berat badan. Artinya, kalori yang masuk lebih sedikit daripada yang dibakar.',
-            'Hitung kebutuhan kalori harianmu (BMR x aktivitas), lalu kurangi 300-500 kkal untuk defisit yang aman.',
-            'Jangan defisit terlalu ekstrim (<1200 kkal untuk wanita, <1500 untuk pria) karena bisa memperlambat metabolisme.',
-            'Gunakan kalkulator KEMOENIK untuk menentukan target defisit yang tepat.'
-        ],
-        warna: '#DC2626',
-        bgWarna: '#FEE2E2',
-        icon: '🔥'
-    },
-    {
-        id: 'pola-makan',
-        judul: 'Panduan Kurangi Gula',
-        konten: [
-            'Gula tambahan adalah musuh utama diet. Batasi konsumsi gula maksimal 4 sendok teh per hari.',
-            'Hindari minuman manis kemasan, sirup, dan kopi kekinian.',
-            'Ganti gula dengan pemanis alami seperti stevia atau konsumsi buah untuk rasa manis.',
-            'Baca label nutrisi: hindari produk dengan kadar gula >10g per 100g.'
-        ],
-        warna: '#C07E10',
-        bgWarna: '#FEF3C7',
-        icon: '🍬'
-    },
-    {
-        id: 'olahraga-tips',
-        judul: 'Panduan Olahraga',
-        konten: [
-            'Kombinasi cardio dan strength training paling efektif untuk bakar lemak.',
-            'Lakukan cardio 3-4x seminggu (jalan cepat, lari, bersepeda) masing-masing 30 menit.',
-            'Strength training 2x seminggu untuk membangun otot (otak-otak, squat, push-up).',
-            'Jangan lupa pemanasan dan pendinginan untuk cegah cedera.'
-        ],
-        warna: '#1D4ED8',
-        bgWarna: '#DBEAFE',
-        icon: '🏋️'
-    },
-    {
-        id: 'air-putih',
-        judul: 'Cara Minum KEMOENIK',
-        konten: [
-            'Minum 3 kapsul pagi setelah sarapan dengan air hangat.',
-            'Minum 3 kapsul sore/malam setelah makan malam.',
-            'Pastikan minum air putih minimal 2 liter sehari untuk membantu kinerja herbal.',
-            'Jangan lupa minum air putih sebelum makan untuk mengurangi porsi.'
-        ],
-        warna: '#2E8B35',
-        bgWarna: '#DCFCE7',
-        icon: '💧'
-    },
-    {
-        id: 'if-puasa',
-        judul: 'Opsi: Intermittent Fasting',
-        konten: [
-            'IF 16:8 artinya puasa 16 jam, makan dalam jendela 8 jam (misal 10.00-18.00).',
-            'Metode ini membantu mengurangi asupan kalori dan meningkatkan sensitivitas insulin.',
-            'Saat puasa, hanya boleh minum air putih, teh/kopi tanpa gula.',
-            'Kombinasikan dengan KEMOENIK untuk hasil maksimal: minum saat buka puasa dan sebelum puasa.'
-        ],
-        warna: '#7C3AED',
-        bgWarna: '#EDE9FE',
-        icon: '⏰'
-    },
-    {
-        id: 'waktu-makan',
-        judul: 'Waktu Makan Ideal',
-        konten: [
-            'Sarapan: 07.00-08.00, kaya protein dan serat.',
-            'Makan siang: 12.00-13.00, porsi sedang dengan sayur dan lauk.',
-            'Makan malam: sebelum 19.00, ringan dan hindari karbohidrat berlebih.',
-            'Camilan: pilih buah atau kacang, batasi setelah jam 18.00.'
-        ],
-        warna: '#D97706',
-        bgWarna: '#FEF3C7',
-        icon: '🕒'
-    },
-    {
-        id: 'lymphatic',
-        judul: 'Lymphatic Drainage',
-        konten: [
-            'Lymphatic drainage adalah pijatan ringan untuk melancarkan aliran getah bening.',
-            'Bisa dilakukan sendiri dengan gerakan memutar di area leher, ketiak, dan pangkal paha.',
-            'Lakukan 10-15 menit setiap hari, terutama saat hari istirahat olahraga.',
-            'Manfaat: mengurangi kembung, meningkatkan imun, dan membantu detoks.'
-        ],
-        warna: '#2563EB',
-        bgWarna: '#EFF6FF',
-        icon: '💆'
-    },
-    {
-        id: 'tidur',
-        judul: 'Pentingnya Tidur',
-        konten: [
-            'Tidur cukup 7-8 jam per malam membantu mengatur hormon lapar (ghrelin dan leptin).',
-            'Kurang tidur dapat meningkatkan keinginan makan makanan manis dan berlemak.',
-            'Tidur juga membantu pemulihan otot setelah olahraga.',
-            'Ciptakan rutinitas tidur yang teratur: hindari HP 1 jam sebelum tidur.'
-        ],
-        warna: '#6B21A5',
-        bgWarna: '#F3E8FF',
-        icon: '😴'
-    }
-];
-
-// ========== DATA SOAL QUIZ ==========
-var quizQuestions = [
-    {
-        text: 'Seberapa sering Anda merasa lapar?',
-        options: [
-            { emoji: '🍔', text: 'Sering sekali, bahkan setelah makan', scores: [3, 1, 2, 4, 2, 3, 4] },
-            { emoji: '🍎', text: 'Kadang-kadang, normal', scores: [2, 2, 3, 2, 3, 2, 2] },
-            { emoji: '🥗', text: 'Jarang, mudah kenyang', scores: [1, 3, 2, 1, 2, 1, 1] }
-        ]
-    },
-    {
-        text: 'Bagaimana respons tubuh Anda terhadap makanan manis?',
-        options: [
-            { emoji: '🍰', text: 'Cepat lapar lagi setelah makan manis', scores: [3, 2, 2, 4, 3, 2, 3] },
-            { emoji: '🍬', text: 'Biasa saja, tidak terlalu pengaruh', scores: [2, 3, 3, 2, 2, 3, 2] },
-            { emoji: '🍵', text: 'Hindari manis, cepat gemuk', scores: [1, 4, 2, 3, 2, 1, 2] }
-        ]
-    },
-    {
-        text: 'Seberapa sering Anda mengonsumsi karbohidrat (nasi, roti, mie)?',
-        options: [
-            { emoji: '🍚', text: 'Setiap kali makan, porsi besar', scores: [4, 3, 3, 4, 2, 4, 3] },
-            { emoji: '🍝', text: '1-2 kali sehari, porsi sedang', scores: [2, 2, 3, 2, 3, 2, 2] },
-            { emoji: '🥦', text: 'Jarang, lebih banyak protein & sayur', scores: [1, 1, 2, 1, 3, 1, 2] }
-        ]
-    },
-    {
-        text: 'Bagaimana tingkat energi Anda sepanjang hari?',
-        options: [
-            { emoji: '⚡', text: 'Energi naik turun, mudah lelah', scores: [2, 3, 2, 3, 4, 3, 4] },
-            { emoji: '😊', text: 'Stabil, cukup berenergi', scores: [3, 2, 3, 2, 2, 3, 2] },
-            { emoji: '😴', text: 'Sering lemas, kurang bertenaga', scores: [1, 4, 2, 3, 3, 2, 3] }
-        ]
-    },
-    {
-        text: 'Apakah Anda mudah stres atau cemas?',
-        options: [
-            { emoji: '😰', text: 'Sangat mudah, sering makan saat stres', scores: [2, 3, 2, 3, 4, 3, 5] },
-            { emoji: '😌', text: 'Kadang, biasa saja', scores: [3, 2, 3, 2, 2, 3, 2] },
-            { emoji: '😎', text: 'Jarang stres, santai', scores: [2, 1, 2, 1, 1, 2, 1] }
-        ]
-    },
-    {
-        text: 'Bagaimana kualitas tidur Anda?',
-        options: [
-            { emoji: '😴', text: 'Tidur nyenyak 7-8 jam', scores: [3, 2, 3, 2, 2, 3, 1] },
-            { emoji: '😐', text: 'Cukup, sering terbangun', scores: [2, 3, 2, 3, 3, 2, 3] },
-            { emoji: '😫', text: 'Sulit tidur, kurang dari 6 jam', scores: [1, 4, 2, 3, 4, 2, 4] }
-        ]
-    },
-    {
-        text: 'Apakah Anda mengalami retensi air (mudah bengkak, berat badan naik turun)?',
-        options: [
-            { emoji: '💧', text: 'Sering, terutama saat PMS', scores: [2, 2, 2, 2, 4, 2, 3] },
-            { emoji: '💪', text: 'Jarang, badan cenderung stabil', scores: [3, 3, 3, 3, 1, 3, 2] },
-            { emoji: '🤷', text: 'Tidak tahu / kadang', scores: [2, 2, 2, 2, 2, 2, 2] }
-        ]
-    },
-    {
-        text: 'Seberapa sering Anda berolahraga?',
-        options: [
-            { emoji: '🏃', text: 'Rutin 3-5x seminggu', scores: [4, 3, 4, 3, 3, 5, 2] },
-            { emoji: '🚶', text: '1-2x seminggu', scores: [2, 2, 2, 2, 2, 2, 2] },
-            { emoji: '🛋️', text: 'Jarang / tidak pernah', scores: [1, 3, 1, 2, 3, 1, 3] }
-        ]
-    },
-    {
-        text: 'Bagaimana metabolisme keluarga Anda?',
-        options: [
-            { emoji: '👨‍👩‍👧', text: 'Kebanyakan gemuk / mudah gemuk', scores: [1, 4, 2, 3, 3, 2, 3] },
-            { emoji: '👪', text: 'Rata-rata normal', scores: [3, 2, 3, 2, 2, 3, 2] },
-            { emoji: '🏃', text: 'Kebanyakan kurus / susah gemuk', scores: [4, 1, 3, 2, 1, 4, 1] }
-        ]
-    },
-    {
-        text: 'Apakah Anda sering ngemil di malam hari?',
-        options: [
-            { emoji: '🍪', text: 'Sering, susah menahan lapar', scores: [3, 2, 2, 4, 3, 3, 4] },
-            { emoji: '🍎', text: 'Kadang, bisa dikontrol', scores: [2, 2, 3, 2, 2, 2, 2] },
-            { emoji: '🚫', text: 'Tidak pernah, sudah terbiasa', scores: [1, 2, 2, 1, 2, 1, 1] }
-        ]
-    },
-    {
-        text: 'Bagaimana respons tubuh terhadap makanan berlemak?',
-        options: [
-            { emoji: '🍟', text: 'Langsung terasa berat, kembung', scores: [2, 3, 2, 3, 3, 2, 3] },
-            { emoji: '🍗', text: 'Biasa saja, tidak masalah', scores: [3, 2, 3, 2, 2, 3, 2] },
-            { emoji: '🤢', text: 'Mual / tidak tahan', scores: [1, 1, 1, 1, 2, 1, 2] }
-        ]
-    },
-    {
-        text: 'Apakah Anda memiliki riwayat diabetes dalam keluarga?',
-        options: [
-            { emoji: '🩺', text: 'Ya, orang tua / saudara kandung', scores: [2, 3, 2, 4, 2, 2, 3] },
-            { emoji: '👨‍👩‍👧', text: 'Ada, tetapi jauh (kakek, bibi)', scores: [2, 2, 2, 3, 2, 2, 2] },
-            { emoji: '✅', text: 'Tidak ada riwayat', scores: [3, 2, 3, 2, 3, 3, 2] }
-        ]
-    },
-    {
-        text: 'Seberapa sering Anda merasa kembung atau begah?',
-        options: [
-            { emoji: '🎈', text: 'Sering, hampir setiap hari', scores: [2, 3, 2, 2, 4, 2, 3] },
-            { emoji: '😐', text: 'Kadang-kadang', scores: [2, 2, 3, 2, 2, 3, 2] },
-            { emoji: '✅', text: 'Jarang', scores: [3, 2, 2, 3, 1, 2, 2] }
-        ]
-    },
-    {
-        text: 'Apakah Anda mudah merasa kenyang?',
-        options: [
-            { emoji: '🍽️', text: 'Ya, sedikit makan sudah kenyang', scores: [1, 3, 2, 1, 2, 1, 2] },
-            { emoji: '🤔', text: 'Normal, sedang-sedang saja', scores: [2, 2, 3, 2, 2, 3, 2] },
-            { emoji: '🍕', text: 'Tidak, bisa makan banyak', scores: [4, 2, 2, 4, 3, 3, 3] }
-        ]
-    },
-    {
-        text: 'Bagaimana kondisi pencernaan Anda?',
-        options: [
-            { emoji: '💩', text: 'Lancar, BAB rutin setiap hari', scores: [3, 2, 3, 2, 2, 3, 2] },
-            { emoji: '😣', text: 'Sembelit atau diare bergantian', scores: [2, 3, 2, 3, 4, 2, 3] },
-            { emoji: '🤷', text: 'Kadang lancar, kadang susah', scores: [2, 2, 2, 2, 3, 2, 2] }
-        ]
-    }
-];
-
-// ========== DATA SERVICE UNTUK PENYIMPANAN ==========
-var DataService = {
-    loadUserData: function(wa) {
-        var key = 'kemoenik_user_' + wa;
-        var data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : {};
-    },
-    saveUserData: function(wa, data) {
-        var key = 'kemoenik_user_' + wa;
-        localStorage.setItem(key, JSON.stringify(data));
-    },
-    saveKalkulator: function(wa, data) {
-        var userData = this.loadUserData(wa);
-        userData.kalkulator = data;
-        this.saveUserData(wa, userData);
-        return { success: true };
-    },
-    saveQuiz: function(wa, data) {
-        var userData = this.loadUserData(wa);
-        userData.quiz = data;
-        this.saveUserData(wa, userData);
-        return { success: true };
-    },
-    saveEvaluasi: function(wa, data) {
-        var userData = this.loadUserData(wa);
-        if (!userData.evaluasi) userData.evaluasi = [];
-        // Jika data adalah array (setelah hapus), timpa
-        if (Array.isArray(data)) {
-            userData.evaluasi = data;
-        } else {
-            userData.evaluasi.push(data);
-        }
-        this.saveUserData(wa, userData);
-    },
-    saveProfile: function(wa, data) {
-        var userData = this.loadUserData(wa);
-        userData.profile = data;
-        this.saveUserData(wa, userData);
-    },
-    resetProgram: function(wa) {
-        var userData = this.loadUserData(wa);
-        userData.kalkulator = null;
-        userData.evaluasi = [];
-        this.saveUserData(wa, userData);
-    },
-    saveMisiChecked: function(wa, key, val) {
-        var userData = this.loadUserData(wa);
-        if (!userData.misiChecked) userData.misiChecked = {};
-        userData.misiChecked[key] = val;
-        this.saveUserData(wa, userData);
-    },
-    saveProgramPilihan: function(wa, pilihan) {
-        var userData = this.loadUserData(wa);
-        userData.programPilihan = pilihan;
-        this.saveUserData(wa, userData);
-    }
+// ============================================================
+// Data Trait per tipe metabolisme — TIDAK DIUBAH
+// ============================================================
+const traitDataByType = {
+  1: [
+    { name:'Respons terhadap Karbohidrat', badge:'Sensitif Tinggi', badgeClass:'badge-tinggi', pct:85, labels:['Rendah','Normal','Tinggi'], desc:'Tubuhmu bereaksi kuat terhadap asupan karbohidrat. Batasi karbohidrat sederhana & ganti dengan yang kompleks.' },
+    { name:'Kemampuan Bakar Lemak', badge:'Normal', badgeClass:'badge-optimal', pct:50, labels:['Rendah','Normal','Tinggi'], desc:'Kemampuan bakar lemak dalam batas normal. Defisit kalori konsisten akan memberikan hasil optimal.' },
+    { name:'Efisiensi Metabolisme Basal', badge:'Di Atas Rata-rata', badgeClass:'badge-optimal', pct:65, labels:['Rendah','Normal','Tinggi'], desc:'Metabolisme basalmu cukup efisien. Ini membantumu membakar kalori lebih banyak saat istirahat.' },
+    { name:'Toleransi Puasa', badge:'Rendah', badgeClass:'badge-perlu', pct:30, labels:['Rendah','Normal','Tinggi'], desc:'Kamu cenderung kurang toleran terhadap puasa panjang. IF tidak direkomendasikan untuk tipe ini.' },
+    { name:'Sensitivitas Stres vs BB', badge:'Sedang', badgeClass:'badge-perlu', pct:50, labels:['Rendah','Sedang','Tinggi'], desc:'Stres cukup berpengaruh terhadap berat badanmu. Kelola stres dengan olahraga ringan & tidur cukup.' }
+  ],
+  2: [
+    { name:'Kemampuan Bakar Lemak', badge:'Perlu Perhatian', badgeClass:'badge-perlu', pct:72, labels:['Rendah','Normal','Tinggi'], desc:'Tubuhmu cenderung lebih lambat membakar lemak. Atasi dengan defisit kalori konsisten + IF 16:8.' },
+    { name:'Respons terhadap Karbohidrat', badge:'Normal', badgeClass:'badge-optimal', pct:45, labels:['Sensitif','Normal','Toleran'], desc:'Respons gula darahmu terhadap karbohidrat masih normal. Tetap batasi karbohidrat sederhana.' },
+    { name:'Efisiensi Metabolisme Basal', badge:'Di Bawah Rata-rata', badgeClass:'badge-perlu', pct:30, labels:['Rendah','Normal','Tinggi'], desc:'Metabolisme basalmu lebih hemat energi — membakar lebih sedikit kalori saat istirahat.' },
+    { name:'Respons terhadap Kardio', badge:'Kurang Optimal', badgeClass:'badge-tinggi', pct:78, labels:['Kurang','Cukup','Baik'], desc:'Kardio saja tidak cukup efektif. Kombinasikan dengan latihan kekuatan untuk hasil lebih optimal.' },
+    { name:'Toleransi Puasa', badge:'Baik', badgeClass:'badge-optimal', pct:25, labels:['Rendah','Normal','Tinggi'], desc:'Tubuhmu cukup toleran terhadap puasa. IF 16:8 sangat cocok dan efektif untukmu!' }
+  ],
+  3: [
+    { name:'Kemampuan Bakar Lemak', badge:'Baik', badgeClass:'badge-optimal', pct:60, labels:['Rendah','Normal','Tinggi'], desc:'Kemampuan membakar lemakmu cukup baik, terutama saat dikombinasikan dengan latihan kekuatan.' },
+    { name:'Metabolisme Protein', badge:'Tinggi', badgeClass:'badge-optimal', pct:80, labels:['Rendah','Normal','Tinggi'], desc:'Tubuhmu efisien menggunakan protein untuk membangun & mempertahankan otot.' },
+    { name:'Respons terhadap Olahraga', badge:'Sangat Baik', badgeClass:'badge-optimal', pct:20, labels:['Kurang','Cukup','Baik'], desc:'Tubuhmu merespons sangat baik terhadap latihan fisik — ini keunggulan besar!' },
+    { name:'Toleransi Kalori Rendah', badge:'Perlu Perhatian', badgeClass:'badge-perlu', pct:65, labels:['Toleran','Sedang','Sensitif'], desc:'Diet terlalu rendah kalori bisa merusak ototmu. Jangan potong kalori terlalu drastis.' },
+    { name:'Efisiensi Metabolisme Basal', badge:'Tinggi', badgeClass:'badge-optimal', pct:25, labels:['Rendah','Normal','Tinggi'], desc:'Metabolisme basalmu efisien dan tinggi — kamu membakar lebih banyak kalori bahkan saat istirahat.' }
+  ],
+  4: [
+    { name:'Kecepatan Metabolisme', badge:'Lambat', badgeClass:'badge-tinggi', pct:80, labels:['Cepat','Normal','Lambat'], desc:'Metabolismemu bekerja lebih pelan. Jangan potong kalori drastis — defisit kecil lebih efektif.' },
+    { name:'Kemampuan Bakar Lemak', badge:'Rendah', badgeClass:'badge-perlu', pct:70, labels:['Rendah','Normal','Tinggi'], desc:'Pembakaran lemak butuh lebih banyak waktu. Konsistensi jangka panjang adalah kuncinya.' },
+    { name:'Toleransi Aktivitas Fisik', badge:'Sedang', badgeClass:'badge-perlu', pct:55, labels:['Rendah','Sedang','Tinggi'], desc:'Tingkatkan aktivitas fisik secara bertahap — jalan kaki, naik tangga, hindari lift.' },
+    { name:'Respons terhadap Perubahan', badge:'Butuh Waktu', badgeClass:'badge-perlu', pct:72, labels:['Cepat','Sedang','Lambat'], desc:'Tubuhmu butuh lebih banyak waktu untuk beradaptasi. Sabar dan tetap konsisten!' },
+    { name:'Sensitivitas Stres vs BB', badge:'Sedang', badgeClass:'badge-perlu', pct:55, labels:['Rendah','Sedang','Tinggi'], desc:'Stres cukup berpengaruh. Prioritaskan tidur 7–8 jam dan kelola stres dengan baik.' }
+  ],
+  5: [
+    { name:'Pengaruh Stres terhadap BB', badge:'Tinggi', badgeClass:'badge-tinggi', pct:82, labels:['Rendah','Sedang','Tinggi'], desc:'Stres sangat mempengaruhi berat badanmu. Prioritaskan manajemen stres & tidur berkualitas.' },
+    { name:'Pola Tidur', badge:'Perlu Perhatian', badgeClass:'badge-perlu', pct:70, labels:['Baik','Sedang','Buruk'], desc:'Kurang tidur meningkatkan hormon lapar & menurunkan metabolisme. Targetkan 7–8 jam/malam.' },
+    { name:'Makan Emosional', badge:'Perlu Diwaspadai', badgeClass:'badge-perlu', pct:75, labels:['Rendah','Sedang','Tinggi'], desc:'Kamu cenderung makan saat emosi. Kenali triggernya dan cari alternatif — olahraga, meditasi.' },
+    { name:'Konsistensi Rutinitas', badge:'Perlu Ditingkatkan', badgeClass:'badge-tinggi', pct:65, labels:['Konsisten','Sedang','Tidak Konsisten'], desc:'Rutinitas yang tidak konsisten menghambat program diet. Buat jadwal makan & minum KEMOENIK tetap.' },
+    { name:'Kemampuan Bakar Lemak', badge:'Normal', badgeClass:'badge-optimal', pct:45, labels:['Rendah','Normal','Tinggi'], desc:'Kemampuan bakar lemakmu normal. Dengan perbaikan gaya hidup, hasilnya akan meningkat signifikan.' }
+  ],
+  6: [
+    { name:'Kesehatan Pencernaan', badge:'Perlu Perhatian', badgeClass:'badge-tinggi', pct:75, labels:['Baik','Sedang','Sensitif'], desc:'Sistem pencernaanmu sensitif. Hindari makanan pemicu: susu, gluten, gorengan, makanan pedas.' },
+    { name:'Kemampuan Bakar Lemak', badge:'Normal', badgeClass:'badge-optimal', pct:50, labels:['Rendah','Normal','Tinggi'], desc:'Kemampuan bakar lemak normal, namun masalah pencernaan sering menghambat proses diet.' },
+    { name:'Respons terhadap Lemak', badge:'Sensitif', badgeClass:'badge-perlu', pct:70, labels:['Toleran','Normal','Sensitif'], desc:'Makanan berlemak tinggi memicu ketidaknyamanan pencernaan. Fokus pada lemak sehat & porsi kecil.' },
+    { name:'Keberagaman Bakteri Usus', badge:'Perlu Ditingkatkan', badgeClass:'badge-perlu', pct:60, labels:['Baik','Sedang','Kurang'], desc:'Tambahkan probiotik: yogurt, tempe, kimchi untuk kesehatan usus yang lebih baik.' },
+    { name:'Toleransi Puasa', badge:'Rendah', badgeClass:'badge-tinggi', pct:75, labels:['Tinggi','Sedang','Rendah'], desc:'IF tidak direkomendasikan untuk tipe perutmu yang sensitif. Makan teratur lebih disarankan.' }
+  ],
+  7: [
+    { name:'Kemampuan Bakar Lemak', badge:'Baik', badgeClass:'badge-optimal', pct:35, labels:['Rendah','Normal','Tinggi'], desc:'Kemampuan bakar lemakmu baik. Pertahankan dengan defisit kalori konsisten.' },
+    { name:'Respons terhadap Karbohidrat', badge:'Normal', badgeClass:'badge-optimal', pct:50, labels:['Sensitif','Normal','Toleran'], desc:'Respons karbohidratmu seimbang. Tetap variasikan antara karbohidrat kompleks dan sederhana.' },
+    { name:'Efisiensi Metabolisme Basal', badge:'Normal', badgeClass:'badge-optimal', pct:50, labels:['Rendah','Normal','Tinggi'], desc:'Metabolisme basalmu dalam kondisi optimal. Pertahankan pola makan sehat & olahraga rutin.' },
+    { name:'Toleransi Olahraga', badge:'Baik', badgeClass:'badge-optimal', pct:25, labels:['Rendah','Sedang','Tinggi'], desc:'Tubuhmu merespons baik terhadap berbagai jenis olahraga. Variasikan kardio + latihan kekuatan.' },
+    { name:'Konsistensi', badge:'Kunci Utama', badgeClass:'badge-optimal', pct:50, labels:['Rendah','Sedang','Tinggi'], desc:'Metabolismemu sudah baik — kunci keberhasilanmu adalah KONSISTENSI dalam menjalankan program.' }
+  ]
 };
 
-// ========== FUNGSI CHECK VOUCHER (DUMMY) ==========
-async function checkVoucherValid(wa, voucher) {
-    // Simulasi pengecekan voucher (selalu valid untuk demo)
-    return { valid: true, fallback: false, message: 'Voucher valid' };
-}
+// Data Quiz — TIDAK DIUBAH
+const quizQuestions = [
+  { text:"Ketika makan nasi dalam porsi besar (lebih dari 1 centong), apa yang biasanya kamu rasakan?", options:[{emoji:"😴",text:"Langsung mengantuk dan lemas",scores:[3,0,0,1,0,0,0]},{emoji:"😐",text:"Biasa saja, tidak ada efek khusus",scores:[0,0,0,0,0,0,3]},{emoji:"😤",text:"Perut kembung dan tidak nyaman",scores:[0,0,0,0,0,3,0]},{emoji:"⚡",text:"Justru merasa lebih berenergi",scores:[0,1,2,0,0,0,1]}]},
+  { text:"Bagaimana kondisi berat badanmu dalam 6 bulan terakhir?", options:[{emoji:"📈",text:"Naik terus meski tidak makan banyak",scores:[2,2,0,1,1,0,0]},{emoji:"🔄",text:"Naik turun tidak stabil",scores:[1,1,0,0,2,0,1]},{emoji:"➡️",text:"Stagnan, susah turun meski sudah diet",scores:[1,2,0,2,0,0,0]},{emoji:"📉",text:"Bisa turun kalau konsisten diet",scores:[0,0,1,0,0,0,3]}]},
+  { text:"Dimana lemak paling banyak menumpuk di tubuhmu?", options:[{emoji:"🍎",text:"Perut dan pinggang",scores:[2,2,0,1,0,0,0]},{emoji:"🍐",text:"Paha dan pinggul",scores:[1,1,0,1,1,0,0]},{emoji:"📏",text:"Merata di seluruh tubuh",scores:[0,1,0,2,0,0,1]},{emoji:"💪",text:"Lemak sedikit tapi susah berotot",scores:[0,0,3,0,0,0,0]}]},
+  { text:"Bagaimana nafsu makanmu sehari-hari?", options:[{emoji:"🐘",text:"Selalu lapar, sulit kenyang",scores:[1,2,0,1,1,0,0]},{emoji:"⏰",text:"Lapar di jam tertentu saja",scores:[0,0,0,0,0,0,3]},{emoji:"😐",text:"Normal, tidak terlalu lapar",scores:[0,1,1,0,0,1,1]},{emoji:"😤",text:"Sering ngidam makanan manis/asin",scores:[2,0,0,0,2,0,0]}]},
+  { text:"Apa yang terjadi setelah kamu makan makanan manis?", options:[{emoji:"📈",text:"Gula darah naik cepat, lalu drop dan lapar lagi",scores:[3,0,0,0,0,1,0]},{emoji:"😴",text:"Mengantuk dan ingin tidur",scores:[1,1,0,2,0,0,0]},{emoji:"⚡",text:"Merasa berenergi cukup lama",scores:[0,0,1,0,0,0,3]},{emoji:"🤢",text:"Tidak nyaman atau mual",scores:[0,0,0,0,0,3,0]}]},
+  { text:"Bagaimana kualitas tidurmu?", options:[{emoji:"😴",text:"Sering susah tidur atau tidur tidak nyenyak",scores:[0,0,0,0,3,0,0]},{emoji:"🌙",text:"Tidur cukup dan berkualitas",scores:[0,0,0,0,0,0,3]},{emoji:"⏰",text:"Tidur mepet karena aktivitas padat",scores:[0,1,1,0,1,0,0]},{emoji:"💤",text:"Sering tidur berlebihan tapi tetap lelah",scores:[1,1,0,2,0,0,0]}]},
+  { text:"Bagaimana kondisi perutmu sehari-hari?", options:[{emoji:"🎈",text:"Sering kembung walau tidak makan banyak",scores:[0,0,0,0,0,3,0]},{emoji:"😖",text:"Sering sembelit atau susah BAB",scores:[0,0,0,0,0,3,0]},{emoji:"✅",text:"Pencernaan lancar dan normal",scores:[0,0,0,0,0,0,3]},{emoji:"🔄",text:"Kadang bermasalah, kadang tidak",scores:[0,0,0,0,1,1,1]}]},
+  { text:"Bagaimana tubuhmu merespons olahraga kardio?", options:[{emoji:"🔥",text:"Berkeringat banyak tapi BB tidak turun",scores:[1,3,0,0,0,0,0]},{emoji:"💪",text:"Berkeringat dan BB turun",scores:[0,0,0,0,0,0,3]},{emoji:"😓",text:"Cepat lelah, sulit kardio lama",scores:[0,0,0,3,0,0,0]},{emoji:"🏋️",text:"Lebih suka olahraga kekuatan/gym",scores:[0,0,3,0,0,0,0]}]},
+  { text:"Bagaimana distribusi lemak di tubuhmu?", options:[{emoji:"🍎",text:"Banyak di perut (bentuk apel)",scores:[2,2,0,1,0,0,0]},{emoji:"🍐",text:"Banyak di pinggul/paha (bentuk pir)",scores:[1,1,0,1,1,0,0]},{emoji:"📏",text:"Merata di seluruh tubuh",scores:[0,1,0,2,0,0,1]},{emoji:"💪",text:"Lemak sedikit, tapi susah berotot",scores:[0,0,3,0,0,0,0]}]},
+  { text:"Setelah makan makanan berlemak (gorengan, santan)?", options:[{emoji:"🤢",text:"Mual atau tidak nyaman di perut",scores:[0,0,0,0,0,3,0]},{emoji:"😴",text:"Langsung mengantuk dan lemas",scores:[1,2,0,1,0,0,0]},{emoji:"✅",text:"Tidak ada masalah",scores:[0,0,1,0,0,0,3]},{emoji:"⚡",text:"Justru merasa lebih berenergi",scores:[0,1,1,0,0,0,1]}]},
+  { text:"Bagaimana kondisi kulitmu sehari-hari?", options:[{emoji:"🔴",text:"Mudah berjerawat atau kemerahan",scores:[1,0,0,0,1,2,0]},{emoji:"💧",text:"Kering dan kusam",scores:[0,1,0,2,0,1,0]},{emoji:"✨",text:"Normal dan sehat",scores:[0,0,0,0,0,0,3]},{emoji:"🌊",text:"Berminyak terutama di T-zone",scores:[1,0,0,0,2,1,0]}]},
+  { text:"Apa yang terjadi saat kamu skip makan (puasa sebentar)?", options:[{emoji:"😡",text:"Langsung pusing, lemas, dan marah",scores:[2,0,1,0,1,0,0]},{emoji:"💪",text:"Tidak masalah, masih berenergi",scores:[0,2,0,0,0,0,2]},{emoji:"🎯",text:"Justru merasa lebih fokus",scores:[0,3,0,0,0,0,1]},{emoji:"😐",text:"Biasa saja, tidak terlalu terasa",scores:[0,1,0,1,0,0,2]}]},
+  { text:"Bagaimana pola makan idealmu sehari-hari?", options:[{emoji:"🥩",text:"Lebih suka daging & protein, kurang suka karbo",scores:[0,0,3,0,0,0,0]},{emoji:"🥗",text:"Lebih suka sayur & buah, hindari lemak",scores:[0,0,0,0,0,2,1]},{emoji:"🍱",text:"Makan apa saja tapi porsi kecil",scores:[0,0,0,3,0,0,1]},{emoji:"⚖️",text:"Seimbang, semua dimakan secukupnya",scores:[0,0,0,0,0,0,3]}]},
+  { text:"Bagaimana tingkat aktivitas fisikmu sehari-hari?", options:[{emoji:"🪑",text:"Sangat jarang gerak, kerja duduk",scores:[1,2,0,2,0,0,0]},{emoji:"🚶",text:"Kadang jalan kaki, tidak rutin olahraga",scores:[1,1,0,1,1,0,0]},{emoji:"🏃",text:"Olahraga ringan 2-3x seminggu",scores:[0,0,1,0,0,0,2]},{emoji:"💪",text:"Olahraga intens hampir setiap hari",scores:[0,0,3,0,0,0,1]}]},
+  { text:"Apa pengalamanmu dengan program diet sebelumnya?", options:[{emoji:"😤",text:"Sudah coba banyak diet tapi tidak berhasil",scores:[1,2,0,1,1,0,0]},{emoji:"🔄",text:"Berhasil tapi berat balik lagi (yo-yo)",scores:[2,1,0,0,1,0,0]},{emoji:"📈",text:"Belum pernah coba diet serius",scores:[0,0,0,0,2,0,1]},{emoji:"✅",text:"Cukup berhasil kalau konsisten",scores:[0,0,0,0,0,0,3]}]}
+];
+
+const quizTypes = [
+  {id:1, name:"Tipe Nasi Warrior", tagline:"Tubuhmu bereaksi kuat terhadap karbohidrat", emoji:"🍚", color:"#E07B39", bg:"#FEF0E6", textColor:"#7C2D12", metode:"standar", metodeName:"Standar + Kurangi Karbo", skor:78,
+    tips:["Batasi nasi putih max 1 centong per makan","Ganti dengan nasi merah, ubi, atau kentang rebus","Makan karbo hanya di pagi & siang, hindari malam","Perbanyak protein & sayuran di setiap makan","KEMOENIK membantu menstabilkan respons gula darah"],
+    hindari:"Nasi putih, roti putih, minuman manis", anjuran:"Nasi merah, ubi jalar, oatmeal"},
+  {id:2, name:"Tipe Lemak Fighter", tagline:"Tubuhmu butuh dorongan ekstra untuk bakar lemak", emoji:"🔥", color:"#E53E3E", bg:"#FEF2F2", textColor:"#7F1D1D", metode:"agresif", metodeName:"Agresif + Intermittent Fasting 16:8", skor:72,
+    tips:["Terapkan IF 16:8: makan dalam jendela 8 jam saja","Contoh: makan jam 10.00–18.00, puasa sisanya","Fokus pada makanan rendah lemak jenuh","Kardio minimal 30 menit setiap hari","KEMOENIK diminum saat buka puasa untuk efek maksimal"],
+    hindari:"Gorengan, santan, makanan olahan berlemak", anjuran:"Dada ayam, ikan, tempe, sayuran hijau"},
+  {id:3, name:"Tipe Otot Aktif", tagline:"Tubuhmu lebih optimal dengan asupan protein tinggi", emoji:"💪", color:"#3182CE", bg:"#EBF8FF", textColor:"#1E3A5F", metode:"standar", metodeName:"Standar + Tinggi Protein", skor:82,
+    tips:["Target protein 1.8–2.2g per kg berat badan","Makan protein di setiap waktu makan utama","Kombinasikan kardio dengan latihan kekuatan","Konsumsi protein 30 menit setelah olahraga","KEMOENIK membantu pemulihan dan metabolisme optimal"],
+    hindari:"Diet terlalu rendah kalori yang merusak otot", anjuran:"Telur, dada ayam, tempe, ikan, Greek yogurt"},
+  {id:4, name:"Tipe Hemat Energi", tagline:"Metabolismemu bekerja lebih pelan dari rata-rata", emoji:"🐢", color:"#7C3AED", bg:"#F5F3FF", textColor:"#4C1D95", metode:"ringan", metodeName:"Ringan + Konsisten Jangka Panjang", skor:68,
+    tips:["Jangan potong kalori drastis, kurangi perlahan","Defisit kecil (300 kcal) lebih efektif untuk tipe ini","Perbanyak aktivitas ringan: jalan kaki, naik tangga","Makan lebih sering dalam porsi kecil (5–6x sehari)","KEMOENIK membantu meningkatkan metabolisme secara alami"],
+    hindari:"Diet ekstrem atau crash diet", anjuran:"Makanan tinggi serat, protein, dan air"},
+  {id:5, name:"Tipe Mood & Lifestyle", tagline:"Gaya hidupmu sangat mempengaruhi berat badanmu", emoji:"🌙", color:"#D97706", bg:"#FFFBEB", textColor:"#78350F", metode:"ringan", metodeName:"Ringan + Kelola Stres & Tidur", skor:70,
+    tips:["Prioritaskan tidur 7–8 jam per malam","Kelola stres dengan meditasi atau olahraga ringan","Hindari makan larut malam saat stres","Buat rutinitas makan yang teratur setiap hari","KEMOENIK membantu keseimbangan hormonal secara alami"],
+    hindari:"Begadang, makan emosional, kafein berlebih", anjuran:"Pisang, dark chocolate, teh herbal"},
+  {id:6, name:"Tipe Perut Sensitif", tagline:"Sistem pencernaanmu butuh perhatian ekstra", emoji:"🌿", color:"#059669", bg:"#ECFDF5", textColor:"#064E3B", metode:"standar", metodeName:"Standar + Anti Inflamasi", skor:75,
+    tips:["Hindari makanan pemicu: susu, gluten, gorengan","Perbanyak probiotik: yogurt, tempe, kimchi","Makan perlahan dan kunyah hingga halus","Hindari makan terburu-buru atau sambil stres","KEMOENIK dengan herbal alami bantu sehatkan pencernaan"],
+    hindari:"Susu, gorengan, makanan pedas berlebih, gluten", anjuran:"Yogurt, tempe, sayuran rebus, buah non-asam"},
+  {id:7, name:"Tipe Seimbang", tagline:"Tubuhmu sudah baik, kuncinya konsistensi!", emoji:"⚖️", color:"#2D5A3D", bg:"#F0FDF4", textColor:"#14532D", metode:"standar", metodeName:"Standar + Konsistensi", skor:88,
+    tips:["Tubuhmu merespons baik terhadap diet seimbang","Tetap pada defisit kalori yang konsisten setiap hari","Variasikan menu agar tidak bosan","Olahraga kombinasi kardio + kekuatan 3–4x seminggu","KEMOENIK sebagai pendamping untuk hasil lebih optimal"],
+    hindari:"Inkonsistensi dan cheat meal berlebihan", anjuran:"Semua makanan bergizi dalam porsi seimbang"}
+];
+
+// ============================================================
+// BARU: Data konten Tips Diet
+// ============================================================
+const tipsKontenData = [
+  {
+    id: 'defisit', icon: '🔥', judul: 'Defisit Kalori — Kunci Utama Diet',
+    warna: '#DC2626', bgWarna: '#FEF2F2',
+    konten: [
+      'Defisit kalori = kalori masuk LEBIH SEDIKIT dari kalori yang dibakar tubuh.',
+      'Kalori harian yang sudah dihitung di kalkulator adalah target harianmu — jangan melebihinya!',
+      'Defisit 300–500 kkal/hari = turun ~0.3–0.5 kg/minggu (aman & konsisten)',
+      'Defisit 700 kkal/hari = turun ~0.7 kg/minggu (agresif, perlu disiplin tinggi)',
+      'JANGAN potong kalori di bawah 1200 kkal/hari — berbahaya untuk kesehatan'
+    ]
+  },
+  {
+    id: 'pola-makan', icon: '🍽️', judul: 'Pola Makan yang Benar',
+    warna: '#059669', bgWarna: '#ECFDF5',
+    konten: [
+      'Makan 3x sehari + 2x snack sehat, jangan skip sarapan',
+      'Perbanyak protein di setiap makan (telur, ayam, tempe, tahu, ikan)',
+      'Batasi nasi putih — ganti dengan nasi merah, ubi, kentang rebus, atau oatmeal',
+      'Sayuran hijau: makan sepuasnya karena kalorinya sangat rendah',
+      'Hindari makanan olahan, gorengan, dan minuman manis setiap hari',
+      'Minum 2–3 liter air putih per hari untuk mendukung metabolisme'
+    ]
+  },
+  {
+    id: 'waktu-makan', icon: '⏰', judul: 'Waktu Makan yang Optimal',
+    warna: '#D97706', bgWarna: '#FFFBEB',
+    konten: [
+      'Sarapan: jam 06:00–08:00 (jangan skip!)',
+      'Makan siang: jam 11:30–13:00',
+      'Snack sore: jam 15:00–16:00',
+      'Makan malam: maksimal jam 18:00–19:00',
+      'Jangan makan berat setelah jam 19:00 — metabolisme melambat di malam hari',
+      'Konsumsi KEMOENIK: 3 kapsul pagi (sesudah makan) + 3 kapsul sore (sesudah makan)'
+    ]
+  },
+  {
+    id: 'if-puasa', icon: '🌙', judul: 'Intermittent Fasting (IF) 16:8',
+    warna: '#7C3AED', bgWarna: '#F5F3FF',
+    konten: [
+      'IF 16:8 artinya: puasa 16 jam, makan dalam jendela 8 jam saja',
+      'Contoh: makan dari jam 10:00 hingga 18:00, puasa dari 18:00 sampai 10:00 besok',
+      'Boleh minum air putih, teh herbal tanpa gula, dan kopi hitam tanpa gula saat puasa',
+      'Minum KEMOENIK saat buka puasa (jam 10:00) untuk efek maksimal',
+      'IF sangat cocok untuk Tipe Lemak Fighter (Tipe 2)',
+      'TIDAK disarankan untuk: ibu hamil, busui, penderita maag, Tipe Perut Sensitif (Tipe 6)'
+    ]
+  },
+  {
+    id: 'olahraga-tips', icon: '💪', judul: 'Panduan Olahraga Diet KEMOENIK',
+    warna: '#2563EB', bgWarna: '#EFF6FF',
+    konten: [
+      'Jalan kaki 30 menit/hari sudah sangat efektif untuk pemula — mulai dari sini!',
+      'Jumping Jack: olahraga ringan yang bisa dilakukan di rumah tanpa alat',
+      'Lompat Tali: kardio terbaik untuk bakar kalori cepat (~150–200 kkal/15 menit)',
+      'Lymphatic Drainage: pijat lembut untuk membantu sirkulasi dan pembuangan toksin',
+      'Tutorial Lymphatic: pijat leher ke bawah, ketiak melingkar, perut searah jarum jam, paha dari lutut ke atas — 10–15x tiap area',
+      'Cari tutorial di YouTube/TikTok: "Jumping Jack Pemula", "Lompat Tali Diet", "Lymphatic Drainage untuk Diet"'
+    ]
+  },
+  {
+    id: 'lymphatic', icon: '🌿', judul: 'Lymphatic Drainage — Panduan Lengkap',
+    warna: '#059669', bgWarna: '#ECFDF5',
+    konten: [
+      'Lakukan setiap malam sebelum tidur, durasi 10–15 menit',
+      'LANGKAH 1 — Leher: Pijat dari belakang telinga turun ke arah tulang selangka, 10x kiri & kanan',
+      'LANGKAH 2 — Ketiak: Tekan ringan area ketiak dengan gerakan melingkar, 15x kiri & kanan',
+      'LANGKAH 3 — Perut: Pijat searah jarum jam dimulai dari pusar melebar ke luar, 15–20x',
+      'LANGKAH 4 — Paha: Tekan dari lutut ke arah atas paha, 10–15x per sisi',
+      'LANGKAH 5 — Betis: Tekan dari pergelangan kaki ke arah lutut, 10x per sisi',
+      'Gunakan minyak kelapa atau lotion agar lebih nyaman dan efektif'
+    ]
+  },
+  {
+    id: 'air-putih', icon: '💧', judul: 'Hidrasi — Kenapa Air Putih Sangat Penting',
+    warna: '#0284C7', bgWarna: '#F0F9FF',
+    konten: [
+      'Target: minum minimal 2 liter (8 gelas) air putih sehari',
+      'Minum 1–2 gelas segera setelah bangun tidur untuk kickstart metabolisme',
+      'Minum 1 gelas 20–30 menit sebelum makan untuk kurangi porsi makan secara alami',
+      'Kurangi minuman manis, soda, jus kemasan, dan kopi kental bergula',
+      'Tanda dehidrasi: urin berwarna gelap, pusing, sulit konsentrasi — segera minum!',
+      'KEMOENIK mengandung Tempuyung yang bersifat diuretik alami — pastikan minum cukup air'
+    ]
+  },
+  {
+    id: 'tidur', icon: '😴', judul: 'Tidur yang Berkualitas untuk Diet',
+    warna: '#4F46E5', bgWarna: '#EEF2FF',
+    konten: [
+      'Target tidur: 7–8 jam per malam, tidur sebelum jam 23:00',
+      'Kurang tidur meningkatkan hormon Ghrelin (hormon lapar) — kamu jadi lebih mudah lapar',
+      'Kurang tidur juga menurunkan hormon Leptin (hormon kenyang) — susah merasa cukup',
+      'Tidur cukup = metabolisme lebih cepat + proses pembakaran lemak lebih efektif',
+      'Tips tidur lebih baik: matikan layar HP 1 jam sebelum tidur, kamar gelap dan sejuk',
+      'Hindari makan berat atau kafein 2–3 jam sebelum tidur'
+    ]
+  }
+];
