@@ -455,7 +455,7 @@
                 <input type="tel" id="wa" placeholder="Contoh: 08123456789" required>
             </div>
             <p class="privacy-text">
-                <i class="fas fa-shield-alt"></i> Nomor WA hanya digunakan untuk sinkronisasi data diet Anda.
+                <i class="fas fa-shield-alt"></i> Nomor WA hanya digunakan untuk sinkronisasi data diet Anda, semua data akan hilang jika reset, ganti hp, menghapus cache browser.
             </p>
         </div>
 
@@ -776,11 +776,15 @@
                     }
                     
                     // Cek apakah user punya data di localStorage
-                    const storageKey = `kemoenik_${wa}`;
+                    const storageKey = `kemoenik_user_${wa}`;
                     const existingData = localStorage.getItem(storageKey);
-                    const hasExistingData = existingData ? JSON.parse(existingData).kalkulator : false;
+                    const parsedExisting = existingData ? JSON.parse(existingData) : null;
+                    const hasExistingData = parsedExisting && parsedExisting.kalkulator !== null && parsedExisting.kalkulator !== undefined;
+                    // Cek juga key lama
+                    const oldKalData = localStorage.getItem('kemoenik_kal_data');
+                    const hasOldData = oldKalData ? (JSON.parse(oldKalData).dietCal !== undefined) : false;
                     
-                    tempData.isReturningUser = data.status === 'ACTIVE_SAME_WA' || hasExistingData;
+                    tempData.isReturningUser = data.status === 'ACTIVE_SAME_WA' || hasExistingData || hasOldData;
                     
                     const welcomeMsg = tempData.isReturningUser
                         ? `👋 Selamat datang kembali, <strong>${nama}</strong>!<br><br>🌟 Voucher aktif hingga <strong>${expDate}</strong>.<br>Data lama akan dilanjutkan.`
@@ -853,8 +857,12 @@
         // Pilihan: Mulai program baru
         function startNewProgram() {
             document.getElementById('programChoiceModal').classList.remove('show');
-            // Hapus data lama di localStorage
-            localStorage.removeItem(`kemoenik_${tempData.wa}`);
+            // Hapus SEMUA data lama di localStorage
+            localStorage.removeItem('kemoenik_user_' + tempData.wa);
+            localStorage.removeItem('kemoenik_kal_data');
+            localStorage.removeItem('kemoenik_quiz');
+            localStorage.removeItem('kemoenik_state_v2');
+            localStorage.removeItem('kemoenik_program_pilihan');
             redirectToPanduan('new');
         }
 
