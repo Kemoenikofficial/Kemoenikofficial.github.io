@@ -20,6 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
+        /* CSS tidak berubah, tetap sama seperti sebelumnya */
         * { 
             margin: 0; 
             padding: 0; 
@@ -566,16 +567,12 @@
 
     <script>
         // ==========================================
-        // KONFIGURASI - PASTIKAN URL INI BENAR
+        // KONFIGURASI - SESUAIKAN DENGAN SETUP ANDA
         // ==========================================
         const CONFIG = {
-            // URL ke halaman panduan yang sudah online
-            PANDUAN_URL: 'https://kemoenikofficial.github.io/PANDUANKEMOENIK/',
-            
-            // URL Google Apps Script untuk verifikasi kode
+            // URL ke halaman panduan (relative path)
+            PANDUAN_URL: './index.html',   // Diubah dari absolute ke relative
             APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec',
-            
-            // Masa aktif voucher dalam hari
             VOUCHER_DAYS: 7
         };
 
@@ -599,6 +596,44 @@
             if (wa.startsWith('62')) return wa;
             if (wa.startsWith('0')) return '62' + wa.substring(1);
             return wa;
+        }
+
+        // ✅ TAMBAHAN: Mendapatkan atau membuat device ID unik
+        function getDeviceId() {
+            let id = localStorage.getItem('kemoenik_device_id');
+            if (!id) {
+                id = 'D_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                localStorage.setItem('kemoenik_device_id', id);
+            }
+            return id;
+        }
+
+        // ✅ TAMBAHAN: Memeriksa dan mengikat voucher ke device + WA
+        function checkDeviceBinding(wa, voucher) {
+            const key = 'kemoenik_bind_' + voucher;
+            const stored = localStorage.getItem(key);
+            const deviceId = getDeviceId();
+            
+            if (stored) {
+                const data = JSON.parse(stored);
+                if (data.wa !== wa) {
+                    return { ok: false, reason: 'wa_mismatch', message: 'Kode ini sudah digunakan nomor WA lain' };
+                }
+                if (data.device !== deviceId) {
+                    return { ok: false, reason: 'device_mismatch', message: 'Kode ini sudah aktif di perangkat lain' };
+                }
+                return { ok: true, existing: true };
+            }
+            
+            // First time - create binding
+            localStorage.setItem(key, JSON.stringify({
+                wa: wa,
+                device: deviceId,
+                activatedAt: Date.now(),
+                expiry: Date.now() + (7 * 24 * 60 * 60 * 1000)
+            }));
+            
+            return { ok: true, existing: false };
         }
 
         // Format tanggal ke bahasa Indonesia
@@ -729,9 +764,17 @@
                 isReturningUser: false
             };
 
+            // Handle berdasarkan status dari server
             switch(data.status) {
                 case 'SUCCESS':
                 case 'ACTIVE_SAME_WA':
+                    // ✅ TAMBAHAN: Cek device binding
+                    const bindingCheck = checkDeviceBinding(wa, kode);
+                    if (!bindingCheck.ok) {
+                        showResult('error', '❌ ' + bindingCheck.message);
+                        return; // Stop, tidak lanjut ke redirect
+                    }
+                    
                     // Cek apakah user punya data di localStorage
                     const storageKey = `kemoenik_${wa}`;
                     const existingData = localStorage.getItem(storageKey);
@@ -780,6 +823,18 @@
         
         // Handle tombol lanjut
         function handleLanjut() {
+            // Sebelum redirect, pastikan binding masih valid (opsional, untuk keamanan)
+            const binding = checkDeviceBinding(tempData.wa, tempData.kode);
+            if (!binding.ok) {
+                // Jika binding gagal, tampilkan error dan jangan redirect
+                let errorMsg = binding.reason === 'wa_mismatch' 
+                    ? 'Nomor WA tidak sesuai dengan binding.' 
+                    : 'Perangkat tidak sesuai dengan binding.';
+                showResult('error', '❌ ' + errorMsg);
+                document.getElementById('btnLanjut').classList.remove('show');
+                return;
+            }
+
             if (tempData.isReturningUser) {
                 // Tampilkan modal pilihan untuk user yang sudah pernah daftar
                 document.getElementById('programChoiceModal').classList.add('show');
@@ -811,6 +866,8 @@
             localStorage.setItem('kemoenik_nama', tempData.nama);
             localStorage.setItem('kemoenik_mode', mode);
             localStorage.setItem('kemoenik_login_time', Date.now());
+            // ✅ TAMBAHAN: Simpan expiry
+            localStorage.setItem('kemoenik_expiry', String(Date.now() + CONFIG.VOUCHER_DAYS * 24 * 60 * 60 * 1000));
 
             // Buat URL dengan parameter
             const params = new URLSearchParams({
@@ -820,7 +877,7 @@
                 t: Date.now()
             });
 
-            // Redirect ke halaman panduan online
+            // Redirect
             window.location.href = `${CONFIG.PANDUAN_URL}?${params.toString()}`;
         }
 
@@ -870,6 +927,9 @@
         window.continueOldProgram = continueOldProgram;
         window.startNewProgram = startNewProgram;
         window.toggleAccordion = toggleAccordion;
+        // ✅ TAMBAHAN: Expose fungsi device
+        window.getDeviceId = getDeviceId;
+        window.checkDeviceBinding = checkDeviceBinding;
     </script>
 </body>
 </html>
