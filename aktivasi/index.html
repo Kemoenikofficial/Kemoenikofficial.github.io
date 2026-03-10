@@ -566,11 +566,11 @@
 
     <script>
         // ==========================================
-        // KONFIGURASI - SESUAIKAN DENGAN SETUP ANDA
+        // KONFIGURASI - PASTIKAN URL INI BENAR
         // ==========================================
         const CONFIG = {
-            // URL ke halaman panduan (index.html yang sudah diperbaiki)
-            PANDUAN_URL: 'https://kemoenikofficial.github.io/PANDUANKEMOENIK/index.html',
+            // URL ke halaman panduan yang sudah online
+            PANDUAN_URL: 'https://kemoenikofficial.github.io/PANDUANKEMOENIK/',
             
             // URL Google Apps Script untuk verifikasi kode
             APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec',
@@ -820,7 +820,7 @@
                 t: Date.now()
             });
 
-            // Redirect
+            // Redirect ke halaman panduan online
             window.location.href = `${CONFIG.PANDUAN_URL}?${params.toString()}`;
         }
 
