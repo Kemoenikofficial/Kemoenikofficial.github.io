@@ -1191,7 +1191,7 @@ function renderHomeJadwal() {
     html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">';
     html += '<div style="width:44px;height:44px;border-radius:13px;background:' + (isRest ? '#F3F4F6' : 'linear-gradient(135deg,var(--green),var(--green3))') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
     if (isRest) {
-      html += '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>';
+      html += '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="6"/></svg>';
     } else {
       html += '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8"/><path d="M8 12l4 3 4-3"/><path d="M8 19l-2 3M16 19l2 3"/></svg>';
     }
@@ -1674,7 +1674,7 @@ window.toggleMisi = toggleMisi;
 
 
 // ============================================================
-// renderStatusIndikator — indikator aktif di topbar & bottom nav
+// renderStatusIndikator — indikator aktif di topbar & bottom nav & profil
 // ============================================================
 function renderStatusIndikator() {
   var hasKalkulator = !!(appState.kalkulator && appState.kalkulator.dietCal);
@@ -1701,6 +1701,18 @@ function renderStatusIndikator() {
   // Dot di ikon Kuis bottom nav
   var dot = document.getElementById('statusDot');
   if (dot) dot.style.background = warna;
+
+  // Indikator di halaman Profil
+  var profilStatus = document.getElementById('profilStatusIndicator');
+  if (profilStatus) {
+    if (isActive) {
+      profilStatus.innerHTML = '<div style="width:8px;height:8px;border-radius:50%;background:#10B981;"></div><span>Aktif</span>';
+    } else if (isPartial) {
+      profilStatus.innerHTML = '<div style="width:8px;height:8px;border-radius:50%;background:#F59E0B;"></div><span>Sebagian</span>';
+    } else {
+      profilStatus.innerHTML = '<div style="width:8px;height:8px;border-radius:50%;background:#9CA3AF;"></div><span>Setup</span>';
+    }
+  }
 }
 
 // ============================================================
