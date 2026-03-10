@@ -261,3 +261,56 @@ function snoozeReminder() {
     document.getElementById('inAppReminder').style.display = 'block';
   }, 15 * 60 * 1000);
 }
+
+// ========== DEVICE & BINDING HELPERS ==========
+
+function getDeviceFingerprint() {
+    var fp = localStorage.getItem('kemoenik_device_fp');
+    if (!fp) {
+        var raw = navigator.userAgent + '|' + screen.width + 'x' + screen.height + '|' + Math.random();
+        fp = btoa(raw).substr(0, 32);
+        localStorage.setItem('kemoenik_device_fp', fp);
+    }
+    return fp;
+}
+
+function getDeviceId() {
+    var id = localStorage.getItem('kemoenik_device_id');
+    if (!id) {
+        id = 'D_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        localStorage.setItem('kemoenik_device_id', id);
+    }
+    return id;
+}
+
+function checkLocalBinding(voucher, wa) {
+    var key = 'kemoenik_bind_' + voucher;
+    var stored = localStorage.getItem(key);
+    
+    if (!stored) return { exists: false };
+    
+    var data = JSON.parse(stored);
+    return {
+        exists: true,
+        wa: data.wa,
+        device: data.device,
+        matchWA: data.wa === wa,
+        matchDevice: data.device === getDeviceId()
+    };
+}
+
+function saveBinding(voucher, wa, deviceId) {
+    var key = 'kemoenik_bind_' + voucher;
+    localStorage.setItem(key, JSON.stringify({
+        wa: wa,
+        device: deviceId || getDeviceId(),
+        createdAt: Date.now(),
+        expiry: Date.now() + (7 * 24 * 60 * 60 * 1000)
+    }));
+}
+
+// Expose ke window
+window.getDeviceFingerprint = getDeviceFingerprint;
+window.getDeviceId = getDeviceId;
+window.checkLocalBinding = checkLocalBinding;
+window.saveBinding = saveBinding;
