@@ -1467,7 +1467,7 @@ function renderTipsKonten() {
     if (extraIds.indexOf(tips.id) === -1) return;
     var uid = 'acc-extra-' + tips.id;
     html += '<div class="acc" id="' + uid + '" style="margin-bottom:8px;">';
-    html += '<div class="acc-hd" onclick="tog('' + uid + '')">';
+    html += '<div class="acc-hd" onclick="tog(\'' + uid + '\')">';
     html += '<div class="acc-icon" style="background:' + tips.bgWarna + ';font-size:16px;display:flex;align-items:center;justify-content:center;">' + tips.icon + '</div>';
     html += '<div class="acc-info"><div class="acc-title">' + tips.judul + '</div>';
     html += '<div class="acc-sub">' + (tips.konten[0] ? tips.konten[0].substring(0, 55) + '...' : '') + '</div></div>';
@@ -1616,7 +1616,7 @@ function renderJadwalCeklis() {
 
   var html = '<div style="background:' + bgWarna + ';border:1.5px solid ' + (checked ? '#10B981' : warna) + ';border-radius:12px;padding:12px 14px;">';
   html += '<div style="font-size:11px;font-weight:700;color:' + warna + ';margin-bottom:6px;">' + icon + ' OLAHRAGA HARI INI</div>';
-  html += '<div class="mission-item" onclick="toggleMisi('' + misiKey + '', this)" style="padding:0;border:none;">';
+  html += '<div class="mission-item" onclick="toggleMisi(\'' + misiKey + '\', this)" style="padding:0;border:none;">';
   html += '<div class="mission-check' + (checked ? ' checked' : '') + '">';
   if (checked) html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
   html += '</div>';
