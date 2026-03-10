@@ -1,5 +1,5 @@
 // ============================================================
-// LOGIKA UTAMA APLIKASI - KEMOENIK
+// LOGIKA UTAMA APLIKASI - KEMOENIK (VERSI LENGKAP)
 // ============================================================
 
 // ========== INISIALISASI ==========
@@ -14,7 +14,6 @@ function initApp() {
             wa = getQueryParam('wa') || '';
             voucher = getQueryParam('voucher') || '';
             mode = getQueryParam('mode') || 'continue';
-            
             if (wa && voucher) {
                 localStorage.setItem('kemoenik_wa', wa);
                 localStorage.setItem('kemoenik_voucher', voucher);
@@ -58,6 +57,7 @@ function initApp() {
                 state.set('user.nama', userData.profile.nama);
                 state.set('user.wa', normalizedWA);
             }
+            if (userData.misiChecked) state.set('misiChecked', userData.misiChecked);
         }
 
         if (!appState.kalkulator) {
@@ -383,7 +383,6 @@ function hitungStreak() {
     var todayKey = 'olahraga_' + today;
     if (appState.misiChecked && appState.misiChecked[todayKey]) {
         streak = 1;
-        // Cek kemarin (sederhana)
         var yesterday = new Date(Date.now() - 86400000).toDateString();
         var yesterdayKey = 'olahraga_' + yesterday;
         if (appState.misiChecked && appState.misiChecked[yesterdayKey]) {
