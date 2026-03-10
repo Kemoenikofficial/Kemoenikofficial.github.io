@@ -152,14 +152,51 @@ const DataService = {
     const userData = this.loadUserData(wa) || {};
     const profile = userData.profile || {};
     const newData = {
-      profile: profile,
+      profile: { ...profile, lastReset: new Date().toISOString() },
       kalkulator: null,
       quiz: null,
       evaluasi: [],
+      misiChecked: {},
       resetAt: new Date().toISOString()
     };
     this.saveUserData(wa, newData);
+    // Hapus juga key-key lama
+    localStorage.removeItem('kemoenik_kal_data');
+    localStorage.removeItem('kemoenik_quiz');
+    localStorage.removeItem('kemoenik_state_v2');
+    localStorage.removeItem('kemoenik_program_pilihan');
     return { success: true };
+  },
+
+  // BARU: Simpan & load pilihan program (Normal atau IF)
+  saveProgramPilihan(wa, pilihan) {
+    const userData = this.loadUserData(wa) || {};
+    userData.programPilihan = pilihan;
+    this.saveUserData(wa, userData);
+    localStorage.setItem('kemoenik_program_pilihan', pilihan);
+    return { success: true };
+  },
+
+  loadProgramPilihan(wa) {
+    const userData = this.loadUserData(wa);
+    return (userData && userData.programPilihan)
+      ? userData.programPilihan
+      : (localStorage.getItem('kemoenik_program_pilihan') || 'normal');
+  },
+
+  // BARU: Simpan & load misi harian
+  saveMisiChecked(wa, misiKey, checked) {
+    const userData = this.loadUserData(wa) || {};
+    if (!userData.misiChecked) userData.misiChecked = {};
+    userData.misiChecked[misiKey] = checked;
+    this.saveUserData(wa, userData);
+    state.set('misiChecked.' + misiKey, checked);
+    return { success: true };
+  },
+
+  getMisiChecked(wa) {
+    const userData = this.loadUserData(wa);
+    return (userData && userData.misiChecked) ? userData.misiChecked : {};
   }
 };
 
