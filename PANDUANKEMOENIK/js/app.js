@@ -186,10 +186,15 @@ function renderAll() {
   renderFAQ();
   renderProfilPage();
   renderTipsNotif();
+  renderTipsKonten();
   renderJadwalOlahraga();
   renderMenuHarian();
   renderDrawer();
   renderHomeJadwal();
+  renderStartStopBtn();
+  renderStatusIndikator();
+  renderMakroShortcut();
+  renderMisiByProgram();
 
   var kuisNotif = document.getElementById('kuisFirstNotif');
   if (kuisNotif) kuisNotif.style.display = appState.quiz ? 'none' : 'flex';
@@ -216,7 +221,10 @@ function renderHomeStats() {
     document.getElementById('heroName').innerHTML = escHtml(q.tipeName) + ' <span>' + escHtml(q.tipe_emoji) + '</span>';
     document.getElementById('heroTypeName').textContent = '';
     document.getElementById('heroBadge').textContent = q.metode === 'agresif' ? '🔥 Agresif' : q.metode === 'ringan' ? '🐢 Ringan' : '⚖️ Standar';
-    document.getElementById('statMetode').textContent = q.metode || '—';
+    var metodeDisplayMap = { 'standar': 'Standar', 'agresif': 'Agresif + IF', 'ringan': 'Ringan' };
+    document.getElementById('statMetode').textContent = metodeDisplayMap[q.metode] || q.metodeName || q.metode || '—';
+    var skorEl = document.getElementById('statSkor');
+    if (skorEl) skorEl.textContent = q.skor ? q.skor + '%' : '—';
   }
 
   if (k) {
@@ -241,7 +249,8 @@ function renderHomeStats() {
     document.getElementById('progNotif').style.display = 'flex';
   }
 
-  document.getElementById('evalTarget').textContent = k ? (k.target || '—') + ' kg' : '—';
+  var evalTargetEl = document.getElementById('evalTarget');
+  if (evalTargetEl) evalTargetEl.textContent = k && k.target ? k.target + ' kg' : '—';
   if (document.getElementById('mealTargetDisplay')) document.getElementById('mealTargetDisplay').textContent = k ? Math.round(k.dietCal) : '—';
   if (document.getElementById('targetKcalLengkap')) document.getElementById('targetKcalLengkap').textContent = k ? Math.round(k.dietCal) : '—';
 }
@@ -413,40 +422,72 @@ function setMissionMode(mode) {
 }
 
 function renderMisiNormal() {
-  var html = `
-    <div class="mission-item" id="n1" onclick="toggleMission('n1','nc1')">
-      <div class="mission-check" id="nc1"></div>
-      <div class="mission-text"><div class="mission-name">Bangun & Minum Air</div><div class="mission-sub">2 gelas air putih hangat</div></div>
-      <div class="mission-tag tag-blue">Pagi</div>
-    </div>
-    <div class="mission-item" id="n2" onclick="toggleMission('n2','nc2')">
-      <div class="mission-check" id="nc2"></div>
-      <div class="mission-text"><div class="mission-name">Olahraga Pagi</div><div class="mission-sub">Jalan kaki 30 menit</div></div>
-      <div class="mission-tag tag-green">Aktif</div>
-    </div>
-    <div class="mission-item" id="n3" onclick="toggleMission('n3','nc3')">
-      <div class="mission-check" id="nc3"></div>
-      <div class="mission-text"><div class="mission-name">Minum KEMOENIK Pagi</div><div class="mission-sub">Sesudah sarapan</div></div>
-      <div class="mission-tag tag-gold">Herbal</div>
-    </div>
-  `;
-  document.getElementById('misiNormal').innerHTML = html;
+  var hariIdx = new Date().getDay();
+  var hariMap = [6,0,1,2,3,4,5];
+  var metode = (appState.quiz && appState.quiz.metode) ? appState.quiz.metode : 'standar';
+  var jadwal = targetOlahragaData[metode] || targetOlahragaData.standar;
+  var todayOlahraga = jadwal[hariMap[hariIdx]];
+  var isRest = todayOlahraga && (todayOlahraga.aktivitas.indexOf('Istirahat') !== -1 || todayOlahraga.aktivitas.indexOf('recovery') !== -1);
+  var todayKey = new Date().toDateString();
+  var wa = localStorage.getItem('kemoenik_wa') || '';
+
+  var misiList = [
+    { icon:'💊', text:'Minum KEMOENIK pagi (3 kapsul sesudah sarapan)' },
+    { icon:'💊', text:'Minum KEMOENIK sore (3 kapsul sesudah makan sore)' },
+    { icon:'💧', text:'Minum air putih minimal 2 liter hari ini' },
+    { icon: isRest ? '😴' : '💪', text: isRest ? 'Hari istirahat — lakukan Lymphatic ringan malam ini' : (todayOlahraga ? todayOlahraga.aktivitas : 'Olahraga sesuai jadwal program') },
+    { icon:'🍽️', text:'Makan sesuai panduan menu & target kalori harian' },
+    { icon:'🌙', text:'Tidur cukup 7–8 jam malam ini' }
+  ];
+
+  var html = '';
+  misiList.forEach(function(m, i) {
+    var misiKey = 'normal_' + i + '_' + todayKey;
+    var checked = appState.misiChecked && appState.misiChecked[misiKey];
+    html += '<div class="mission-item" onclick="toggleMisi(\'' + misiKey + '\', this)">';
+    html += '<div class="mission-check' + (checked ? ' checked' : '') + '">';
+    if (checked) html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+    html += '</div>';
+    html += '<div class="mission-text' + (checked ? ' done' : '') + '">' + m.icon + ' ' + m.text + '</div>';
+    html += '</div>';
+  });
+
+  var el = document.getElementById('misiNormalList');
+  if (el) setSafeHTML(el, html);
 }
 
 function renderMisiIF() {
-  var html = `
-    <div class="mission-item" id="i1" onclick="toggleMission('i1','ic1')">
-      <div class="mission-check" id="ic1"></div>
-      <div class="mission-text"><div class="mission-name">Mulai Puasa 16 Jam</div><div class="mission-sub">Hanya air putih</div></div>
-      <div class="mission-tag tag-red">Puasa</div>
-    </div>
-    <div class="mission-item" id="i2" onclick="toggleMission('i2','ic2')">
-      <div class="mission-check" id="ic2"></div>
-      <div class="mission-text"><div class="mission-name">Olahraga Pagi (saat puasa)</div><div class="mission-sub">Jalan kaki 30 menit</div></div>
-      <div class="mission-tag tag-blue">IF+Kardio</div>
-    </div>
-  `;
-  document.getElementById('misiIF').innerHTML = html;
+  var hariIdx = new Date().getDay();
+  var hariMap = [6,0,1,2,3,4,5];
+  var jadwal = targetOlahragaData['if'] || targetOlahragaData.standar;
+  var todayOlahraga = jadwal[hariMap[hariIdx]];
+  var isRest = todayOlahraga && (todayOlahraga.aktivitas.indexOf('Istirahat') !== -1 || todayOlahraga.aktivitas.indexOf('recovery') !== -1);
+  var todayKey = new Date().toDateString();
+
+  var misiList = [
+    { icon:'⏰', text:'Buka puasa jam 10:00 — minum KEMOENIK 3 kapsul + makan bergizi' },
+    { icon:'🌙', text:'Tutup jendela makan jam 18:00 (puasa 16 jam)' },
+    { icon:'💧', text:'Minum air putih minimal 2 liter selama jendela makan' },
+    { icon: isRest ? '😴' : '💪', text: isRest ? 'Hari istirahat — lakukan Lymphatic ringan malam ini' : (todayOlahraga ? todayOlahraga.aktivitas : 'Olahraga dalam jendela makan') },
+    { icon:'🍽️', text:'Makan bergizi & sesuai target kalori dalam jendela 8 jam' },
+    { icon:'💊', text:'Minum KEMOENIK 3 kapsul sore (sesudah makan sore)' },
+    { icon:'🌙', text:'Tidur cukup 7–8 jam malam ini' }
+  ];
+
+  var html = '';
+  misiList.forEach(function(m, i) {
+    var misiKey = 'if_' + i + '_' + todayKey;
+    var checked = appState.misiChecked && appState.misiChecked[misiKey];
+    html += '<div class="mission-item" onclick="toggleMisi(\'' + misiKey + '\', this)">';
+    html += '<div class="mission-check' + (checked ? ' checked' : '') + '">';
+    if (checked) html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+    html += '</div>';
+    html += '<div class="mission-text' + (checked ? ' done' : '') + '">' + m.icon + ' ' + m.text + '</div>';
+    html += '</div>';
+  });
+
+  var el = document.getElementById('misiIFList');
+  if (el) setSafeHTML(el, html);
 }
 
 function toggleMission(itemId, checkId) {
@@ -1090,7 +1131,14 @@ function renderHomeJadwal() {
   var el = document.getElementById('homeJadwalContent');
   if (!el) return;
   try {
-    var metode = (appState.quiz && appState.quiz.metode) ? appState.quiz.metode : 'standar';
+    // Cek pilihan program user (Normal atau IF)
+    var programPilihan = localStorage.getItem('kemoenik_program_pilihan') || 'normal';
+    var metode;
+    if (programPilihan === 'if') {
+      metode = 'if';
+    } else {
+      metode = (appState.quiz && appState.quiz.metode) ? appState.quiz.metode : 'standar';
+    }
     var jadwal = targetOlahragaData[metode] || targetOlahragaData['standar'];
     var hariIdx = new Date().getDay();
     var hariMap = [6, 0, 1, 2, 3, 4, 5];
@@ -1111,7 +1159,8 @@ function renderHomeJadwal() {
     html += '</div>';
     html += '<div style="flex:1;">';
     html += '<div style="font-size:14px;font-weight:800;color:var(--text);">' + hariName + (isRest ? ' — Hari Istirahat' : ' — Olahraga Hari Ini') + '</div>';
-    html += '<div style="font-size:11px;color:var(--text3);margin-top:1px;">Metode ' + metode.charAt(0).toUpperCase() + metode.slice(1) + '</div>';
+    var labelProg = programPilihan === 'if' ? 'Program IF 16:8' : 'Metode ' + metode.charAt(0).toUpperCase() + metode.slice(1);
+    html += '<div style="font-size:11px;color:var(--text3);margin-top:1px;">' + labelProg + '</div>';
     html += '</div></div>';
 
     html += '<div style="background:' + (isRest ? '#F9FAFB' : '#ECFDF5') + ';border-radius:12px;padding:12px 14px;margin-bottom:12px;">';
@@ -1307,3 +1356,222 @@ window.addEventListener('keydown', function(e){
     document.querySelectorAll('.modal-panel.on').forEach(p => closePanel(p.id));
   }
 });
+
+// ============================================================
+// FUNGSI BARU: Reset dan Edit Quiz
+// ============================================================
+function resetAndEditQuiz() {
+  if (!confirm('Yakin ingin ulangi quiz? Hasil quiz lama akan diganti dengan hasil baru.')) return;
+  var wa = localStorage.getItem('kemoenik_wa') || '';
+  if (wa) {
+    var normalizedWA = normalizeWA(wa);
+    var userData = DataService.loadUserData(normalizedWA) || {};
+    userData.quiz = null;
+    DataService.saveUserData(normalizedWA, userData);
+  }
+  state.set('quiz', null);
+  appState.quiz = null;
+  localStorage.removeItem('kemoenik_quiz');
+  go('program');
+  setTimeout(function() {
+    var quizIntro = document.getElementById('quizIntro');
+    var quizRunning = document.getElementById('quizRunning');
+    var quizResult = document.getElementById('quizResult');
+    if (quizIntro) quizIntro.style.display = 'block';
+    if (quizRunning) quizRunning.style.display = 'none';
+    if (quizResult) quizResult.style.display = 'none';
+    renderHomeStats();
+    renderAll();
+  }, 200);
+  showToast('Silakan isi quiz baru 📝');
+}
+window.resetAndEditQuiz = resetAndEditQuiz;
+
+// ============================================================
+// FUNGSI BARU: Render Konten Tips Diet
+// ============================================================
+function renderTipsKonten() {
+  var container = document.getElementById('tipsKontenContainer');
+  if (!container || typeof tipsKontenData === 'undefined') return;
+  var html = '';
+  tipsKontenData.forEach(function(tips) {
+    html += '<div style="background:' + tips.bgWarna + ';border-radius:14px;padding:16px;margin-bottom:12px;">';
+    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">';
+    html += '<div style="font-size:24px;">' + tips.icon + '</div>';
+    html += '<div style="font-size:14px;font-weight:700;color:' + tips.warna + ';">' + tips.judul + '</div>';
+    html += '</div>';
+    tips.konten.forEach(function(poin) {
+      html += '<div class="tips-konten-poin">' + poin + '</div>';
+    });
+    html += '</div>';
+  });
+  setSafeHTML(container, html);
+}
+
+// ============================================================
+// FUNGSI BARU: Render Status Indikator Header
+// ============================================================
+function renderStatusIndikator() {
+  var el = document.getElementById('statusIndikator');
+  if (!el) return;
+  var hasKalkulator = !!(appState.kalkulator && appState.kalkulator.dietCal);
+  var hasQuiz = !!(appState.quiz && appState.quiz.tipe);
+  var isActive = hasKalkulator && hasQuiz;
+  var isPartial = hasKalkulator || hasQuiz;
+  var warna = isActive ? '#10B981' : (isPartial ? '#F59E0B' : '#9CA3AF');
+  var label = isActive ? '✓ Aktif' : (isPartial ? '⚡ Sebagian' : '○ Setup Dulu');
+  el.innerHTML = '<div class="status-badge-pill" style="border:1px solid ' + warna + ';">' +
+    '<div class="status-dot-pill" style="background:' + warna + ';"></div>' +
+    '<span style="color:' + warna + ';">' + label + '</span></div>';
+}
+
+// ============================================================
+// FUNGSI BARU: Render Makronutrisi Shortcut
+// ============================================================
+function renderMakroShortcut() {
+  var container = document.getElementById('shortcutMakro');
+  if (!container) return;
+  var k = appState.kalkulator;
+  if (!k || !k.dietCal || !k.berat) {
+    container.innerHTML = '<div style="font-size:10px;color:var(--text3);text-align:center;">Isi kalkulator dulu</div>';
+    return;
+  }
+  var protein = Math.round(k.berat * 2);
+  var lemak = Math.round(k.berat * 0.8);
+  var karbo = Math.max(0, Math.round((k.dietCal - (protein * 4 + lemak * 9)) / 4));
+  container.innerHTML =
+    '<div class="makro-sc-row" style="color:var(--green);">P: ' + protein + 'g</div>' +
+    '<div class="makro-sc-row" style="color:#D97706;">L: ' + lemak + 'g</div>' +
+    '<div class="makro-sc-row" style="color:#7EA88A;">K: ' + karbo + 'g</div>';
+}
+
+// ============================================================
+// FUNGSI BARU: Start / Stop / Restart Program
+// ============================================================
+function renderStartStopBtn() {
+  var container = document.getElementById('progStartStopContainer');
+  if (!container) return;
+  var k = appState.kalkulator;
+  var isActive = k && k.startDateISO;
+  if (isActive) {
+    container.innerHTML =
+      '<div class="prog-action-row">' +
+      '<button class="prog-action-btn stop" onclick="stopProgram()">⏹ Berhenti</button>' +
+      '<button class="prog-action-btn start" onclick="restartProgram()">🔄 Mulai Ulang</button>' +
+      '</div>';
+  } else {
+    container.innerHTML =
+      '<button class="prog-action-btn start" onclick="startProgram()">▶️ Mulai Program Sekarang</button>';
+  }
+}
+
+function startProgram() {
+  if (!appState.kalkulator) {
+    showToast('Isi kalkulator dulu ya!');
+    go('program');
+    return;
+  }
+  var wa = localStorage.getItem('kemoenik_wa') || '';
+  var normalizedWA = normalizeWA(wa);
+  var now = new Date();
+  var isoStr = now.toISOString().split('T')[0];
+  var displayStr = now.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
+  state.set('kalkulator.startDateISO', isoStr);
+  state.set('kalkulator.startDate', displayStr);
+  state.set('kalkulator.startDateDisplay', displayStr);
+  var userData = DataService.loadUserData(normalizedWA) || {};
+  if (userData.kalkulator) {
+    userData.kalkulator.startDateISO = isoStr;
+    userData.kalkulator.startDate = displayStr;
+    userData.kalkulator.startDateDisplay = displayStr;
+    DataService.saveUserData(normalizedWA, userData);
+  }
+  renderAll();
+  showToast('✅ Program dimulai! Semangat!');
+}
+
+function stopProgram() {
+  if (!confirm('Yakin ingin menghentikan program? Data progress tetap tersimpan.')) return;
+  var wa = localStorage.getItem('kemoenik_wa') || '';
+  var normalizedWA = normalizeWA(wa);
+  state.set('kalkulator.startDateISO', null);
+  state.set('kalkulator.startDate', null);
+  var userData = DataService.loadUserData(normalizedWA) || {};
+  if (userData.kalkulator) {
+    userData.kalkulator.startDateISO = null;
+    userData.kalkulator.startDate = null;
+    DataService.saveUserData(normalizedWA, userData);
+  }
+  renderAll();
+  showToast('Program dihentikan. Data tetap tersimpan.');
+}
+
+function restartProgram() {
+  if (!confirm('Mulai ulang program dari awal? Timeline akan direset ke hari ini.')) return;
+  startProgram();
+}
+
+window.startProgram = startProgram;
+window.stopProgram = stopProgram;
+window.restartProgram = restartProgram;
+
+// ============================================================
+// FUNGSI BARU: Pilih Program (Normal / IF) di Home
+// ============================================================
+function pilihProgramHome(pilihan) {
+  localStorage.setItem('kemoenik_program_pilihan', pilihan);
+  var wa = localStorage.getItem('kemoenik_wa') || '';
+  if (wa) DataService.saveProgramPilihan(normalizeWA(wa), pilihan);
+
+  var btnNormal = document.getElementById('btnProgNormal');
+  var btnIF = document.getElementById('btnProgIF');
+  if (btnNormal) {
+    btnNormal.className = 'prog-selector-btn ' + (pilihan === 'normal' ? 'active' : 'inactive');
+  }
+  if (btnIF) {
+    btnIF.className = 'prog-selector-btn ' + (pilihan === 'if' ? 'active' : 'inactive');
+  }
+  renderHomeJadwal();
+  renderMisiByProgram();
+  showToast(pilihan === 'if' ? '🌙 Program IF 16:8 dipilih!' : '💪 Program Normal dipilih!');
+}
+window.pilihProgramHome = pilihProgramHome;
+
+// ============================================================
+// FUNGSI BARU: Render Misi berdasarkan program
+// ============================================================
+function renderMisiByProgram() {
+  var programPilihan = localStorage.getItem('kemoenik_program_pilihan') || 'normal';
+  var misiNormal = document.getElementById('misiNormal');
+  var misiIF = document.getElementById('misiIF');
+  if (misiNormal) misiNormal.classList.toggle('show', programPilihan !== 'if');
+  if (misiIF) misiIF.classList.toggle('show', programPilihan === 'if');
+  if (programPilihan === 'if') {
+    renderMisiIF();
+  } else {
+    renderMisiNormal();
+  }
+}
+
+// ============================================================
+// FUNGSI BARU: Toggle Misi Harian
+// ============================================================
+function toggleMisi(misiKey, el) {
+  var checkEl = el.querySelector('.mission-check');
+  var textEl = el.querySelector('.mission-text');
+  var isChecked = checkEl && checkEl.classList.contains('checked');
+  var newVal = !isChecked;
+  if (checkEl) {
+    checkEl.classList.toggle('checked', newVal);
+    checkEl.innerHTML = newVal
+      ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '';
+  }
+  if (textEl) textEl.classList.toggle('done', newVal);
+  state.set('misiChecked.' + misiKey, newVal);
+  state._persist();
+  var wa = localStorage.getItem('kemoenik_wa') || '';
+  if (wa) DataService.saveMisiChecked(normalizeWA(wa), misiKey, newVal);
+  if (newVal) showToast('✅ Misi tercatat! Keep going!');
+}
+window.toggleMisi = toggleMisi;
