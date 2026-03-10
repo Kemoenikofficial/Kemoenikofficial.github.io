@@ -432,14 +432,22 @@ function renderEvalHistory() {
 // ========== MISSION ==========
 function setMissionMode(mode) {
   document.querySelectorAll('.mission-set').forEach(s => s.classList.remove('show'));
-  document.querySelectorAll('.mm-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.mm-btn, .prog-selector-btn').forEach(b => {
+    b.classList.remove('on');
+    b.classList.remove('active');
+    b.classList.add('inactive');
+  });
   if (mode === 'normal') {
-    document.getElementById('misiNormal').classList.add('show');
-    document.getElementById('modeNormal').classList.add('on');
+    var misiNormal = document.getElementById('misiNormal');
+    if (misiNormal) misiNormal.classList.add('show');
+    var btnNormal = document.getElementById('modeNormal') || document.getElementById('btnProgNormal');
+    if (btnNormal) { btnNormal.classList.add('on'); btnNormal.classList.add('active'); btnNormal.classList.remove('inactive'); }
     renderMisiNormal();
   } else {
-    document.getElementById('misiIF').classList.add('show');
-    document.getElementById('modeIF').classList.add('on');
+    var misiIF = document.getElementById('misiIF');
+    if (misiIF) misiIF.classList.add('show');
+    var btnIF = document.getElementById('modeIF') || document.getElementById('btnProgIF');
+    if (btnIF) { btnIF.classList.add('on'); btnIF.classList.add('active'); btnIF.classList.remove('inactive'); }
     renderMisiIF();
   }
   localStorage.setItem('kemoenik_mission_mode', mode);
