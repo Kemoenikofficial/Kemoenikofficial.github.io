@@ -257,6 +257,26 @@ function renderHomeStats() {
   if (evalTargetEl) evalTargetEl.textContent = k && k.target ? k.target + ' kg' : '—';
   if (document.getElementById('mealTargetDisplay')) document.getElementById('mealTargetDisplay').textContent = k ? Math.round(k.dietCal) : '—';
   if (document.getElementById('targetKcalLengkap')) document.getElementById('targetKcalLengkap').textContent = k ? Math.round(k.dietCal) : '—';
+
+  // ---- Program Banner (halaman Program) ----
+  if (k && q) {
+    var metodeMap = { 'standar': 'Standar', 'agresif': 'Agresif + IF 16:8', 'ringan': 'Ringan' };
+    var defisitLabel = k.defisit ? k.defisit + ' kkal/hari' : '500 kkal/hari';
+    document.getElementById('progNama').textContent = q.tipe_emoji + ' ' + q.tipeName;
+    document.getElementById('progDesc').textContent = 'Metode: ' + (metodeMap[q.metode] || q.metodeName) + '  •  Defisit: ' + defisitLabel;
+  } else if (q) {
+    document.getElementById('progNama').textContent = q.tipe_emoji + ' ' + q.tipeName;
+    document.getElementById('progDesc').textContent = 'Isi kalkulator untuk aktivasi program lengkap';
+  } else if (k) {
+    document.getElementById('progNama').textContent = k.nama || '—';
+    document.getElementById('progDesc').textContent = 'Isi kuis untuk mendapat rekomendasi metode diet';
+  }
+
+  // ---- Makronutrisi shortcut ----
+  renderMakroShortcut();
+
+  // ---- Status indikator ----
+  renderStatusIndikator();
 }
 
 function renderHomeGreeting() {
@@ -1372,7 +1392,6 @@ window.addEventListener('keydown', function(e){
 // FUNGSI BARU: Reset dan Edit Quiz
 // ============================================================
 function resetAndEditQuiz() {
-  if (!confirm('Yakin ingin ulangi quiz? Hasil quiz lama akan diganti dengan hasil baru.')) return;
   var wa = localStorage.getItem('kemoenik_wa') || '';
   if (wa) {
     var normalizedWA = normalizeWA(wa);
@@ -1404,13 +1423,13 @@ window.resetAndEditQuiz = resetAndEditQuiz;
 function renderTipsKonten() {
   if (typeof tipsKontenData === 'undefined') return;
 
-  // Map tipsKontenData id ke accordion yang ada di INDEX
+  // Mapping tips id ke accordion HTML yang sudah ada
   var accMap = {
-    'defisit':   'acc-defisit',
-    'pola-makan':'acc-gula',      // ganti konten accordion gula dengan pola makan
-    'if-puasa':  'acc-if',
-    'olahraga-tips': 'acc-ola',
-    'air-putih': 'acc-minum'
+    'defisit':      'acc-defisit',
+    'pola-makan':   'acc-gula',
+    'olahraga-tips':'acc-ola',
+    'air-putih':    'acc-minum',
+    'if-puasa':     'acc-if'
   };
 
   tipsKontenData.forEach(function(tips) {
@@ -1419,19 +1438,19 @@ function renderTipsKonten() {
     var acc = document.getElementById(accId);
     if (!acc) return;
 
-    // Update judul di header accordion
+    // Update judul & sub di header accordion
     var titleEl = acc.querySelector('.acc-title');
-    var subEl = acc.querySelector('.acc-sub');
+    var subEl   = acc.querySelector('.acc-sub');
     if (titleEl) titleEl.textContent = tips.judul;
-    if (subEl) subEl.textContent = tips.konten[0] ? tips.konten[0].substring(0, 60) + '...' : '';
+    if (subEl)   subEl.textContent   = tips.konten[0] ? tips.konten[0].substring(0, 55) + '...' : '';
 
     // Isi body accordion
     var bodyEl = acc.querySelector('.acc-body');
     if (!bodyEl) return;
-    var html = '<div style="padding:4px 0;">';
+    var html = '<div style="padding:4px 0 8px;">';
     tips.konten.forEach(function(poin) {
       html += '<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;color:var(--text);">';
-      html += '<span style="color:' + tips.warna + ';flex-shrink:0;margin-top:1px;">•</span>';
+      html += '<span style="color:' + tips.warna + ';flex-shrink:0;font-weight:700;">•</span>';
       html += '<span>' + poin + '</span>';
       html += '</div>';
     });
@@ -1439,76 +1458,40 @@ function renderTipsKonten() {
     setSafeHTML(bodyEl, html);
   });
 
-  // Accordion tambahan: tampilkan tips yang tidak ada di accMap di tipsKontenContainer
-  var container = document.getElementById('tipsKontenContainer');
-  if (!container) return;
-  var unmappedIds = ['lymphatic', 'tidur', 'waktu-makan'];
+  // Accordion tambahan (waktu-makan, lymphatic, tidur) — buat dinamis dan inject ke page-tips
+  var extraContainer = document.getElementById('tipsExtraContainer');
+  if (!extraContainer) return;
+  var extraIds = ['waktu-makan', 'lymphatic', 'tidur'];
   var html = '';
   tipsKontenData.forEach(function(tips) {
-    if (unmappedIds.indexOf(tips.id) === -1) return;
-    html += '<div class="acc" style="margin-bottom:10px;">';
-    html += '<div style="background:' + tips.bgWarna + ';border-radius:12px;padding:14px 16px;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">';
-    html += '<div style="display:flex;align-items:center;gap:10px;">';
-    html += '<span style="font-size:20px;">' + tips.icon + '</span>';
-    html += '<div style="flex:1;font-size:13px;font-weight:700;color:' + tips.warna + ';">' + tips.judul + '</div>';
-    html += '<span style="color:' + tips.warna + ';font-size:18px;font-weight:300;">+</span>';
-    html += '</div></div>';
-    html += '<div style="display:none;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;">';
+    if (extraIds.indexOf(tips.id) === -1) return;
+    var uid = 'acc-extra-' + tips.id;
+    html += '<div class="acc" id="' + uid + '" style="margin-bottom:8px;">';
+    html += '<div class="acc-hd" onclick="tog('' + uid + '')">';
+    html += '<div class="acc-icon" style="background:' + tips.bgWarna + ';font-size:16px;display:flex;align-items:center;justify-content:center;">' + tips.icon + '</div>';
+    html += '<div class="acc-info"><div class="acc-title">' + tips.judul + '</div>';
+    html += '<div class="acc-sub">' + (tips.konten[0] ? tips.konten[0].substring(0, 55) + '...' : '') + '</div></div>';
+    html += '<div class="acc-toggle">+</div></div>';
+    html += '<div class="acc-body"><div style="padding:4px 0 8px;">';
     tips.konten.forEach(function(poin) {
-      html += '<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;">';
-      html += '<span style="color:' + tips.warna + ';flex-shrink:0;">•</span><span>' + poin + '</span></div>';
+      html += '<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;">';
+      html += '<span style="color:' + tips.warna + ';flex-shrink:0;font-weight:700;">•</span><span>' + poin + '</span></div>';
     });
-    html += '</div></div>';
+    html += '</div></div></div>';
   });
-  setSafeHTML(container, html);
-}
+  setSafeHTML(extraContainer, html);
 
-// ============================================================
-// FUNGSI BARU: Render Status Indikator Header
-// ============================================================
-function renderStatusIndikator() {
-  var hasKalkulator = !!(appState.kalkulator && appState.kalkulator.dietCal);
-  var hasQuiz = !!(appState.quiz && appState.quiz.tipe);
-  var isActive = hasKalkulator && hasQuiz;
-  var isPartial = hasKalkulator || hasQuiz;
-  var warna = isActive ? '#10B981' : (isPartial ? '#F59E0B' : '#9CA3AF');
-  var label = isActive ? '✓ Program Aktif' : (isPartial ? '⚡ Setup Sebagian' : '○ Belum Setup');
-
-  // Badge di header home
-  var el = document.getElementById('statusIndikator');
-  if (el) {
-    el.innerHTML = '<div class="status-badge-pill" style="border:1px solid ' + warna + ';">' +
-      '<div class="status-dot-pill" style="background:' + warna + ';"></div>' +
-      '<span style="color:' + warna + ';">' + label + '</span></div>';
+  // Sembunyikan tipsKontenContainer lama (panduan lengkap di bawah — dihapus tampilannya)
+  var oldContainer = document.getElementById('tipsKontenContainer');
+  if (oldContainer) {
+    oldContainer.style.display = 'none';
+    var secTitle = oldContainer.previousElementSibling;
+    if (secTitle && secTitle.textContent && secTitle.textContent.indexOf('Panduan Lengkap') !== -1) {
+      secTitle.style.display = 'none';
+    }
   }
-
-  // Dot kecil di ikon Kuis bottom nav (indikator program aktif/tidak)
-  var dot = document.getElementById('statusDot');
-  if (dot) dot.style.background = warna;
 }
 
-// ============================================================
-// FUNGSI BARU: Render Makronutrisi Shortcut
-// ============================================================
-function renderMakroShortcut() {
-  var container = document.getElementById('shortcutMakro');
-  if (!container) return;
-  var k = appState.kalkulator;
-  if (!k || !k.dietCal || !k.berat) {
-    container.innerHTML = '<div style="font-size:10px;color:var(--text3);text-align:center;line-height:1.4;">Isi<br>kalkulator</div>';
-    return;
-  }
-  // Gunakan data makro tersimpan dari CALFATLOSS, fallback ke kalkulasi
-  var proteinMult = k.metode === 'ringan' ? 1.8 : k.metode === 'agresif' ? 2.2 : 2.0;
-  var lemakMult = k.metode === 'ringan' ? 0.9 : k.metode === 'agresif' ? 0.7 : 0.8;
-  var protein = (k.makro && k.makro.protein) ? k.makro.protein : Math.round(k.berat * proteinMult);
-  var lemak = (k.makro && k.makro.lemak) ? k.makro.lemak : Math.round(k.berat * lemakMult);
-  var karbo = (k.makro && k.makro.karbo) ? k.makro.karbo : Math.max(0, Math.round((k.dietCal - (protein * 4 + lemak * 9)) / 4));
-  container.innerHTML =
-    '<div class="makro-sc-row" style="color:#10B981;font-weight:800;">P: ' + protein + 'g</div>' +
-    '<div class="makro-sc-row" style="color:#D97706;font-weight:800;">L: ' + lemak + 'g</div>' +
-    '<div class="makro-sc-row" style="color:#7EA88A;font-weight:800;">K: ' + karbo + 'g</div>';
-}
 
 // ============================================================
 // FUNGSI BARU: Start / Stop / Restart Program
@@ -1680,3 +1663,56 @@ function toggleMisi(misiKey, el) {
   if (newVal) showToast('✅ Misi tercatat! Keep going!');
 }
 window.toggleMisi = toggleMisi;
+
+
+// ============================================================
+// renderStatusIndikator — indikator aktif di topbar & bottom nav
+// ============================================================
+function renderStatusIndikator() {
+  var hasKalkulator = !!(appState.kalkulator && appState.kalkulator.dietCal);
+  var hasQuiz       = !!(appState.quiz && appState.quiz.tipe);
+  var isActive  = hasKalkulator && hasQuiz;
+  var isPartial = hasKalkulator || hasQuiz;
+  var warna = isActive ? '#10B981' : (isPartial ? '#F59E0B' : '#9CA3AF');
+
+  // Badge kecil di bawah keranjang topbar
+  var topEl = document.getElementById('topbarStatus');
+  if (topEl) {
+    if (isActive) {
+      topEl.innerHTML = '<div style="width:8px;height:8px;border-radius:50%;background:#10B981;"></div>' +
+        '<span style="font-size:9px;font-weight:700;color:#10B981;">Aktif</span>';
+    } else if (isPartial) {
+      topEl.innerHTML = '<div style="width:8px;height:8px;border-radius:50%;background:#F59E0B;"></div>' +
+        '<span style="font-size:9px;font-weight:700;color:#F59E0B;">Sebagian</span>';
+    } else {
+      topEl.innerHTML = '<div style="width:8px;height:8px;border-radius:50%;background:#9CA3AF;"></div>' +
+        '<span style="font-size:9px;font-weight:700;color:#9CA3AF;">Setup</span>';
+    }
+  }
+
+  // Dot di ikon Kuis bottom nav
+  var dot = document.getElementById('statusDot');
+  if (dot) dot.style.background = warna;
+}
+
+// ============================================================
+// renderMakroShortcut — tampilkan P/L/K di shortcut home
+// ============================================================
+function renderMakroShortcut() {
+  var container = document.getElementById('shortcutMakro');
+  if (!container) return;
+  var k = appState.kalkulator;
+  if (!k || !k.dietCal || !k.berat) {
+    container.innerHTML = '<div style="font-size:10px;color:var(--text3);text-align:center;line-height:1.5;">Isi<br>kalkulator</div>';
+    return;
+  }
+  var proteinMult = k.metode === 'ringan' ? 1.8 : k.metode === 'agresif' ? 2.2 : 2.0;
+  var lemakMult   = k.metode === 'ringan' ? 0.9 : k.metode === 'agresif' ? 0.7 : 0.8;
+  var protein = (k.makro && k.makro.protein) ? k.makro.protein : Math.round(k.berat * proteinMult);
+  var lemak   = (k.makro && k.makro.lemak)   ? k.makro.lemak   : Math.round(k.berat * lemakMult);
+  var karbo   = (k.makro && k.makro.karbo)   ? k.makro.karbo   : Math.max(0, Math.round((k.dietCal - (protein * 4 + lemak * 9)) / 4));
+  container.innerHTML =
+    '<div style="font-size:11px;font-weight:800;color:#10B981;margin-bottom:1px;">P: ' + protein + 'g</div>' +
+    '<div style="font-size:11px;font-weight:800;color:#D97706;margin-bottom:1px;">L: ' + lemak   + 'g</div>' +
+    '<div style="font-size:11px;font-weight:800;color:#3B82F6;">K: ' + karbo   + 'g</div>';
+}
