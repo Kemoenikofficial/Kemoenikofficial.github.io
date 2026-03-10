@@ -2,112 +2,151 @@
 // LOGIKA UTAMA APLIKASI
 // ============================================================
 
-// ========== INISIALISASI ==========
-async function initApp() {
-  try {
-    var wa = getQueryParam('wa') || localStorage.getItem('kemoenik_wa') || '';
-    var voucher = getQueryParam('voucher') || localStorage.getItem('kemoenik_voucher') || '';
-    var mode = getQueryParam('mode') || 'continue';
+// ========== INISIALISASI INSTANT (NO LOADING) ==========
+function initApp() {
+    try {
+        // 1. Ambil dari localStorage (SYNC - instant)
+        var wa = localStorage.getItem('kemoenik_wa') || '';
+        var voucher = localStorage.getItem('kemoenik_voucher') || '';
+        var expiry = localStorage.getItem('kemoenik_expiry') || '';
+        var mode = localStorage.getItem('kemoenik_mode') || 'continue';
 
-    if (!wa) wa = localStorage.getItem('kemoenik_temp_wa') || '';
-    if (!voucher) voucher = localStorage.getItem('kemoenik_temp_voucher') || '';
-
-    if (!wa || !voucher) {
-      document.getElementById('accessScreen').style.display = 'flex';
-      document.getElementById('app').style.display = 'none';
-      return;
-    }
-
-    var normalizedWA = normalizeWA(wa);
-
-    localStorage.setItem('kemoenik_wa', normalizedWA);
-    localStorage.setItem('kemoenik_voucher', voucher);
-    localStorage.setItem('kemoenik_mode', mode);
-
-    document.getElementById('accessScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-
-    // Verifikasi voucher (opsional, jika gagal fallback)
-    var isValid = await checkVoucherValid(normalizedWA, voucher);
-    if (!isValid.valid) {
-      showToast(isValid.message);
-    }
-
-    // Load data dari localStorage
-    var userData = DataService.loadUserData(normalizedWA);
-
-    // Handle mode "new" — reset program
-    if (mode === 'new' && userData) {
-      await DataService.resetProgram(normalizedWA);
-      userData = { profile: userData.profile };
-    }
-
-    // Sync ke appState
-    if (userData) {
-      if (userData.kalkulator) state.set('kalkulator', userData.kalkulator);
-      if (userData.quiz) state.set('quiz', userData.quiz);
-      if (userData.evaluasi) state.set('evaluasi', userData.evaluasi);
-      if (userData.profile) {
-        state.set('user.nama', userData.profile.nama);
-        state.set('user.wa', normalizedWA);
-      }
-    }
-
-    // Fallback localStorage lama
-    if (!appState.kalkulator) {
-      try {
-        var raw = localStorage.getItem('kemoenik_kal_data');
-        if (raw) {
-          var p = JSON.parse(raw);
-          if (p && (p.dietCal || p.kaloriHarian)) {
-            if (!p.dietCal && p.kaloriHarian) p.dietCal = p.kaloriHarian;
-            state.set('kalkulator', p);
-          }
+        // 2. Fallback: cek URL params (untuk first load dari aktivitas)
+        if (!wa || !voucher) {
+            wa = getQueryParam('wa') || '';
+            voucher = getQueryParam('voucher') || '';
+            mode = getQueryParam('mode') || 'continue';
+            
+            // Jika dari URL, simpan ke localStorage
+            if (wa && voucher) {
+                localStorage.setItem('kemoenik_wa', wa);
+                localStorage.setItem('kemoenik_voucher', voucher);
+                localStorage.setItem('kemoenik_mode', mode);
+                localStorage.setItem('kemoenik_expiry', String(Date.now() + 7 * 24 * 60 * 60 * 1000));
+            }
         }
-      } catch(e) {}
-    }
-    if (!appState.quiz) {
-      try {
-        var rawQ = localStorage.getItem('kemoenik_quiz');
-        if (rawQ) {
-          var pq = JSON.parse(rawQ);
-          if (pq && pq.tipe) state.set('quiz', pq);
+
+        // 3. Validasi - jika tidak ada session
+        if (!wa || !voucher) {
+            document.getElementById('accessScreen').style.display = 'flex';
+            document.getElementById('app').style.display = 'none';
+            return;
         }
-      } catch(e) {}
-    }
 
-    if (appState.kalkulator && appState.kalkulator.nama) {
-      state.set('user.nama', appState.kalkulator.nama);
-    }
+        // 4. Cek expiry
+        if (expiry && Date.now() > parseInt(expiry)) {
+            // Session expired
+            localStorage.removeItem('kemoenik_wa');
+            localStorage.removeItem('kemoenik_voucher');
+            localStorage.removeItem('kemoenik_expiry');
+            document.getElementById('accessScreen').style.display = 'flex';
+            document.getElementById('app').style.display = 'none';
+            showToast('Sesi habis. Silakan verifikasi ulang.');
+            return;
+        }
 
-    state._persist();
+        // 5. ✅ TAMPILKAN APP INSTANTLY (tidak tunggu verifikasi server)
+        document.getElementById('accessScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
 
-    // Simpan profile ke localStorage
-    await DataService.saveProfile(normalizedWA, {
-      nama: appState.user.nama || 'User',
-      wa: normalizedWA,
-      voucherAktif: voucher,
-      lastActive: new Date().toISOString()
-    });
+        // 6. Load data dari localStorage (SYNC)
+        var normalizedWA = normalizeWA(wa);
+        var userData = DataService.loadUserData(normalizedWA);
 
-    renderAll();
-    setTimeout(renderHomeJadwal, 150);
+        // 7. Handle mode "new" — reset program
+        if (mode === 'new' && userData) {
+            DataService.resetProgram(normalizedWA);
+            userData = { profile: userData.profile };
+        }
 
-    if (localStorage.getItem('kemoenik_just_finished_quiz') === 'true') {
-      localStorage.removeItem('kemoenik_just_finished_quiz');
-      setTimeout(function() {
-        renderProfilPage();
-        ['acc-trait','acc-karakter','acc-skor'].forEach(function(id) {
-          var el = document.getElementById(id);
-          if (el) el.classList.add('on');
+        // 8. Sync ke appState
+        if (userData) {
+            if (userData.kalkulator) state.set('kalkulator', userData.kalkulator);
+            if (userData.quiz) state.set('quiz', userData.quiz);
+            if (userData.evaluasi) state.set('evaluasi', userData.evaluasi);
+            if (userData.profile) {
+                state.set('user.nama', userData.profile.nama);
+                state.set('user.wa', normalizedWA);
+            }
+        }
+
+        // 9. Fallback localStorage lama (untuk backward compatibility)
+        if (!appState.kalkulator) {
+            try {
+                var raw = localStorage.getItem('kemoenik_kal_data');
+                if (raw) {
+                    var p = JSON.parse(raw);
+                    if (p && (p.dietCal || p.kaloriHarian)) {
+                        if (!p.dietCal && p.kaloriHarian) p.dietCal = p.kaloriHarian;
+                        state.set('kalkulator', p);
+                    }
+                }
+            } catch(e) {}
+        }
+        if (!appState.quiz) {
+            try {
+                var rawQ = localStorage.getItem('kemoenik_quiz');
+                if (rawQ) {
+                    var pq = JSON.parse(rawQ);
+                    if (pq && pq.tipe) state.set('quiz', pq);
+                }
+            } catch(e) {}
+        }
+
+        if (appState.kalkulator && appState.kalkulator.nama) {
+            state.set('user.nama', appState.kalkulator.nama);
+        }
+
+        state._persist();
+
+        // 10. Simpan profile
+        DataService.saveProfile(normalizedWA, {
+            nama: appState.user.nama || 'User',
+            wa: normalizedWA,
+            voucherAktif: voucher,
+            lastActive: new Date().toISOString()
         });
-      }, 200);
-    }
 
-  } catch(e) {
-    console.error('initApp error:', e);
-    showToast('Gagal memuat aplikasi. Coba refresh halaman.');
-  }
+        // 11. ✅ RENDER LANGSUNG (NO setTimeout delay)
+        renderAll();
+        renderHomeJadwal(); // Langsung, tanpa setTimeout 150ms
+
+        // 12. Background verification (opsional, tidak block UI)
+        setTimeout(function() {
+            backgroundVerify(normalizedWA, voucher);
+        }, 3000); // Delay 3 detik, setelah UI stabil
+
+        // 13. Handle quiz just finished
+        if (localStorage.getItem('kemoenik_just_finished_quiz') === 'true') {
+            localStorage.removeItem('kemoenik_just_finished_quiz');
+            setTimeout(function() {
+                renderProfilPage();
+                ['acc-trait','acc-karakter','acc-skor'].forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el) el.classList.add('on');
+                });
+            }, 100); // Reduced from 200ms
+        }
+
+    } catch(e) {
+        console.error('initApp error:', e);
+        showToast('Gagal memuat aplikasi. Coba refresh halaman.');
+    }
+}
+
+// ✅ TAMBAHAN: Background verification (tidak block UI)
+async function backgroundVerify(wa, voucher) {
+    try {
+        var result = await checkVoucherValid(wa, voucher);
+        if (!result.valid && !result.fallback) {
+            // Hanya show toast, tidak block UI
+            showToast('Info: ' + result.message);
+            // Optional: bisa redirect ke aktivitas setelah beberapa saat
+            // setTimeout(function() { goToAktivitas(); }, 5000);
+        }
+    } catch(e) {
+        console.log('Background verify error (offline mode):', e);
+    }
 }
 
 // ========== NAVIGASI ==========
