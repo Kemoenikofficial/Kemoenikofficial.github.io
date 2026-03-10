@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KEMOENIK - Aktivasi & Panduan</title>
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #F4F6F3;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .app-container {
+            max-width: 430px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        /* Aktivasi Screen */
+        #aktivasi-screen {
+            padding: 32px 24px;
+            background: white;
+        }
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #1F4D3A;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .logo span { color: #C9A86A; }
+        .logo-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: #e6f4ea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        h2 { font-size: 20px; margin-bottom: 8px; color: #1A1A1A; text-align: center; }
+        p { color: #7A9080; font-size: 14px; text-align: center; margin-bottom: 24px; }
+        .form-group { margin-bottom: 20px; }
+        label { font-size: 13px; font-weight: 600; color: #2D4A35; display: block; margin-bottom: 6px; }
+        .input-wrapper {
+            position: relative;
+            border: 1.5px solid #DDE5DB;
+            border-radius: 16px;
+            background: #F9FBF9;
+        }
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7A9080;
+        }
+        input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            font-family: 'Outfit', sans-serif;
+            outline: none;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2E7D5B, #1F4D3A);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+        .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+        .btn-outline {
+            background: white;
+            border: 1.5px solid #C5D5C1;
+            color: #1F4D3A;
+            padding: 14px;
+            border-radius: 24px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 16px;
+            color: white;
+            display: none;
+        }
+        .result-box.success { background: #2E7D5B; }
+        .result-box.warning { background: #C9A86A; }
+        .result-box.error { background: #C0392B; }
+        .result-box.show { display: block; }
+
+        /* Dashboard Screen */
+        #dashboard-screen {
+            background: #F4F6F3;
+            min-height: 600px;
+            display: none;
+        }
+        .topbar {
+            background: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #DDE5DB;
+        }
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #F9FBF9;
+            border: 1px solid #DDE5DB;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .menu-btn span {
+            width: 16px;
+            height: 2px;
+            background: #1F4D3A;
+            border-radius: 2px;
+        }
+        .hero {
+            padding: 24px 20px 0;
+            background: #F4F6F3;
+        }
+        .hero-greeting {
+            font-size: 11px;
+            color: #2E7D5B;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .hero-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 30px;
+            font-weight: 600;
+            color: #1F4D3A;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: white;
+            border: 1px solid #DDE5DB;
+            border-radius: 16px;
+            padding: 14px 12px;
+            text-align: center;
+        }
+        .stat-card .value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #1F4D3A;
+        }
+        .stat-card .label {
+            font-size: 9px;
+            color: #7A9080;
+            text-transform: uppercase;
+        }
+        .pill-nav {
+            display: flex;
+            background: white;
+            padding: 0 20px;
+            border-bottom: 1px solid #DDE5DB;
+            overflow-x: auto;
+        }
+        .pill {
+            padding: 14px 4px;
+            margin-right: 22px;
+            font-size: 13px;
+            color: #7A9080;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .pill.active {
+            color: #1F4D3A;
+            border-bottom-color: #2E7D5B;
+            font-weight: 700;
+        }
+        .content {
+            padding: 20px 16px;
+            height: 500px;
+            overflow-y: auto;
+        }
+        .greeting-card {
+            background: linear-gradient(145deg, #1F4D3A, #163628);
+            color: white;
+            padding: 20px 22px;
+            border-radius: 24px;
+            margin-bottom: 20px;
+        }
+        .greeting-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+        }
+        .section-title {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #7A9080;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .progress-card {
+            background: white;
+            border: 1px solid #DDE5DB;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .pct-badge {
+            background: rgba(46,125,91,0.1);
+            color: #2E7D5B;
+            padding: 7px 13px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #EEF3EE;
+            border-radius: 3px;
+            margin: 15px 0 8px;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2E7D5B, #3A9970);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .shortcut-card {
+            background: white;
+            border: 1px solid #DDE5DB;
+            border-radius: 20px;
+            padding: 18px 16px;
+            position: relative;
+        }
+        .shortcut-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .shortcut-title {
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .shortcut-sub {
+            font-size: 11px;
+            color: #7A9080;
+        }
+        .arrow {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            color: #7A9080;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal.active { display: flex; }
+        .modal-sheet {
+            background: white;
+            width: 100%;
+            max-width: 430px;
+            border-radius: 24px 24px 0 0;
+            padding: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .bottom-nav {
+            display: flex;
+            background: white;
+            border-top: 1px solid #DDE5DB;
+            padding: 8px 0;
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 9px;
+            color: #7A9080;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: #1F4D3A;
+        }
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 28px;
+            height: 2.5px;
+            background: #2E7D5B;
+            border-radius: 0 0 4px 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Aktivasi Screen -->
+        <div id="aktivasi-screen">
+            <div class="logo-img">🌿</div>
+            <div class="logo">KEMO<span>ENIK</span></div>
+            <h2>Akses Diperlukan</h2>
+            <p>Masukkan data Anda untuk mengakses panduan diet personal.</p>
+            
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="nama" placeholder="Contoh: Anita Susanti">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Nomor WhatsApp</label>
+                <div class="input-wrapper">
+                    <i class="fab fa-whatsapp"></i>
+                    <input type="tel" id="wa" placeholder="08123456789">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Kode Konsultasi</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-ticket-alt"></i>
+                    <input type="text" id="kode" placeholder="Contoh: KEMO-1234">
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="aktivasi()">Aktivasi & Buka Panduan</button>
+            <div id="result" class="result-box"></div>
+            
+            <p style="margin-top: 20px; font-size: 12px;">
+                <i class="fas fa-shield-alt"></i> Data Anda aman dan hanya disimpan di browser ini.
+            </p>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen">
+            <div class="topbar">
+                <div class="menu-btn">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="logo" style="font-size: 18px;">KEMO<span>ENIK</span></div>
+                <div style="width: 40px;"></div>
+            </div>
+
+            <div class="hero">
+                <div class="hero-greeting">Profil Metabolisme</div>
+                <div class="hero-name" id="heroName">Halo, <span id="userName">—</span>!</div>
+                <div class="stats-row">
+                    <div class="stat-card"><div class="value" id="statKkal">1.450</div><div class="label">Kkal/Hari</div></div>
+                    <div class="stat-card"><div class="value" id="statMinggu">8mg</div><div class="label">Target/Minggu</div></div>
+                    <div class="stat-card"><div class="value" id="statMetode">Standar</div><div class="label">Metode</div></div>
+                </div>
+            </div>
+
+            <div class="pill-nav">
+                <div class="pill active" onclick="gantiTab('home')">Home</div>
+                <div class="pill" onclick="gantiTab('profil')">Profil</div>
+                <div class="pill" onclick="gantiTab('tips')">Tips</div>
+                <div class="pill" onclick="gantiTab('program')">Program</div>
+                <div class="pill" onclick="gantiTab('kuis')">Kuis</div>
+            </div>
+
+            <div class="content" id="content-area">
+                <!-- HOME -->
+                <div id="home-tab">
+                    <div class="greeting-card">
+                        <h3>Halo, <span id="userNameHome">—</span>! 👋</h3>
+                        <p>Selamat datang di panduan diet KEMOENIK — hari ini kita jaga komitmenmu 💪</p>
+                    </div>
+                    
+                    <div class="section-title">Progres Program Diet</div>
+                    <div class="progress-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div class="section-title">Hari ini</div>
+                                <div style="font-family: 'Cormorant Garamond'; font-size: 24px;">Hari <span id="progHari">3</span> dari <span id="progTotal">56</span></div>
+                            </div>
+                            <div class="pct-badge" id="progPct">5%</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progFill" style="width: 5%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="shortcut-grid">
+                        <div class="shortcut-card" onclick="gantiTab('kuis')">
+                            <div class="shortcut-icon" style="background: #FEF3C7;">📋</div>
+                            <div class="shortcut-title">Kuis Tipe</div>
+                            <div class="shortcut-sub">Temukan tipe metabolismemu</div>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="shortcut-card" onclick="bukaModal('kalkulator')">
+                            <div class="shortcut-icon" style="background: #DCFCE7;">⚖️</div>
+                            <div class="shortcut-title">Kalkulator</div>
+                            <div class="shortcut-sub">Hitung kalori & target</div>
+                            <span class="arrow">›</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROFIL (placeholder) -->
+                <div id="profil-tab" style="display: none;">
+                    <p>Profil metabolisme akan tampil setelah isi kuis.</p>
+                </div>
+
+                <!-- TIPS (placeholder) -->
+                <div id="tips-tab" style="display: none;">
+                    <p>Tips diet akan muncul di sini.</p>
+                </div>
+
+                <!-- PROGRAM (placeholder) -->
+                <div id="program-tab" style="display: none;">
+                    <p>Program diet Anda.</p>
+                </div>
+
+                <!-- KUIS (placeholder) -->
+                <div id="kuis-tab" style="display: none;">
+                    <p>Kuis metabolisme.</p>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item active" onclick="gantiTab('home')"><i class="fas fa-home"></i><span>Home</span></div>
+                <div class="nav-item" onclick="gantiTab('profil')"><i class="fas fa-user"></i><span>Profil</span></div>
+                <div class="nav-item" onclick="gantiTab('tips')"><i class="fas fa-lightbulb"></i><span>Tips</span></div>
+                <div class="nav-item" onclick="gantiTab('program')"><i class="fas fa-calendar"></i><span>Program</span></div>
+                <div class="nav-item" onclick="gantiTab('kuis')"><i class="fas fa-question"></i><span>Kuis</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Kalkulator -->
+    <div class="modal" id="modal-kalkulator">
+        <div class="modal-sheet">
+            <h3 style="font-family: 'Cormorant Garamond';">⚖️ Kalkulator Kalori</h3>
+            <p style="color: #7A9080; margin-bottom: 20px;">Hitung kebutuhan kalori harianmu</p>
+            
+            <div class="form-group">
+                <label>Berat Badan (kg)</label>
+                <input type="number" id="berat" class="input-wrapper" style="padding: 12px;" placeholder="65">
+            </div>
+            <div class="form-group">
+                <label>Tinggi Badan (cm)</label>
+                <input type="number" id="tinggi" class="input-wrapper" style="padding: 12px;" placeholder="160">
+            </div>
+            <div class="form-group">
+                <label>Usia</label>
+                <input type="number" id="usia" class="input-wrapper" style="padding: 12px;" placeholder="25">
+            </div>
+            <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <select id="gender" class="input-wrapper" style="padding: 12px;">
+                    <option value="perempuan">Perempuan</option>
+                    <option value="laki">Laki-laki</option>
+                </select>
+            </div>
+
+            <button class="btn-primary" onclick="hitungKalori()">Hitung</button>
+            <button class="btn-outline" style="margin-top: 10px;" onclick="tutupModal('kalkulator')">Tutup</button>
+
+            <div id="hasilKalori" style="margin-top: 20px; display: none;">
+                <div style="background: #2E7D5B; color: white; padding: 16px; border-radius: 16px;">
+                    <div style="font-size: 24px; font-weight: 700;" id="hasilKkal">—</div>
+                    <div>kkal/hari (target diet)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi Aktivasi
+        function aktivasi() {
+            const nama = document.getElementById('nama').value.trim();
+            const wa = document.getElementById('wa').value.trim();
+            const kode = document.getElementById('kode').value.trim();
+            const resultBox = document.getElementById('result');
+
+            if (!nama || !wa || !kode) {
+                resultBox.className = 'result-box show error';
+                resultBox.innerHTML = '❌ Semua field harus diisi!';
+                return;
+            }
+            if (wa.length < 10) {
+                resultBox.className = 'result-box show error';
+                resultBox.innerHTML = '❌ Nomor WA minimal 10 digit!';
+                return;
+            }
+
+            // Simpan data
+            localStorage.setItem('kemoenik_nama', nama);
+            localStorage.setItem('kemoenik_wa', wa);
+            localStorage.setItem('kemoenik_voucher', kode);
+
+            // Tampilkan sukses
+            resultBox.className = 'result-box show success';
+            resultBox.innerHTML = '✅ Aktivasi berhasil! Mengalihkan...';
+
+            // Pindah ke dashboard
+            setTimeout(() => {
+                document.getElementById('aktivasi-screen').style.display = 'none';
+                document.getElementById('dashboard-screen').style.display = 'block';
+                document.getElementById('userName').textContent = nama.split(' ')[0];
+                document.getElementById('userNameHome').textContent = nama.split(' ')[0];
+            }, 1500);
+        }
+
+        // Ganti tab
+        function gantiTab(tab) {
+            document.querySelectorAll('.pill, .nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.pill, .nav-item').forEach(el => {
+                if (el.textContent.toLowerCase().includes(tab)) el.classList.add('active');
+            });
+            document.querySelectorAll('#content-area > div').forEach(div => div.style.display = 'none');
+            document.getElementById(tab + '-tab').style.display = 'block';
+        }
+
+        // Modal
+        function bukaModal(id) {
+            document.getElementById('modal-' + id).classList.add('active');
+        }
+        function tutupModal(id) {
+            document.getElementById('modal-' + id).classList.remove('active');
+        }
+
+        // Kalkulator sederhana
+        function hitungKalori() {
+            const berat = parseFloat(document.getElementById('berat').value) || 0;
+            const tinggi = parseFloat(document.getElementById('tinggi').value) || 0;
+            const usia = parseFloat(document.getElementById('usia').value) || 0;
+            const gender = document.getElementById('gender').value;
+
+            if (!berat || !tinggi || !usia) {
+                alert('Isi semua data!');
+                return;
+            }
+
+            // Rumus Mifflin-St Jeor
+            let bmr;
+            if (gender === 'laki') {
+                bmr = 10 * berat + 6.25 * tinggi - 5 * usia + 5;
+            } else {
+                bmr = 10 * berat + 6.25 * tinggi - 5 * usia - 161;
+            }
+            const tdee = bmr * 1.375; // aktivitas ringan
+            const target = Math.round(tdee - 500); // defisit 500
+
+            document.getElementById('hasilKkal').textContent = target;
+            document.getElementById('hasilKalori').style.display = 'block';
+            document.getElementById('statKkal').textContent = target;
+        }
+
+        // Tutup modal jika klik di luar
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
