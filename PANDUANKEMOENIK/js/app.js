@@ -240,15 +240,22 @@ function renderHomeStats() {
     document.getElementById('heroName').innerHTML = escHtml(q.tipeName) + ' <span>' + escHtml(q.tipe_emoji) + '</span>';
     document.getElementById('heroTypeName').textContent = '';
     document.getElementById('heroBadge').textContent = q.metode === 'agresif' ? '🔥 Agresif' : q.metode === 'ringan' ? '🐢 Ringan' : '⚖️ Standar';
-    // No. 2: Isi METODE dari hasil kuis - tampilkan label lengkap
+
+    // No. 2: Isi METODE dari hasil kuis — ambil metodeName (nama lengkap) yang tersimpan saat quiz selesai
+    // Contoh: "Standar (Defisit 500 kkal)", "Agresif (Defisit 700 kkal)", "Ringan (Defisit 300 kkal)"
+    // Fallback ke map sederhana jika metodeName tidak ada
     var metodeDisplayMap = { 'standar': 'Standar', 'agresif': 'Agresif', 'ringan': 'Ringan', 'if': 'IF 16:8' };
-    var metodeText = metodeDisplayMap[q.metode] || q.metodeName || q.metode || '—';
-    document.getElementById('statMetode').textContent = metodeText;
+    var metodeText = q.metodeName || metodeDisplayMap[q.metode] || q.metode || '—';
+    var statMetodeEl = document.getElementById('statMetode');
+    if (statMetodeEl) statMetodeEl.textContent = metodeText;
+
     // No. 1: Isi SKOR & AKURASI dari hasil kuis metabolisme
+    // Sumber utama: q.skor (tersimpan saat quiz selesai, misal 72)
+    // Fallback ke 72 jika data lama tidak punya field skor (konsisten dengan renderProfilPage)
     var skorEl = document.getElementById('statSkor');
     if (skorEl) {
-      var skorVal = q.skor || q.akurasi || q.score || null;
-      skorEl.textContent = skorVal ? (String(skorVal).replace('%','') + '%') : '—';
+      var skorVal = q.skor || q.akurasi || q.score || 72;
+      skorEl.textContent = String(skorVal).replace('%', '') + '%';
     }
   } else {
     // Jika belum ada quiz, tampilkan dash
