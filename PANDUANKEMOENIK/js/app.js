@@ -57,17 +57,6 @@ function initApp() {
         var normalizedWA = normalizeWA(wa);
         var userData = DataService.loadUserData(normalizedWA);
 
-        // 6b. Migrasi: jika data tidak ditemukan dengan normalized key,
-        // coba load dengan raw WA, lalu pindahkan ke normalized key
-        if (!userData && wa !== normalizedWA) {
-            var oldData = DataService.loadUserData(wa);
-            if (oldData) {
-                userData = oldData;
-                DataService.saveUserData(normalizedWA, oldData); // migrasi ke key baru
-                console.log('Migrasi data dari key lama ke normalized key berhasil');
-            }
-        }
-
         // 7. Handle mode "new" — reset program
         if (mode === 'new' && userData) {
             DataService.resetProgram(normalizedWA);
@@ -75,15 +64,13 @@ function initApp() {
         }
 
         // 8. Sync ke appState
-        // SELALU set user.wa ke normalizedWA agar save/load key konsisten
-        state.set('user.wa', normalizedWA);
         if (userData) {
             if (userData.kalkulator) state.set('kalkulator', userData.kalkulator);
             if (userData.quiz) state.set('quiz', userData.quiz);
             if (userData.evaluasi) state.set('evaluasi', userData.evaluasi);
-            if (userData.misiChecked) state.set('misiChecked', userData.misiChecked);
-            if (userData.profile && userData.profile.nama) {
+            if (userData.profile) {
                 state.set('user.nama', userData.profile.nama);
+                state.set('user.wa', normalizedWA);
             }
         }
 
@@ -786,7 +773,7 @@ async function simpanKalkulator(btnEl) {
   if (btnEl) { btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"> Menyimpan...'; btnEl.disabled = true; }
 
   try {
-    var wa = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
+    var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
     if (!wa) {
       showToast('Error: WA tidak ditemukan');
       if (btnEl) { btnEl.innerHTML = origHtml; btnEl.disabled = false; }
@@ -1121,7 +1108,7 @@ async function showResult() {
     state.set('quiz', qData);
     try { localStorage.setItem('kemoenik_quiz', JSON.stringify(qData)); } catch(e) {}
 
-    var waForQuiz = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
+    var waForQuiz = appState.user.wa || localStorage.getItem('kemoenik_wa');
     if (waForQuiz) await DataService.saveQuiz(waForQuiz, qData);
 
     renderAll();
@@ -1138,7 +1125,7 @@ async function selesaiQuiz() {
       showToast('Error: Hasil kuis tidak ditemukan');
       return;
     }
-    var wa = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
+    var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
     if (!wa) {
       showToast('Error: WA tidak ditemukan');
       return;
