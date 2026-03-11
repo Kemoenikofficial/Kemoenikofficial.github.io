@@ -101,13 +101,13 @@ Total: Rp <span id="total">0</span>
 
 <script>
 
-/* DATABASE PRODUK */
+/* =====================
+MASUKKAN LINK APPS SCRIPT
+===================== */
 
-const produk = {
-"8992761140023":{nama:"Indomie Goreng",harga:3500},
-"8996001600267":{nama:"Aqua 600ml",harga:4000},
-"8998888800123":{nama:"Teh Botol",harga:5000}
-};
+const API_URL = "https://script.google.com/macros/s/AKfycbxD3aTQrCsZXlitaZf59VLZSPBtwkMI5L0AyWpOKSEcpUrmo_IV9W7_6QlOS_NLTgFWTw/exec";
+
+/* ===================== */
 
 let keranjang=[];
 let total=0;
@@ -115,25 +115,6 @@ let total=0;
 function bunyi(){
 var audio=new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
 audio.play();
-}
-
-function tambahItem(barcode){
-
-if(!produk[barcode]){
-alert("Produk tidak ditemukan");
-return;
-}
-
-bunyi();
-
-let item=produk[barcode];
-
-keranjang.push(item);
-
-total+=item.harga;
-
-render();
-
 }
 
 function render(){
@@ -171,11 +152,36 @@ render();
 
 }
 
-/* SCANNER */
+/* =====================
+SCAN BARCODE
+===================== */
 
-function onScanSuccess(decodedText){
+function onScanSuccess(barcode){
 
-tambahItem(decodedText);
+fetch(API_URL+"?barcode="+barcode)
+
+.then(res=>res.json())
+
+.then(data=>{
+
+bunyi();
+
+keranjang.push({
+nama:data.nama,
+harga:Number(data.harga)
+});
+
+total+=Number(data.harga);
+
+render();
+
+})
+
+.catch(err=>{
+
+alert("Produk tidak ditemukan");
+
+});
 
 }
 
