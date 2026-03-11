@@ -264,7 +264,7 @@ function renderHomeStats() {
     // Contoh: "Standar (Defisit 500 kkal)", "Agresif (Defisit 700 kkal)", "Ringan (Defisit 300 kkal)"
     // Fallback ke map sederhana jika metodeName tidak ada
     var metodeDisplayMap = { 'standar': 'Standar', 'agresif': 'Agresif', 'ringan': 'Ringan', 'if': 'IF 16:8' };
-    var metodeText = q.metodeName || metodeDisplayMap[q.metode] || q.metode || '—';
+    var metodeText = metodeDisplayMap[q.metode] || q.metode || '—';
     var statMetodeEl = document.getElementById('statMetode');
     if (statMetodeEl) statMetodeEl.textContent = metodeText;
 
