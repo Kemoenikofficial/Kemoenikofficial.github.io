@@ -3,7 +3,7 @@
 // ============================================================
 
 // URL halaman aktivasi (login/verifikasi voucher)
-const APP_URL = '../aktivasi/index.html';
+const APP_URL = '/PANDUANKEMOENIK/aktivasi/index.html';
 
 // Data FAQ
 const faqData = [
