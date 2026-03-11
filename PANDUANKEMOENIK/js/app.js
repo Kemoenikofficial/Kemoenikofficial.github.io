@@ -196,7 +196,6 @@ function renderAll() {
   renderStatusIndikator();
   renderMakroShortcut();
   renderMisiByProgram();
-  renderJadwalCeklis();
 
   var kuisNotif = document.getElementById('kuisFirstNotif');
   if (kuisNotif) kuisNotif.style.display = appState.quiz ? 'none' : 'flex';
@@ -223,10 +222,22 @@ function renderHomeStats() {
     document.getElementById('heroName').innerHTML = escHtml(q.tipeName) + ' <span>' + escHtml(q.tipe_emoji) + '</span>';
     document.getElementById('heroTypeName').textContent = '';
     document.getElementById('heroBadge').textContent = q.metode === 'agresif' ? '🔥 Agresif' : q.metode === 'ringan' ? '🐢 Ringan' : '⚖️ Standar';
-    var metodeDisplayMap = { 'standar': 'Standar', 'agresif': 'Agresif + IF', 'ringan': 'Ringan' };
-    document.getElementById('statMetode').textContent = metodeDisplayMap[q.metode] || q.metodeName || q.metode || '—';
+    // No. 2: Isi METODE dari hasil kuis - tampilkan label lengkap
+    var metodeDisplayMap = { 'standar': 'Standar', 'agresif': 'Agresif', 'ringan': 'Ringan', 'if': 'IF 16:8' };
+    var metodeText = metodeDisplayMap[q.metode] || q.metodeName || q.metode || '—';
+    document.getElementById('statMetode').textContent = metodeText;
+    // No. 1: Isi SKOR & AKURASI dari hasil kuis metabolisme
     var skorEl = document.getElementById('statSkor');
-    if (skorEl) skorEl.textContent = q.skor ? q.skor + '%' : '—';
+    if (skorEl) {
+      var skorVal = q.skor || q.akurasi || q.score || null;
+      skorEl.textContent = skorVal ? (String(skorVal).replace('%','') + '%') : '—';
+    }
+  } else {
+    // Jika belum ada quiz, tampilkan dash
+    var sEl = document.getElementById('statSkor');
+    var mEl = document.getElementById('statMetode');
+    if (sEl) sEl.textContent = '—';
+    if (mEl) mEl.textContent = '—';
   }
 
   if (k) {
@@ -1190,6 +1201,25 @@ function renderJadwalOlahraga() {
   setSafeHTML(document.getElementById('jadwalNormalList'), html);
 }
 
+// ========== ARRAY MOTIVASI OLAHRAGA ==========
+var pesanMotivasiOlahraga = [
+  'Mantap! Pembakaran lemak makin optimal! \uD83D\uDD25',
+  'Bagus! Jaga konsistensi ya! \uD83D\uDCAA',
+  'Setiap gerakan mendekatkan kamu ke target! \uD83C\uDFAF',
+  'Keren! Metabolisme kamu makin aktif hari ini! \u26A1',
+  'Istirahat juga bagian dari progress. Good job! \uD83D\uDE4C',
+  'Tubuh kamu berterima kasih atas gerakan hari ini! \u2764\uFE0F',
+  'Konsisten adalah kunci. Kamu luar biasa! \uD83C\uDF1F',
+  'Progress bukan tentang cepat, tapi tentang tidak berhenti! \uD83D\uDE80',
+  'Olahraga hari ini = investasi tubuh ideal esok hari! \uD83D\uDCC8',
+  'Kamu sudah selangkah lebih dekat ke goal! Keep it up! \uD83C\uDFC6'
+];
+
+function getRandomMotivasi() {
+  var idx = Math.floor(Math.random() * pesanMotivasiOlahraga.length);
+  return pesanMotivasiOlahraga[idx];
+}
+
 // ========== HELPER: Hitung Streak ==========
 function hitungStreak() {
   var streak = 0, today = new Date();
@@ -1241,6 +1271,18 @@ function generateKalenderMini(jadwal, hm) {
   }
   return html;
 }
+
+// ========== HANDLER: Tunda & Ganti Olahraga ==========
+function tundaOlahraga() {
+  showToast('\u23F0 Fitur Tunda sedang dalam pengembangan. Stay tuned!');
+}
+function gantiOlahraga() {
+  showToast('\uD83D\uDD04 Fitur Ganti Olahraga sedang dalam pengembangan. Stay tuned!');
+}
+window.tundaOlahraga = tundaOlahraga;
+window.gantiOlahraga = gantiOlahraga;
+
+// ========== MAIN: Render Home Jadwal ==========
 function renderHomeJadwal() {
   var el = document.getElementById('homeJadwalContent');
   if (!el) return;
@@ -1258,14 +1300,23 @@ function renderHomeJadwal() {
     var streak = hitungStreak();
     var prog = hitungProgressMinggu();
     var html = '';
+
+    // ---- 1. STREAK COUNTER ----
     if (streak > 0) {
-      html += '<div class="olahraga-streak-badge">' + streak + ' hari berturut-turut!</div>';
+      var streakLabel = streak >= 7 ? '\uD83C\uDFC5 Luar Biasa!' : streak >= 3 ? '\uD83D\uDCAA Rajin' : '\uD83D\uDCAB Keep Going!';
+      html += '<div class="olahraga-streak-badge">\uD83D\uDD25 ' + streak + ' hari berturut-turut! ' + streakLabel + '</div>';
     }
+
+    // ---- 2. PROGRESS MINGGUAN ----
     html += '<div class="olahraga-progress-week">';
-    html += '<div class="olahraga-progress-label">Progress minggu ini: ' + prog.terpenuhi + ' dari ' + prog.total + ' sesi</div>';
+    html += '<div class="olahraga-progress-label">Minggu ini: ' + prog.terpenuhi + ' dari ' + prog.total + ' sesi olahraga</div>';
     html += '<div class="olahraga-progress-bar-bg"><div class="olahraga-progress-bar-fill" style="width:' + prog.persen + '%"></div></div>';
     html += '</div>';
+
+    // ---- 3. KALENDER MINI 7 DOT ----
     html += '<div class="kalender-mini">' + generateKalenderMini(jadwal, hariMap) + '</div>';
+
+    // ---- 4. HEADER HARI INI ----
     html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
     html += '<div style="width:40px;height:40px;border-radius:12px;background:' + (isRest ? '#F3F4F6' : 'linear-gradient(135deg,var(--green),var(--green3))') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
     if (isRest) {
@@ -1278,7 +1329,9 @@ function renderHomeJadwal() {
     var labelP = pp==='if' ? 'Program IF 16:8' : 'Metode ' + metode.charAt(0).toUpperCase() + metode.slice(1);
     html += '<div style="font-size:11px;color:var(--text3);margin-top:1px;">' + labelP + '</div>';
     html += '</div></div>';
-    html += '<div style="background:' + (isRest ? '#F9FAFB' : '#ECFDF5') + ';border-radius:12px;padding:12px 14px;margin-bottom:12px;">';
+
+    // ---- 5. CARD AKTIVITAS HARI INI ----
+    html += '<div style="background:' + (isRest ? '#F9FAFB' : '#ECFDF5') + ';border-radius:12px;padding:12px 14px;margin-bottom:10px;">';
     html += '<div style="font-size:13px;color:' + (isRest ? '#6B7280' : '#065F46') + ';font-weight:' + (isRest ? '400' : '700') + ';line-height:1.7;">' + akt + '</div>';
     if (!isRest) {
       var dur = akt.indexOf('60')!==-1 ? '60 menit' : akt.indexOf('45')!==-1 ? '45 menit' : akt.indexOf('20')!==-1 ? '20 menit' : '30 menit';
@@ -1290,9 +1343,26 @@ function renderHomeJadwal() {
       html += '<div style="font-size:11px;color:#9CA3AF;margin-top:6px;">Istirahat optimal untuk pemulihan. Cukup lymphatic drainage ringan malam ini.</div>';
     }
     html += '</div>';
+
+    // ---- 6. AFIRMASI / MOTIVASI DINAMIS ----
+    html += '<div style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;border-radius:12px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;">';
+    html += '<span style="font-size:18px;">&#128172;</span>';
+    html += '<div id="motivasiOlahragaText" style="font-size:12px;color:#92400E;font-weight:600;line-height:1.5;flex:1;">' + getRandomMotivasi() + '</div>';
+    html += '</div>';
+
+    // ---- 7. TOMBOL AKSI: TUNDA & GANTI OLAHRAGA ----
+    if (!isRest) {
+      html += '<div style="display:flex;gap:8px;margin-bottom:10px;">';
+      html += '<button onclick="tundaOlahraga()" style="flex:1;padding:9px;background:white;color:var(--text3);border:1.5px solid var(--border);border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">&#9201; Tunda</button>';
+      html += '<button onclick="gantiOlahraga()" style="flex:1;padding:9px;background:white;color:var(--text3);border:1.5px solid var(--border);border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">&#128260; Ganti Olahraga</button>';
+      html += '</div>';
+    }
+
+    // ---- 8. TOMBOL JADWAL LENGKAP ----
     html += '<button onclick="openPanel(\'panelJadwalOlahraga\')" style="width:100%;padding:10px;background:var(--green);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;">';
     html += '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
     html += 'Jadwal Lengkap Seminggu</button>';
+
     setSafeHTML(el, html);
   } catch(err) {
     console.log('renderHomeJadwal err:', err);
@@ -1659,7 +1729,6 @@ function pilihProgramHome(pilihan) {
   }
   renderHomeJadwal();
   renderMisiByProgram();
-  renderJadwalCeklis();
   showToast(pilihan === 'if' ? '🌙 Program IF 16:8 dipilih!' : '💪 Program Normal dipilih!');
 }
 window.pilihProgramHome = pilihProgramHome;
@@ -1739,6 +1808,9 @@ function toggleMisi(misiKey, el) {
   var wa = localStorage.getItem('kemoenik_wa') || '';
   if (wa) DataService.saveMisiChecked(normalizeWA(wa), misiKey, newVal);
   if (newVal) showToast('✅ Misi tercatat! Keep going!');
+  // Refresh motivasi text setelah centang
+  var motEl = document.getElementById('motivasiOlahragaText');
+  if (motEl) motEl.textContent = getRandomMotivasi();
 }
 window.toggleMisi = toggleMisi;
 
