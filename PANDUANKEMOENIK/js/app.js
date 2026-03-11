@@ -1,5 +1,5 @@
 // ============================================================
-// LOGIKA UTAMA APLIKASI - KEMOENIK (VERSI LENGKAP DENGAN PERBAIKAN)
+// LOGIKA UTAMA APLIKASI - KEMOENIK (VERSI LENGKAP DIPERBAIKI)
 // ============================================================
 
 // ========== INISIALISASI ==========
@@ -388,7 +388,7 @@ function renderEvalHome() {
     renderEvalHistory();
 }
 
-// ========== FUNGSI BARU UNTUK STREAK DAN PROGRESS ==========
+// ========== FUNGSI UNTUK STREAK DAN PROGRESS ==========
 function hitungStreak() {
     var streak = 0;
     var today = new Date().toDateString();
@@ -451,7 +451,7 @@ function pilihAfirmasi() {
     return list[Math.floor(Math.random() * list.length)];
 }
 
-// ========== RENDER HOME JADWAL (baru) ==========
+// ========== RENDER HOME JADWAL ==========
 function renderHomeJadwal() {
     var el = document.getElementById('homeJadwalContent');
     if (!el) return;
@@ -524,7 +524,7 @@ function renderHomeJadwal() {
     }
 }
 
-// ========== RENDER MAKRO SHORTCUT (baru) ==========
+// ========== RENDER MAKRO SHORTCUT ==========
 function renderMakroShortcut() {
     var container = document.getElementById('shortcutMakro');
     if (!container) return;
@@ -700,170 +700,147 @@ function togFaq(id) {
     document.getElementById(id).classList.toggle('on');
 }
 
-// ========== PROFIL (DIPERBAIKI) ==========
+// ========== PROFIL (VERSI SUPER DEFENSIF - DIPERBAIKI) ==========
 function renderProfilPage() {
+    console.log('renderProfilPage dipanggil');
     var q = appState.quiz;
     var pageProfil = document.getElementById('page-profil');
-    if (!pageProfil) return;
-
-    // Jika tidak ada quiz atau quiz tidak memiliki tipe (data rusak)
-    if (!q || !q.tipe) {
-        // Cek apakah elemen ajakan sudah ada, jika tidak buat
-        var belumKuis = document.getElementById('profilBelumKuis');
-        if (belumKuis) {
-            belumKuis.style.display = 'block';
-            var profilContent = document.getElementById('profilContent');
-            if (profilContent) profilContent.style.display = 'none';
-        } else {
-            // Buat elemen ajakan secara dinamis
-            pageProfil.innerHTML = `
-                <div style="text-align:center;padding:40px 20px;">
-                    <div style="font-size:56px;margin-bottom:16px;">🧬</div>
-                    <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:8px;">Profil Metabolisme Belum Ada</div>
-                    <div style="font-size:13px;color:var(--text3);margin-bottom:6px;line-height:1.7;">Isi kuis tipe metabolisme terlebih dahulu untuk mendapatkan analisis lengkap tentang tubuhmu.</div>
-                    <div style="background:var(--offwhite);border-radius:12px;padding:14px;margin:16px 0;text-align:left;">
-                        <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">Yang kamu dapatkan dari kuis:</div>
-                        <div style="font-size:12px;color:var(--text3);line-height:1.9;">
-                            📈 <strong>Trait Bar Metabolisme</strong> — 5 karakteristik metabolismemu<br>
-                            🧬 <strong>Tipe & Karakteristik</strong> — profil lengkap + anjuran & pantangan<br>
-                            🎯 <strong>Skor & Akurasi</strong> — kesesuaian program KEMOENIK untukmu<br>
-                            ⚖️ <strong>Metode Diet</strong> — otomatis terisi di kalkulator
-                        </div>
-                    </div>
-                    <button class="btn-primary" style="max-width:260px;" onclick="go('kuis')">
-                        <i class="fas fa-pencil-alt"></i> Isi Kuis Sekarang (3 menit)
-                    </button>
-                </div>
-            `;
-        }
+    
+    if (!pageProfil) {
+        console.error('Element #page-profil tidak ditemukan!');
         return;
     }
 
-    // Jika ada quiz, pastikan elemen profilContent tampil
-    var profilContent = document.getElementById('profilContent');
-    if (!profilContent) {
-        // Jika tidak ada, buat struktur dari awal
+    // ========== CEK DATA QUIZ ==========
+    if (!q || !q.tipe) {
+        console.log('Data quiz tidak ada, tampilkan ajakan');
+        // Tampilkan ajakan
         pageProfil.innerHTML = `
-            <button class="btn-outline" style="margin-bottom:12px;width:100%;" onclick="resetAndEditQuiz()">
-                <i class="fas fa-pencil-alt"></i> Edit / Ulangi Quiz
-            </button>
-            <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
-                <div id="profilStatusIndicator" style="display:flex; align-items:center; gap:4px; background:var(--offwhite); padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600;"></div>
-            </div>
-            <div class="acc" id="acc-trait">
-                <div class="acc-hd" onclick="tog('acc-trait')">
-                    <div class="acc-icon" style="background:rgba(232,160,32,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2" stroke-linecap="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
-                    <div class="acc-info">
-                        <div class="acc-title">Trait Bar Metabolisme</div>
-                        <div class="acc-sub" id="traitBarSub">Karakteristik metabolismemu</div>
-                    </div>
-                    <div class="acc-toggle">+</div>
-                </div>
-                <div class="acc-body" id="traitBarContent"></div>
-            </div>
-            <div class="acc" id="acc-karakter">
-                <div class="acc-hd" onclick="tog('acc-karakter')">
-                    <div class="acc-icon" style="background:rgba(46,139,53,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2" stroke-linecap="round"><path d="M2 15c6.667-6 13.333 0 20-6M2 9c6.667 6 13.333 0 20 6"/></svg></div>
-                    <div class="acc-info">
-                        <div class="acc-title">Tipe & Karakteristik</div>
-                        <div class="acc-sub" id="tipeKarakterSub">Tipe metabolismemu</div>
-                    </div>
-                    <div class="acc-toggle">+</div>
-                </div>
-                <div class="acc-body" id="tipeKarakterContent"></div>
-            </div>
-            <div class="acc" id="acc-skor">
-                <div class="acc-hd" onclick="tog('acc-skor');setTimeout(animScore,80)">
-                    <div class="acc-icon" style="background:rgba(59,130,246,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
-                    <div class="acc-info">
-                        <div class="acc-title">Skor & Akurasi</div>
-                        <div class="acc-sub" id="skorSub">Kesesuaian program dengan metabolismemu</div>
-                    </div>
-                    <div class="acc-toggle">+</div>
-                </div>
-                <div class="acc-body">
-                    <div class="score-block">
-                        <div class="score-ring-wrap">
-                            <svg viewBox="0 0 120 120">
-                                <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" style="stop-color:#2E8B35"/>
-                                    <stop offset="100%" style="stop-color:#E8A020"/>
-                                </linearGradient></defs>
-                                <circle class="sr-bg" cx="60" cy="60" r="52"/>
-                                <circle class="sr-fill" id="srFill" cx="60" cy="60" r="52"/>
-                            </svg>
-                            <div class="score-center">
-                                <div class="score-pct" id="scorePct">—</div>
-                                <div class="score-lbl">Akurasi</div>
-                            </div>
-                        </div>
-                        <div class="score-desc" id="scoreDesc">Isi kuis untuk mendapatkan skor akurasi program dietmu.</div>
-                    </div>
-                </div>
+            <div style="text-align:center; padding:40px 20px;">
+                <div style="font-size:56px; margin-bottom:16px;">🧬</div>
+                <div style="font-size:20px; font-weight:700; color:#1F4D3A; margin-bottom:8px;">Profil Metabolisme</div>
+                <div style="font-size:14px; color:#8A9A92; margin-bottom:20px;">Belum ada data kuis. Isi kuis untuk melihat profil metabolismemu.</div>
+                <button onclick="go('kuis')" style="background:#1F4D3A; color:white; border:none; padding:14px 24px; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer;">
+                    <i class="fas fa-pencil-alt"></i> Isi Kuis Sekarang
+                </button>
             </div>
         `;
-        profilContent = document.getElementById('profilContent');
+        return;
     }
 
-    // Sembunyikan ajakan
-    var belumKuis = document.getElementById('profilBelumKuis');
-    if (belumKuis) belumKuis.style.display = 'none';
-    if (profilContent) profilContent.style.display = 'block';
-
+    // ========== DATA QUIZ ADA ==========
+    console.log('Data quiz ditemukan:', q);
+    
+    // Buat HTML lengkap untuk halaman profil
     var tipeId = q.tipe || 2;
     var traits = traitDataByType[tipeId] || traitDataByType[2];
-
+    var tipe = quizTypes.find(t => t.id === tipeId) || quizTypes[1];
+    
+    // Build trait HTML
     var traitHtml = '';
     traits.forEach(function(t) {
-        traitHtml += '<div class="trait-card">';
-        traitHtml += '<div class="trait-top"><div class="trait-name">' + t.name + '</div><div class="trait-badge ' + t.badgeClass + '">' + t.badge + '</div></div>';
-        traitHtml += '<div class="trait-bar-bg"><div class="trait-bar-marker" style="left:' + t.pct + '%"></div></div>';
-        traitHtml += '<div class="trait-labels">' + t.labels.map(l => '<span>' + l + '</span>').join('') + '</div>';
-        traitHtml += '<div class="trait-desc">' + t.desc + '</div>';
-        traitHtml += '</div>';
+        traitHtml += `
+            <div style="background:white; border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span style="font-weight:600; color:#1E2B26;">${t.name}</span>
+                    <span style="background:${t.badgeClass === 'badge-optimal' ? '#DCFCE7' : '#FEF3C7'}; color:${t.badgeClass === 'badge-optimal' ? '#065F46' : '#92400E'}; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600;">${t.badge}</span>
+                </div>
+                <div style="height:6px; background:#E0E4E0; border-radius:3px; margin-bottom:8px; position:relative;">
+                    <div style="width:${t.pct}%; height:100%; background:#1F4D3A; border-radius:3px;"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:#8A9A92; margin-bottom:6px;">
+                    ${t.labels.map(l => '<span>' + l + '</span>').join('')}
+                </div>
+                <div style="font-size:12px; color:#5E6E66; line-height:1.6;">${t.desc}</div>
+            </div>
+        `;
     });
-    var traitContent = document.getElementById('traitBarContent');
-    if (traitContent) traitContent.innerHTML = traitHtml;
-
-    var traitSub = document.getElementById('traitBarSub');
-    if (traitSub) traitSub.textContent = q.tipeName + ' — ' + traits.length + ' karakteristik';
-
-    // Render tipe & karakteristik
-    var tipe = quizTypes.find(t => t.id === tipeId) || quizTypes[1];
-    var karHtml = '<div style="background:' + tipe.bg + ';border-radius:14px;padding:16px;margin-bottom:14px;">';
-    karHtml += '<div style="font-size:24px;margin-bottom:8px;">' + tipe.emoji + '</div>';
-    karHtml += '<div style="font-size:16px;font-weight:800;color:' + tipe.textColor + ';margin-bottom:4px;">' + tipe.name + '</div>';
-    karHtml += '<div style="font-size:12px;color:' + tipe.textColor + ';opacity:0.85;line-height:1.6;">' + tipe.tagline + '</div>';
-    karHtml += '</div>';
-    karHtml += '<div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Karakteristik Utama</div>';
+    
+    // Build karakteristik HTML
+    var karHtml = `
+        <div style="background:${tipe.bg}; border-radius:16px; padding:20px; margin-bottom:16px;">
+            <div style="font-size:32px; margin-bottom:10px;">${tipe.emoji}</div>
+            <div style="font-size:20px; font-weight:700; color:${tipe.textColor};">${tipe.name}</div>
+            <div style="font-size:13px; color:${tipe.textColor}; opacity:0.9; margin-top:4px;">${tipe.tagline}</div>
+        </div>
+        <div style="font-weight:600; color:#1E2B26; margin-bottom:12px;">Karakteristik Utama</div>
+    `;
     tipe.tips.forEach(function(tip) {
-        karHtml += '<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;">';
-        karHtml += '<div style="color:var(--green);font-size:12px;margin-top:2px;">✓</div>';
-        karHtml += '<div style="font-size:12px;color:var(--text3);line-height:1.6;">' + tip + '</div>';
-        karHtml += '</div>';
+        karHtml += `
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <span style="color:#1F4D3A;">✓</span>
+                <span style="font-size:13px; color:#5E6E66;">${tip}</span>
+            </div>
+        `;
     });
-    karHtml += '<div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;">';
-    karHtml += '<div style="background:#FEE2E2;border-radius:8px;padding:8px 12px;font-size:12px;color:#991B1B;"><strong>Hindari:</strong> ' + tipe.hindari + '</div>';
-    karHtml += '<div style="background:#DCFCE7;border-radius:8px;padding:8px 12px;font-size:12px;color:#065F46;"><strong>Anjurkan:</strong> ' + tipe.anjuran + '</div>';
-    karHtml += '</div>';
-    var karakterContent = document.getElementById('tipeKarakterContent');
-    if (karakterContent) karakterContent.innerHTML = karHtml;
-    var karakterSub = document.getElementById('tipeKarakterSub');
-    if (karakterSub) karakterSub.textContent = tipe.name;
-
-    // Skor
+    karHtml += `
+        <div style="margin-top:16px;">
+            <div style="background:#FEE2E2; border-radius:10px; padding:12px; margin-bottom:8px; font-size:12px; color:#991B1B;">
+                <strong>Hindari:</strong> ${tipe.hindari}
+            </div>
+            <div style="background:#DCFCE7; border-radius:10px; padding:12px; font-size:12px; color:#065F46;">
+                <strong>Anjurkan:</strong> ${tipe.anjuran}
+            </div>
+        </div>
+    `;
+    
+    // Build skor HTML
     var skor = q.skor || 72;
-    var scorePct = document.getElementById('scorePct');
-    if (scorePct) scorePct.textContent = skor + '%';
-    var scoreDesc = document.getElementById('scoreDesc');
-    if (scoreDesc) scoreDesc.textContent = 'Program KEMOENIK dengan metode ' + (q.metodeName || q.metode) + ' memiliki kesesuaian ' + skor + '% dengan profil metabolismemu. Semakin konsisten, semakin tinggi efektivitasnya!';
-
-    // Buka accordion
-    ['acc-trait', 'acc-karakter', 'acc-skor'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el && !el.classList.contains('on')) el.classList.add('on');
-    });
-    setTimeout(animScore, 100);
+    var skorHtml = `
+        <div style="display:flex; flex-direction:column; align-items:center; padding:20px;">
+            <div style="position:relative; width:120px; height:120px; margin-bottom:16px;">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="52" fill="none" stroke="#E0E4E0" stroke-width="8"/>
+                    <circle cx="60" cy="60" r="52" fill="none" stroke="#1F4D3A" stroke-width="8" stroke-dasharray="326" stroke-dashoffset="${326 - (skor/100*326)}" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                </svg>
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center;">
+                    <div style="font-size:28px; font-weight:700; color:#1F4D3A;">${skor}%</div>
+                    <div style="font-size:10px; color:#8A9A92;">Akurasi</div>
+                </div>
+            </div>
+            <div style="font-size:13px; color:#5E6E66; text-align:center; line-height:1.6;">
+                Program KEMOENIK dengan metode ${q.metodeName || q.metode} memiliki kesesuaian ${skor}% dengan profil metabolismemu.
+            </div>
+        </div>
+    `;
+    
+    // Gabungkan semua
+    pageProfil.innerHTML = `
+        <div style="margin-bottom:12px;">
+            <button onclick="resetAndEditQuiz()" style="width:100%; padding:12px; background:white; border:1px solid #E0E4E0; border-radius:12px; font-size:13px; font-weight:600; color:#1F4D3A; cursor:pointer;">
+                <i class="fas fa-pencil-alt"></i> Edit / Ulangi Quiz
+            </button>
+        </div>
+        
+        <div style="display:flex; justify-content:flex-end; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:4px; background:#F9FBF9; padding:4px 12px; border-radius:20px;">
+                <div style="width:8px; height:8px; border-radius:50%; background:${(appState.kalkulator && appState.quiz) ? '#10B981' : (appState.kalkulator || appState.quiz) ? '#F59E0B' : '#9CA3AF'};"></div>
+                <span style="font-size:11px; font-weight:600; color:${(appState.kalkulator && appState.quiz) ? '#10B981' : (appState.kalkulator || appState.quiz) ? '#F59E0B' : '#9CA3AF'};">
+                    ${(appState.kalkulator && appState.quiz) ? 'Aktif' : (appState.kalkulator || appState.quiz) ? 'Sebagian' : 'Setup'}
+                </span>
+            </div>
+        </div>
+        
+        <div style="background:white; border-radius:16px; padding:20px; margin-bottom:16px;">
+            <div style="font-size:20px; font-weight:700; color:#1E2B26; margin-bottom:4px;">${q.tipeName}</div>
+            <div style="font-size:14px; color:#8A9A92;">${q.tipe_emoji} ${q.tagline}</div>
+        </div>
+        
+        <div style="margin-top:20px;">
+            <div style="font-weight:600; color:#1E2B26; margin-bottom:12px;">Trait Bar Metabolisme</div>
+            ${traitHtml}
+        </div>
+        
+        <div style="margin-top:20px;">
+            <div style="font-weight:600; color:#1E2B26; margin-bottom:12px;">Tipe & Karakteristik</div>
+            ${karHtml}
+        </div>
+        
+        <div style="margin-top:20px;">
+            <div style="font-weight:600; color:#1E2B26; margin-bottom:12px;">Skor & Akurasi</div>
+            ${skorHtml}
+        </div>
+    `;
 }
 
 function animScore() {
@@ -1173,7 +1150,7 @@ function deleteEval(idx) {
     appState.evaluasi.splice(idx, 1);
     state._persist();
     var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
-    if (wa) DataService.saveEvaluasi(wa, appState.evaluasi); // simpan array baru
+    if (wa) DataService.saveEvaluasi(wa, appState.evaluasi);
     renderEvalHistory();
     renderHomeStats();
     showToast('Evaluasi dihapus');
