@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -12,10 +13,9 @@
         gtag('js', new Date());
         gtag('config', 'G-R7JZQXBQ57');
     </script>
-    <!-- Google Fonts Premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -191,12 +191,12 @@
                         <div class="sc-card-sub">Hitung kalori & target dietmu</div>
                         <span class="sc-card-arr">›</span>
                     </div>
-                    <div class="sc-card" onclick="go('tips')">
-                        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#EFF6FF,#BFDBFE);">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                    <div class="sc-card" onclick="openPanel('panelKalkulator')">
+                        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#ECFDF5,#A7F3D0);">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
                         </div>
-                        <div class="sc-card-name">Makronutrisi</div>
-                        <div id="shortcutMakro" class="sc-card-sub">P / L / K harian</div>
+                        <div class="sc-card-name">Hasil Nutrisi</div>
+                        <div id="shortcutMakro" class="sc-card-sub">Protein, Lemak, Karbohidrat</div>
                         <span class="sc-card-arr">›</span>
                     </div>
                     <div class="sc-card" onclick="openFaq()">
@@ -222,9 +222,10 @@
                     <div class="sec-title" style="margin-bottom:0;">Jadwal Olahraga Hari Ini</div>
                     <div class="sec-link" onclick="openPanel('panelJadwalOlahraga')">Lihat semua ›</div>
                 </div>
-                <div id="homeJadwalWrap" style="background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:20px;">
-                    <div id="homeJadwalContent" style="padding:20px;"></div>
+                <div id="homeJadwalWrap" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:6px;">
+                    <div id="homeJadwalContent" style="padding:14px 16px;"></div>
                 </div>
+                <div id="jadwalCeklisContainer" style="margin-bottom:14px;"></div>
                 <div class="sec-title-row" style="margin-top:4px;">
                     <div class="sec-title" style="margin-bottom:0;">Tips Hari Ini</div>
                     <div class="sec-link" onclick="go('tips')">Lihat semua ›</div>
@@ -262,7 +263,7 @@
                     </div>
                     <div class="faq-section" id="faqContainer"></div>
                 </div>
-                <div style="background:linear-gradient(135deg,#FFF7ED,#FEF2F2);border:1px solid #FED7AA;border-radius:20px;padding:20px;margin-top:16px;">
+                <div style="background:linear-gradient(135deg,#FFF7ED,#FEF2F2);border:1px solid #FED7AA;border-radius:16px;padding:20px;margin-top:16px;">
                     <div style="font-size:13px;font-weight:700;color:#9A3412;text-align:center;margin-bottom:14px;">🛒 Stok Kapsul Menipis? Jangan Sampai Kehabisan!</div>
                     <div class="shop-grid">
                         <a href="https://s.shopee.co.id/4VXlRpSx3t" target="_blank" class="shop-btn shop-shopee"><i class="fas fa-shopping-bag"></i> Shopee</a>
@@ -487,7 +488,7 @@
                         <div class="pb-name">Temukan Tipe Kamu</div>
                         <div class="pb-desc">15 pertanyaan untuk mengetahui tipe metabolisme & program terbaik untukmu</div>
                     </div>
-                    <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:14px;">
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;">
                         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;margin-bottom:14px;">
                             <div><div style="font-size:22px;font-weight:800;color:var(--green3);">15</div><div style="font-size:10px;color:var(--text3);">Pertanyaan</div></div>
                             <div><div style="font-size:22px;font-weight:800;color:var(--gold2);">7</div><div style="font-size:10px;color:var(--text3);">Tipe</div></div>
@@ -656,7 +657,7 @@
                     </div>
                 </div>
                 <div id="hasilKalkulator" style="display:none;margin-top:16px;">
-                    <div style="background:linear-gradient(135deg,var(--green),var(--green3));border-radius:20px;padding:18px;margin-bottom:14px;color:white;">
+                    <div style="background:linear-gradient(135deg,var(--green),var(--green3));border-radius:16px;padding:18px;margin-bottom:14px;color:white;">
                         <div style="font-size:11px;opacity:0.7;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">Hasil Kalkulasi</div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
                             <div><div style="font-size:22px;font-weight:800;" id="hasilKkal">—</div><div style="font-size:11px;opacity:0.75;">kkal/hari (target diet)</div></div>
@@ -1012,27 +1013,9 @@
             localStorage.setItem('kemoenik_voucher', voucher);
             localStorage.setItem('kemoenik_mode', mode);
             localStorage.setItem('kemoenik_expiry', String(Date.now() + 7 * 24 * 60 * 60 * 1000));
+            
             // Clean URL (hapus parameter dari address bar)
             window.history.replaceState({}, document.title, window.location.pathname);
-        }
-
-        // ✅ PERBAIKAN: Jika tidak ada wa/voucher, aktifkan demo mode
-        // supaya halaman tetap tampil (tidak stuck di access screen)
-        var storedWA = localStorage.getItem('kemoenik_wa');
-        var storedVoucher = localStorage.getItem('kemoenik_voucher');
-        if (!storedWA || !storedVoucher) {
-            // Simpan demo session agar halaman bisa tampil
-            localStorage.setItem('kemoenik_wa', '6200000000000');
-            localStorage.setItem('kemoenik_voucher', 'DEMO');
-            localStorage.setItem('kemoenik_mode', 'continue');
-            localStorage.setItem('kemoenik_expiry', String(Date.now() + 30 * 24 * 60 * 60 * 1000));
-        }
-
-        // ✅ PERBAIKAN: Cek expiry dan auto-renew jika hampir habis
-        var expiry = localStorage.getItem('kemoenik_expiry');
-        if (expiry && Date.now() > parseInt(expiry)) {
-            // Auto-renew expiry 7 hari
-            localStorage.setItem('kemoenik_expiry', String(Date.now() + 7 * 24 * 60 * 60 * 1000));
         }
     })();
     </script>
