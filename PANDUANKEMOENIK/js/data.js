@@ -3,7 +3,7 @@
 // ============================================================
 
 // URL halaman aktivasi (login/verifikasi voucher)
-const APP_URL = 'https://kemoenikofficial.github.io/aktivasi/';
+const APP_URL = '../aktivasi/index.html';
 
 // Data FAQ
 const faqData = [
