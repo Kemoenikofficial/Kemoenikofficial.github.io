@@ -232,6 +232,31 @@ function renderHomeStats() {
   var k = appState.kalkulator;
   var q = appState.quiz;
 
+  // FALLBACK: Jika appState.quiz null tapi data ada di localStorage, ambil dari sana
+  if (!q) {
+    try {
+      var rawQ = localStorage.getItem('kemoenik_quiz');
+      if (rawQ) { q = JSON.parse(rawQ); if (q && q.tipe) { appState.quiz = q; state.set('quiz', q); } else { q = null; } }
+    } catch(e) {}
+  }
+  // FALLBACK KEDUA: Cek dari kemoenik_state_v2
+  if (!q) {
+    try {
+      var sv2 = localStorage.getItem('kemoenik_state_v2');
+      if (sv2) { var sv2p = JSON.parse(sv2); if (sv2p.quiz && sv2p.quiz.tipe) { q = sv2p.quiz; appState.quiz = q; state.set('quiz', q); } }
+    } catch(e) {}
+  }
+  // FALLBACK KETIGA: Cek dari userData per WA
+  if (!q) {
+    try {
+      var waFb = localStorage.getItem('kemoenik_wa');
+      if (waFb && typeof DataService !== 'undefined') {
+        var udFb = DataService.loadUserData(normalizeWA(waFb));
+        if (udFb && udFb.quiz && udFb.quiz.tipe) { q = udFb.quiz; appState.quiz = q; state.set('quiz', q); }
+      }
+    } catch(e) {}
+  }
+
   var nama = k ? (k.nama || '—') : (q ? (q.nama || '—') : '—');
   document.getElementById('userName').textContent = nama.split(' ')[0] || '—';
   document.getElementById('dName').textContent = nama || '—';
@@ -614,6 +639,19 @@ function togFaq(id) {
 // ========== PROFIL ==========
 function renderProfilPage() {
   var q = appState.quiz;
+  // FALLBACK: ambil dari localStorage jika appState.quiz kosong
+  if (!q) {
+    try {
+      var rawQ = localStorage.getItem('kemoenik_quiz');
+      if (rawQ) { var pq = JSON.parse(rawQ); if (pq && pq.tipe) { q = pq; appState.quiz = q; state.set('quiz', q); } }
+    } catch(e) {}
+  }
+  if (!q) {
+    try {
+      var sv2 = localStorage.getItem('kemoenik_state_v2');
+      if (sv2) { var sv2p = JSON.parse(sv2); if (sv2p.quiz && sv2p.quiz.tipe) { q = sv2p.quiz; appState.quiz = q; state.set('quiz', q); } }
+    } catch(e) {}
+  }
   var belumKuis = document.getElementById('profilBelumKuis');
   var profilContent = document.getElementById('profilContent');
   if (!q) {
