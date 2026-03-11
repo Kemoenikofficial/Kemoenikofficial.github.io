@@ -18,7 +18,69 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
-</head>
+
+    <!-- ✅ KEAMANAN: Session Guard — harus dijalankan sebelum halaman dirender -->
+    <script>
+        (function() {
+            // Secret key — harus sama persis dengan yang ada di aktivitas.html
+            var SECRET_KEY = 'KMN_s3cr3t_2025_x9z';
+
+            // Hash sederhana — harus identik dengan fungsi di aktivitas.html
+            function hashSimple(str) {
+                var hash = 0;
+                for (var i = 0; i < str.length; i++) {
+                    var chr = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + chr;
+                    hash |= 0;
+                }
+                hash = hash ^ str.length ^ 0x4B4D4E;
+                return (hash >>> 0).toString(16).padStart(8, '0') +
+                       (str.length * 31 + 7).toString(16).padStart(4, '0');
+            }
+
+            function generateToken(wa, voucher) {
+                return hashSimple(wa + '::' + voucher + '::' + SECRET_KEY);
+            }
+
+            function redirectToLogin() {
+                window.location.replace('/PANDUANKEMOENIK/aktivitas.html');
+            }
+
+            // a. Ambil session dari localStorage
+            var raw = localStorage.getItem('userSession');
+            if (!raw) {
+                // b. Session tidak ada → redirect
+                redirectToLogin();
+                return;
+            }
+
+            var session;
+            try {
+                session = JSON.parse(raw);
+            } catch(e) {
+                localStorage.removeItem('userSession');
+                redirectToLogin();
+                return;
+            }
+
+            // c. Cek expired
+            if (!session.expired || Date.now() > session.expired) {
+                localStorage.removeItem('userSession');
+                redirectToLogin();
+                return;
+            }
+
+            // d & e. Hitung ulang token dan bandingkan
+            var expectedToken = generateToken(session.wa, session.voucher);
+            if (!session.token || session.token !== expectedToken) {
+                localStorage.removeItem('userSession');
+                redirectToLogin();
+                return;
+            }
+
+            // f. Semua valid — izinkan akses, tidak perlu lakukan apa-apa
+        })();
+    </script>
 <body>
     <!-- ACCESS SCREEN -->
     <div id="accessScreen" style="display:none;">
