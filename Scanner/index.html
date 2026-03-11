@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Kasir Scanner</title>
+
 <script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+h1{
+background:#00c853;
+margin:0;
+padding:15px;
+font-size:20px;
+}
+
+#reader{
+width:100%;
+max-width:400px;
+margin:auto;
+margin-top:20px;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<h2>SCAN PRODUK</h2>
+<h1>SCAN PRODUK</h1>
 
-<div id="reader" style="width:300px"></div>
+<div id="reader"></div>
 
 <script>
 
@@ -21,7 +53,7 @@ function onScanSuccess(decodedText) {
 
 bunyi();
 
-google.script.run.tambahScan(decodedText);
+alert("Barcode: " + decodedText);
 
 }
 
