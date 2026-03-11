@@ -2,8 +2,8 @@
 // DATA STATIS UNTUK APLIKASI KEMOENIK
 // ============================================================
 
-// URL halaman aktivasi (login/verifikasi voucher)
-const APP_URL = '/PANDUANKEMOENIK/aktivasi/index.html';
+// URL halaman aktivitas
+const APP_URL = 'https://kemoenikofficial.github.io/aktivitas/';
 
 // Data FAQ
 const faqData = [
