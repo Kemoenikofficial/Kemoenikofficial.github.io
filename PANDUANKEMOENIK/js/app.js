@@ -57,6 +57,28 @@ function initApp() {
         var normalizedWA = normalizeWA(wa);
         var userData = DataService.loadUserData(normalizedWA);
 
+        // 6b. MIGRASI DATA LAMA — jika key normalisasi kosong, cari key lama (non-normalized)
+        // Ini terjadi kalau user isi kuis sebelum bug normalizeWA diperbaiki
+        if (!userData || (!userData.quiz && !userData.kalkulator)) {
+            try {
+                // Coba semua variasi WA yang mungkin tersimpan
+                var waVariants = [wa, wa.replace(/\D/g,'')];
+                if (wa.startsWith('62')) waVariants.push('0' + wa.substring(2));
+                if (wa.startsWith('0'))  waVariants.push('62' + wa.substring(1));
+                waVariants.forEach(function(v) {
+                    if (v === normalizedWA) return;
+                    var oldData = DataService.loadUserData(v);
+                    if (oldData && (oldData.quiz || oldData.kalkulator)) {
+                        // Pindahkan ke key yang benar
+                        var mergedData = Object.assign({}, oldData, userData || {});
+                        DataService.saveUserData(normalizedWA, mergedData);
+                        userData = mergedData;
+                        console.log('[KEMOENIK] Data migrasi dari key', v, '→', normalizedWA);
+                    }
+                });
+            } catch(e) { console.warn('Migrasi data lama error:', e); }
+        }
+
         // 7. Handle mode "new" — reset program
         if (mode === 'new' && userData) {
             DataService.resetProgram(normalizedWA);
@@ -232,29 +254,39 @@ function renderHomeStats() {
   var k = appState.kalkulator;
   var q = appState.quiz;
 
-  // FALLBACK: Jika appState.quiz null tapi data ada di localStorage, ambil dari sana
+  // FALLBACK BERLAPIS: jika appState.quiz null, paksa baca dari semua sumber storage
   if (!q) {
     try {
+      // Coba 1: kemoenik_quiz (key lama/flat)
       var rawQ = localStorage.getItem('kemoenik_quiz');
-      if (rawQ) { q = JSON.parse(rawQ); if (q && q.tipe) { appState.quiz = q; state.set('quiz', q); } else { q = null; } }
+      if (rawQ) { var pq = JSON.parse(rawQ); if (pq && pq.tipe) q = pq; }
     } catch(e) {}
   }
-  // FALLBACK KEDUA: Cek dari kemoenik_state_v2
   if (!q) {
     try {
-      var sv2 = localStorage.getItem('kemoenik_state_v2');
-      if (sv2) { var sv2p = JSON.parse(sv2); if (sv2p.quiz && sv2p.quiz.tipe) { q = sv2p.quiz; appState.quiz = q; state.set('quiz', q); } }
+      // Coba 2: kemoenik_state_v2
+      var sv2raw = localStorage.getItem('kemoenik_state_v2');
+      if (sv2raw) { var sv2p = JSON.parse(sv2raw); if (sv2p && sv2p.quiz && sv2p.quiz.tipe) q = sv2p.quiz; }
     } catch(e) {}
   }
-  // FALLBACK KETIGA: Cek dari userData per WA
   if (!q) {
     try {
-      var waFb = localStorage.getItem('kemoenik_wa');
-      if (waFb && typeof DataService !== 'undefined') {
-        var udFb = DataService.loadUserData(normalizeWA(waFb));
-        if (udFb && udFb.quiz && udFb.quiz.tipe) { q = udFb.quiz; appState.quiz = q; state.set('quiz', q); }
-      }
+      // Coba 3: userData per WA (normalized dan non-normalized)
+      var waRaw = appState.user.wa || localStorage.getItem('kemoenik_wa') || '';
+      var waNorm = normalizeWA(waRaw);
+      var waVariants = [waNorm];
+      if (waRaw !== waNorm) waVariants.push(waRaw.replace(/\D/g,''));
+      waVariants.forEach(function(v) {
+        if (q) return;
+        var ud = DataService.loadUserData(v);
+        if (ud && ud.quiz && ud.quiz.tipe) q = ud.quiz;
+      });
     } catch(e) {}
+  }
+  // Jika berhasil dapat dari fallback, sync ke appState supaya render berikutnya langsung ada
+  if (q && !appState.quiz) {
+    state.set('quiz', q);
+    try { localStorage.setItem('kemoenik_quiz', JSON.stringify(q)); } catch(e) {}
   }
 
   var nama = k ? (k.nama || '—') : (q ? (q.nama || '—') : '—');
@@ -639,19 +671,32 @@ function togFaq(id) {
 // ========== PROFIL ==========
 function renderProfilPage() {
   var q = appState.quiz;
-  // FALLBACK: ambil dari localStorage jika appState.quiz kosong
+
+  // FALLBACK BERLAPIS: jika appState.quiz null, paksa baca dari semua sumber storage
   if (!q) {
     try {
       var rawQ = localStorage.getItem('kemoenik_quiz');
-      if (rawQ) { var pq = JSON.parse(rawQ); if (pq && pq.tipe) { q = pq; appState.quiz = q; state.set('quiz', q); } }
+      if (rawQ) { var pq = JSON.parse(rawQ); if (pq && pq.tipe) q = pq; }
     } catch(e) {}
   }
   if (!q) {
     try {
-      var sv2 = localStorage.getItem('kemoenik_state_v2');
-      if (sv2) { var sv2p = JSON.parse(sv2); if (sv2p.quiz && sv2p.quiz.tipe) { q = sv2p.quiz; appState.quiz = q; state.set('quiz', q); } }
+      var sv2raw = localStorage.getItem('kemoenik_state_v2');
+      if (sv2raw) { var sv2p = JSON.parse(sv2raw); if (sv2p && sv2p.quiz && sv2p.quiz.tipe) q = sv2p.quiz; }
     } catch(e) {}
   }
+  if (!q) {
+    try {
+      var waRaw = appState.user.wa || localStorage.getItem('kemoenik_wa') || '';
+      var ud = DataService.loadUserData(normalizeWA(waRaw));
+      if (ud && ud.quiz && ud.quiz.tipe) q = ud.quiz;
+    } catch(e) {}
+  }
+  if (q && !appState.quiz) {
+    state.set('quiz', q);
+    try { localStorage.setItem('kemoenik_quiz', JSON.stringify(q)); } catch(e) {}
+  }
+
   var belumKuis = document.getElementById('profilBelumKuis');
   var profilContent = document.getElementById('profilContent');
   if (!q) {
@@ -818,7 +863,7 @@ async function simpanKalkulator(btnEl) {
   if (btnEl) { btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"> Menyimpan...'; btnEl.disabled = true; }
 
   try {
-    var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+    var wa = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
     if (!wa) {
       showToast('Error: WA tidak ditemukan');
       if (btnEl) { btnEl.innerHTML = origHtml; btnEl.disabled = false; }
@@ -864,7 +909,7 @@ function updateResetButtonVisibility() {
 
 async function resetKalkulator() {
   if (!confirm('Yakin reset kalkulator? Data akan dihapus dan bisa isi ulang.')) return;
-  var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+  var wa = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
   if (!wa) return;
   try {
     await DataService.saveKalkulator(wa, null); // hapus dengan menyimpan null
@@ -964,7 +1009,7 @@ async function saveWeeklyEval() {
     }
     state._persist();
 
-    var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+    var wa = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
     if (wa) await DataService.saveEvaluasi(wa, evalData);
 
     document.getElementById('weekStartWeight').value = '';
@@ -1153,7 +1198,7 @@ async function showResult() {
     state.set('quiz', qData);
     try { localStorage.setItem('kemoenik_quiz', JSON.stringify(qData)); } catch(e) {}
 
-    var waForQuiz = appState.user.wa || localStorage.getItem('kemoenik_wa');
+    var waForQuiz = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
     if (waForQuiz) await DataService.saveQuiz(waForQuiz, qData);
 
     renderAll();
@@ -1170,7 +1215,7 @@ async function selesaiQuiz() {
       showToast('Error: Hasil kuis tidak ditemukan');
       return;
     }
-    var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+    var wa = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
     if (!wa) {
       showToast('Error: WA tidak ditemukan');
       return;
@@ -1215,7 +1260,7 @@ function updateQuizResetButtonVisibility() {
 
 async function resetQuizData() {
   if (!confirm('Yakin reset hasil kuis? Data akan dihapus dan bisa isi ulang.')) return;
-  var wa = appState.user.wa || localStorage.getItem('kemoenik_wa');
+  var wa = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
   if (!wa) return;
   try {
     await DataService.saveQuiz(wa, null);
