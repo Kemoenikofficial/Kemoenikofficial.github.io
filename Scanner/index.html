@@ -102,7 +102,7 @@ Total: Rp <span id="total">0</span>
 <script>
 
 /* =====================
-MASUKKAN LINK APPS SCRIPT
+API APPS SCRIPT
 ===================== */
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxD3aTQrCsZXlitaZf59VLZSPBtwkMI5L0AyWpOKSEcpUrmo_IV9W7_6QlOS_NLTgFWTw/exec";
@@ -112,10 +112,21 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxD3aTQrCsZXlitaZf59VLZ
 let keranjang=[];
 let total=0;
 
+/* =====================
+SUARA TIT
+===================== */
+
 function bunyi(){
+try{
 var audio=new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
-audio.play();
+audio.volume = 1;
+audio.play().catch(()=>{});
+}catch(e){}
 }
+
+/* =====================
+RENDER KERANJANG
+===================== */
 
 function render(){
 
@@ -142,6 +153,10 @@ document.getElementById("total").innerText=total;
 
 }
 
+/* =====================
+HAPUS ITEM
+===================== */
+
 function hapus(index){
 
 total-=keranjang[index].harga;
@@ -156,15 +171,27 @@ render();
 SCAN BARCODE
 ===================== */
 
-function onScanSuccess(barcode){
+let terakhirScan="";
 
-fetch(API_URL+"?barcode="+barcode)
+function onScanSuccess(decodedText){
+
+console.log("SCAN:", decodedText);
+
+if(decodedText===terakhirScan) return;
+
+terakhirScan=decodedText;
+
+setTimeout(()=>{
+terakhirScan="";
+},2000);
+
+bunyi();
+
+fetch(API_URL+"?barcode="+decodedText)
 
 .then(res=>res.json())
 
 .then(data=>{
-
-bunyi();
 
 keranjang.push({
 nama:data.nama,
@@ -177,13 +204,17 @@ render();
 
 })
 
-.catch(err=>{
+.catch(()=>{
 
 alert("Produk tidak ditemukan");
 
 });
 
 }
+
+/* =====================
+START SCANNER
+===================== */
 
 let scanner=new Html5QrcodeScanner(
 "reader",
