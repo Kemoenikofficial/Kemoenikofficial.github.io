@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Kemoenik POS</title>
 
@@ -12,11 +12,9 @@
 
 body{
 margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+font-family:Arial;
 background:#f4f6f8;
 }
-
-/* HEADER */
 
 .header{
 background:#16a34a;
@@ -27,28 +25,30 @@ font-size:20px;
 font-weight:bold;
 }
 
-/* CONTAINER */
-
 .container{
 padding:15px;
 }
 
-/* SCANNER */
-
 #reader{
 width:100%;
-border-radius:12px;
-overflow:hidden;
+margin-bottom:10px;
+}
+
+.scanbtn{
+width:100%;
+padding:14px;
+background:#16a34a;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
 margin-bottom:15px;
 }
 
-/* CART */
-
 .cart{
 background:white;
-border-radius:12px;
+border-radius:10px;
 padding:10px;
-box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
 .item{
@@ -59,7 +59,7 @@ border-bottom:1px solid #eee;
 }
 
 .total{
-font-size:18px;
+font-size:20px;
 font-weight:bold;
 padding:15px;
 text-align:right;
@@ -69,7 +69,7 @@ button{
 background:#ef4444;
 color:white;
 border:none;
-padding:5px 10px;
+padding:6px 10px;
 border-radius:6px;
 }
 
@@ -87,6 +87,10 @@ KEMOENIK POS
 
 <div id="reader"></div>
 
+<button class="scanbtn" onclick="scanManual()">
+SCAN PRODUK
+</button>
+
 <div class="cart">
 
 <div id="list"></div>
@@ -101,32 +105,45 @@ Total: Rp <span id="total">0</span>
 
 <script>
 
-/* =====================
-API APPS SCRIPT
-===================== */
+/* =======================
+LINK APPS SCRIPT
+======================= */
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxD3aTQrCsZXlitaZf59VLZSPBtwkMI5L0AyWpOKSEcpUrmo_IV9W7_6QlOS_NLTgFWTw/exec";
 
-/* ===================== */
+/* ======================= */
 
 let keranjang=[];
 let total=0;
+let lastBarcode="";
 
-/* =====================
-SUARA TIT
-===================== */
+/* =======================
+SUARA TIT SCANNER
+======================= */
 
 function bunyi(){
-try{
-var audio=new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
-audio.volume = 1;
-audio.play().catch(()=>{});
-}catch(e){}
+
+const context = new (window.AudioContext || window.webkitAudioContext)();
+const oscillator = context.createOscillator();
+const gain = context.createGain();
+
+oscillator.type="square";
+oscillator.frequency.value=1000;
+
+oscillator.connect(gain);
+gain.connect(context.destination);
+
+oscillator.start();
+
+setTimeout(()=>{
+oscillator.stop();
+},120);
+
 }
 
-/* =====================
+/* =======================
 RENDER KERANJANG
-===================== */
+======================= */
 
 function render(){
 
@@ -153,9 +170,9 @@ document.getElementById("total").innerText=total;
 
 }
 
-/* =====================
+/* =======================
 HAPUS ITEM
-===================== */
+======================= */
 
 function hapus(index){
 
@@ -167,27 +184,32 @@ render();
 
 }
 
-/* =====================
-SCAN BARCODE
-===================== */
-
-let terakhirScan="";
+/* =======================
+SCAN DARI KAMERA
+======================= */
 
 function onScanSuccess(decodedText){
 
-console.log("SCAN:", decodedText);
+console.log("Barcode terbaca:", decodedText);
 
-if(decodedText===terakhirScan) return;
+lastBarcode=decodedText;
 
-terakhirScan=decodedText;
+}
 
-setTimeout(()=>{
-terakhirScan="";
-},2000);
+/* =======================
+TOMBOL SCAN MANUAL
+======================= */
+
+function scanManual(){
+
+if(!lastBarcode){
+alert("Scan barcode dulu");
+return;
+}
 
 bunyi();
 
-fetch(API_URL+"?barcode="+decodedText)
+fetch(API_URL+"?barcode="+lastBarcode)
 
 .then(res=>res.json())
 
@@ -202,19 +224,19 @@ total+=Number(data.harga);
 
 render();
 
+lastBarcode="";
+
 })
 
 .catch(()=>{
-
 alert("Produk tidak ditemukan");
-
 });
 
 }
 
-/* =====================
+/* =======================
 START SCANNER
-===================== */
+======================= */
 
 let scanner=new Html5QrcodeScanner(
 "reader",
