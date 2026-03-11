@@ -57,6 +57,17 @@ function initApp() {
         var normalizedWA = normalizeWA(wa);
         var userData = DataService.loadUserData(normalizedWA);
 
+        // 6b. Migrasi: jika data tidak ditemukan dengan normalized key,
+        // coba load dengan raw WA, lalu pindahkan ke normalized key
+        if (!userData && wa !== normalizedWA) {
+            var oldData = DataService.loadUserData(wa);
+            if (oldData) {
+                userData = oldData;
+                DataService.saveUserData(normalizedWA, oldData); // migrasi ke key baru
+                console.log('Migrasi data dari key lama ke normalized key berhasil');
+            }
+        }
+
         // 7. Handle mode "new" — reset program
         if (mode === 'new' && userData) {
             DataService.resetProgram(normalizedWA);
