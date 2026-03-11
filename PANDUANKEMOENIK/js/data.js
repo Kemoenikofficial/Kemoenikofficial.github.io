@@ -54,50 +54,50 @@ const faqData = [
 ];
 
 // ============================================================
-// Data Olahraga — DITAMBAHKAN properti MANFAAT untuk setiap aktivitas
+// Data Olahraga — DITAMBAHKAN: Jadwal IF 16:8
 // ============================================================
 const targetOlahragaData = {
   ringan: [
-    {hari:'Sen', aktivitas:'Jalan kaki 30 menit', manfaat: 'Meningkatkan sirkulasi, membakar ~100 kkal, baik untuk pemula.'},
-    {hari:'Sel', aktivitas:'Lymphatic 15 menit', manfaat: 'Melancarkan aliran getah bening, mengurangi kembung.'},
-    {hari:'Rab', aktivitas:'Istirahat aktif — jalan santai', manfaat: 'Pemulihan aktif, tetap bergerak ringan.'},
-    {hari:'Kam', aktivitas:'Jalan kaki 30 menit', manfaat: 'Membakar kalori, menjaga kebugaran.'},
-    {hari:'Jum', aktivitas:'Jumping jack 3 set', manfaat: 'Meningkatkan detak jantung, membakar ~50 kkal.'},
-    {hari:'Sab', aktivitas:'Jalan kaki 45 menit', manfaat: 'Kardio ringan, bakar lemak lebih banyak.'},
-    {hari:'Min', aktivitas:'Istirahat total', manfaat: 'Recovery penuh, jangan lupa minum air.'}
+    {hari:'Sen', aktivitas:'Jalan kaki 30 menit'},
+    {hari:'Sel', aktivitas:'Lymphatic 15 menit'},
+    {hari:'Rab', aktivitas:'Istirahat aktif — jalan santai'},
+    {hari:'Kam', aktivitas:'Jalan kaki 30 menit'},
+    {hari:'Jum', aktivitas:'Jumping jack 3 set'},
+    {hari:'Sab', aktivitas:'Jalan kaki 45 menit'},
+    {hari:'Min', aktivitas:'Istirahat total'}
   ],
   standar: [
-    {hari:'Sen', aktivitas:'Jalan kaki 30 menit + Jumping jack 3 set', manfaat: 'Kombinasi kardio, bakar ~150 kkal, tingkatkan metabolisme.'},
-    {hari:'Sel', aktivitas:'Lompat tali 10 menit + Lymphatic 10 menit', manfaat: 'Bakar kalori cepat + lancarkan sirkulasi.'},
-    {hari:'Rab', aktivitas:'Jalan kaki 30 menit', manfaat: 'Aktivitas ringan, jaga konsistensi.'},
-    {hari:'Kam', aktivitas:'Jumping jack 4 set + Lompat tali 10 menit', manfaat: 'Tingkatkan intensitas, bakar ~200 kkal.'},
-    {hari:'Jum', aktivitas:'Jalan kaki 45 menit + Lymphatic 15 menit', manfaat: 'Kardio + pemulihan, optimal untuk akhir pekan.'},
-    {hari:'Sab', aktivitas:'Lompat tali 15 menit + Jumping jack 3 set', manfaat: 'Sesi pembakaran lemak intensif.'},
-    {hari:'Min', aktivitas:'Istirahat — Lymphatic sebelum tidur', manfaat: 'Pemulihan, bantu detoksifikasi.'}
+    {hari:'Sen', aktivitas:'Jalan kaki 30 menit + Jumping jack 3 set'},
+    {hari:'Sel', aktivitas:'Lompat tali 10 menit + Lymphatic 10 menit'},
+    {hari:'Rab', aktivitas:'Jalan kaki 30 menit'},
+    {hari:'Kam', aktivitas:'Jumping jack 4 set + Lompat tali 10 menit'},
+    {hari:'Jum', aktivitas:'Jalan kaki 45 menit + Lymphatic 15 menit'},
+    {hari:'Sab', aktivitas:'Lompat tali 15 menit + Jumping jack 3 set'},
+    {hari:'Min', aktivitas:'Istirahat — Lymphatic sebelum tidur'}
   ],
   agresif: [
-    {hari:'Sen', aktivitas:'Lompat tali 15 menit + Jalan kaki 30 menit', manfaat: 'Kombinasi intensif, bakar ~250 kkal.'},
-    {hari:'Sel', aktivitas:'Jumping jack 5 set + Lymphatic 15 menit', manfaat: 'Tingkatkan metabolisme, bakar lemak.'},
-    {hari:'Rab', aktivitas:'Jalan kaki 45 menit + Lompat tali 10 menit', manfaat: 'Kardio panjang + akselerasi.'},
-    {hari:'Kam', aktivitas:'Lompat tali 20 menit + Jumping jack 4 set', manfaat: 'Sesi tinggi, bakar kalori maksimal.'},
-    {hari:'Jum', aktivitas:'Jalan kaki 60 menit', manfaat: 'Kardio endurance, bakar lemak tahan lama.'},
-    {hari:'Sab', aktivitas:'Lompat tali 15 menit + Jumping jack 5 set + Lymphatic', manfaat: 'Full combo, hasil maksimal.'},
-    {hari:'Min', aktivitas:'Jalan kaki santai 30 menit — recovery', manfaat: 'Aktif recovery, jaga metabolisme.'}
+    {hari:'Sen', aktivitas:'Lompat tali 15 menit + Jalan kaki 30 menit'},
+    {hari:'Sel', aktivitas:'Jumping jack 5 set + Lymphatic 15 menit'},
+    {hari:'Rab', aktivitas:'Jalan kaki 45 menit + Lompat tali 10 menit'},
+    {hari:'Kam', aktivitas:'Lompat tali 20 menit + Jumping jack 4 set'},
+    {hari:'Jum', aktivitas:'Jalan kaki 60 menit'},
+    {hari:'Sab', aktivitas:'Lompat tali 15 menit + Jumping jack 5 set + Lymphatic'},
+    {hari:'Min', aktivitas:'Jalan kaki santai 30 menit — recovery'}
   ],
-  // Jadwal khusus untuk Program IF 16:8
+  // BARU: Jadwal khusus untuk Program IF 16:8
   if: [
-    {hari:'Sen', aktivitas:'Jalan kaki 30 menit (dalam jendela makan)', manfaat: 'Kardio ringan saat puasa? Sebaiknya di jendela makan.'},
-    {hari:'Sel', aktivitas:'Lymphatic Drainage 15 menit + Jumping Jack 2 set', manfaat: 'Lancarkan sirkulasi, bakar lemak.'},
-    {hari:'Rab', aktivitas:'Istirahat — Jalan santai 20 menit', manfaat: 'Pemulihan, tetap aktif.'},
-    {hari:'Kam', aktivitas:'Lompat Tali 10 menit + Jalan kaki 20 menit', manfaat: 'Kombinasi kardio, bakar ~150 kkal.'},
-    {hari:'Jum', aktivitas:'Jumping Jack 4 set + Lymphatic 10 menit', manfaat: 'Tingkatkan metabolisme, relaksasi.'},
-    {hari:'Sab', aktivitas:'Jalan kaki 45 menit', manfaat: 'Kardio panjang, optimal di akhir pekan.'},
-    {hari:'Min', aktivitas:'Istirahat — Lymphatic sebelum tidur', manfaat: 'Pemulihan, bantu detoks.'}
+    {hari:'Sen', aktivitas:'Jalan kaki 30 menit (dalam jendela makan)'},
+    {hari:'Sel', aktivitas:'Lymphatic Drainage 15 menit + Jumping Jack 2 set'},
+    {hari:'Rab', aktivitas:'Istirahat — Jalan santai 20 menit'},
+    {hari:'Kam', aktivitas:'Lompat Tali 10 menit + Jalan kaki 20 menit'},
+    {hari:'Jum', aktivitas:'Jumping Jack 4 set + Lymphatic 10 menit'},
+    {hari:'Sab', aktivitas:'Jalan kaki 45 menit'},
+    {hari:'Min', aktivitas:'Istirahat — Lymphatic sebelum tidur'}
   ]
 };
 
 // ============================================================
-// Data Menu Harian — Sudah lengkap dengan kalori fixed
+// Data Menu Harian — DIPERBAIKI: Kalori akurat + jadwal KEMOENIK
 // ============================================================
 const menuHarianData = [
   {
