@@ -3,7 +3,7 @@
 // ============================================================
 
 // URL halaman aktivitas
-const APP_URL = 'https://kemoenikofficial.github.io/aktivitas/';
+const APP_URL = '/PANDUANKEMOENIK/aktivasi/index.html';
 
 // Data FAQ
 const faqData = [
