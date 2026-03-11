@@ -57,26 +57,23 @@ function initApp() {
         var normalizedWA = normalizeWA(wa);
         var userData = DataService.loadUserData(normalizedWA);
 
-        // 6b. MIGRASI DATA LAMA — jika key normalisasi kosong, cari key lama (non-normalized)
-        // Ini terjadi kalau user isi kuis sebelum bug normalizeWA diperbaiki
+        // 6b. MIGRASI DATA LAMA — cari data yang tersimpan di key non-normalized
         if (!userData || (!userData.quiz && !userData.kalkulator)) {
             try {
-                // Coba semua variasi WA yang mungkin tersimpan
-                var waVariants = [wa, wa.replace(/\D/g,'')];
-                if (wa.startsWith('62')) waVariants.push('0' + wa.substring(2));
-                if (wa.startsWith('0'))  waVariants.push('62' + wa.substring(1));
+                var waRaw = wa.replace(/\D/g,'');
+                var waVariants = [waRaw];
+                if (waRaw.startsWith('62')) waVariants.push('0' + waRaw.substring(2));
+                if (waRaw.startsWith('0'))  waVariants.push('62' + waRaw.substring(1));
                 waVariants.forEach(function(v) {
-                    if (v === normalizedWA) return;
+                    if (v === normalizedWA || !v) return;
                     var oldData = DataService.loadUserData(v);
                     if (oldData && (oldData.quiz || oldData.kalkulator)) {
-                        // Pindahkan ke key yang benar
                         var mergedData = Object.assign({}, oldData, userData || {});
                         DataService.saveUserData(normalizedWA, mergedData);
                         userData = mergedData;
-                        console.log('[KEMOENIK] Data migrasi dari key', v, '→', normalizedWA);
                     }
                 });
-            } catch(e) { console.warn('Migrasi data lama error:', e); }
+            } catch(e) {}
         }
 
         // 7. Handle mode "new" — reset program
@@ -254,48 +251,13 @@ function renderHomeStats() {
   var k = appState.kalkulator;
   var q = appState.quiz;
 
-  // FALLBACK BERLAPIS: jika appState.quiz null, paksa baca dari semua sumber storage
-  if (!q) {
-    try {
-      // Coba 1: kemoenik_quiz (key lama/flat)
-      var rawQ = localStorage.getItem('kemoenik_quiz');
-      if (rawQ) { var pq = JSON.parse(rawQ); if (pq && pq.tipe) q = pq; }
-    } catch(e) {}
-  }
-  if (!q) {
-    try {
-      // Coba 2: kemoenik_state_v2
-      var sv2raw = localStorage.getItem('kemoenik_state_v2');
-      if (sv2raw) { var sv2p = JSON.parse(sv2raw); if (sv2p && sv2p.quiz && sv2p.quiz.tipe) q = sv2p.quiz; }
-    } catch(e) {}
-  }
-  if (!q) {
-    try {
-      // Coba 3: userData per WA (normalized dan non-normalized)
-      var waRaw = appState.user.wa || localStorage.getItem('kemoenik_wa') || '';
-      var waNorm = normalizeWA(waRaw);
-      var waVariants = [waNorm];
-      if (waRaw !== waNorm) waVariants.push(waRaw.replace(/\D/g,''));
-      waVariants.forEach(function(v) {
-        if (q) return;
-        var ud = DataService.loadUserData(v);
-        if (ud && ud.quiz && ud.quiz.tipe) q = ud.quiz;
-      });
-    } catch(e) {}
-  }
-  // Jika berhasil dapat dari fallback, sync ke appState supaya render berikutnya langsung ada
-  if (q && !appState.quiz) {
-    state.set('quiz', q);
-    try { localStorage.setItem('kemoenik_quiz', JSON.stringify(q)); } catch(e) {}
-  }
-
   var nama = k ? (k.nama || '—') : (q ? (q.nama || '—') : '—');
   document.getElementById('userName').textContent = nama.split(' ')[0] || '—';
   document.getElementById('dName').textContent = nama || '—';
 
   if (q) {
     document.getElementById('heroName').innerHTML = escHtml(q.tipeName) + ' <span>' + escHtml(q.tipe_emoji) + '</span>';
-    document.getElementById('heroTypeName').textContent = '';
+    // heroTypeName tidak diakses langsung — sudah ter-replace saat heroName.innerHTML diubah
     document.getElementById('heroBadge').textContent = q.metode === 'agresif' ? '🔥 Agresif' : q.metode === 'ringan' ? '🐢 Ringan' : '⚖️ Standar';
 
     // No. 2: Isi METODE dari hasil kuis — ambil metodeName (nama lengkap) yang tersimpan saat quiz selesai
@@ -671,32 +633,6 @@ function togFaq(id) {
 // ========== PROFIL ==========
 function renderProfilPage() {
   var q = appState.quiz;
-
-  // FALLBACK BERLAPIS: jika appState.quiz null, paksa baca dari semua sumber storage
-  if (!q) {
-    try {
-      var rawQ = localStorage.getItem('kemoenik_quiz');
-      if (rawQ) { var pq = JSON.parse(rawQ); if (pq && pq.tipe) q = pq; }
-    } catch(e) {}
-  }
-  if (!q) {
-    try {
-      var sv2raw = localStorage.getItem('kemoenik_state_v2');
-      if (sv2raw) { var sv2p = JSON.parse(sv2raw); if (sv2p && sv2p.quiz && sv2p.quiz.tipe) q = sv2p.quiz; }
-    } catch(e) {}
-  }
-  if (!q) {
-    try {
-      var waRaw = appState.user.wa || localStorage.getItem('kemoenik_wa') || '';
-      var ud = DataService.loadUserData(normalizeWA(waRaw));
-      if (ud && ud.quiz && ud.quiz.tipe) q = ud.quiz;
-    } catch(e) {}
-  }
-  if (q && !appState.quiz) {
-    state.set('quiz', q);
-    try { localStorage.setItem('kemoenik_quiz', JSON.stringify(q)); } catch(e) {}
-  }
-
   var belumKuis = document.getElementById('profilBelumKuis');
   var profilContent = document.getElementById('profilContent');
   if (!q) {
