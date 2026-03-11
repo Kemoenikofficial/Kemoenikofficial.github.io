@@ -6,6 +6,9 @@
 // ========== INISIALISASI INSTANT (NO LOADING) ==========
 function initApp() {
     try {
+        // 0. Load state dari kemoenik_state_v2 DULU (agar appState terisi sebelum render)
+        state.loadFromStorage();
+
         // 1. Ambil dari localStorage (SYNC - instant)
         var wa = localStorage.getItem('kemoenik_wa') || '';
         var voucher = localStorage.getItem('kemoenik_voucher') || '';
@@ -90,6 +93,21 @@ function initApp() {
                 if (rawQ) {
                     var pq = JSON.parse(rawQ);
                     if (pq && pq.tipe) state.set('quiz', pq);
+                }
+            } catch(e) {}
+        }
+        // 9b. Fallback tambahan: cek langsung dari kemoenik_state_v2 jika userData kosong
+        if (!appState.kalkulator || !appState.quiz) {
+            try {
+                var sv2 = localStorage.getItem('kemoenik_state_v2');
+                if (sv2) {
+                    var sv2p = JSON.parse(sv2);
+                    if (!appState.kalkulator && sv2p.kalkulator) state.set('kalkulator', sv2p.kalkulator);
+                    if (!appState.quiz && sv2p.quiz) state.set('quiz', sv2p.quiz);
+                    if (!appState.evaluasi || appState.evaluasi.length === 0) {
+                        if (sv2p.evaluasi && sv2p.evaluasi.length > 0) state.set('evaluasi', sv2p.evaluasi);
+                    }
+                    if (sv2p.misiChecked) state.set('misiChecked', Object.assign({}, appState.misiChecked, sv2p.misiChecked));
                 }
             } catch(e) {}
         }
