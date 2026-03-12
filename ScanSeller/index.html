@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Kemoenik Scanner</title>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f8;
+margin:0;
+}
+
+.header{
+background:#16a34a;
+color:white;
+padding:15px;
+text-align:center;
+font-size:20px;
+font-weight:bold;
+}
+
+.container{
+padding:15px;
+}
+
+#reader{
+width:100%;
+}
+
+.info{
+background:white;
+padding:15px;
+border-radius:10px;
+margin-top:10px;
+}
+
+button{
+padding:12px;
+background:#16a34a;
+color:white;
+border:none;
+border-radius:8px;
+width:100%;
+margin-top:10px;
+font-size:16px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+SCAN PRODUK
+</div>
+
+<div class="container">
+
+<div id="reader"></div>
+
+<div class="info">
+
+<div>Barcode : <span id="barcode"></span></div>
+<div>Produk : <span id="nama"></span></div>
+<div>Harga : <span id="harga"></span></div>
+
+<button onclick="simpan()">SIMPAN RESI</button>
+
+</div>
+
+</div>
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbx87tt-MUpUG_nNSHVQ4N7_N0N6ORhjOR6yk8Fcvq_rHK6m8_tl708CRgAk1UI_o0bN/exec";
+
+let barcode="";
+let nama="";
+let harga="";
+
+function onScanSuccess(decodedText){
+
+barcode=decodedText;
+
+document.getElementById("barcode").innerText=barcode;
+
+fetch(API_URL+"?barcode="+barcode)
+
+.then(res=>res.json())
+
+.then(data=>{
+
+if(data.status=="ok"){
+
+nama=data.nama;
+
+harga=data.harga;
+
+document.getElementById("nama").innerText=nama;
+
+document.getElementById("harga").innerText=harga;
+
+}
+
+else{
+
+alert("Produk tidak ditemukan");
+
+}
+
+})
+
+}
+
+function simpan(){
+
+const resi = prompt("Masukkan nomor resi");
+
+const seller = prompt("Masukkan seller");
+
+fetch(API_URL+"?barcode="+barcode);
+
+alert("Data tersimpan");
+
+}
+
+let scanner = new Html5QrcodeScanner(
+"reader",
+{fps:10,qrbox:250}
+);
+
+scanner.render(onScanSuccess);
+
+</script>
+
+</body>
+</html>
