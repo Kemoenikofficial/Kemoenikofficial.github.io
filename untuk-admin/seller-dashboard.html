@@ -556,6 +556,7 @@
   // ── START ────────────────────────────────────────────────
   initDarkMode();
   initSeller();
+  setInterval(() => { if (currentSeller) onSellerChange(currentSeller); }, 5000);
 </script>
 </body>
 </html>
