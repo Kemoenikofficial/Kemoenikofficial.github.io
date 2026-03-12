@@ -3,7 +3,7 @@
  * Replace API_URL with your deployed Google Apps Script Web App URL
  */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzdc4cmtrU4hMYsugpgRFBXEB6c1by7N-89NmVCwxmRgrqVGCfIUw8zhtbdq04L8fpl/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwN_rSWb2-QFCuBma_TeDyTD9q6FQr7v5yZXXezaedxX_0YDm5VbSjkVX4lWQDaMrK_/exec";
 
 // ──────────────────────────────────────────────────────────────
 // CORE FETCH HELPER
