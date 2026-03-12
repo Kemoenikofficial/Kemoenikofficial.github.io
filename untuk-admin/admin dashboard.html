@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — ScanResi</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ── LAYOUT ── */
+    .layout { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 230px;
+      min-width: 230px;
+      background: var(--bg-sidebar);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .sidebar-logo .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--green-600);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .sidebar-logo span {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .sidebar-logo small {
+      display: block;
+      color: rgba(255,255,255,0.4);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .nav-section-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.25);
+      padding: 0 8px;
+      margin: 16px 0 6px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+      text-decoration: none;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.85); }
+    .nav-item.active { background: rgba(22,163,74,0.25); color: #4ade80; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-footer {
+      padding: 16px 12px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .sidebar-user:hover { background: rgba(255,255,255,0.07); }
+    .user-avatar {
+      width: 32px; height: 32px;
+      background: var(--green-700);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .sidebar-user .user-info { flex: 1; min-width: 0; }
+    .sidebar-user .user-name { color: #fff; font-size: 12px; font-weight: 600; truncate: true; }
+    .sidebar-user .user-role { color: rgba(255,255,255,0.4); font-size: 10px; }
+
+    /* MAIN */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+    /* TOPBAR */
+    .topbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-light);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .topbar-search {
+      flex: 1;
+      max-width: 340px;
+      position: relative;
+    }
+    .topbar-search input {
+      padding: 8px 14px 8px 36px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--text-primary);
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+    .topbar-search input:focus { border-color: var(--green-500); background: var(--bg-card); }
+    .topbar-search .search-icon {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); font-size: 14px;
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .icon-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      font-size: 15px;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .icon-btn:hover { border-color: var(--green-500); color: var(--green-600); }
+    .notif-dot {
+      position: absolute; top: -3px; right: -3px;
+      width: 8px; height: 8px;
+      background: var(--red-500);
+      border-radius: 50%;
+      border: 1.5px solid var(--bg-card);
+    }
+
+    /* CONTENT */
+    .content { padding: 24px; flex: 1; overflow-y: auto; }
+
+    /* STAT CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 18px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .stat-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 8px; }
+    .stat-value { font-size: 26px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1; }
+    .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+    .stat-sub .up { color: var(--green-600); }
+    .stat-sub .down { color: var(--red-500); }
+    .stat-card.accent { background: linear-gradient(135deg, var(--green-700), var(--green-600)); border-color: var(--green-700); }
+    .stat-card.accent .stat-label,
+    .stat-card.accent .stat-value,
+    .stat-card.accent .stat-sub { color: rgba(255,255,255,0.9); }
+    .stat-card.accent .stat-sub { color: rgba(255,255,255,0.7); }
+
+    /* CHARTS GRID */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .chart-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .chart-card canvas { height: 220px !important; }
+
+    /* BOTTOM GRID */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 14px;
+    }
+
+    /* TABLE FILTERS */
+    .table-filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .table-filters .input, .table-filters .select { max-width: 180px; }
+    .table-filters .input.search-full { max-width: 260px; }
+
+    /* TABLE ACTIONS */
+    .table-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+    }
+
+    /* SIDE PANEL */
+    .side-panel { display: flex; flex-direction: column; gap: 14px; }
+
+    /* PAYMENT PANEL */
+    .payment-panel {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .payment-form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+    .form-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* OVERDUE PANEL */
+    .overdue-panel {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .overdue-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-top: 1px solid var(--border-light);
+    }
+    .overdue-item:first-of-type { border-top: none; }
+    .overdue-seller { font-size: 13px; font-weight: 600; }
+    .overdue-amount { font-size: 13px; font-weight: 700; color: var(--red-500); }
+
+    /* LIVE RESI */
+    .live-resi {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .live-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-top: 1px solid var(--border-light);
+      gap: 10px;
+    }
+    .live-item:first-of-type { border-top: none; }
+    .live-resi-no { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--text-primary); }
+    .live-meta { font-size: 11px; color: var(--text-muted); }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: var(--green-500);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* EXPORT BUTTONS */
+    .export-btns { display: flex; gap: 6px; }
+
+    /* LOADING OVERLAY */
+    .loading-overlay {
+      position: fixed; inset: 0; background: rgba(255,255,255,0.8);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999; backdrop-filter: blur(2px);
+    }
+    [data-theme="dark"] .loading-overlay { background: rgba(0,0,0,0.6); }
+    .loading-box {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 32px 40px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .loading-box p { margin-top: 12px; color: var(--text-secondary); font-size: 13px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1200px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .sidebar { width: 64px; min-width: 64px; }
+      .sidebar-logo span, .sidebar-logo small, .nav-item span:not(.nav-icon),
+      .nav-section-label, .sidebar-user .user-info { display: none; }
+      .sidebar-logo { justify-content: center; padding: 16px; }
+      .nav-item { justify-content: center; padding: 10px; }
+      .sidebar-user { justify-content: center; }
+      .charts-grid, .bottom-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="spinner" style="width:36px;height:36px;border-width:3px;margin:0 auto"></div>
+    <p>Memuat data dashboard…</p>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">📦</div>
+      <div>
+        <span>ScanResi</span>
+        <small>Admin Panel</small>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item active" href="#">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">📋</span>
+        <span>Transaksi</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">👥</span>
+        <span>Seller</span>
+      </a>
+
+      <div class="nav-section-label">Monitoring</div>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">📦</span>
+        <span>Live Resi</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">⚠️</span>
+        <span>Overdue</span>
+      </a>
+
+      <div class="nav-section-label">Aksi</div>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">✅</span>
+        <span>Tandai Lunas</span>
+      </a>
+      <a class="nav-item" href="seller-dashboard.html">
+        <span class="nav-icon">📱</span>
+        <span>Seller View</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name">Admin</div>
+          <div class="user-role">Super Admin</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <span class="topbar-title">Admin Dashboard</span>
+      <div class="topbar-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="globalSearch" placeholder="Cari resi, seller, produk…" oninput="onGlobalSearch(this.value)" />
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="darkModeToggle" title="Dark Mode">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="icon-btn" title="Notifikasi">
+          🔔<span class="notif-dot"></span>
+        </button>
+        <button class="icon-btn" title="Refresh" onclick="initDashboard()">🔄</button>
+        <div class="user-avatar" style="cursor:pointer;width:36px;height:36px;border-radius:8px;font-size:13px">A</div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- STATS -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card skeleton" style="height:90px"></div>
+        <div class="stat-card skeleton" style="height:90px"></div>
+        <div class="stat-card skeleton" style="height:90px"></div>
+        <div class="stat-card skeleton" style="height:90px"></div>
+        <div class="stat-card skeleton" style="height:90px"></div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="section-title">Penjualan Per Seller</div>
+          <div class="chart-container"><canvas id="chartSeller"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="section-title">Penjualan Harian</div>
+          <div class="chart-container"><canvas id="chartHarian"></canvas></div>
+        </div>
+      </div>
+
+      <!-- TABLE + SIDE PANELS -->
+      <div class="bottom-grid">
+
+        <!-- TRANSACTION TABLE -->
+        <div class="card" style="padding:20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div class="section-title" style="margin-bottom:0">Data Resi</div>
+            <div class="export-btns">
+              <button class="btn btn-outline btn-sm" onclick="doExportCSV()">📥 CSV</button>
+              <button class="btn btn-outline btn-sm" onclick="doExportExcel()">📊 Excel</button>
+            </div>
+          </div>
+
+          <div class="table-filters">
+            <div style="position:relative;flex:1;min-width:200px;max-width:280px">
+              <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted)">🔍</span>
+              <input type="text" class="input" id="tableSearch" placeholder="Cari resi…" oninput="applyFilters()" style="padding-left:32px" />
+            </div>
+            <select class="select" id="filterSeller" onchange="applyFilters()" style="max-width:160px">
+              <option value="">Semua Seller</option>
+            </select>
+            <select class="select" id="filterStatus" onchange="applyFilters()" style="max-width:130px">
+              <option value="">Semua Status</option>
+              <option value="LUNAS">LUNAS</option>
+              <option value="BELUM">BELUM</option>
+            </select>
+            <input type="date" class="input" id="filterDateFrom" onchange="applyFilters()" style="max-width:150px" />
+            <input type="date" class="input" id="filterDateTo" onchange="applyFilters()" style="max-width:150px" />
+          </div>
+
+          <div class="table-wrap">
+            <table id="resiTable">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Nomor Resi</th>
+                  <th>Seller</th>
+                  <th>Produk</th>
+                  <th>Qty</th>
+                  <th>Harga</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="resiBody">
+                <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">
+                  <div class="spinner" style="margin:0 auto 8px"></div>Memuat…
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-actions">
+            <div id="paginationControls" style="display:flex;align-items:center;gap:8px"></div>
+          </div>
+        </div>
+
+        <!-- SIDE PANELS -->
+        <div class="side-panel">
+
+          <!-- PAYMENT PANEL -->
+          <div class="payment-panel">
+            <div class="section-title">Tandai Lunas</div>
+            <div class="payment-form">
+              <div>
+                <div class="form-label">Seller</div>
+                <select class="select" id="paySeller"></select>
+              </div>
+              <div>
+                <div class="form-label">Jumlah Produk Dibayar</div>
+                <input type="number" class="input" id="payJumlah" placeholder="Contoh: 10" min="1" />
+              </div>
+              <div id="payPreview" style="background:var(--bg);border-radius:8px;padding:12px;font-size:12px;display:none">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                  <span class="text-muted">Pending (BELUM):</span>
+                  <span id="previewBelum" class="font-semibold">-</span>
+                </div>
+                <div style="display:flex;justify-content:space-between">
+                  <span class="text-muted">Akan ditandai:</span>
+                  <span id="previewJumlah" class="font-semibold" style="color:var(--green-600)">-</span>
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="showTandaiModal()">
+                ✅ Tandai Lunas
+              </button>
+            </div>
+          </div>
+
+          <!-- OVERDUE -->
+          <div class="overdue-panel">
+            <div class="section-title">Overdue Pembayaran</div>
+            <div id="overdueList">
+              <div class="skeleton" style="height:40px;margin-bottom:8px;border-radius:8px"></div>
+              <div class="skeleton" style="height:40px;margin-bottom:8px;border-radius:8px"></div>
+            </div>
+          </div>
+
+          <!-- LIVE RESI -->
+          <div class="live-resi">
+            <div class="section-title" style="justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="display:block;width:4px;height:18px;background:var(--green-600);border-radius:2px"></span>
+                Resi Terbaru
+              </div>
+              <div style="display:flex;align-items:center;gap:5px">
+                <div class="live-dot"></div>
+                <span style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em">LIVE</span>
+              </div>
+            </div>
+            <div id="liveList">
+              <div class="skeleton" style="height:32px;margin-bottom:6px;border-radius:8px"></div>
+              <div class="skeleton" style="height:32px;margin-bottom:6px;border-radius:8px"></div>
+              <div class="skeleton" style="height:32px;margin-bottom:6px;border-radius:8px"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Tandai Lunas Confirmation -->
+<div class="modal-overlay" id="tandaiModal">
+  <div class="modal">
+    <div class="modal-icon">✅</div>
+    <h3>Tandai Lunas</h3>
+    <p id="modalText">Apakah Anda ingin menandai 10 produk lunas untuk LUNISCA?</p>
+    <div style="background:var(--bg);border-radius:8px;padding:12px;margin:-8px 0 16px;font-size:12px;color:var(--text-secondary)" id="modalDetail"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('tandaiModal')">Batal</button>
+      <button class="btn btn-primary" onclick="doTandaiLunas()">
+        Tandai <span id="modalJumlah">0</span> produk lunas
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="dashboard.js"></script>
+<script>
+  let allResi = [];
+  let filteredResi = [];
+  let paginator;
+  const PAGE_SIZE = 10;
+
+  // ── INIT ──────────────────────────────────────────────────
+  async function initDashboard() {
+    document.getElementById("loadingOverlay").style.display = "flex";
+    try {
+      allResi = await loadResi();
+      const sellers = await loadSellers();
+      renderAll(allResi, sellers);
+    } catch (e) {
+      showToast("Gagal memuat data. Menggunakan data demo.", "warn");
+      allResi = MOCK_RESI;
+      renderAll(allResi, MOCK_SELLERS);
+    } finally {
+      document.getElementById("loadingOverlay").style.display = "none";
+    }
+  }
+
+  function renderAll(data, sellers) {
+    renderStats(data);
+    renderCharts(data);
+    renderSellerDropdowns(sellers);
+    applyFilters();
+    renderOverdue(data);
+    renderLiveResi(data);
+  }
+
+  // ── STATS ────────────────────────────────────────────────
+  function renderStats(data) {
+    const s = computeStats(data);
+    document.getElementById("statsGrid").innerHTML = `
+      <div class="stat-card accent">
+        <div class="stat-label">Total Resi</div>
+        <div class="stat-value">${s.totalResi.toLocaleString()}</div>
+        <div class="stat-sub"><span class="up">↑ +${s.resiHariIni}</span> hari ini</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Seller</div>
+        <div class="stat-value">${s.totalSeller}</div>
+        <div class="stat-sub">Aktif</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Penjualan</div>
+        <div class="stat-value" style="font-size:18px">${formatRupiah(s.totalPenjualan)}</div>
+        <div class="stat-sub"><span class="up">↑ Rp 4.000.000</span> hari ini</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Belum Bayar</div>
+        <div class="stat-value" style="font-size:20px;color:var(--red-500)">${s.countBelum}</div>
+        <div class="stat-sub" style="color:var(--red-400)">${formatRupiah(s.totalBelumBayar)}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Resi Hari Ini</div>
+        <div class="stat-value">${s.resiHariIni}</div>
+        <div class="stat-sub">Pending: ${data.filter(r=>r.status==="BELUM").length}</div>
+      </div>
+    `;
+  }
+
+  // ── CHARTS ───────────────────────────────────────────────
+  function renderCharts(data) {
+    const perSeller = computePenjualanPerSeller(data);
+    const harian = computePenjualanHarian(data, 7);
+
+    const GREEN_SHADES = ["#16a34a","#22c55e","#4ade80","#86efac","#bbf7d0","#dcfce7"];
+
+    makeBarChart("chartSeller",
+      perSeller.map(x => x.seller),
+      [{
+        label: "Penjualan",
+        data: perSeller.map(x => x.total),
+        backgroundColor: perSeller.map((_, i) => GREEN_SHADES[i % GREEN_SHADES.length]),
+        borderRadius: 8,
+        borderSkipped: false,
+      }]
+    );
+
+    const grad = document.getElementById("chartHarian")?.getContext("2d")?.createLinearGradient(0,0,0,220);
+    if (grad) {
+      grad.addColorStop(0, "rgba(22,163,74,0.25)");
+      grad.addColorStop(1, "rgba(22,163,74,0.01)");
+    }
+    makeLineChart("chartHarian",
+      harian.map(x => x.label),
+      [{
+        label: "Penjualan",
+        data: harian.map(x => x.total),
+        borderColor: "#16a34a",
+        backgroundColor: grad || "rgba(22,163,74,0.15)",
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: "#16a34a",
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      }]
+    );
+  }
+
+  // ── SELLER DROPDOWNS ─────────────────────────────────────
+  function renderSellerDropdowns(sellers) {
+    ["filterSeller", "paySeller"].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const defaultOpt = id === "filterSeller"
+        ? '<option value="">Semua Seller</option>'
+        : '<option value="">Pilih Seller</option>';
+      el.innerHTML = defaultOpt + sellers.map(s => `<option value="${s}">${s}</option>`).join("");
+    });
+  }
+
+  // ── TABLE ────────────────────────────────────────────────
+  function applyFilters() {
+    const search = document.getElementById("tableSearch")?.value || "";
+    const gsearch = document.getElementById("globalSearch")?.value || "";
+    const seller = document.getElementById("filterSeller")?.value || "";
+    const status = document.getElementById("filterStatus")?.value || "";
+    const dateFrom = document.getElementById("filterDateFrom")?.value || "";
+    const dateTo = document.getElementById("filterDateTo")?.value || "";
+
+    filteredResi = filterResi(allResi, {
+      search: search || gsearch,
+      seller, status, dateFrom, dateTo,
+    });
+
+    paginator = new Paginator(filteredResi, PAGE_SIZE);
+    renderTable();
+  }
+
+  function renderTable() {
+    const data = paginator.currentData;
+    const tbody = document.getElementById("resiBody");
+
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📭</div><p>Tidak ada data ditemukan</p></div></td></tr>`;
+    } else {
+      tbody.innerHTML = data.map(r => `
+        <tr>
+          <td>${formatDate(r.tanggal)}</td>
+          <td class="mono">${r.nomor_resi}</td>
+          <td><span style="font-weight:600">${r.seller}</span></td>
+          <td>${r.produk}</td>
+          <td style="text-align:center">${r.qty || 1}</td>
+          <td>${formatRupiah(r.harga)}</td>
+          <td style="font-weight:700">${formatRupiah(r.total || r.harga)}</td>
+          <td><span class="badge badge-${r.status === 'LUNAS' ? 'lunas' : 'belum'}">${r.status}</span></td>
+        </tr>
+      `).join("");
+    }
+
+    paginator.renderControls("paginationControls", "goToPage");
+  }
+
+  function goToPage(p) {
+    paginator.setPage(p);
+    renderTable();
+  }
+
+  function onGlobalSearch(val) {
+    document.getElementById("tableSearch").value = val;
+    applyFilters();
+  }
+
+  // ── OVERDUE ──────────────────────────────────────────────
+  function renderOverdue(data) {
+    const overdue = computeOverdue(data);
+    const el = document.getElementById("overdueList");
+    if (!overdue.length) {
+      el.innerHTML = `<div class="empty-state" style="padding:20px"><p>🎉 Tidak ada overdue!</p></div>`;
+      return;
+    }
+    el.innerHTML = overdue.map(o => `
+      <div class="overdue-item">
+        <div>
+          <div class="overdue-seller">${o.seller}</div>
+          <div class="live-meta">${allResi.filter(r=>r.seller===o.seller&&r.status==="BELUM").length} produk belum bayar</div>
+        </div>
+        <div class="overdue-amount">${formatRupiah(o.total)}</div>
+      </div>
+    `).join("");
+  }
+
+  // ── LIVE RESI ────────────────────────────────────────────
+  function renderLiveResi(data) {
+    const recent = [...data].reverse().slice(0, 6);
+    document.getElementById("liveList").innerHTML = recent.map(r => `
+      <div class="live-item">
+        <div>
+          <div class="live-resi-no">${r.nomor_resi}</div>
+          <div class="live-meta">${r.seller} · ${formatDateShort(r.tanggal)}</div>
+        </div>
+        <span class="badge badge-${r.status === 'LUNAS' ? 'lunas' : 'belum'}">${r.status}</span>
+      </div>
+    `).join("");
+  }
+
+  // ── TANDAI LUNAS ─────────────────────────────────────────
+  document.getElementById("payJumlah").addEventListener("input", updatePayPreview);
+  document.getElementById("paySeller").addEventListener("change", updatePayPreview);
+
+  function updatePayPreview() {
+    const seller = document.getElementById("paySeller").value;
+    const jumlah = parseInt(document.getElementById("payJumlah").value) || 0;
+    const preview = document.getElementById("payPreview");
+    if (!seller || !jumlah) { preview.style.display = "none"; return; }
+    const belum = allResi.filter(r => r.seller === seller && r.status === "BELUM").length;
+    const akan = Math.min(jumlah, belum);
+    document.getElementById("previewBelum").textContent = belum;
+    document.getElementById("previewJumlah").textContent = akan;
+    preview.style.display = "block";
+  }
+
+  function showTandaiModal() {
+    const seller = document.getElementById("paySeller").value;
+    const jumlah = parseInt(document.getElementById("payJumlah").value);
+    if (!seller) { showToast("Pilih seller terlebih dahulu", "warn"); return; }
+    if (!jumlah || jumlah < 1) { showToast("Masukkan jumlah produk", "warn"); return; }
+    const belum = allResi.filter(r => r.seller === seller && r.status === "BELUM").length;
+    const akan = Math.min(jumlah, belum);
+    if (akan === 0) { showToast("Tidak ada produk BELUM untuk seller ini", "warn"); return; }
+    document.getElementById("modalText").textContent =
+      `Apakah Anda ingin menandai ${akan} produk lunas untuk ${seller}?`;
+    document.getElementById("modalDetail").textContent =
+      `${akan} produk pada seller ${seller} akan ditandai lunas`;
+    document.getElementById("modalJumlah").textContent = akan;
+    openModal("tandaiModal");
+  }
+
+  async function doTandaiLunas() {
+    const seller = document.getElementById("paySeller").value;
+    const jumlah = parseInt(document.getElementById("payJumlah").value);
+    closeModal("tandaiModal");
+    try {
+      const result = await window.doTandaiLunas(seller, jumlah);
+      showToast(`✅ ${result.updated} produk berhasil ditandai LUNAS`, "success");
+      allResi = await loadResi();
+      renderAll(allResi, MOCK_SELLERS);
+      document.getElementById("payJumlah").value = "";
+      document.getElementById("payPreview").style.display = "none";
+    } catch (e) {
+      showToast("Gagal memperbarui data", "error");
+    }
+  }
+
+  // ── EXPORT ───────────────────────────────────────────────
+  function doExportCSV() {
+    exportToCSV(filteredResi, `resi-export-${new Date().toISOString().slice(0,10)}.csv`);
+    showToast("File CSV berhasil diunduh");
+  }
+  function doExportExcel() {
+    // Fallback to CSV if SheetJS unavailable
+    exportToCSV(filteredResi, `resi-export-${new Date().toISOString().slice(0,10)}.csv`);
+    showToast("File diunduh sebagai CSV");
+  }
+
+  // ── START ────────────────────────────────────────────────
+  initDarkMode();
+  initDashboard();
+
+  // Auto-refresh every 60s
+  setInterval(() => initDashboard(), 60000);
+</script>
+</body>
+</html>
