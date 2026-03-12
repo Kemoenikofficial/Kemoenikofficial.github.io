@@ -558,6 +558,7 @@ document.addEventListener("click",e=>{if(e.target.classList.contains("modal-over
 
 /* ══ START ══ */
 boot();
+setInterval(()=>{ if(currentSeller) startDash(currentSeller); }, 5000);
 </script>
 </body>
 </html>
