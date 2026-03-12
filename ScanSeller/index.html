@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>KEMOENIK POS</title>
+<title>SCAN RESI</title>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
 
 body{
-margin:0;
 font-family:Arial;
-background:#f4f6f8;
+margin:0;
+background:#f3f3f3;
 }
 
 .header{
 background:#16a34a;
 color:white;
 text-align:center;
-padding:16px;
+padding:15px;
 font-size:22px;
 font-weight:bold;
 }
@@ -35,33 +34,37 @@ width:100%;
 margin-bottom:15px;
 }
 
-.scanbtn{
+button{
 width:100%;
 padding:14px;
+border:none;
+border-radius:8px;
+font-size:16px;
+margin-top:10px;
+}
+
+.scan{
 background:#16a34a;
 color:white;
-border:none;
-border-radius:10px;
-font-size:18px;
-margin-bottom:15px;
 }
 
 select{
 width:100%;
 padding:12px;
-margin-bottom:10px;
+margin-top:10px;
 border-radius:8px;
-border:1px solid #ddd;
+border:1px solid #ccc;
 font-size:16px;
 }
 
 .total{
+margin-top:20px;
 background:white;
-border-radius:12px;
-padding:20px;
-font-size:22px;
-text-align:right;
+padding:15px;
+border-radius:10px;
+font-size:20px;
 font-weight:bold;
+text-align:right;
 }
 
 </style>
@@ -71,15 +74,15 @@ font-weight:bold;
 <body>
 
 <div class="header">
-KEMOENIK POS
+SCAN RESI
 </div>
 
 <div class="container">
 
 <div id="reader"></div>
 
-<button class="scanbtn" onclick="scanManual()">
-SCAN PRODUK
+<button class="scan" onclick="scanManual()">
+SCAN RESI
 </button>
 
 <select id="seller"></select>
@@ -104,58 +107,25 @@ const API="https://script.google.com/macros/s/AKfycbwMKriFGgT9WLy3AGVXPNoK8aY9Pd
 let lastBarcode="";
 let total=0;
 
-/* LOAD SELLER */
-
-fetch(API+"?action=seller")
-.then(res=>res.json())
-.then(data=>{
-
-let s=document.getElementById("seller");
-
-data.forEach(i=>{
-s.innerHTML+=`<option>${i[0]}</option>`;
-});
-
-});
-
-
-/* LOAD PRODUK */
-
-fetch(API+"?action=produk")
-.then(res=>res.json())
-.then(data=>{
-
-let p=document.getElementById("produk");
-
-data.forEach(i=>{
-p.innerHTML+=`<option>${i[0]}</option>`;
-});
-
-});
-
-
-/* SOUND */
-
 function bunyi(){
 
-const ctx=new(window.AudioContext||window.webkitAudioContext)();
+const ctx=new AudioContext();
 const osc=ctx.createOscillator();
 const gain=ctx.createGain();
 
 osc.type="square";
-osc.frequency.value=1000;
+osc.frequency.value=900;
 
 osc.connect(gain);
 gain.connect(ctx.destination);
 
 osc.start();
 
-setTimeout(()=>{osc.stop();},120);
+setTimeout(()=>{
+osc.stop();
+},120);
 
 }
-
-
-/* SCAN SUCCESS */
 
 function onScanSuccess(decodedText){
 
@@ -163,31 +133,27 @@ lastBarcode=decodedText;
 
 }
 
-
-/* SCAN BUTTON */
-
 function scanManual(){
 
-if(!lastBarcode){
-alert("Scan barcode dulu");
+if(lastBarcode==""){
+alert("Scan resi dulu");
 return;
 }
+
+var seller=document.getElementById("seller").value;
+var produk=document.getElementById("produk").value;
+var harga=document.getElementById("harga").value;
 
 bunyi();
 
-let seller=document.getElementById("seller").value;
-let produk=document.getElementById("produk").value;
-let harga=document.getElementById("harga").value;
+fetch(API+"?action=scan"+
+"&resi="+lastBarcode+
+"&seller="+seller+
+"&produk="+produk+
+"&harga="+harga)
 
-fetch(API+"?action=scan&resi="+lastBarcode+"&seller="+seller+"&produk="+produk+"&harga="+harga)
-
-.then(res=>res.json())
-.then(data=>{
-
-if(data.status=="duplicate"){
-alert("RESI SUDAH ADA");
-return;
-}
+.then(r=>r.json())
+.then(d=>{
 
 total+=Number(harga);
 
@@ -199,8 +165,43 @@ lastBarcode="";
 
 }
 
+function loadSeller(){
 
-/* START CAMERA */
+fetch(API+"?action=seller")
+.then(r=>r.json())
+.then(data=>{
+
+var s=document.getElementById("seller");
+
+data.forEach(v=>{
+var o=document.createElement("option");
+o.value=v;
+o.textContent=v;
+s.appendChild(o);
+});
+
+});
+
+}
+
+function loadProduk(){
+
+fetch(API+"?action=produk")
+.then(r=>r.json())
+.then(data=>{
+
+var s=document.getElementById("produk");
+
+data.forEach(v=>{
+var o=document.createElement("option");
+o.value=v;
+o.textContent=v;
+s.appendChild(o);
+});
+
+});
+
+}
 
 let scanner=new Html5QrcodeScanner(
 "reader",
@@ -208,6 +209,9 @@ let scanner=new Html5QrcodeScanner(
 );
 
 scanner.render(onScanSuccess);
+
+loadSeller();
+loadProduk();
 
 </script>
 
