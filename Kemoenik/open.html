@@ -1,258 +1,232 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kemoenik Official Store</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kemoenik Official Store</title>
 
-  <style>
-    *{box-sizing:border-box;}
+<style>
+*{box-sizing:border-box;}
 
-    body{
-      margin:0;
-      font-family:'Segoe UI', Arial, sans-serif;
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:20px;
-      background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
-      position:relative;
-    }
+body{
+  margin:0;
+  font-family:'Segoe UI', Arial, sans-serif;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
+  position:relative;
+}
 
-    /* Glow Background */
-    body::before,
-    body::after{
-      content:"";
-      position:absolute;
-      border-radius:50%;
-      filter:blur(120px);
-      opacity:0.35;
-      z-index:0;
-    }
+/* Glow Background */
+body::before,
+body::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:0.35;
+  z-index:0;
+}
 
-    body::before{
-      width:320px;
-      height:320px;
-      background:#16a34a;
-      top:-100px;
-      left:-100px;
-    }
+body::before{
+  width:320px;
+  height:320px;
+  background:#16a34a;
+  top:-100px;
+  left:-100px;
+}
 
-    body::after{
-      width:380px;
-      height:380px;
-      background:#4ade80;
-      bottom:-140px;
-      right:-140px;
-    }
+body::after{
+  width:380px;
+  height:380px;
+  background:#4ade80;
+  bottom:-140px;
+  right:-140px;
+}
 
-    /* WELCOME TEXT DI ATAS */
-    .welcome{
-      position:absolute;
-      top:40px;
-      font-size:18px;
-      font-weight:800;
-      letter-spacing:2px;
-      color:#16a34a;
-      animation:fadeDown 0.8s ease forwards;
-      opacity:0;
-    }
+/* WELCOME TEXT DI ATAS */
+.welcome{
+  position:absolute;
+  top:40px;
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:2px;
+  color:#16a34a;
+  animation:fadeDown 0.8s ease forwards;
+  opacity:0;
+}
 
-    @keyframes fadeDown{
-      from{
-        opacity:0;
-        transform:translateY(-10px);
-      }
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
-    }
+@keyframes fadeDown{
+  from{
+    opacity:0;
+    transform:translateY(-10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
 
-    /* Card */
-    .card{
-      position:relative;
-      z-index:2;
-      background:white;
-      padding:45px 30px;
-      border-radius:22px;
-      max-width:420px;
-      width:100%;
-      text-align:center;
-      box-shadow:0 25px 60px rgba(0,0,0,0.15);
-      transform:translateY(40px);
-      opacity:0;
-      animation:cardIn 0.8s ease forwards;
-      animation-delay:0.2s;
-    }
+/* Card */
+.card{
+  position:relative;
+  z-index:2;
+  background:white;
+  padding:45px 30px;
+  border-radius:22px;
+  max-width:420px;
+  width:100%;
+  text-align:center;
+  box-shadow:0 25px 60px rgba(0,0,0,0.15);
+  transform:translateY(40px);
+  opacity:0;
+  animation:cardIn 0.8s ease forwards;
+  animation-delay:0.2s;
+}
 
-    .logo{
-      width:85px;
-      margin-bottom:18px;
-      transform:translateY(-20px);
-      opacity:0;
-      animation:logoDrop 0.7s ease forwards;
-      animation-delay:0.4s;
-    }
+.logo{
+  width:85px;
+  margin-bottom:18px;
+  transform:translateY(-20px);
+  opacity:0;
+  animation:logoDrop 0.7s ease forwards;
+  animation-delay:0.4s;
+}
 
-    h1{
-      margin:0;
-      font-size:21px;
-      font-weight:800;
-      color:#065f46;
-      letter-spacing:0.5px;
-    }
+h1{
+  margin:0;
+  font-size:21px;
+  font-weight:800;
+  color:#065f46;
+  letter-spacing:0.5px;
+}
 
-    .brand{
-      font-size:12px;
-      letter-spacing:1.5px;
-      color:#6b7280;
-      margin-bottom:20px;
-    }
+.brand{
+  font-size:12px;
+  letter-spacing:1.5px;
+  color:#6b7280;
+  margin-bottom:20px;
+}
 
-    p{
-      font-size:14px;
-      color:#4b5563;
-      margin-bottom:28px;
-      line-height:1.6;
-    }
+p{
+  font-size:14px;
+  color:#4b5563;
+  margin-bottom:28px;
+  line-height:1.6;
+}
 
-    .countdown{
-      font-size:13px;
-      background:#f0fdf4;
-      padding:8px 12px;
-      border-radius:40px;
-      display:inline-block;
-      margin-bottom:20px;
-      color:#059669;
-      font-weight:600;
-    }
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-size:15px;
+  cursor:pointer;
+  margin-bottom:14px;
+  transition:0.2s ease;
+}
 
-    button{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:14px;
-      font-size:15px;
-      cursor:pointer;
-      margin-bottom:14px;
-      transition:0.2s ease;
-    }
+.primary{
+  background:#16a34a;
+  color:white;
+  font-weight:700;
+  box-shadow:0 10px 20px rgba(22,163,74,0.3);
+}
 
-    .primary{
-      background:#16a34a;
-      color:white;
-      font-weight:700;
-      box-shadow:0 10px 20px rgba(22,163,74,0.3);
-    }
+.primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 28px rgba(22,163,74,0.4);
+}
 
-    .primary:hover{
-      transform:translateY(-2px);
-      box-shadow:0 14px 28px rgba(22,163,74,0.4);
-    }
+.primary:active{
+  transform:scale(0.97);
+}
 
-    .primary:active{
-      transform:scale(0.97);
-    }
+.secondary{
+  background:#e5e7eb;
+  color:#374151;
+}
 
-    .secondary{
-      background:#e5e7eb;
-      color:#374151;
-    }
+.secondary:hover{
+  background:#d1d5db;
+}
 
-    .secondary:hover{
-      background:#d1d5db;
-    }
+.footer{
+  font-size:11px;
+  color:#9ca3af;
+  margin-top:18px;
+}
 
-    .footer{
-      font-size:11px;
-      color:#9ca3af;
-      margin-top:18px;
-    }
+@keyframes cardIn{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
 
-    @keyframes cardIn{
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
-    }
-
-    @keyframes logoDrop{
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
-    }
-  </style>
+@keyframes logoDrop{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="welcome">WELCOME TO KEMOENIK</div>
+<div class="welcome">WELCOME TO KEMOENIK</div>
 
-  <div class="card">
+<div class="card">
 
-    <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="logo">
+  <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" class="logo">
 
-    <h1>Kemoenik Official Store</h1>
-    <div class="brand">Toko Online Resmi</div>
+  <h1>Kemoenik Official Store</h1>
+  <div class="brand">Toko Online Resmi</div>
 
-    <p>
-      Untuk pengalaman checkout dan pembayaran yang lebih lancar,
-      sebaiknya buka website ini di browser utama Anda.
-    </p>
+  <p>
+    Untuk pengalaman checkout dan pembayaran yang lebih lancar,
+    silakan buka website ini di browser utama Anda.
+  </p>
 
-    <div class="countdown" id="countdownText">Mengalihkan ke toko dalam 3 detik...</div>
+  <button class="primary" onclick="openExternal()">
+    Buka di Browser Utama
+  </button>
 
-    <button class="primary" onclick="openInBrowser()">
-      Buka di Browser Utama
-    </button>
+  <button class="secondary" onclick="continueHere()">
+    Tetap Lanjut di TikTok / Instagram
+  </button>
 
-    <button class="secondary" onclick="continueHere()">
-      Tetap Lanjut di Sini
-    </button>
-
-    <div class="footer">
-      © 2026 Kemoenik Official Store
-    </div>
-
+  <div class="footer">
+    © 2026 Kemoenik Official Store
   </div>
 
-  <script>
-    // Hitung mundur redirect ke index.html
-    let seconds = 3;
-    const countdownEl = document.getElementById('countdownText');
-    const interval = setInterval(() => {
-      seconds--;
-      if (seconds <= 0) {
-        clearInterval(interval);
-        window.location.href = 'index.html';
-      } else {
-        countdownEl.innerText = `Mengalihkan ke toko dalam ${seconds} detik...`;
-      }
-    }, 1000);
+</div>
 
-    // Fungsi untuk membuka di browser utama
-    function openInBrowser() {
-      // Coba intent untuk Android, fallback ke URL biasa
-      var currentUrl = window.location.origin + '/index.html';
-      var isAndroid = /android/i.test(navigator.userAgent);
+<script>
+function openExternal(){
+  var currentUrl = window.location.origin + "/index.html";
+  var isAndroid = /android/i.test(navigator.userAgent);
 
-      if (isAndroid) {
-        // Intent untuk Chrome (dapat disesuaikan dengan browser lain)
-        window.location.href = 
-          "intent://" + window.location.host + "/index.html#Intent;scheme=https;package=com.android.chrome;end";
-      } else {
-        window.open(currentUrl, '_blank');
-      }
-    }
+  if (isAndroid) {
+    // Intent untuk Android (default Chrome)
+    window.location.href =
+      "intent://" +
+      window.location.host +
+      "/index.html#Intent;scheme=https;package=com.android.chrome;end";
+  } else {
+    // Untuk iOS/desktop buka tab baru
+    window.open(currentUrl, "_blank");
+  }
+}
 
-    // Fungsi untuk tetap lanjut di webview (langsung ke index.html)
-    function continueHere() {
-      window.location.href = 'index.html';
-    }
-  </script>
+function continueHere(){
+  window.location.href = "index.html";
+}
+</script>
 
 </body>
 </html>
