@@ -428,10 +428,22 @@
 
   async function refreshData() {
     if (!currentSeller) return;
-    document.getElementById("ptrIndicator").style.display = "block";
-    await onSellerChange(currentSeller);
-    document.getElementById("ptrIndicator").style.display = "none";
+    await silentRefresh();
     showToast("Data diperbarui");
+  }
+
+  // Silent background refresh — tidak kedip, tidak loading
+  async function silentRefresh() {
+    if (!currentSeller) return;
+    try {
+      const newData = await loadResi({ seller: currentSeller });
+      if (JSON.stringify(sellerResi) !== JSON.stringify(newData)) {
+        sellerResi = newData;
+        renderStats(sellerResi);
+        renderChart(sellerResi);
+        renderResiList();
+      }
+    } catch(e) { /* gagal diam-diam */ }
   }
 
   // ── STATS ────────────────────────────────────────────────
@@ -556,7 +568,7 @@
   // ── START ────────────────────────────────────────────────
   initDarkMode();
   initSeller();
-  setInterval(() => { if (currentSeller) onSellerChange(currentSeller); }, 5000);
+  setInterval(silentRefresh, 5000);
 </script>
 </body>
 </html>
