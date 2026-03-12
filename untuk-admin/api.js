@@ -203,7 +203,7 @@ const MOCK_RESI = [
 const MOCK_SELLERS = ["LUNISCA2026-01", "ALNISHOP2026-02", "SEHATBARENG"];
 
 // Use mock data by default; set to false when real API is ready
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 async function loadResi(filters = {}) {
   if (USE_MOCK) {
