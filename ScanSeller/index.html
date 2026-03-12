@@ -5,57 +5,63 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>SCAN RESI</title>
+<title>KEMOENIK POS</title>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
 
 body{
+margin:0;
 font-family:Arial;
 background:#f4f6f8;
-margin:0;
 }
 
 .header{
 background:#16a34a;
 color:white;
 text-align:center;
-padding:15px;
-font-size:20px;
+padding:16px;
+font-size:22px;
+font-weight:bold;
 }
 
 .container{
-padding:20px;
-}
-
-button{
-width:100%;
 padding:15px;
-margin-bottom:10px;
-border:none;
-border-radius:8px;
-font-size:16px;
 }
 
-.scan{
+#reader{
+width:100%;
+margin-bottom:15px;
+}
+
+.scanbtn{
+width:100%;
+padding:14px;
 background:#16a34a;
 color:white;
-}
-
-.stop{
-background:#ef4444;
-color:white;
+border:none;
+border-radius:10px;
+font-size:18px;
+margin-bottom:15px;
 }
 
 select{
 width:100%;
-padding:10px;
-margin-top:10px;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ddd;
+font-size:16px;
 }
 
-#reader{
-margin-top:15px;
+.total{
+background:white;
+border-radius:12px;
+padding:20px;
+font-size:22px;
+text-align:right;
+font-weight:bold;
 }
 
 </style>
@@ -65,36 +71,38 @@ margin-top:15px;
 <body>
 
 <div class="header">
-SCAN RESI
+KEMOENIK POS
 </div>
 
 <div class="container">
 
-<button class="scan" onclick="startScan()">SCAN</button>
-<button class="stop" onclick="stopScan()">STOP</button>
-
 <div id="reader"></div>
+
+<button class="scanbtn" onclick="scanManual()">
+SCAN PRODUK
+</button>
 
 <select id="seller"></select>
 
 <select id="produk"></select>
 
 <select id="harga">
-
 <option value="70000">70000</option>
 <option value="30000">30000</option>
-
 </select>
 
+<div class="total">
+Total: Rp <span id="total">0</span>
 </div>
 
+</div>
 
 <script>
 
 const API="https://script.google.com/macros/s/AKfycbx87tt-MUpUG_nNSHVQ4N7_N0N6ORhjOR6yk8Fcvq_rHK6m8_tl708CRgAk1UI_o0bN/execT";
 
-let scanner;
-
+let lastBarcode="";
+let total=0;
 
 /* LOAD SELLER */
 
@@ -126,7 +134,7 @@ p.innerHTML+=`<option>${i[0]}</option>`;
 });
 
 
-/* BUNYI */
+/* SOUND */
 
 function bunyi(){
 
@@ -142,24 +150,28 @@ gain.connect(ctx.destination);
 
 osc.start();
 
-setTimeout(()=>{
-osc.stop();
-},120);
+setTimeout(()=>{osc.stop();},120);
 
 }
 
 
-/* START SCAN */
+/* SCAN SUCCESS */
 
-function startScan(){
+function onScanSuccess(decodedText){
 
-scanner=new Html5Qrcode("reader");
+lastBarcode=decodedText;
 
-scanner.start(
-{ facingMode:"environment" },
-{ fps:10, qrbox:250 },
+}
 
-(decodedText)=>{
+
+/* SCAN BUTTON */
+
+function scanManual(){
+
+if(!lastBarcode){
+alert("Scan barcode dulu");
+return;
+}
 
 bunyi();
 
@@ -167,7 +179,7 @@ let seller=document.getElementById("seller").value;
 let produk=document.getElementById("produk").value;
 let harga=document.getElementById("harga").value;
 
-fetch(API+"?action=scan&resi="+decodedText+"&seller="+seller+"&produk="+produk+"&harga="+harga)
+fetch(API+"?action=scan&resi="+lastBarcode+"&seller="+seller+"&produk="+produk+"&harga="+harga)
 
 .then(res=>res.json())
 .then(data=>{
@@ -177,26 +189,25 @@ alert("RESI SUDAH ADA");
 return;
 }
 
-console.log("saved");
+total+=Number(harga);
+
+document.getElementById("total").innerText=total;
+
+lastBarcode="";
 
 });
 
 }
 
+
+/* START CAMERA */
+
+let scanner=new Html5QrcodeScanner(
+"reader",
+{fps:10,qrbox:250}
 );
 
-}
-
-
-/* STOP */
-
-function stopScan(){
-
-if(scanner){
-scanner.stop();
-}
-
-}
+scanner.render(onScanSuccess);
 
 </script>
 
