@@ -5,172 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kemoenik Official Store - Pembuka</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    /* (style sama seperti sebelumnya, sudah lengkap) */
+    * { box-sizing: border-box; }
     body {
-      margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      margin: 0; font-family: 'Segoe UI', Arial, sans-serif; height: 100vh;
+      display: flex; justify-content: center; align-items: center; padding: 20px;
       background: linear-gradient(135deg, #e6f4ea 0%, #f5fdf8 60%, #ffffff 100%);
       position: relative;
     }
-
-    /* Glow background */
-    body::before,
-    body::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.35;
-      z-index: 0;
+    body::before, body::after {
+      content: ""; position: absolute; border-radius: 50%; filter: blur(120px);
+      opacity: 0.35; z-index: 0;
     }
-
-    body::before {
-      width: 320px;
-      height: 320px;
-      background: #16a34a;
-      top: -100px;
-      left: -100px;
-    }
-
-    body::after {
-      width: 380px;
-      height: 380px;
-      background: #4ade80;
-      bottom: -140px;
-      right: -140px;
-    }
-
+    body::before { width: 320px; height: 320px; background: #16a34a; top: -100px; left: -100px; }
+    body::after { width: 380px; height: 380px; background: #4ade80; bottom: -140px; right: -140px; }
     .welcome {
-      position: absolute;
-      top: 40px;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: #16a34a;
-      animation: fadeDown 0.8s ease forwards;
-      opacity: 0;
+      position: absolute; top: 40px; font-size: 18px; font-weight: 800;
+      letter-spacing: 2px; color: #16a34a; animation: fadeDown 0.8s ease forwards; opacity: 0;
     }
-
     @keyframes fadeDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
     .card {
-      position: relative;
-      z-index: 2;
-      background: white;
-      padding: 45px 30px;
-      border-radius: 22px;
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-      transform: translateY(40px);
-      opacity: 0;
-      animation: cardIn 0.8s ease forwards;
-      animation-delay: 0.2s;
+      position: relative; z-index: 2; background: white; padding: 45px 30px;
+      border-radius: 22px; max-width: 420px; width: 100%; text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15); transform: translateY(40px);
+      opacity: 0; animation: cardIn 0.8s ease forwards; animation-delay: 0.2s;
     }
-
-    .logo {
-      width: 85px;
-      margin-bottom: 18px;
-      transform: translateY(-20px);
-      opacity: 0;
-      animation: logoDrop 0.7s ease forwards;
-      animation-delay: 0.4s;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 21px;
-      font-weight: 800;
-      color: #065f46;
-      letter-spacing: 0.5px;
-    }
-
-    .brand {
-      font-size: 12px;
-      letter-spacing: 1.5px;
-      color: #6b7280;
-      margin-bottom: 20px;
-    }
-
-    p {
-      font-size: 14px;
-      color: #4b5563;
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
+    .logo { width: 85px; margin-bottom: 18px; transform: translateY(-20px); opacity: 0;
+            animation: logoDrop 0.7s ease forwards; animation-delay: 0.4s; }
+    h1 { margin: 0; font-size: 21px; font-weight: 800; color: #065f46; letter-spacing: 0.5px; }
+    .brand { font-size: 12px; letter-spacing: 1.5px; color: #6b7280; margin-bottom: 20px; }
+    p { font-size: 14px; color: #4b5563; margin-bottom: 28px; line-height: 1.6; }
     button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 14px;
-      font-size: 15px;
-      cursor: pointer;
-      margin-bottom: 14px;
-      transition: 0.2s ease;
+      width: 100%; padding: 14px; border: none; border-radius: 14px; font-size: 15px;
+      cursor: pointer; margin-bottom: 14px; transition: 0.2s ease;
     }
-
     .primary {
-      background: #16a34a;
-      color: white;
-      font-weight: 700;
-      box-shadow: 0 10px 20px rgba(22, 163, 74, 0.3);
+      background: #16a34a; color: white; font-weight: 700;
+      box-shadow: 0 10px 20px rgba(22,163,74,0.3);
     }
-
-    .primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 28px rgba(22, 163, 74, 0.4);
-    }
-
-    .primary:active {
-      transform: scale(0.97);
-    }
-
-    .secondary {
-      background: #e5e7eb;
-      color: #374151;
-    }
-
-    .secondary:hover {
-      background: #d1d5db;
-    }
-
-    .footer {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-top: 18px;
-    }
-
+    .primary:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(22,163,74,0.4); }
+    .primary:active { transform: scale(0.97); }
+    .secondary { background: #e5e7eb; color: #374151; }
+    .secondary:hover { background: #d1d5db; }
+    .footer { font-size: 11px; color: #9ca3af; margin-top: 18px; }
     @keyframes cardIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes logoDrop {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -204,10 +89,9 @@
 
 <script>
   function openExternal() {
-    // Mencoba membuka di browser eksternal (khusus Android dengan Chrome)
     var isAndroid = /android/i.test(navigator.userAgent);
     if (isAndroid) {
-      // Intent URL untuk membuka di Chrome
+      // Intent untuk membuka di Chrome (browser eksternal)
       window.location.href =
         "intent://" +
         window.location.host +
@@ -219,7 +103,7 @@
   }
 
   function continueHere() {
-    // Tetap di webview internal (TikTok/Instagram) dan buka toko
+    // Tetap di webview internal dan buka halaman utama toko
     window.location.href = "index.html";
   }
 </script>
