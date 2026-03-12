@@ -435,11 +435,30 @@ async function startDash(seller){
   finally{document.getElementById("loadingScreen").style.display="none";}
   renderStats();renderChart();renderList();
 }
+
+/* Silent background refresh — tidak ada loading, tidak kedip */
+async function silentRefresh(){
+  if(!currentSeller) return;
+  try{
+    let newData;
+    if(USE_MOCK){ newData=MOCK_RESI.filter(r=>r.seller===currentSeller); }
+    else{
+      const url=new URL(API_URL);
+      url.searchParams.append("action","getResi");
+      url.searchParams.append("seller",currentSeller);
+      newData=await fetch(url).then(r=>r.json());
+    }
+    // Hanya update DOM kalau ada perubahan data
+    if(JSON.stringify(sellerResi)!==JSON.stringify(newData)){
+      sellerResi=newData;
+      renderStats();renderChart();renderList();
+    }
+  }catch(e){ /* gagal diam-diam, tidak ganggu user */ }
+}
+
 async function refreshData(){
-  if(!currentSeller)return;
-  document.getElementById("loadingScreen").style.display="flex";
-  document.getElementById("loadingText").textContent="Memperbarui…";
-  await startDash(currentSeller);
+  if(!currentSeller) return;
+  await silentRefresh();
   showToast("Data diperbarui");
 }
 
@@ -558,7 +577,7 @@ document.addEventListener("click",e=>{if(e.target.classList.contains("modal-over
 
 /* ══ START ══ */
 boot();
-setInterval(()=>{ if(currentSeller) startDash(currentSeller); }, 5000);
+setInterval(silentRefresh, 5000);
 </script>
 </body>
 </html>
