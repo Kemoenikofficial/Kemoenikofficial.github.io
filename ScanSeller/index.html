@@ -23,29 +23,22 @@ color:white;
 text-align:center;
 padding:15px;
 font-size:20px;
-font-weight:bold;
 }
 
 .container{
 padding:20px;
 }
 
-select{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-}
-
 button{
 width:100%;
-padding:14px;
-margin-top:10px;
+padding:15px;
+margin-bottom:10px;
 border:none;
 border-radius:8px;
 font-size:16px;
 }
 
-.start{
+.scan{
 background:#16a34a;
 color:white;
 }
@@ -53,6 +46,12 @@ color:white;
 .stop{
 background:#ef4444;
 color:white;
+}
+
+select{
+width:100%;
+padding:10px;
+margin-top:10px;
 }
 
 #reader{
@@ -71,23 +70,15 @@ SCAN RESI
 
 <div class="container">
 
-<label>Seller</label>
-<select id="seller">
+<button class="scan" onclick="startScan()">SCAN</button>
+<button class="stop" onclick="stopScan()">STOP</button>
 
-<option>LUNISCA2026-01</option>
-<option>ALNISHOP2020-02</option>
-<option>SEHATBARENG2026-03</option>
+<div id="reader"></div>
 
-</select>
+<select id="seller"></select>
 
-<label>Produk</label>
-<select id="produk">
+<select id="produk"></select>
 
-<option>KEMOENIK SLIM</option>
-
-</select>
-
-<label>Harga</label>
 <select id="harga">
 
 <option value="70000">70000</option>
@@ -95,46 +86,77 @@ SCAN RESI
 
 </select>
 
-<button class="start" onclick="startScan()">START SCAN</button>
-
-<button class="stop" onclick="stopScan()">STOP SCAN</button>
-
-<div id="reader"></div>
-
 </div>
+
 
 <script>
 
-const API_URL="https://script.google.com/macros/s/AKfycbx87tt-MUpUG_nNSHVQ4N7_N0N6ORhjOR6yk8Fcvq_rHK6m8_tl708CRgAk1UI_o0bN/exec";
+const API="https://script.google.com/macros/s/AKfycbx87tt-MUpUG_nNSHVQ4N7_N0N6ORhjOR6yk8Fcvq_rHK6m8_tl708CRgAk1UI_o0bN/execT";
 
 let scanner;
 
+
+/* LOAD SELLER */
+
+fetch(API+"?action=seller")
+.then(res=>res.json())
+.then(data=>{
+
+let s=document.getElementById("seller");
+
+data.forEach(i=>{
+s.innerHTML+=`<option>${i[0]}</option>`;
+});
+
+});
+
+
+/* LOAD PRODUK */
+
+fetch(API+"?action=produk")
+.then(res=>res.json())
+.then(data=>{
+
+let p=document.getElementById("produk");
+
+data.forEach(i=>{
+p.innerHTML+=`<option>${i[0]}</option>`;
+});
+
+});
+
+
+/* BUNYI */
+
 function bunyi(){
 
-const context=new(window.AudioContext||window.webkitAudioContext)();
-const oscillator=context.createOscillator();
-const gain=context.createGain();
+const ctx=new(window.AudioContext||window.webkitAudioContext)();
+const osc=ctx.createOscillator();
+const gain=ctx.createGain();
 
-oscillator.type="square";
-oscillator.frequency.value=1000;
+osc.type="square";
+osc.frequency.value=1000;
 
-oscillator.connect(gain);
-gain.connect(context.destination);
+osc.connect(gain);
+gain.connect(ctx.destination);
 
-oscillator.start();
+osc.start();
 
 setTimeout(()=>{
-oscillator.stop();
+osc.stop();
 },120);
 
 }
+
+
+/* START SCAN */
 
 function startScan(){
 
 scanner=new Html5Qrcode("reader");
 
 scanner.start(
-{ facingMode: "environment" },
+{ facingMode:"environment" },
 { fps:10, qrbox:250 },
 
 (decodedText)=>{
@@ -145,12 +167,17 @@ let seller=document.getElementById("seller").value;
 let produk=document.getElementById("produk").value;
 let harga=document.getElementById("harga").value;
 
-fetch(API_URL+"?action=simpan&resi="+decodedText+"&seller="+seller+"&produk="+produk+"&harga="+harga)
+fetch(API+"?action=scan&resi="+decodedText+"&seller="+seller+"&produk="+produk+"&harga="+harga)
 
 .then(res=>res.json())
 .then(data=>{
 
-console.log("tersimpan");
+if(data.status=="duplicate"){
+alert("RESI SUDAH ADA");
+return;
+}
+
+console.log("saved");
 
 });
 
@@ -160,12 +187,13 @@ console.log("tersimpan");
 
 }
 
+
+/* STOP */
+
 function stopScan(){
 
 if(scanner){
-scanner.stop().then(()=>{
-console.log("scanner berhenti");
-});
+scanner.stop();
 }
 
 }
