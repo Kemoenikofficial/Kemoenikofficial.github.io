@@ -770,9 +770,31 @@ function openModal(id){document.getElementById(id)?.classList.add("open");}
 function closeModal(id){document.getElementById(id)?.classList.remove("open");}
 document.addEventListener("click",e=>{if(e.target.classList.contains("modal-overlay"))e.target.classList.remove("open");});
 
+/* ══════ SILENT REFRESH ══════ */
+async function silentRefresh(){
+  try{
+    let newData;
+    if(USE_MOCK){ newData=[...MOCK_RESI]; }
+    else{
+      const url=new URL(API_URL); url.searchParams.append("action","getResi");
+      newData=await fetch(url).then(r=>r.json());
+    }
+    // Hanya update kalau ada perubahan data
+    if(JSON.stringify(allResi)!==JSON.stringify(newData)){
+      allResi=newData;
+      renderStats(allResi);
+      renderCharts(allResi);
+      renderSellerDropdowns(USE_MOCK?MOCK_SELLERS:[...new Set(allResi.map(r=>r.seller))]);
+      applyFilters();
+      renderOverdue(allResi);
+      renderLive(allResi);
+    }
+  }catch(e){ /* gagal diam-diam */ }
+}
+
 /* ══════ START ══════ */
 initDashboard();
-setInterval(initDashboard,5000);
+setInterval(silentRefresh,5000);
 </script>
 </body>
 </html>
