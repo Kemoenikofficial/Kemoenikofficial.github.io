@@ -118,6 +118,17 @@ let total=0;
 let lastBarcode="";
 
 /* =======================
+FORMAT RUPIAH
+======================= */
+
+function formatRupiah(angka){
+return new Intl.NumberFormat('id-ID',{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}).format(angka);
+}
+
+/* =======================
 SUARA TIT SCANNER
 ======================= */
 
@@ -157,7 +168,7 @@ list.innerHTML+=`
 <div class="item">
 <div>
 ${item.nama}<br>
-Rp ${item.harga}
+Rp ${formatRupiah(item.harga)}
 </div>
 
 <button onclick="hapus(${index})">X</button>
@@ -166,7 +177,7 @@ Rp ${item.harga}
 
 });
 
-document.getElementById("total").innerText=total;
+document.getElementById("total").innerText=formatRupiah(total);
 
 }
 
