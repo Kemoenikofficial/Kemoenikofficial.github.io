@@ -11,16 +11,16 @@
 <style>
 
 body{
-font-family:Arial;
 margin:0;
-background:#f3f3f3;
+font-family:Arial;
+background:#f2f2f2;
 }
 
 .header{
 background:#16a34a;
 color:white;
 text-align:center;
-padding:15px;
+padding:16px;
 font-size:22px;
 font-weight:bold;
 }
@@ -31,37 +31,34 @@ padding:15px;
 
 #reader{
 width:100%;
-margin-bottom:15px;
+margin-bottom:10px;
 }
 
-button{
+.scanbtn{
 width:100%;
-padding:14px;
-border:none;
-border-radius:8px;
-font-size:16px;
-margin-top:10px;
-}
-
-.scan{
+padding:15px;
 background:#16a34a;
 color:white;
+border:none;
+border-radius:10px;
+font-size:18px;
+margin-bottom:10px;
 }
 
 select{
 width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:8px;
+padding:14px;
+border-radius:10px;
 border:1px solid #ccc;
+margin-top:10px;
 font-size:16px;
 }
 
 .total{
-margin-top:20px;
 background:white;
+margin-top:15px;
 padding:15px;
-border-radius:10px;
+border-radius:12px;
 font-size:20px;
 font-weight:bold;
 text-align:right;
@@ -81,8 +78,8 @@ SCAN RESI
 
 <div id="reader"></div>
 
-<button class="scan" onclick="scanManual()">
-SCAN RESI
+<button class="scanbtn" onclick="simpanScan()">
+SCAN PRODUK
 </button>
 
 <select id="seller"></select>
@@ -107,6 +104,8 @@ const API="https://script.google.com/macros/s/AKfycbwMKriFGgT9WLy3AGVXPNoK8aY9Pd
 let lastBarcode="";
 let total=0;
 
+/* bunyi tit */
+
 function bunyi(){
 
 const ctx=new AudioContext();
@@ -127,22 +126,26 @@ osc.stop();
 
 }
 
+/* scan berhasil */
+
 function onScanSuccess(decodedText){
 
 lastBarcode=decodedText;
 
 }
 
-function scanManual(){
+/* tombol scan */
+
+function simpanScan(){
 
 if(lastBarcode==""){
 alert("Scan resi dulu");
 return;
 }
 
-var seller=document.getElementById("seller").value;
-var produk=document.getElementById("produk").value;
-var harga=document.getElementById("harga").value;
+let seller=document.getElementById("seller").value;
+let produk=document.getElementById("produk").value;
+let harga=document.getElementById("harga").value;
 
 bunyi();
 
@@ -152,8 +155,8 @@ fetch(API+"?action=scan"+
 "&produk="+produk+
 "&harga="+harga)
 
-.then(r=>r.json())
-.then(d=>{
+.then(res=>res.json())
+.then(data=>{
 
 total+=Number(harga);
 
@@ -165,43 +168,59 @@ lastBarcode="";
 
 }
 
+/* load seller */
+
 function loadSeller(){
 
 fetch(API+"?action=seller")
-.then(r=>r.json())
+.then(res=>res.json())
 .then(data=>{
 
-var s=document.getElementById("seller");
+let s=document.getElementById("seller");
+
+s.innerHTML="";
 
 data.forEach(v=>{
-var o=document.createElement("option");
+
+let o=document.createElement("option");
 o.value=v;
 o.textContent=v;
+
 s.appendChild(o);
+
 });
 
 });
 
 }
+
+/* load produk */
 
 function loadProduk(){
 
 fetch(API+"?action=produk")
-.then(r=>r.json())
+.then(res=>res.json())
 .then(data=>{
 
-var s=document.getElementById("produk");
+let p=document.getElementById("produk");
+
+p.innerHTML="";
 
 data.forEach(v=>{
-var o=document.createElement("option");
+
+let o=document.createElement("option");
 o.value=v;
 o.textContent=v;
-s.appendChild(o);
+
+p.appendChild(o);
+
 });
 
 });
 
 }
+
+/* start scanner */
 
 let scanner=new Html5QrcodeScanner(
 "reader",
@@ -209,6 +228,8 @@ let scanner=new Html5QrcodeScanner(
 );
 
 scanner.render(onScanSuccess);
+
+/* load data */
 
 loadSeller();
 loadProduk();
