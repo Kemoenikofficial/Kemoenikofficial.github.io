@@ -5,7 +5,7 @@
  * Set USE_MOCK = false setelah deploy
  */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwGhEHrNA7jvFKQv5OMliVOukHMyW3uETAT127VY6MJeNrm3ZeW_LtXFbCK8fIy-H_t/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzQPLKPF18H-4Qolyr_4e3cy4Ovdiahhea8LvmL9FJ17vUAD5qEjM14IFD4LyBIoiiD/exec";
 const USE_MOCK = false; // ganti false setelah deploy
 
 /* ═══════════════════════════════════════════
@@ -157,4 +157,19 @@ function exportToCSV(data, filename = "export.csv") {
   a.download    = filename;
   a.click();
   URL.revokeObjectURL(a.href);
+}
+
+/* ── MOCK STOK ── */
+const MOCK_STOK = [
+  { produk:"KEMOENIK SLIM", stok_masuk:500, keluar:23, sisa:477, warning:false },
+  { produk:"KEMOENIK BOLD", stok_masuk:200, keluar:195, sisa:5, warning:true }
+];
+
+async function loadStok() {
+  if (USE_MOCK) return MOCK_STOK;
+  const url = new URL(API_URL);
+  url.searchParams.set("action", "getStok");
+  const res  = await fetch(url.toString());
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
 }
