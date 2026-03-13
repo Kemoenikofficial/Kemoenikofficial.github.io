@@ -166,6 +166,10 @@
       <a class="sb-item" onclick="showPage('seller',this)">
         <span class="si">👥</span> Ringkasan Seller
       </a>
+      <div class="sb-label">Inventori</div>
+      <a class="sb-item" onclick="showPage('stok',this)">
+        <span class="si">📦</span> Stok Produk
+      </a>
       <div class="sb-label">Monitoring</div>
       <a class="sb-item" onclick="showPage('live',this)">
         <span class="si">📦</span> Live Resi
@@ -341,6 +345,39 @@
       </div>
     </div>
 
+  <!-- PAGE STOK -->
+    <div class="page" id="page-stok">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+          <div class="sec-title" style="margin-bottom:0">Stok Produk</div>
+          <button class="btn btn-outline btn-sm" onclick="loadAndRenderStok()">🔄 Refresh</button>
+        </div>
+        <!-- SUMMARY CARDS STOK -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px" id="stokSummary">
+          <div class="kpi-card"><div class="kpi-label">Total Masuk</div><div class="kpi-val" id="stokTotalMasuk">—</div><div class="kpi-sub">semua produk</div></div>
+          <div class="kpi-card"><div class="kpi-label">Total Keluar</div><div class="kpi-val" id="stokTotalKeluar">—</div><div class="kpi-sub">semua tahun</div></div>
+          <div class="kpi-card"><div class="kpi-label">Sisa Stok</div><div class="kpi-val" id="stokTotalSisa">—</div><div class="kpi-sub" id="stokWarningCount"></div></div>
+        </div>
+        <!-- TABEL STOK -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Produk</th>
+                <th style="text-align:center">Stok Masuk</th>
+                <th style="text-align:center">Keluar</th>
+                <th style="text-align:center">Sisa</th>
+                <th style="text-align:center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="stokTableBody">
+              <tr><td colspan="5"><div class="empty-state"><div class="ei">📦</div><p>Memuat data stok…</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /layout -->
 
@@ -370,7 +407,7 @@ let stats         = {};
 const PAGE_SIZE   = 10;
 
 /* ═══ NAVIGATION ═══ */
-const pageTitles = { dashboard:"Dashboard", transaksi:"Transaksi", pembayaran:"Tandai Lunas", seller:"Ringkasan Seller", live:"Live Monitor" };
+const pageTitles = { dashboard:"Dashboard", transaksi:"Transaksi", pembayaran:"Tandai Lunas", seller:"Ringkasan Seller", live:"Live Monitor", stok:"Stok Produk" };
 function showPage(id, el) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".sb-item").forEach(i => i.classList.remove("active"));
@@ -718,6 +755,64 @@ function doExportCSV() {
   if (!filteredResi.length && !allResi.length) { showToast("Tidak ada data","warn"); return; }
   exportToCSV(filteredResi.length ? filteredResi : allResi, `resi-${currentYear}.csv`);
   showToast("Export berhasil");
+}
+
+
+/* ═══ STOK ═══ */
+let stokData = [];
+
+async function loadAndRenderStok() {
+  try {
+    stokData = await loadStok();
+    renderStok();
+  } catch(e) {
+    showToast("Gagal memuat stok","error");
+  }
+}
+
+function renderStok() {
+  const data    = stokData;
+  const body    = document.getElementById("stokTableBody");
+  if (!data.length) {
+    body.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="ei">📦</div><p>Tidak ada data stok</p></div></td></tr>`;
+    return;
+  }
+
+  // Summary cards
+  const totalMasuk  = data.reduce((s,r) => s + (r.stok_masuk||0), 0);
+  const totalKeluar = data.reduce((s,r) => s + (r.keluar||0), 0);
+  const totalSisa   = data.reduce((s,r) => s + (r.sisa||0), 0);
+  const warningCount = data.filter(r => r.warning).length;
+
+  document.getElementById("stokTotalMasuk").textContent  = totalMasuk.toLocaleString("id-ID");
+  document.getElementById("stokTotalKeluar").textContent = totalKeluar.toLocaleString("id-ID");
+  document.getElementById("stokTotalSisa").textContent   = totalSisa.toLocaleString("id-ID");
+  document.getElementById("stokWarningCount").textContent = warningCount > 0
+    ? `⚠️ ${warningCount} produk stok menipis`
+    : "✅ Semua stok aman";
+  document.getElementById("stokTotalSisa").style.color = warningCount > 0 ? "#d97706" : "var(--green)";
+
+  // Tabel
+  body.innerHTML = data.map(r => {
+    const statusBadge = r.warning
+      ? `<span class="badge" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d">⚠️ Menipis</span>`
+      : `<span class="badge badge-lunas">✅ Aman</span>`;
+    const sisaColor = r.warning ? "color:#d97706;font-weight:800" : "font-weight:700";
+    return `<tr>
+      <td><b>${r.produk}</b></td>
+      <td style="text-align:center">${(r.stok_masuk||0).toLocaleString("id-ID")}</td>
+      <td style="text-align:center">${(r.keluar||0).toLocaleString("id-ID")}</td>
+      <td style="text-align:center;${sisaColor}">${(r.sisa||0).toLocaleString("id-ID")}</td>
+      <td style="text-align:center">${statusBadge}</td>
+    </tr>`;
+  }).join("");
+}
+
+// Load stok saat klik menu stok
+const _origShowPage = showPage;
+function showPage(id, el) {
+  _origShowPage(id, el);
+  if (id === "stok" && !stokData.length) loadAndRenderStok();
 }
 
 /* ═══ START ═══ */
