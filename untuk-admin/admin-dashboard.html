@@ -170,7 +170,7 @@
       <a class="sb-item" onclick="showPage('live',this)">
         <span class="si">📦</span> Live Resi
       </a>
-      <a class="sb-item" href="seller-dashboard.html">
+      <a class="sb-item" href="seller-view.html">
         <span class="si">📱</span> Seller View
       </a>
     </nav>
@@ -295,8 +295,8 @@
             </select>
           </div>
           <div>
-            <label class="text-sm" style="display:block;font-weight:600;margin-bottom:5px;color:var(--text2)">Jumlah Resi Lunas</label>
-            <input type="number" class="input" id="payJumlah" min="1" placeholder="Contoh: 10" oninput="updatePayPreview()"/>
+            <label class="text-sm" style="display:block;font-weight:600;margin-bottom:5px;color:var(--text2)">Jumlah Produk Lunas</label>
+            <input type="number" class="input" id="payJumlah" min="1" placeholder="Contoh: 20" oninput="updatePayPreview()"/>
           </div>
           <button class="btn btn-gold" onclick="openPayConfirm()" style="padding:10px 20px">Tandai Lunas</button>
         </div>
@@ -597,21 +597,40 @@ function updatePayPreview() {
   const jumlah = parseInt(document.getElementById("payJumlah").value) || 0;
   const prev   = document.getElementById("payPreview");
   if (!seller || !jumlah) { prev.style.display = "none"; return; }
-  const s = (stats.per_seller||[]).find(x => x.seller === seller);
-  if (!s) { prev.style.display = "none"; return; }
+
+  // Hitung berapa resi yang akan terlunasi berdasarkan qty FIFO
+  const belumResi = allResi
+    .filter(r => r.seller===seller && r.status==="BELUM")
+    .sort((a,b) => new Date(a.tanggal)-new Date(b.tanggal)); // terlama dulu
+
+  let sisaQty    = jumlah;
+  let resiCount  = 0;
+  let totalNilai = 0;
+
+  for (const r of belumResi) {
+    if (sisaQty <= 0) break;
+    const qty = r.qty || 1;
+    if (qty <= sisaQty) {
+      sisaQty   -= qty;
+      resiCount++;
+      totalNilai += r.total || 0;
+    } else {
+      break; // tidak pecah resi
+    }
+  }
+
   prev.style.display = "block";
-  const count    = Math.min(jumlah, s.resi);
-  const estimasi = allResi.filter(r => r.seller===seller && r.status==="BELUM").slice(0, jumlah).reduce((sum,r)=>sum+(r.total||0),0);
-  prev.innerHTML = `<b>${count}</b> resi seller <b>${seller}</b> akan ditandai LUNAS · Estimasi nilai: <b>${formatRupiah(estimasi)}</b>`;
+  const kurang = sisaQty > 0 ? ` <span style="color:var(--gold2)">(sisa ${sisaQty} produk belum cukup 1 resi)</span>` : "";
+  prev.innerHTML = `Melunasi <b>${jumlah} produk</b> = <b>${resiCount} resi</b> seller <b>${seller}</b> · Nilai: <b>${formatRupiah(totalNilai)}</b>${kurang}`;
 }
 
 function openPayConfirm() {
   const seller = document.getElementById("paySeller").value;
   const jumlah = parseInt(document.getElementById("payJumlah").value) || 0;
   if (!seller) { showToast("Pilih seller dulu","warn"); return; }
-  if (!jumlah) { showToast("Masukkan jumlah resi","warn"); return; }
-  document.getElementById("modalLunasText").textContent = `Tandai ${jumlah} resi BELUM → LUNAS untuk ${seller}?`;
-  document.getElementById("modalLunasDetail").textContent = `${jumlah} resi paling lama milik ${seller} akan ditandai lunas.`;
+  if (!jumlah) { showToast("Masukkan jumlah produk","warn"); return; }
+  document.getElementById("modalLunasText").textContent = `Tandai lunas ${jumlah} produk untuk ${seller}?`;
+  document.getElementById("modalLunasDetail").textContent = `Sistem akan melunasi resi secara FIFO (terlama dulu) sampai total ${jumlah} produk terpenuhi.`;
   openModal("modalLunas");
 }
 
@@ -621,10 +640,10 @@ async function confirmLunas() {
   const jumlah = parseInt(document.getElementById("payJumlah").value) || 0;
   try {
     const res = await doTandaiLunas(seller, jumlah, currentYear);
-    showToast(`✅ ${res.updated} resi berhasil ditandai LUNAS`);
+    const sisaMsg = res.sisa_kurang > 0 ? ` (sisa ${res.sisa_kurang} produk tidak cukup 1 resi)` : "";
+    showToast(`✅ ${res.qty_dilunasi||res.updated} produk / ${res.updated} resi berhasil LUNAS${sisaMsg}`);
     document.getElementById("payJumlah").value = "";
     document.getElementById("payPreview").style.display = "none";
-    // Reload data
     allResi = await loadResi({ tahun: currentYear });
     stats   = await loadStats({ tahun: currentYear });
     renderAll();
