@@ -324,10 +324,41 @@
 
       <!-- STATS -->
       <div class="stats-grid" id="statsGrid">
-        <div class="stat-card c-green"><div class="stat-label">Total Resi</div><div class="stat-value" id="sTotalResi">—</div><div class="stat-sub">semua transaksi</div><div class="stat-icon">📦</div></div>
-        <div class="stat-card c-gold"><div class="stat-label">Total Penjualan</div><div class="stat-value" id="sTotalPenjualan">—</div><div class="stat-sub" id="sResiCount">—</div><div class="stat-icon">💰</div></div>
-        <div class="stat-card c-blue"><div class="stat-label">Sudah Lunas</div><div class="stat-value" id="sLunas">—</div><div class="stat-sub" id="sLunasNominal">—</div><div class="stat-icon">✅</div></div>
-        <div class="stat-card c-red"><div class="stat-label">Belum Bayar</div><div class="stat-value" id="sBelum">—</div><div class="stat-sub" id="sBelumNominal">—</div><div class="stat-icon">⏳</div></div>
+        <!-- ROW 1: Total -->
+        <div class="stat-card c-green">
+          <div class="stat-label">Total Resi</div>
+          <div class="stat-value" id="sTotalResi">—</div>
+          <div class="stat-sub" style="display:flex;align-items:center;gap:6px;margin-top:6px">
+            <span style="background:#f0fdf4;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;color:#15803d" id="sTotalProduk">— produk</span>
+          </div>
+          <div class="stat-icon">📦</div>
+        </div>
+        <div class="stat-card c-gold">
+          <div class="stat-label">Total Penjualan</div>
+          <div class="stat-value" id="sTotalPenjualan">—</div>
+          <div class="stat-sub" id="sResiCount">—</div>
+          <div class="stat-icon">💰</div>
+        </div>
+        <!-- ROW 2: Lunas -->
+        <div class="stat-card c-blue">
+          <div class="stat-label">Sudah Lunas</div>
+          <div class="stat-value" id="sLunas">— <span style="font-size:13px;font-weight:500;color:var(--text3)">resi</span></div>
+          <div class="stat-sub" style="display:flex;align-items:center;gap:6px;margin-top:4px">
+            <span style="background:#eff6ff;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;color:#1d4ed8" id="sLunasProduk">— produk</span>
+            <span id="sLunasNominal" style="font-size:11px;color:var(--text3)">—</span>
+          </div>
+          <div class="stat-icon">✅</div>
+        </div>
+        <!-- ROW 3: Belum -->
+        <div class="stat-card c-red">
+          <div class="stat-label">Belum Bayar</div>
+          <div class="stat-value" id="sBelum">— <span style="font-size:13px;font-weight:500;color:var(--text3)">resi</span></div>
+          <div class="stat-sub" style="display:flex;align-items:center;gap:6px;margin-top:4px">
+            <span style="background:#fff7ed;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;color:#c2410c" id="sBelumProduk">— produk</span>
+            <span id="sBelumNominal" style="font-size:11px;color:var(--text3)">—</span>
+          </div>
+          <div class="stat-icon">⏳</div>
+        </div>
       </div>
 
       <!-- CHARTS -->
@@ -501,12 +532,19 @@ function renderStats() {
   const lunas  = data.filter(r=>r.status==="LUNAS");
   const belum  = data.filter(r=>r.status==="BELUM");
   const totalP = data.reduce((s,r)=>s+(r.total||0),0);
+  const totalQty      = data.reduce((s,r)=>s+(r.qty||1),0);
+  const lunasQty      = lunas.reduce((s,r)=>s+(r.qty||1),0);
+  const belumQty      = belum.reduce((s,r)=>s+(r.qty||1),0);
+
   document.getElementById("sTotalResi").textContent      = data.length;
+  document.getElementById("sTotalProduk").textContent    = totalQty + " produk";
   document.getElementById("sTotalPenjualan").textContent = formatRupiah(totalP);
-  document.getElementById("sResiCount").textContent      = data.length + " resi";
-  document.getElementById("sLunas").textContent          = lunas.length;
+  document.getElementById("sResiCount").textContent      = data.length + " resi · " + totalQty + " produk";
+  document.getElementById("sLunas").innerHTML            = lunas.length + ' <span style="font-size:13px;font-weight:500;color:var(--text3)">resi</span>';
+  document.getElementById("sLunasProduk").textContent    = lunasQty + " produk";
   document.getElementById("sLunasNominal").textContent   = formatRupiah(lunas.reduce((s,r)=>s+(r.total||0),0));
-  document.getElementById("sBelum").textContent          = belum.length;
+  document.getElementById("sBelum").innerHTML            = belum.length + ' <span style="font-size:13px;font-weight:500;color:var(--text3)">resi</span>';
+  document.getElementById("sBelumProduk").textContent    = belumQty + " produk";
   document.getElementById("sBelumNominal").textContent   = formatRupiah(belum.reduce((s,r)=>s+(r.total||0),0));
 }
 
