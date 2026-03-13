@@ -315,17 +315,19 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg
       <div class="mob-stat lunas">
         <div class="mob-stat-label">Total Resi</div>
         <div class="mob-stat-value" id="mTotalResi">—</div>
-        <div class="mob-stat-sub">semua transaksi</div>
+        <div class="mob-stat-sub" id="mTotalProduk" style="font-weight:700;color:var(--green-600)">— produk</div>
       </div>
       <div class="mob-stat belum">
         <div class="mob-stat-label">Belum Bayar</div>
         <div class="mob-stat-value" id="mBelumCount">—</div>
-        <div class="mob-stat-sub" id="mBelumNominal">Rp —</div>
+        <div class="mob-stat-sub" id="mBelumProduk" style="font-weight:700;color:#d97706">— produk</div>
+        <div class="mob-stat-sub" id="mBelumNominal" style="font-size:10px">Rp —</div>
       </div>
       <div class="mob-stat lunas">
         <div class="mob-stat-label">Sudah Lunas</div>
         <div class="mob-stat-value" id="mLunasCount">—</div>
-        <div class="mob-stat-sub" id="mLunasNominal">Rp —</div>
+        <div class="mob-stat-sub" id="mLunasProduk" style="font-weight:700;color:var(--green-600)">— produk</div>
+        <div class="mob-stat-sub" id="mLunasNominal" style="font-size:10px">Rp —</div>
       </div>
       <div class="mob-stat">
         <div class="mob-stat-label">Hari Ini</div>
@@ -402,7 +404,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg
    1. Ganti API_URL dengan URL Apps Script kamu
    2. Ganti USE_MOCK = false setelah deploy
 ════════════════════════════════════════ */
-const API_URL = "https://script.google.com/macros/s/AKfycbwGhEHrNA7jvFKQv5OMliVOukHMyW3uETAT127VY6MJeNrm3ZeW_LtXFbCK8fIy-H_t/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzQPLKPF18H-4Qolyr_4e3cy4Ovdiahhea8LvmL9FJ17vUAD5qEjM14IFD4LyBIoiiD/exec";
 const USE_MOCK = false; // ← GANTI false setelah deploy Apps Script
 
 /* ═══ MOCK DATA ═══ */
@@ -694,12 +696,19 @@ function renderStats() {
   const hariIni = data.filter(r => r.tanggal?.slice(0,10) === today).length;
   const totalP  = data.reduce((s,r)=>s+(r.total||0),0);
 
+  const totalQty  = data.reduce((s,r)=>s+(r.qty||1),0);
+  const lunasQty  = lunas.reduce((s,r)=>s+(r.qty||1),0);
+  const belumQty  = belum.reduce((s,r)=>s+(r.qty||1),0);
+
   document.getElementById("wTotalPenjualan").textContent  = formatRupiah(totalP);
-  document.getElementById("wResiCount").textContent       = data.length + " resi total";
+  document.getElementById("wResiCount").textContent       = data.length + " resi · " + totalQty + " produk";
   document.getElementById("mTotalResi").textContent       = data.length;
+  document.getElementById("mTotalProduk").textContent     = totalQty + " produk";
   document.getElementById("mLunasCount").textContent      = lunas.length;
+  document.getElementById("mLunasProduk").textContent     = lunasQty + " produk";
   document.getElementById("mLunasNominal").textContent    = formatRupiah(lunas.reduce((s,r)=>s+(r.total||0),0));
   document.getElementById("mBelumCount").textContent      = belum.length;
+  document.getElementById("mBelumProduk").textContent     = belumQty + " produk";
   document.getElementById("mBelumNominal").textContent    = formatRupiah(belum.reduce((s,r)=>s+(r.total||0),0));
   document.getElementById("mHariIni").textContent         = hariIni;
 }
