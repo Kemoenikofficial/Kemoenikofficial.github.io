@@ -1,581 +1,805 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Seller Dashboard — KEMOENIK</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Seller Dashboard — KEMOENIK</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-    :root {
-      /* Dashboard colors — original green theme */
-      --bg:#f0f4f0; --surface:#FFFFFF; --card:#FFFFFF; --card2:#e8f0e8; --offwhite:#f8faf8;
-      --green:#16a34a; --green2:#16a34a; --green3:#14532d; --greenlit:#22c55e;
-      --gold:#C8A96A; --gold2:#A8843F; --goldlit:#E8D09A;
-      --border:#e5e7eb; --border2:#d1d5db;
-      --text:#111827; --text2:#374151; --text3:#9ca3af;
-      --white:#FFFFFF; --red:#ef4444;
-      --font-display:'Plus Jakarta Sans',sans-serif;
-      --font-body:'Plus Jakarta Sans',sans-serif;
-      --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
-      --shadow-md:0 4px 16px rgba(0,0,0,0.08),0 2px 6px rgba(0,0,0,0.04);
-      --shadow-lg:0 10px 40px rgba(0,0,0,0.12),0 4px 12px rgba(0,0,0,0.06);
-      --r-sm:8px; --r-md:14px; --r-lg:18px; --r-xl:20px;
-    }
+/* ════════════════════════════════════════
+   KEMOENIK Seller — style.css
+   Tema: Hijau terang, mobile-first
+════════════════════════════════════════ */
 
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:var(--font-body);background:var(--bg);color:var(--text);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;}
-    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+:root {
+  --green-50:  #f0fdf4;
+  --green-100: #dcfce7;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --green-800: #166534;
+  --white:     #ffffff;
+  --bg:        #f0f4f0;
+  --bg-card:   #ffffff;
+  --border:    #e5e7eb;
+  --border-light: #f3f4f6;
+  --text-primary:   #111827;
+  --text-secondary: #374151;
+  --text-muted:     #9ca3af;
+  --radius:    14px;
+  --shadow:    0 2px 12px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04);
+  --shadow-sm: 0 1px 6px rgba(0,0,0,.04);
+  --font-mono: 'Courier New', monospace;
+}
 
-    /* ── SPINNER ── */
-    .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--greenlit);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
-    @keyframes spin{to{transform:rotate(360deg);}}
+[data-theme="dark"] {
+  --bg:        #0d1b0d;
+  --bg-card:   #1a2e1a;
+  --border:    #2d4a2d;
+  --border-light: #243824;
+  --text-primary:   #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted:     #6b7280;
+}
 
-    /* ── BADGE ── */
-    .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
-    .badge-lunas{background:#D1FAE5;color:#065F46;}
-    .badge-belum{background:#FEF9C3;color:#854D0E;}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg); color:var(--text-primary); -webkit-font-smoothing:antialiased; }
 
-    /* ── MODAL ── */
-    .modal-overlay{position:fixed;inset:0;background:rgba(15,30,20,.55);backdrop-filter:blur(6px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
-    .modal-overlay.open{opacity:1;pointer-events:all;}
-    .modal{background:var(--card);border-radius:var(--r-xl);padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:var(--shadow-lg);transform:scale(.95) translateY(8px);transition:transform .2s;}
-    .modal-overlay.open .modal{transform:scale(1) translateY(0);}
-    .modal-icon{width:60px;height:60px;background:linear-gradient(135deg,#15803d,#22c55e);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px;}
-    .modal h3{font-size:20px;font-weight:700;color:#15803d;margin-bottom:8px;}
-    .modal p{font-size:13px;color:var(--text3);margin-bottom:20px;}
-    .modal-actions{display:flex;gap:10px;justify-content:center;}
-    .btn-outline{background:transparent;color:var(--green);border:1.5px solid var(--green);padding:9px 20px;border-radius:var(--r-sm);font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
-    .btn-danger{background:#FEF2F2;color:var(--red);border:1.5px solid #FECACA;padding:9px 20px;border-radius:var(--r-sm);font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
-    .btn-danger:hover{background:var(--red);color:#fff;}
+/* ── BADGE ── */
+.badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:99px; font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+.badge-lunas { background:#d1fae5; color:#065f46; }
+.badge-belum { background:#fef9c3; color:#854d0e; }
 
-    /* ── TOAST ── */
-    .toast-container{position:fixed;top:20px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:8px;}
-    .toast{background:var(--white);border:1px solid var(--border);border-left:4px solid var(--greenlit);border-radius:var(--r-sm);padding:12px 16px;box-shadow:var(--shadow-md);font-size:13px;font-weight:500;max-width:300px;animation:slideIn .3s ease;display:flex;align-items:center;gap:8px;}
-    .toast.warn{border-left-color:var(--gold);}
-    .toast.error{border-left-color:var(--red);}
-    @keyframes slideIn{from{transform:translateX(110%);opacity:0;}to{transform:translateX(0);opacity:1;}}
-    @keyframes fadeOut{from{opacity:1;}to{opacity:0;transform:translateX(20px);}}
+/* ── BUTTON ── */
+.btn { display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:all .15s; }
+.btn-primary { background:var(--green-600); color:#fff; }
+.btn-primary:hover { background:var(--green-700); }
+.btn-outline { background:transparent; color:var(--green-600); border:1.5px solid var(--green-600); }
+.btn-sm { padding:5px 11px; font-size:12px; }
 
-    /* ════════════════
-       LOGIN SCREEN
-    ════════════════ */
-    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:linear-gradient(160deg,var(--green3) 0%,var(--greenlit) 45%,var(--bg) 100%);}
-    .login-card{background:var(--white);border-radius:var(--r-xl);padding:40px 28px 36px;width:100%;max-width:380px;box-shadow:var(--shadow-lg);border:1px solid var(--border);}
-    .login-logo{text-align:center;margin-bottom:28px;}
-    .login-logo .brand{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--green2);letter-spacing:.5px;}
-    .login-logo .brand span{color:var(--gold);}
-    .login-logo .sub{font-size:12px;color:var(--text3);margin-top:4px;}
-    .login-logo .ico{font-size:44px;margin-bottom:12px;}
-    .login-form{display:flex;flex-direction:column;gap:14px;}
-    .form-group{display:flex;flex-direction:column;gap:5px;}
-    .form-group label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);}
-    .form-group .wrap{position:relative;}
-    .form-group .wrap .ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none;}
-    .form-group input{width:100%;padding:12px 14px 12px 38px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-body);font-size:14px;background:var(--offwhite);color:var(--text);outline:none;transition:all .2s;}
-    .form-group input:focus{border-color:var(--greenlit);background:var(--white);box-shadow:0 0 0 3px rgba(46,107,83,.1);}
-    .login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--green3),var(--greenlit));color:#fff;border:none;border-radius:var(--r-md);font-family:var(--font-body);font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(31,77,58,.3);transition:all .2s;}
-    .login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(31,77,58,.4);}
-    .login-btn:disabled{opacity:.7;cursor:not-allowed;transform:none;}
-    .login-error{background:#FEF2F2;color:#991b1b;border:1px solid #FECACA;border-radius:var(--r-sm);padding:11px 14px;font-size:13px;font-weight:500;display:none;align-items:center;gap:8px;}
-    .login-error.show{display:flex;}
-    .login-hint{text-align:center;margin-top:14px;font-size:11px;color:var(--text3);}
-    .login-hint strong{color:var(--gold2);}
+/* ── INPUT ── */
+.input, .select {
+  padding:9px 12px; border:1.5px solid var(--border); border-radius:10px;
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:13px;
+  background:var(--bg-card); color:var(--text-primary);
+  outline:none; transition:border-color .15s; width:100%;
+  -webkit-appearance:none; appearance:none;
+}
+.input:focus, .select:focus { border-color:var(--green-600); box-shadow:0 0 0 3px rgba(22,163,74,.1); }
 
-    /* ════════════════
-       DASHBOARD
-    ════════════════ */
-    .dash{display:none;}
-    .dash.show{display:block;}
+/* ── SPINNER ── */
+.spinner { width:18px; height:18px; border:2px solid var(--border); border-top-color:var(--green-600); border-radius:50%; animation:spin .6s linear infinite; display:inline-block; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
-    /* HEADER */
-    .hdr{background:linear-gradient(135deg,#15803d 0%,#16a34a 100%);padding:22px 16px 58px;position:relative;overflow:hidden;}
-    .hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,106,.25) 0%,transparent 65%);}
-    .hdr::after{content:'';position:absolute;bottom:-25px;left:-25px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.04);}
-    .hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:relative;z-index:1;}
-    .hdr-brand{font-size:18px;font-weight:800;color:#fff;}
-    .hdr-brand span{color:#bbf7d0;}
-    .hdr-actions{display:flex;gap:6px;}
-    .hdr-btn{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.15);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;transition:background .15s;}
-    .hdr-btn:hover{background:rgba(255,255,255,.25);}
-    .hdr-greet{color:rgba(255,255,255,.65);font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;position:relative;z-index:1;}
-    .hdr-name{font-family:var(--font-display);color:#fff;font-size:24px;font-weight:600;letter-spacing:.2px;position:relative;z-index:1;}
+/* ── TOAST ── */
+.toast-container { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:2000; display:flex; flex-direction:column; gap:6px; align-items:center; }
+.toast { background:#fff; border:1px solid var(--border); border-left:4px solid var(--green-600); border-radius:10px; padding:10px 14px; box-shadow:var(--shadow); font-size:13px; font-weight:500; display:flex; align-items:center; gap:7px; white-space:nowrap; animation:toastIn .3s ease; }
+.toast.error { border-left-color:#ef4444; }
+.toast.warn  { border-left-color:#f59e0b; }
+@keyframes toastIn { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+@keyframes fadeOut { from { opacity:1; } to { opacity:0; transform:translateY(-8px); } }
 
-    /* BODY */
-    .body{margin-top:-40px;padding:0 12px 90px;position:relative;z-index:1;}
+/* ── MODAL ── */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s; }
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal { background:var(--bg-card); border-radius:20px 20px 0 0; padding:28px 22px 36px; width:100%; max-width:480px; transform:translateY(100%); transition:transform .3s cubic-bezier(.4,0,.2,1); }
+.modal-overlay.open .modal { transform:translateY(0); }
+.modal-handle { width:36px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 20px; }
 
-    /* SESSION CHIP */
-    .sess-chip{background:var(--white);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px;box-shadow:var(--shadow-sm);}
-    .sess-av{width:36px;height:36px;background:linear-gradient(135deg,#15803d,#22c55e);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;flex-shrink:0;}
-    .sess-name{font-size:13px;font-weight:700;color:var(--text);}
-    .sess-role{font-size:11px;color:#16a34a;font-weight:600;}
+/* ── SECTION TITLE ── */
+.section-title { font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:12px; display:flex; align-items:center; gap:7px; }
+.section-title::before { content:''; display:block; width:3px; height:14px; background:var(--green-600); border-radius:2px; }
 
-    /* STAT WIDE */
-    .stat-wide{background:var(--white);border-radius:var(--r-md);padding:16px 18px;box-shadow:var(--shadow-sm);margin-bottom:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-    .sw-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);}
-    .sw-val{font-size:20px;font-weight:800;color:var(--text);}
-    .sw-sub{font-size:11px;color:#16a34a;font-weight:600;}
+/* ── PAGINATION ── */
+.page-btn { width:30px; height:30px; border-radius:8px; border:1.5px solid var(--border); background:var(--bg-card); color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; transition:all .15s; }
+.page-btn:hover { border-color:var(--green-600); color:var(--green-600); }
+.page-btn:disabled { opacity:.35; cursor:not-allowed; }
 
-    /* STAT GRID */
-    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-    .stat-box{background:var(--white);border-radius:var(--r-md);padding:15px 13px;box-shadow:var(--shadow-sm);border:1px solid var(--border);}
-    .sb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;}
-    .sb-val{font-size:22px;font-weight:800;color:var(--text);}
-    .sb-sub{font-size:10px;color:var(--text3);margin-top:3px;}
-    .sb-val.gold{color:#16a34a;}
-    .sb-val.red{color:var(--red);}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ── LOGIN SCREEN ── */
+.login-screen {
+  min-height:100vh;
+  background:linear-gradient(160deg, #1F4D3A 0%, #163628 50%, #0f2a1f 100%);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:24px;
+  position:relative; overflow:hidden;
+}
+.login-screen::before {
+  content:'';
+  position:absolute; top:-60px; right:-60px;
+  width:220px; height:220px; border-radius:50%;
+  background:rgba(200,169,106,.08);
+}
+.login-screen::after {
+  content:'';
+  position:absolute; bottom:-40px; left:-40px;
+  width:160px; height:160px; border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+.login-box {
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(200,169,106,.25);
+  border-radius:24px;
+  padding:36px 28px;
+  width:100%; max-width:380px;
+  position:relative; z-index:1;
+}
+.login-brand { text-align:center; margin-bottom:28px; }
+.login-brand .logo { font-size:28px; font-weight:800; color:#fff; letter-spacing:.5px; }
+.login-brand .logo span { color:#C8A96A; }
+.login-brand .sub { font-size:11px; color:rgba(255,255,255,.4); margin-top:4px; letter-spacing:.1em; text-transform:uppercase; }
+.login-field { margin-bottom:14px; }
+.login-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:rgba(255,255,255,.5); display:block; margin-bottom:6px; }
+.login-input {
+  width:100%; padding:13px 15px;
+  background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(255,255,255,.15);
+  border-radius:12px;
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:14px;
+  color:#fff; outline:none;
+  transition:border-color .2s;
+}
+.login-input::placeholder { color:rgba(255,255,255,.3); }
+.login-input:focus { border-color:#C8A96A; background:rgba(255,255,255,.1); }
+.login-btn {
+  width:100%; padding:14px;
+  background:linear-gradient(135deg,#A8843F,#C8A96A);
+  border:none; border-radius:12px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:15px; font-weight:700; color:#fff;
+  cursor:pointer; margin-top:6px;
+  transition:all .2s;
+  box-shadow:0 6px 20px rgba(200,169,106,.3);
+}
+.login-btn:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(200,169,106,.4); }
+.login-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+.login-err { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); border-radius:10px; padding:10px 13px; font-size:12px; color:#fca5a5; text-align:center; margin-top:10px; display:none; }
 
-    /* SECTION */
-    .sec{background:var(--white);border-radius:var(--r-md);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm);border:1px solid var(--border);}
-    .sec canvas{height:160px !important;}
-    .sec-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
-    .sec-title::before{content:'';display:block;width:4px;height:16px;background:#16a34a;border-radius:2px;flex-shrink:0;}
+/* ── DASHBOARD ── */
+.dash-screen { display:none; min-height:100vh; background:var(--bg); }
+.dash-screen.show { display:block; }
 
-    /* TABS */
-    .tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;}
-    .tabs::-webkit-scrollbar{display:none;}
-    .tab{flex-shrink:0;padding:5px 14px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--offwhite);color:var(--text3);transition:all .15s;}
-    .tab.active{background:#16a34a;border-color:#16a34a;color:#fff;}
+/* TOP HEADER */
+.mob-header {
+  background:linear-gradient(135deg,#166534,#16a34a);
+  padding:20px 16px 52px;
+  position:relative; overflow:hidden;
+}
+.mob-header::before { content:''; position:absolute; top:-30px; right:-30px; width:140px; height:140px; border-radius:50%; background:rgba(255,255,255,.07); }
+.mob-header::after  { content:''; position:absolute; bottom:-20px; left:-20px; width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,.05); }
+.mob-header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; position:relative; z-index:1; }
+.mob-header-logo { display:flex; align-items:center; gap:8px; }
+.mob-logo-icon { width:32px; height:32px; background:rgba(255,255,255,.2); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+.mob-logo-text { color:#fff; font-size:14px; font-weight:700; }
+.mob-header-actions { display:flex; gap:6px; position:relative; z-index:1; }
+.mob-icon-btn { width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,.15); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:15px; }
+.mob-header-name { color:rgba(255,255,255,.75); font-size:13px; margin-bottom:4px; position:relative; z-index:1; }
+.mob-seller-name { color:#fff; font-size:22px; font-weight:800; letter-spacing:-.02em; position:relative; z-index:1; }
 
-    /* SEARCH */
-    .mob-search{position:relative;flex:1;}
-    .mob-search input{width:100%;padding:9px 12px 9px 32px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-body);font-size:13px;background:var(--offwhite);color:var(--text);outline:none;transition:border-color .2s;}
-    .mob-search input:focus{border-color:#16a34a;}
-    .mob-search .si{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;}
+/* CONTENT */
+.mob-content { margin-top:-36px; padding:0 12px 100px; position:relative; z-index:1; }
 
-    /* RESI ITEM */
-    .resi-item{display:flex;align-items:center;padding:11px 0;border-top:1px solid var(--border);gap:12px;}
-    .resi-item:first-of-type{border-top:none;}
-    .resi-date{width:38px;height:38px;border-radius:10px;background:#f0fdf4;border:1px solid #bbf7d0;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700;color:#15803d;line-height:1.3;}
-    .resi-info{flex:1;min-width:0;}
-    .resi-no{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .resi-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+/* STAT CARDS */
+.mob-stat-wide { background:var(--bg-card); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin-bottom:12px; border:1px solid var(--border-light); display:flex; align-items:center; justify-content:space-between; }
+.mob-stat-wide .wlabel { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); }
+.mob-stat-wide .wvalue { font-size:20px; font-weight:800; color:var(--text-primary); }
+.mob-stat-wide .wsub { font-size:11px; color:var(--green-600); font-weight:600; }
+.mob-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.mob-stat { background:var(--bg-card); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); border:1px solid var(--border-light); }
+.mob-stat-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:5px; }
+.mob-stat-value { font-size:20px; font-weight:800; color:var(--text-primary); letter-spacing:-.02em; }
+.mob-stat-sub { font-size:10px; color:var(--text-muted); margin-top:3px; }
+.mob-stat.lunas .mob-stat-value { color:var(--green-600); }
+.mob-stat.belum .mob-stat-value { color:#d97706; }
 
-    /* LOGOUT BTN */
-    .logout-btn{width:100%;padding:13px;background:#FEF2F2;color:var(--red);border:1.5px solid #FECACA;border-radius:var(--r-sm);font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;transition:all .15s;}
-    .logout-btn:hover{background:var(--red);color:#fff;}
+/* SECTION */
+.mob-section { background:var(--bg-card); border-radius:var(--radius); padding:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); border:1px solid var(--border-light); }
+.mob-section canvas { height:160px !important; }
 
-    /* EXPORT BTN */
-    .exp-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--r-sm);font-family:var(--font-body);font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--offwhite);color:var(--text2);transition:all .15s;}
-    .exp-btn:hover{border-color:#16a34a;color:#16a34a;}
+/* RESI LIST */
+.resi-item { display:flex; align-items:center; padding:12px 0; border-top:1px solid var(--border-light); gap:12px; }
+.resi-item:first-of-type { border-top:none; }
+.resi-date-badge { width:40px; height:40px; border-radius:10px; background:var(--green-50); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; font-size:10px; font-weight:700; color:var(--green-700); line-height:1.2; }
+[data-theme="dark"] .resi-date-badge { background:rgba(22,163,74,.15); }
+.resi-info { flex:1; min-width:0; }
+.resi-number { font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.resi-meta { font-size:11px; color:var(--text-muted); margin-top:2px; }
 
-    /* BOTTOM NAV */
-    .bnav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:100;box-shadow:0 -1px 0 var(--border);}
-    .bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text3);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:4px 0;transition:color .15s;}
-    .bni.active{color:#16a34a;}
-    .bni .ni{font-size:19px;}
+/* FILTER */
+.mob-filter { display:flex; gap:8px; margin-bottom:12px; }
+.mob-filter .input, .mob-filter .select { font-size:13px; padding:9px 12px; }
 
-    /* PAGE BTN */
-    .page-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-family:var(--font-body);font-weight:600;transition:all .15s;}
-    .page-btn:hover{border-color:#16a34a;color:#16a34a;}
-    .page-btn:disabled{opacity:.35;cursor:not-allowed;}
+/* TABS */
+.section-tabs { display:flex; gap:6px; margin-bottom:14px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.section-tabs::-webkit-scrollbar { display:none; }
+.tab-pill { flex-shrink:0; padding:6px 14px; border-radius:99px; font-size:12px; font-weight:600; cursor:pointer; border:1.5px solid var(--border); background:var(--bg-card); color:var(--text-muted); transition:all .15s; }
+.tab-pill.active { background:var(--green-600); border-color:var(--green-600); color:#fff; }
 
-    /* EMPTY */
-    .mob-empty{text-align:center;padding:28px 16px;color:var(--text3);}
-    .mob-empty .ei{font-size:32px;margin-bottom:8px;}
+/* YEAR SELECT */
+.year-bar { display:flex; align-items:center; gap:8px; background:var(--bg-card); border-radius:var(--radius); padding:10px 14px; margin-bottom:12px; border:1px solid var(--border-light); }
+.year-bar label { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; white-space:nowrap; }
+.year-bar .select { margin-bottom:0; }
 
-    /* LOADING */
-    .mob-loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;}
-    .mob-loading .brand{font-size:22px;font-weight:800;color:#16a34a;margin-top:14px;}
-    .mob-loading .brand span{color:#16a34a;}
-    .mob-loading p{font-size:12px;color:var(--text3);margin-top:4px;}
-  </style>
+/* EMPTY */
+.mob-empty { text-align:center; padding:32px 16px; color:var(--text-muted); }
+.mob-empty .icon { font-size:36px; margin-bottom:8px; }
+
+/* BOTTOM NAV */
+.mob-bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--bg-card); border-top:1px solid var(--border); display:flex; padding:8px 0 max(8px,env(safe-area-inset-bottom)); z-index:100; }
+.mob-nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; color:var(--text-muted); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:4px 0; }
+.mob-nav-item.active { color:var(--green-600); }
+.mob-nav-item .nav-icon { font-size:20px; }
+
+/* LOADING */
+.mob-loading { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; }
+[data-theme="dark"] .mob-loading { background:#0d1b0d; }
+.mob-loading .logo { font-size:40px; margin-bottom:16px; }
+.mob-loading p { color:var(--text-muted); font-size:13px; margin-top:12px; }
+</style>
 </head>
 <body>
 
-<!-- LOADING -->
-<div class="mob-loading" id="loadingScreen">
-  <div class="spinner" style="width:36px;height:36px;border-width:3px"></div>
-  <div class="brand">KEMO<span>ENIK</span></div>
-  <p id="loadingText">Memuat…</p>
-</div>
-
-<!-- ════════════════════════
-     LOGIN
-════════════════════════ -->
-<div class="login-screen" id="loginScreen" style="display:none">
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="ico">📦</div>
-      <div class="brand">KEMO<span>ENIK</span></div>
-      <div class="sub">Seller Dashboard · Masuk untuk melihat data Anda</div>
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="logo">KEMO<span>ENIK</span></div>
+      <div class="sub">Seller Dashboard</div>
     </div>
-    <div class="login-form">
-      <div class="login-error" id="loginError">
-        <span>⚠️</span><span id="loginErrorMsg">Nama atau nomor WA salah</span>
-      </div>
-      <div class="form-group">
-        <label>Nama Seller</label>
-        <div class="wrap">
-          <span class="ico">👤</span>
-          <input type="text" id="inputNama" placeholder="Contoh: LUNISCA2026-01"
-            autocomplete="username"
-            onkeydown="if(event.key==='Enter') document.getElementById('inputWa').focus()" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Nomor WhatsApp (Password)</label>
-        <div class="wrap">
-          <span class="ico">📱</span>
-          <input type="tel" id="inputWa" placeholder="Contoh: 08123456789"
-            autocomplete="current-password"
-            onkeydown="if(event.key==='Enter') doLogin()" />
-        </div>
-      </div>
-      <button class="login-btn" id="loginBtn" onclick="doLogin()">🔐 Masuk</button>
+    <div class="login-field">
+      <label class="login-label">Nama Seller</label>
+      <input type="text" class="login-input" id="loginNama" placeholder="Masukkan nama seller…" autocomplete="username"/>
     </div>
-    <div class="login-hint">Username: <strong>Nama seller</strong> &nbsp;·&nbsp; Password: <strong>No. WA</strong></div>
+    <div class="login-field">
+      <label class="login-label">Password</label>
+      <input type="password" class="login-input" id="loginPass" placeholder="Masukkan password…" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Masuk</button>
+    <div class="login-err" id="loginErr"></div>
   </div>
 </div>
 
-<!-- ════════════════════════
-     DASHBOARD
-════════════════════════ -->
-<div class="dash" id="dashScreen">
+<!-- DASHBOARD SCREEN -->
+<div class="dash-screen" id="dashScreen">
 
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="hdr-brand">KEMO<span>ENIK</span></div>
-      <div class="hdr-actions">
-        <button class="hdr-btn" onclick="refreshData()" title="Refresh">🔄</button>
-        <button class="hdr-btn" onclick="doLogout()" title="Keluar">🚪</button>
-      </div>
-    </div>
-    <div class="hdr-greet">Selamat datang,</div>
-    <div class="hdr-name" id="hdrName">—</div>
+  <!-- LOADING -->
+  <div class="mob-loading" id="loadingScreen" style="display:none">
+    <div class="logo">📦</div>
+    <div class="spinner" style="width:28px;height:28px;border-width:3px"></div>
+    <p id="loadingText">Memuat data…</p>
   </div>
 
-  <div class="body">
+  <!-- HEADER -->
+  <div class="mob-header">
+    <div class="mob-header-top">
+      <div class="mob-header-logo">
+        <div class="mob-logo-icon">📦</div>
+        <span class="mob-logo-text">ScanResi</span>
+      </div>
+      <div class="mob-header-actions">
+        <button class="mob-icon-btn" id="darkModeToggle">🌙</button>
+        <button class="mob-icon-btn" onclick="manualRefresh()">🔄</button>
+        <button class="mob-icon-btn" onclick="doLogout()">🚪</button>
+      </div>
+    </div>
+    <div class="mob-header-name">Selamat datang,</div>
+    <div class="mob-seller-name" id="hdrName">—</div>
+  </div>
 
-    <div class="sess-chip">
-      <div class="sess-av" id="sessAv">?</div>
+  <!-- CONTENT -->
+  <div class="mob-content">
+
+    <!-- YEAR SELECTOR -->
+    <div class="year-bar">
+      <label>Tahun</label>
+      <select class="select" id="yearSel" onchange="onYearChange(this.value)" style="margin-bottom:0"></select>
+    </div>
+
+    <!-- WIDE STAT -->
+    <div class="mob-stat-wide">
       <div>
-        <div class="sess-name" id="sessName">—</div>
-        <div class="sess-role">✅ Login sebagai Seller</div>
+        <div class="wlabel">Total Penjualan</div>
+        <div class="wvalue" id="wTotalPenjualan">Rp —</div>
+        <div class="wsub" id="wResiCount">— resi total</div>
+      </div>
+      <div style="font-size:36px">💰</div>
+    </div>
+
+    <!-- STAT GRID -->
+    <div class="mob-stats">
+      <div class="mob-stat lunas">
+        <div class="mob-stat-label">Total Resi</div>
+        <div class="mob-stat-value" id="mTotalResi">—</div>
+        <div class="mob-stat-sub">semua transaksi</div>
+      </div>
+      <div class="mob-stat belum">
+        <div class="mob-stat-label">Belum Bayar</div>
+        <div class="mob-stat-value" id="mBelumCount">—</div>
+        <div class="mob-stat-sub" id="mBelumNominal">Rp —</div>
+      </div>
+      <div class="mob-stat lunas">
+        <div class="mob-stat-label">Sudah Lunas</div>
+        <div class="mob-stat-value" id="mLunasCount">—</div>
+        <div class="mob-stat-sub" id="mLunasNominal">Rp —</div>
+      </div>
+      <div class="mob-stat">
+        <div class="mob-stat-label">Hari Ini</div>
+        <div class="mob-stat-value" id="mHariIni">—</div>
+        <div class="mob-stat-sub">resi baru</div>
       </div>
     </div>
 
-    <div class="stat-wide">
-      <div>
-        <div class="sw-lbl">Total Penjualan</div>
-        <div class="sw-val" id="swTotal">Rp —</div>
-        <div class="sw-sub" id="swSub">— resi total</div>
-      </div>
-      <div style="font-size:38px">💰</div>
-    </div>
-
-    <div class="stat-grid">
-      <div class="stat-box">
-        <div class="sb-lbl">Total Resi</div>
-        <div class="sb-val" id="sbResi">—</div>
-        <div class="sb-sub">semua transaksi</div>
-      </div>
-      <div class="stat-box">
-        <div class="sb-lbl">Belum Bayar</div>
-        <div class="sb-val red" id="sbBelum">—</div>
-        <div class="sb-sub" id="sbBelumNom">Rp —</div>
-      </div>
-      <div class="stat-box">
-        <div class="sb-lbl">Sudah Dibayar</div>
-        <div class="sb-val gold" id="sbLunas">—</div>
-        <div class="sb-sub" id="sbLunasNom">Rp —</div>
-      </div>
-      <div class="stat-box">
-        <div class="sb-lbl">Hari Ini</div>
-        <div class="sb-val" id="sbHari">—</div>
-        <div class="sb-sub">resi baru</div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <div class="sec-title">Penjualan Harian</div>
+    <!-- CHART -->
+    <div class="mob-section">
+      <div class="section-title">Penjualan 7 Hari Terakhir</div>
       <canvas id="chartHarian"></canvas>
     </div>
 
-    <div class="sec">
+    <!-- RESI LIST -->
+    <div class="mob-section">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div class="sec-title" style="margin-bottom:0">Data Resi</div>
-        <button class="exp-btn" onclick="doExport()">📥 Export</button>
+        <div class="section-title" style="margin-bottom:0">Data Resi</div>
+        <button class="btn btn-outline btn-sm" onclick="doExport()">📥 Export</button>
       </div>
-      <div class="tabs">
-        <div class="tab active" onclick="setTab('semua',this)">Semua</div>
-        <div class="tab" onclick="setTab('LUNAS',this)">LUNAS</div>
-        <div class="tab" onclick="setTab('BELUM',this)">BELUM</div>
+
+      <div class="section-tabs">
+        <div class="tab-pill active" onclick="setTab('semua',this)">Semua</div>
+        <div class="tab-pill" onclick="setTab('LUNAS',this)">LUNAS</div>
+        <div class="tab-pill" onclick="setTab('BELUM',this)">BELUM</div>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <div class="mob-search">
-          <span class="si">🔍</span>
-          <input type="text" id="resiSearch" placeholder="Cari nomor resi…" oninput="renderList()" />
+
+      <div class="mob-filter">
+        <div style="position:relative;flex:1">
+          <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px">🔍</span>
+          <input type="text" class="input" id="resiSearch" placeholder="Cari nomor resi…" oninput="renderResiList()" style="padding-left:30px"/>
         </div>
       </div>
-      <div id="resiList"><div class="mob-empty"><div class="ei">📭</div><p>Memuat…</p></div></div>
-      <div id="resiPag" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px"></div>
+
+      <div id="resiListContainer">
+        <div class="mob-empty"><div class="icon">📭</div><p>Memuat data…</p></div>
+      </div>
+      <div id="mobPagination" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px"></div>
     </div>
 
-    <div class="sec">
-      <div class="sec-title">Akun</div>
-      <div style="font-size:13px;color:var(--text3);margin-bottom:6px">Login sebagai <strong id="logoutName" style="color:var(--text)">—</strong></div>
-      <button class="logout-btn" onclick="doLogout()">🚪 Keluar dari Akun</button>
+  </div><!-- /mob-content -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="mob-bottom-nav">
+    <div class="mob-nav-item active">
+      <div class="nav-icon">📊</div><span>Dashboard</span>
     </div>
-
-  </div>
-
-  <nav class="bnav">
-    <div class="bni active"><div class="ni">📊</div><span>Dashboard</span></div>
-    <div class="bni"><div class="ni">📋</div><span>Resi</span></div>
-    <div class="bni"><div class="ni">💰</div><span>Bayar</span></div>
-    <div class="bni" onclick="doLogout()"><div class="ni">🚪</div><span>Keluar</span></div>
+    <div class="mob-nav-item" onclick="setTab('BELUM',document.querySelector('.tab-pill:nth-child(3)'));document.querySelector('.tab-pill:nth-child(3)').click()">
+      <div class="nav-icon">⏳</div><span>Belum</span>
+    </div>
+    <div class="mob-nav-item" onclick="doExport()">
+      <div class="nav-icon">📥</div><span>Export</span>
+    </div>
   </nav>
-</div>
 
-<!-- MODAL LOGOUT -->
-<div class="modal-overlay" id="logoutModal">
+</div><!-- /dash-screen -->
+
+<!-- LOGOUT MODAL -->
+<div class="modal-overlay" id="modalLogout">
   <div class="modal">
-    <div class="modal-icon">🚪</div>
-    <h3>Keluar?</h3>
-    <p>Anda akan keluar dari akun seller ini.</p>
-    <div class="modal-actions">
-      <button class="btn-outline" onclick="closeModal('logoutModal')">Batal</button>
-      <button class="btn-danger" onclick="confirmLogout()">Ya, Keluar</button>
+    <div class="modal-handle"></div>
+    <h3 style="font-size:17px;font-weight:700;margin-bottom:8px;color:var(--text-primary)">Keluar?</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">Kamu akan keluar dari dashboard seller.</p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline w-full" onclick="closeModal('modalLogout')">Batal</button>
+      <button class="btn btn-primary w-full" onclick="confirmLogout()">Keluar</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ══ CONFIG ══ */
-const API_URL  = "https://script.google.com/macros/s/AKfycbwN_rSWb2-QFCuBma_TeDyTD9q6FQr7v5yZXXezaedxX_0YDm5VbSjkVX4lWQDaMrK_/exec";
-const USE_MOCK = false; // ganti false setelah deploy API
+/* ════════════════════════════════════════
+   ⚙️  KONFIGURASI — EDIT BAGIAN INI
+   1. Ganti API_URL dengan URL Apps Script kamu
+   2. Ganti USE_MOCK = false setelah deploy
+════════════════════════════════════════ */
+const API_URL = "https://script.google.com/macros/s/AKfycbzSB5-HRcBHs7fA2SWJToHcFaTGg4FHzesI7dhwH9MMsJKNzU-qoxlWS49Rz0X9Pq79/exec";
+const USE_MOCK = false; // ← GANTI false setelah deploy Apps Script
 
-/* ══ MOCK DATA ══ */
-const MOCK_SELLERS_DATA=[
-  {nama:"LUNISCA2026-01",wa:"08123456789"},
-  {nama:"ALNISHOP2026-02",wa:"08111111111"},
-  {nama:"SEHATBARENG",wa:"08222222222"},
-];
-const MOCK_RESI=[
-  {tanggal:"2024-04-25",nomor_resi:"JX748599721",seller:"LUNISCA2026-01",produk:"KEMONIK SLIM",qty:1,harga:70000,total:70000,status:"BELUM"},
-  {tanggal:"2024-04-25",nomor_resi:"JNE32875502",seller:"LUNISCA2026-01",produk:"KEMONIK SLIM",qty:1,harga:70000,total:70000,status:"LUNAS"},
-  {tanggal:"2024-04-25",nomor_resi:"JNE23047595",seller:"LUNISCA2026-01",produk:"KEMONIK SLIM",qty:1,harga:30000,total:30000,status:"LUNAS"},
-  {tanggal:"2024-04-24",nomor_resi:"JNE20394857",seller:"LUNISCA2026-01",produk:"KEMONIK SLIM",qty:1,harga:70000,total:70000,status:"LUNAS"},
-  {tanggal:"2024-04-22",nomor_resi:"PJX11223344",seller:"LUNISCA2026-01",produk:"KEMONIK SLIM",qty:1,harga:70000,total:70000,status:"LUNAS"},
-  {tanggal:"2024-04-21",nomor_resi:"JNE55667788",seller:"LUNISCA2026-01",produk:"KEMONIK SLIM",qty:1,harga:30000,total:30000,status:"BELUM"},
-  {tanggal:"2024-04-25",nomor_resi:"JNE23047596",seller:"ALNISHOP2026-02",produk:"KEMONIK SLIM",qty:1,harga:70000,total:70000,status:"BELUM"},
-  {tanggal:"2024-04-24",nomor_resi:"PJX52840348",seller:"ALNISHOP2026-02",produk:"KEMONIK SLIM",qty:1,harga:70000,total:70000,status:"LUNAS"},
-  {tanggal:"2024-04-24",nomor_resi:"SJX10293847",seller:"SEHATBARENG",produk:"KEMONIK SLIM",qty:1,harga:30000,total:30000,status:"LUNAS"},
-  {tanggal:"2024-04-22",nomor_resi:"JTX99887766",seller:"SEHATBARENG",produk:"KEMONIK SLIM",qty:1,harga:30000,total:30000,status:"BELUM"},
+/* ═══ MOCK DATA ═══ */
+const MOCK_SELLERS_DATA = [
+  { nama:"LUNISCA2026-01",  password:"kemo123" },
+  { nama:"ALNISHOP2026-02", password:"shop456" },
+  { nama:"SEHATBARENG",     password:"sehat789" },
 ];
 
-/* ══ STATE ══ */
-let sellerResi=[],currentSeller="",activeTab="semua";
-let pag={page:1,data:[],total:1};
-const PAGE=10,SESS="kemoenik_seller_v1";
+const MOCK_RESI = [
+  { tanggal:"2026-03-13", nomor_resi:"JX748599721", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"BELUM" },
+  { tanggal:"2026-03-13", nomor_resi:"JNE32875502", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
+  { tanggal:"2026-03-12", nomor_resi:"JNE23047595", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:30000, total:30000, status:"LUNAS" },
+  { tanggal:"2026-03-12", nomor_resi:"JNE23047596", seller:"ALNISHOP2026-02", produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"BELUM" },
+  { tanggal:"2026-03-11", nomor_resi:"PJX52840348", seller:"ALNISHOP2026-02", produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
+  { tanggal:"2026-03-11", nomor_resi:"SJX10293847", seller:"SEHATBARENG",     produk:"KEMONIK SLIM", qty:1, harga:30000, total:30000, status:"LUNAS" },
+  { tanggal:"2026-03-10", nomor_resi:"JNE20394857", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
+  { tanggal:"2026-03-09", nomor_resi:"PJX11223344", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
+  { tanggal:"2026-03-09", nomor_resi:"JTX99887766", seller:"SEHATBARENG",     produk:"KEMONIK SLIM", qty:1, harga:30000, total:30000, status:"BELUM" },
+];
 
-/* ══ BOOT ══ */
-function boot(){
-  const sv=sessionStorage.getItem(SESS);
-  if(sv){try{const s=JSON.parse(sv);if(s.seller){startDash(s.seller);return;}}catch(e){}}
-  showLogin();
-}
-function showLogin(){
-  document.getElementById("loadingScreen").style.display="none";
-  document.getElementById("loginScreen").style.display="flex";
-  document.getElementById("dashScreen").classList.remove("show");
-  setTimeout(()=>document.getElementById("inputNama").focus(),100);
+/* ═══ LOGIN ═══ */
+async function apiLogin(nama, password) {
+  if (USE_MOCK) {
+    const found = MOCK_SELLERS_DATA.find(s => s.nama.toLowerCase() === nama.toLowerCase() && s.password === password);
+    if (found) return { status:"ok", seller: found.nama };
+    return { status:"gagal", pesan:"Nama seller atau password salah" };
+  }
+  const url = new URL(API_URL);
+  url.searchParams.append("action","login");
+  url.searchParams.append("nama", nama);
+  url.searchParams.append("password", password);
+  const res = await fetch(url.toString());
+  return res.json();
 }
 
-/* ══ LOGIN ══ */
-async function doLogin(){
-  const nama=document.getElementById("inputNama").value.trim();
-  const wa=document.getElementById("inputWa").value.trim();
-  const btn=document.getElementById("loginBtn");
-  document.getElementById("loginError").classList.remove("show");
-  if(!nama||!wa){showErr("Nama dan nomor WA wajib diisi");return;}
-  btn.disabled=true;
-  btn.innerHTML=`<div class="spinner" style="border-color:rgba(255,255,255,.3);border-top-color:#fff;width:16px;height:16px"></div> Memeriksa…`;
-  try{
-    let res;
-    if(USE_MOCK){
-      const f=MOCK_SELLERS_DATA.find(s=>s.nama.toLowerCase()===nama.toLowerCase()&&s.wa===wa);
-      res=f?{status:"ok",seller:f.nama}:{status:"gagal",pesan:"Nama atau nomor WA salah"};
+/* ═══ GET RESI ═══ */
+async function apiGetResi(seller, tahun) {
+  if (USE_MOCK) {
+    return MOCK_RESI.filter(r => r.seller === seller);
+  }
+  const url = new URL(API_URL);
+  url.searchParams.append("action","getResi");
+  url.searchParams.append("seller", seller);
+  if (tahun) url.searchParams.append("tahun", tahun);
+  const res = await fetch(url.toString());
+  return res.json();
+}
+
+/* ═══ GET TAHUN ═══ */
+async function apiGetTahun() {
+  if (USE_MOCK) return ["2026"];
+  const url = new URL(API_URL);
+  url.searchParams.append("action","tahun");
+  const res = await fetch(url.toString());
+  return res.json();
+}
+
+/* ═══ FORMAT ═══ */
+function formatRupiah(n) { return "Rp " + Number(n||0).toLocaleString("id-ID"); }
+function formatDate(s)   {
+  if (!s) return "-";
+  const d = new Date(s);
+  return isNaN(d) ? s : d.toLocaleDateString("id-ID",{day:"2-digit",month:"2-digit",year:"numeric"});
+}
+function formatDateShort(s) {
+  if (!s) return "-";
+  const d = new Date(s);
+  return isNaN(d) ? s : d.toLocaleDateString("id-ID",{day:"2-digit",month:"short"});
+}
+
+function exportToCSV(data, filename="export.csv") {
+  if (!data?.length) return;
+  const h = Object.keys(data[0]);
+  const rows = data.map(r => h.map(k=>`"${(r[k]??'').toString().replace(/"/g,'""')}"`).join(","));
+  const csv = [h.join(","), ...rows].join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8;"}));
+  a.download = filename; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+</script>
+<script>
+/**
+ * dashboard.js — Seller shared utilities
+ * untuk-seller/
+ */
+
+/* ── TOAST ── */
+function showToast(msg, type="success") {
+  let c = document.querySelector(".toast-container");
+  if (!c) { c = document.createElement("div"); c.className="toast-container"; document.body.appendChild(c); }
+  const icons = {success:"✅",error:"❌",warn:"⚠️",info:"ℹ️"};
+  const t = document.createElement("div");
+  t.className = `toast ${type!=="success"?type:""}`;
+  t.innerHTML = `<span>${icons[type]||"✅"}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(()=>{ t.style.animation="fadeOut .3s ease forwards"; setTimeout(()=>t.remove(),300); },3000);
+}
+
+/* ── MODAL ── */
+function openModal(id)  { document.getElementById(id)?.classList.add("open"); }
+function closeModal(id) { document.getElementById(id)?.classList.remove("open"); }
+document.addEventListener("click", e => { if(e.target.classList.contains("modal-overlay")) e.target.classList.remove("open"); });
+
+/* ── DARK MODE ── */
+function initDarkMode() {
+  if (localStorage.getItem("theme")==="dark") document.documentElement.setAttribute("data-theme","dark");
+  const btn = document.getElementById("darkModeToggle");
+  if (!btn) return;
+  const update = () => btn.textContent = document.documentElement.getAttribute("data-theme")==="dark" ? "☀️" : "🌙";
+  update();
+  btn.addEventListener("click", () => {
+    const dark = document.documentElement.getAttribute("data-theme")==="dark";
+    if (dark) { document.documentElement.removeAttribute("data-theme"); localStorage.setItem("theme","light"); }
+    else       { document.documentElement.setAttribute("data-theme","dark"); localStorage.setItem("theme","dark"); }
+    update();
+  });
+}
+
+/* ── LINE CHART ── */
+function makeLineChart(canvasId, labels, datasets) {
+  const ctx = document.getElementById(canvasId)?.getContext("2d");
+  if (!ctx) return;
+  if (!window._charts) window._charts = {};
+  if (window._charts[canvasId]) window._charts[canvasId].destroy();
+  window._charts[canvasId] = new Chart(ctx, {
+    type:"line", data:{labels, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false},
+        tooltip:{ backgroundColor:"#fff", titleColor:"#111827", bodyColor:"#9ca3af", borderColor:"#e5e7eb", borderWidth:1, padding:10,
+          callbacks:{ label: c => " "+formatRupiah(c.raw) } }
+      },
+      scales:{
+        x:{ grid:{display:false}, ticks:{color:"#9ca3af",font:{size:10}} },
+        y:{ grid:{color:"rgba(229,231,235,.6)"}, ticks:{color:"#9ca3af",font:{size:10},callback:v=>"Rp "+(v/1000)+"k"} }
+      }
+    }
+  });
+}
+
+/* ── PAGINATOR ── */
+class Paginator {
+  constructor(data, pageSize=10) { this.data=data; this.pageSize=pageSize; this.currentPage=1; }
+  get totalPages()  { return Math.max(1, Math.ceil(this.data.length/this.pageSize)); }
+  get currentData() { const s=(this.currentPage-1)*this.pageSize; return this.data.slice(s,s+this.pageSize); }
+  setPage(p)        { this.currentPage=Math.max(1,Math.min(p,this.totalPages)); }
+}
+
+/* ── HARIAN ── */
+function computeHarian(data, days=7) {
+  const result = [];
+  for (let i=days-1; i>=0; i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const key   = d.toISOString().slice(0,10);
+    const label = d.toLocaleDateString("id-ID",{day:"2-digit",month:"short"});
+    const total = data.filter(r=>r.tanggal&&r.tanggal.slice(0,10)===key).reduce((s,r)=>s+(r.total||0),0);
+    result.push({label,total});
+  }
+  return result;
+}
+
+</script>
+<script>
+/* ═══ CONST ═══ */
+const SESS = "kemoenik_seller_v2";
+
+/* ═══ STATE ═══ */
+let currentSeller = "";
+let sellerResi    = [];
+let activeTab     = "semua";
+let mobPaginator;
+let currentYear   = "";
+const MOB_PAGE   = 10;
+
+/* ═══ BOOT ═══ */
+function boot() {
+  initDarkMode();
+  const saved = sessionStorage.getItem(SESS);
+  if (saved) {
+    try {
+      const { seller, year } = JSON.parse(saved);
+      currentSeller = seller;
+      currentYear   = year || "";
+      showDash(seller);
+    } catch(e) { sessionStorage.removeItem(SESS); }
+  }
+}
+
+/* ═══ LOGIN ═══ */
+async function doLogin() {
+  const nama = document.getElementById("loginNama").value.trim();
+  const pass = document.getElementById("loginPass").value.trim();
+  const errEl = document.getElementById("loginErr");
+  const btn   = document.getElementById("loginBtn");
+  if (!nama || !pass) { showErrLogin("Isi nama seller dan password dulu"); return; }
+  btn.disabled = true;
+  btn.textContent = "Memeriksa…";
+  errEl.style.display = "none";
+  try {
+    const res = await apiLogin(nama, pass);
+    if (res.status === "ok") {
+      currentSeller = res.seller;
+      sessionStorage.setItem(SESS, JSON.stringify({ seller: res.seller, year: currentYear }));
+      showDash(res.seller);
     } else {
-      const url=new URL(API_URL);
-      url.searchParams.append("action","login");
-      url.searchParams.append("nama",nama);
-      url.searchParams.append("wa",wa);
-      res=await fetch(url).then(r=>r.json());
+      showErrLogin(res.pesan || "Nama seller atau password salah");
     }
-    if(res.status==="ok"){
-      sessionStorage.setItem(SESS,JSON.stringify({seller:res.seller}));
-      startDash(res.seller);
-    } else { showErr(res.pesan||"Nama atau nomor WA salah"); }
-  }catch(e){showErr("Gagal terhubung. Cek koneksi.");}
-  finally{btn.disabled=false;btn.innerHTML="🔐 Masuk";}
+  } catch(e) {
+    showErrLogin("Gagal koneksi. Coba lagi.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Masuk";
+  }
 }
-function showErr(m){document.getElementById("loginErrorMsg").textContent=m;document.getElementById("loginError").classList.add("show");}
 
-/* ══ START DASHBOARD ══ */
-async function startDash(seller){
-  currentSeller=seller;
-  ["hdrName","sessName","logoutName"].forEach(id=>document.getElementById(id).textContent=seller);
-  document.getElementById("sessAv").textContent=seller.charAt(0).toUpperCase();
-  document.getElementById("loginScreen").style.display="none";
+function showErrLogin(msg) {
+  const el = document.getElementById("loginErr");
+  el.textContent = msg;
+  el.style.display = "block";
+}
+
+/* ═══ SHOW DASHBOARD ═══ */
+async function showDash(seller) {
+  document.getElementById("loginScreen").style.display = "none";
   document.getElementById("dashScreen").classList.add("show");
-  document.getElementById("loadingText").textContent="Memuat data "+seller+"…";
-  document.getElementById("loadingScreen").style.display="flex";
-  try{
-    if(USE_MOCK){ sellerResi=MOCK_RESI.filter(r=>r.seller===seller); }
-    else{
-      const url=new URL(API_URL);
-      url.searchParams.append("action","getResi");
-      url.searchParams.append("seller",seller);
-      sellerResi=await fetch(url).then(r=>r.json());
-    }
-  }catch(e){sellerResi=[];showToast("Gagal memuat data","error");}
-  finally{document.getElementById("loadingScreen").style.display="none";}
-  renderStats();renderChart();renderList();
+  document.getElementById("hdrName").textContent = seller;
+  document.getElementById("loadingScreen").style.display = "flex";
+  document.getElementById("loadingText").textContent = "Memuat data " + seller + "…";
+
+  try {
+    // Load tahun list
+    const tahunList = await apiGetTahun();
+    const ySel = document.getElementById("yearSel");
+    ySel.innerHTML = tahunList.map(t => `<option value="${t}">${t}</option>`).join("");
+    if (!currentYear || !tahunList.includes(currentYear)) currentYear = tahunList[0] || "";
+    ySel.value = currentYear;
+
+    // Load resi
+    sellerResi = await apiGetResi(seller, currentYear);
+    renderStats();
+    renderChart();
+    renderResiList();
+  } catch(e) {
+    showToast("Gagal memuat data","error");
+  } finally {
+    document.getElementById("loadingScreen").style.display = "none";
+  }
 }
 
-/* Silent background refresh — tidak ada loading, tidak kedip */
-async function silentRefresh(){
-  if(!currentSeller) return;
-  try{
-    let newData;
-    if(USE_MOCK){ newData=MOCK_RESI.filter(r=>r.seller===currentSeller); }
-    else{
-      const url=new URL(API_URL);
-      url.searchParams.append("action","getResi");
-      url.searchParams.append("seller",currentSeller);
-      newData=await fetch(url).then(r=>r.json());
-    }
-    // Hanya update DOM kalau ada perubahan data
-    if(JSON.stringify(sellerResi)!==JSON.stringify(newData)){
-      sellerResi=newData;
-      renderStats();renderChart();renderList();
-    }
-  }catch(e){ /* gagal diam-diam, tidak ganggu user */ }
+/* ═══ YEAR CHANGE ═══ */
+async function onYearChange(year) {
+  currentYear = year;
+  sessionStorage.setItem(SESS, JSON.stringify({ seller: currentSeller, year: currentYear }));
+  document.getElementById("loadingScreen").style.display = "flex";
+  document.getElementById("loadingText").textContent = "Memuat data " + currentYear + "…";
+  try {
+    sellerResi = await apiGetResi(currentSeller, currentYear);
+    renderStats(); renderChart(); renderResiList();
+  } catch(e) { showToast("Gagal ganti tahun","error"); }
+  finally { document.getElementById("loadingScreen").style.display = "none"; }
 }
 
-async function refreshData(){
-  if(!currentSeller) return;
+/* ═══ SILENT REFRESH ═══ */
+async function silentRefresh() {
+  if (!currentSeller) return;
+  try {
+    const newData = await apiGetResi(currentSeller, currentYear);
+    if (JSON.stringify(sellerResi) !== JSON.stringify(newData)) {
+      sellerResi = newData;
+      renderStats(); renderChart(); renderResiList();
+    }
+  } catch(e) { /* diam */ }
+}
+
+async function manualRefresh() {
   await silentRefresh();
   showToast("Data diperbarui");
 }
 
-/* ══ LOGOUT ══ */
-function doLogout(){openModal("logoutModal");}
-function confirmLogout(){
-  closeModal("logoutModal");
-  sessionStorage.removeItem(SESS);
-  sellerResi=[];currentSeller="";
-  document.getElementById("inputNama").value="";
-  document.getElementById("inputWa").value="";
-  document.getElementById("loginError").classList.remove("show");
-  document.getElementById("dashScreen").classList.remove("show");
-  showLogin();
+/* ═══ STATS ═══ */
+function renderStats() {
+  const data    = sellerResi;
+  const lunas   = data.filter(r => r.status === "LUNAS");
+  const belum   = data.filter(r => r.status === "BELUM");
+  const today   = new Date().toISOString().slice(0,10);
+  const hariIni = data.filter(r => r.tanggal?.slice(0,10) === today).length;
+  const totalP  = data.reduce((s,r)=>s+(r.total||0),0);
+
+  document.getElementById("wTotalPenjualan").textContent  = formatRupiah(totalP);
+  document.getElementById("wResiCount").textContent       = data.length + " resi total";
+  document.getElementById("mTotalResi").textContent       = data.length;
+  document.getElementById("mLunasCount").textContent      = lunas.length;
+  document.getElementById("mLunasNominal").textContent    = formatRupiah(lunas.reduce((s,r)=>s+(r.total||0),0));
+  document.getElementById("mBelumCount").textContent      = belum.length;
+  document.getElementById("mBelumNominal").textContent    = formatRupiah(belum.reduce((s,r)=>s+(r.total||0),0));
+  document.getElementById("mHariIni").textContent         = hariIni;
 }
 
-/* ══ STATS ══ */
-function renderStats(){
-  const tot=sellerResi.reduce((s,r)=>s+Number(r.total||r.harga||0),0);
-  const ln=sellerResi.filter(r=>r.status==="LUNAS");
-  const bl=sellerResi.filter(r=>r.status==="BELUM");
-  const today=new Date().toLocaleDateString("id-ID");
-  const hari=sellerResi.filter(r=>new Date(r.tanggal).toLocaleDateString("id-ID")===today).length;
-  document.getElementById("swTotal").textContent=fRp(tot);
-  document.getElementById("swSub").textContent=sellerResi.length+" resi total";
-  document.getElementById("sbResi").textContent=sellerResi.length;
-  document.getElementById("sbLunas").textContent=ln.length;
-  document.getElementById("sbLunasNom").textContent=fRp(ln.reduce((s,r)=>s+Number(r.total||r.harga||0),0));
-  document.getElementById("sbBelum").textContent=bl.length;
-  document.getElementById("sbBelumNom").textContent=fRp(bl.reduce((s,r)=>s+Number(r.total||r.harga||0),0));
-  document.getElementById("sbHari").textContent=hari;
+/* ═══ CHART ═══ */
+function renderChart() {
+  const harian = computeHarian(sellerResi, 7);
+  const grad   = document.getElementById("chartHarian")?.getContext("2d")?.createLinearGradient(0,0,0,160);
+  if (grad) { grad.addColorStop(0,"rgba(22,163,74,.3)"); grad.addColorStop(1,"rgba(22,163,74,0)"); }
+  makeLineChart("chartHarian",
+    harian.map(h=>h.label),
+    [{ label:"Penjualan", data:harian.map(h=>h.total),
+       borderColor:"#16a34a", backgroundColor:grad||"rgba(22,163,74,.15)",
+       fill:true, tension:.4,
+       pointBackgroundColor:"#fff", pointBorderColor:"#16a34a", pointBorderWidth:2, pointRadius:4 }]
+  );
 }
 
-/* ══ CHART ══ */
-function renderChart(){
-  const hm={};
-  sellerResi.forEach(r=>{
-    const d=new Date(r.tanggal);
-    const lb=d.toLocaleDateString("id-ID",{weekday:"short",day:"numeric"});
-    if(!hm[lb])hm[lb]={lb,t:0,d};
-    hm[lb].t+=Number(r.total||r.harga||0);
-  });
-  const h=Object.values(hm).sort((a,b)=>a.d-b.d).slice(-7);
-  const ctx=document.getElementById("chartHarian")?.getContext("2d");
-  if(!ctx)return;
-  const grad=ctx.createLinearGradient(0,0,0,160);
-  grad.addColorStop(0,"rgba(22,163,74,.22)"); grad.addColorStop(1,"rgba(22,163,74,0)");
-  if(window._sc)window._sc.destroy();
-  window._sc=new Chart(ctx,{type:"line",data:{labels:h.map(x=>x.lb),datasets:[{data:h.map(x=>x.t),borderColor:"#16a34a",backgroundColor:grad,fill:true,tension:.4,pointBackgroundColor:"#fff",pointBorderColor:"#16a34a",pointBorderWidth:2,pointRadius:4,pointHoverRadius:6}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:"#fff",titleColor:"#1E2B26",bodyColor:"#8A9A92",borderColor:"#DDE4DA",borderWidth:1,padding:12,callbacks:{label:c=>" "+fRp(c.raw)}}},
-    scales:{x:{grid:{display:false},ticks:{color:"#8A9A92",font:{family:"'Inter'",size:11}}},y:{grid:{color:"rgba(221,228,218,.6)"},ticks:{color:"#8A9A92",font:{family:"'Inter'",size:11},callback:v=>"Rp "+(v/1000)+"k"}}}}
-  });
+/* ═══ RESI LIST ═══ */
+function setTab(tab, el) {
+  activeTab = tab;
+  document.querySelectorAll(".tab-pill").forEach(t=>t.classList.remove("active"));
+  if (el) el.classList.add("active");
+  renderResiList();
 }
 
-/* ══ LIST ══ */
-function setTab(t,el){activeTab=t;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));el.classList.add("active");pag.page=1;renderList();}
-function renderList(){
-  const q=document.getElementById("resiSearch").value.toLowerCase();
-  let d=sellerResi;
-  if(activeTab!=="semua")d=d.filter(r=>r.status===activeTab);
-  if(q)d=d.filter(r=>r.nomor_resi?.toLowerCase().includes(q)||r.produk?.toLowerCase().includes(q));
-  pag={page:pag.page||1,data:d,total:Math.max(1,Math.ceil(d.length/PAGE))};
-  if(pag.page>pag.total)pag.page=1;
-  renderPage();
+function renderResiList() {
+  const search = document.getElementById("resiSearch").value.toLowerCase();
+  let data = sellerResi;
+  if (activeTab !== "semua") data = data.filter(r=>r.status===activeTab);
+  if (search) data = data.filter(r=>
+    r.nomor_resi?.toLowerCase().includes(search) ||
+    r.produk?.toLowerCase().includes(search)
+  );
+  mobPaginator = new Paginator(data, MOB_PAGE);
+  renderResiPage();
 }
-function renderPage(){
-  const{page,data,total}=pag;
-  const sl=data.slice((page-1)*PAGE,page*PAGE);
-  const c=document.getElementById("resiList");
-  if(!sl.length){c.innerHTML=`<div class="mob-empty"><div class="ei">📭</div><p>Tidak ada data</p></div>`;document.getElementById("resiPag").innerHTML="";return;}
-  c.innerHTML=sl.map(r=>{
-    const d=new Date(r.tanggal);
-    const day=isNaN(d)?"":d.getDate();
-    const mon=isNaN(d)?"":d.toLocaleDateString("id-ID",{month:"short"});
-    return `<div class="resi-item">
-      <div class="resi-date"><div>${day}</div><div>${mon}</div></div>
-      <div class="resi-info">
-        <div class="resi-no">${r.nomor_resi}</div>
-        <div class="resi-meta">${r.produk} · ${fRp(r.total||r.harga)}</div>
-      </div>
-      <span class="badge badge-${r.status==="LUNAS"?"lunas":"belum"}">${r.status}</span>
-    </div>`;
+
+function renderResiPage() {
+  const data = mobPaginator.currentData;
+  const container = document.getElementById("resiListContainer");
+  if (!data.length) {
+    container.innerHTML = `<div class="mob-empty"><div class="icon">📭</div><p>Tidak ada data</p></div>`;
+    document.getElementById("mobPagination").innerHTML = "";
+    return;
+  }
+  container.innerHTML = data.map(r => {
+    const d   = new Date(r.tanggal);
+    const day = isNaN(d) ? "" : d.getDate();
+    const mon = isNaN(d) ? "" : d.toLocaleDateString("id-ID",{month:"short"});
+    return `
+      <div class="resi-item">
+        <div class="resi-date-badge"><div>${day}</div><div>${mon}</div></div>
+        <div class="resi-info">
+          <div class="resi-number">${r.nomor_resi}</div>
+          <div class="resi-meta">${r.produk} · ${formatRupiah(r.total||r.harga)}</div>
+        </div>
+        <span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span>
+      </div>`;
   }).join("");
-  const pg=document.getElementById("resiPag");
-  if(total<=1){pg.innerHTML="";return;}
-  pg.innerHTML=`<button class="page-btn" onclick="goP(${page-1})" ${page===1?"disabled":""}>‹</button>
-    <span style="font-size:11px;color:var(--text3);padding:0 8px">${page} / ${total}</span>
-    <button class="page-btn" onclick="goP(${page+1})" ${page===total?"disabled":""}>›</button>`;
-}
-function goP(p){pag.page=Math.max(1,Math.min(p,pag.total));renderPage();window.scrollTo({top:400,behavior:"smooth"});}
 
-/* ══ EXPORT ══ */
-function doExport(){
-  if(!sellerResi.length){showToast("Tidak ada data","warn");return;}
-  const h=["tanggal","nomor_resi","produk","qty","harga","total","status"];
-  const rows=sellerResi.map(r=>h.map(k=>`"${(r[k]||"").toString().replace(/"/g,'""')}"`).join(","));
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([[h.join(","),...rows].join("\n")],{type:"text/csv;charset=utf-8;"}));
-  a.download=currentSeller+"-resi.csv";a.click();
-  showToast("Data berhasil diexport");
+  const total = mobPaginator.totalPages;
+  const cur   = mobPaginator.currentPage;
+  const pag   = document.getElementById("mobPagination");
+  if (total <= 1) { pag.innerHTML = ""; return; }
+  pag.innerHTML = `
+    <button class="page-btn" onclick="mobGoPage(${cur-1})" ${cur===1?"disabled":""}>‹</button>
+    <span style="font-size:12px;color:var(--text-muted);padding:0 8px">${cur} / ${total}</span>
+    <button class="page-btn" onclick="mobGoPage(${cur+1})" ${cur===total?"disabled":""}>›</button>
+  `;
 }
 
-/* ══ UTILS ══ */
-function fRp(n){return"Rp "+Number(n||0).toLocaleString("id-ID");}
-function showToast(msg,type="success"){
-  let c=document.querySelector(".toast-container");
-  if(!c){c=document.createElement("div");c.className="toast-container";document.body.appendChild(c);}
-  const t=document.createElement("div");t.className=`toast ${type!=="success"?type:""}`;
-  t.innerHTML=`<span>${{success:"✅",warn:"⚠️",error:"❌"}[type]||"✅"}</span><span>${msg}</span>`;
-  c.appendChild(t);
-  setTimeout(()=>{t.style.animation="fadeOut .3s ease forwards";setTimeout(()=>t.remove(),300);},3000);
+function mobGoPage(p) {
+  mobPaginator.setPage(p);
+  renderResiPage();
+  window.scrollTo({ top:400, behavior:"smooth" });
 }
-function openModal(id){document.getElementById(id)?.classList.add("open");}
-function closeModal(id){document.getElementById(id)?.classList.remove("open");}
-document.addEventListener("click",e=>{if(e.target.classList.contains("modal-overlay"))e.target.classList.remove("open");});
 
-/* ══ START ══ */
+/* ═══ EXPORT ═══ */
+function doExport() {
+  if (!sellerResi.length) { showToast("Tidak ada data","warn"); return; }
+  exportToCSV(sellerResi, `${currentSeller}-${currentYear}.csv`);
+  showToast("Export berhasil");
+}
+
+/* ═══ LOGOUT ═══ */
+function doLogout()     { openModal("modalLogout"); }
+function confirmLogout() {
+  closeModal("modalLogout");
+  sessionStorage.removeItem(SESS);
+  currentSeller = "";
+  sellerResi    = [];
+  document.getElementById("dashScreen").classList.remove("show");
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("loginNama").value = "";
+  document.getElementById("loginPass").value = "";
+  document.getElementById("loginErr").style.display = "none";
+}
+
+/* ═══ START ═══ */
 boot();
 setInterval(silentRefresh, 5000);
 </script>
