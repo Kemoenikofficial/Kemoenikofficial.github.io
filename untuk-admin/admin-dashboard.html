@@ -414,6 +414,7 @@ function showPage(id, el) {
   document.getElementById("page-" + id)?.classList.add("active");
   if (el) el.classList.add("active");
   document.getElementById("pageTitle").textContent = pageTitles[id] || id;
+  if (id === "stok" && !stokData.length) loadAndRenderStok();
 }
 
 /* ═══ INIT ═══ */
@@ -808,12 +809,7 @@ function renderStok() {
   }).join("");
 }
 
-// Load stok saat klik menu stok
-const _origShowPage = showPage;
-function showPage(id, el) {
-  _origShowPage(id, el);
-  if (id === "stok" && !stokData.length) loadAndRenderStok();
-}
+// stok dimuat saat klik menu (lihat showPage asli)
 
 /* ═══ START ═══ */
 initDarkMode();
