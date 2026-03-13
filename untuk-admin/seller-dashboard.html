@@ -2,271 +2,660 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Seller View — KEMOENIK Admin</title>
 <link rel="stylesheet" href="style.css"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body { background:var(--bg); }
-.mob-header { background:linear-gradient(135deg,#166534,#16a34a); padding:20px 16px 52px; position:relative; overflow:hidden; }
-.mob-header::before { content:''; position:absolute; top:-30px; right:-30px; width:140px; height:140px; border-radius:50%; background:rgba(255,255,255,.07); }
-.mob-header::after  { content:''; position:absolute; bottom:-20px; left:-20px; width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,.05); }
-.mob-header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; position:relative; z-index:1; }
-.mob-header-logo { display:flex; align-items:center; gap:8px; }
-.mob-logo-icon { width:32px; height:32px; background:rgba(255,255,255,.2); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; }
-.mob-logo-text { color:#fff; font-size:14px; font-weight:700; }
-.mob-header-actions { display:flex; gap:6px; position:relative; z-index:1; }
-.mob-icon-btn { width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,.15); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:15px; }
-.mob-header-name { color:rgba(255,255,255,.75); font-size:13px; margin-bottom:4px; position:relative; z-index:1; }
-.mob-seller-name { color:#fff; font-size:22px; font-weight:800; letter-spacing:-.02em; position:relative; z-index:1; }
-.mob-content { margin-top:-36px; padding:0 12px 100px; position:relative; z-index:1; }
-.mob-stat-wide { background:var(--bg-card); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin-bottom:12px; border:1px solid var(--border-light); display:flex; align-items:center; justify-content:space-between; }
-.mob-stat-wide .wlabel { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); }
-.mob-stat-wide .wvalue { font-size:20px; font-weight:800; color:var(--text-primary); }
-.mob-stat-wide .wsub { font-size:11px; color:var(--green-600); font-weight:600; }
-.mob-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-.mob-stat { background:var(--bg-card); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); border:1px solid var(--border-light); }
-.mob-stat-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:5px; }
-.mob-stat-value { font-size:20px; font-weight:800; color:var(--text-primary); letter-spacing:-.02em; }
-.mob-stat-sub { font-size:10px; color:var(--text-muted); margin-top:3px; }
-.mob-stat.lunas .mob-stat-value { color:var(--green-600); }
-.mob-stat.belum .mob-stat-value { color:#d97706; }
-.mob-section { background:var(--bg-card); border-radius:var(--radius); padding:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); border:1px solid var(--border-light); }
-.mob-section canvas { height:160px !important; }
-.resi-item { display:flex; align-items:center; padding:12px 0; border-top:1px solid var(--border-light); gap:12px; }
+/* ═══ LAYOUT RESPONSIVE ═══ */
+.sv-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+@media (max-width: 768px) {
+  .sv-layout { grid-template-columns: 1fr; }
+  .sv-sidebar { display: none; }
+  .sv-topbar  { display: flex; }
+  .sv-mobile-nav { display: flex; }
+}
+
+/* ═══ SIDEBAR (desktop) ═══ */
+.sv-sidebar {
+  background: var(--green3);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sv-brand {
+  font-family: var(--font-d);
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 8px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  margin-bottom: 8px;
+}
+.sv-brand span { color: var(--goldlit); }
+.sv-brand-sub { font-size: 10px; color: rgba(255,255,255,.35); letter-spacing: .1em; text-transform: uppercase; margin-top: 3px; }
+.sv-label { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.3); padding: 10px 8px 4px; }
+.sv-field { padding: 8px; }
+.sv-field label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: rgba(255,255,255,.4); display: block; margin-bottom: 5px; }
+.sv-field .select {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  color: #fff;
+  font-size: 13px;
+}
+.sv-field .select:focus { border-color: var(--goldlit); }
+.sv-seller-name {
+  background: rgba(200,169,106,.12);
+  border: 1px solid rgba(200,169,106,.25);
+  border-radius: 10px;
+  padding: 12px;
+  margin: 8px 0;
+}
+.sv-seller-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.4); margin-bottom: 4px; }
+.sv-seller-val { font-size: 16px; font-weight: 700; color: var(--goldlit); }
+.sv-back-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: rgba(255,255,255,.6);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+  text-decoration: none;
+  margin-top: auto;
+  border: 1px solid rgba(255,255,255,.08);
+}
+.sv-back-btn:hover { background: rgba(255,255,255,.07); color: #fff; }
+
+/* ═══ MAIN ═══ */
+.sv-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ═══ TOPBAR (both desktop+mobile) ═══ */
+.sv-topbar {
+  height: 56px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.sv-topbar-title { font-family: var(--font-d); font-size: 16px; font-weight: 600; color: var(--green2); }
+.sv-topbar-seller { font-size: 12px; color: var(--text3); margin-left: 6px; }
+.sv-topbar-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.admin-chip {
+  background: rgba(31,77,58,.08);
+  border: 1px solid rgba(31,77,58,.15);
+  border-radius: 99px;
+  padding: 3px 10px;
+  font-size: 10px; font-weight: 700;
+  color: var(--green2);
+}
+
+/* ═══ CONTENT ═══ */
+.sv-content {
+  flex: 1;
+  padding: 22px;
+  overflow-y: auto;
+}
+@media (max-width: 768px) {
+  .sv-content { padding: 14px 12px 90px; }
+}
+
+/* ═══ MOBILE HEADER ═══ */
+.sv-mob-header {
+  display: none;
+  background: linear-gradient(135deg,#166534,#16a34a);
+  padding: 20px 16px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.sv-mob-header::before { content:''; position:absolute; top:-30px; right:-30px; width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.07); }
+@media (max-width: 768px) { .sv-mob-header { display: block; } }
+.sv-mob-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; position:relative;z-index:1; }
+.sv-mob-brand { display: flex; align-items: center; gap: 8px; }
+.sv-mob-icon { width:30px;height:30px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px; }
+.sv-mob-txt { color:#fff;font-size:13px;font-weight:700; }
+.sv-mob-actions { display:flex;gap:5px; }
+.sv-mob-btn { width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.15);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px; }
+.sv-mob-sub { color:rgba(255,255,255,.7);font-size:12px;margin-bottom:3px;position:relative;z-index:1; }
+.sv-mob-name { color:#fff;font-size:20px;font-weight:800;letter-spacing:-.02em;position:relative;z-index:1; }
+
+/* ═══ MOBILE SELECTORS ═══ */
+.mob-selectors {
+  display: none;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: var(--sh-sm);
+  border: 1px solid var(--border);
+}
+@media (max-width: 768px) { .mob-selectors { display: block; } }
+.mob-sel-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mob-sel-row label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text3); display: block; margin-bottom: 4px; }
+
+/* ═══ STATS GRID ═══ */
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 20px; }
+@media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 768px)  { .stats-grid { grid-template-columns: repeat(2,1fr); gap: 10px; } }
+.stat-card {
+  background: var(--card);
+  border-radius: var(--r-md);
+  padding: 18px;
+  border: 1px solid var(--border);
+  box-shadow: var(--sh-sm);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::after { content:''; position:absolute; right:-10px; top:-10px; width:55px; height:55px; border-radius:50%; opacity:.06; }
+.stat-card.c-green::after { background:var(--green); }
+.stat-card.c-gold::after  { background:var(--gold); }
+.stat-card.c-red::after   { background:#EF4444; }
+.stat-card.c-blue::after  { background:#3B82F6; }
+.stat-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:7px; }
+.stat-value { font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.02em; }
+.stat-sub   { font-size:11px;color:var(--text3);margin-top:4px; }
+.stat-icon  { position:absolute;right:14px;top:14px;font-size:20px;opacity:.65; }
+
+/* ═══ CHART + TABLE ROW ═══ */
+.chart-row { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px; }
+@media (max-width:900px) { .chart-row { grid-template-columns:1fr; } }
+.chart-card { background:var(--card);border-radius:var(--r-md);padding:20px;border:1px solid var(--border);box-shadow:var(--sh-sm); }
+.chart-container { height:200px; }
+
+/* ═══ TABLE SECTION ═══ */
+.table-section { background:var(--card);border-radius:var(--r-md);border:1px solid var(--border);box-shadow:var(--sh-sm);overflow:hidden; }
+.table-header { padding:14px 18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border); }
+.filter-row { display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
+.filter-row .select,.filter-row .input { width:auto;min-width:130px;font-size:13px; }
+.table-footer { padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
+
+/* ═══ MOBILE RESI LIST ═══ */
+.mob-resi-section { display:none;background:var(--card);border-radius:var(--r-md);padding:16px;border:1px solid var(--border);box-shadow:var(--sh-sm); }
+@media (max-width:768px) {
+  .desktop-table { display:none; }
+  .mob-resi-section { display:block; }
+}
+.resi-item { display:flex;align-items:center;padding:11px 0;border-top:1px solid var(--border);gap:12px; }
 .resi-item:first-of-type { border-top:none; }
-.resi-date-badge { width:40px; height:40px; border-radius:10px; background:var(--green-50); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; font-size:10px; font-weight:700; color:var(--green-700); line-height:1.2; }
-.resi-info { flex:1; min-width:0; }
-.resi-number { font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.resi-meta { font-size:11px; color:var(--text-muted); margin-top:2px; }
-.mob-filter { display:flex; gap:8px; margin-bottom:12px; }
-.section-tabs { display:flex; gap:6px; margin-bottom:14px; overflow-x:auto; scrollbar-width:none; }
-.section-tabs::-webkit-scrollbar { display:none; }
-.tab-pill { flex-shrink:0; padding:6px 14px; border-radius:99px; font-size:12px; font-weight:600; cursor:pointer; border:1.5px solid var(--border); background:var(--bg-card); color:var(--text-muted); transition:all .15s; }
-.tab-pill.active { background:var(--green-600); border-color:var(--green-600); color:#fff; }
-.seller-selector { background:var(--bg-card); border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; box-shadow:var(--shadow-sm); border:1px solid var(--border-light); }
-.seller-selector label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); display:block; margin-bottom:8px; }
-.year-bar { display:flex; align-items:center; gap:8px; background:var(--bg-card); border-radius:var(--radius); padding:10px 14px; margin-bottom:12px; border:1px solid var(--border-light); }
-.year-bar label { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; white-space:nowrap; }
-.mob-empty { text-align:center; padding:32px 16px; color:var(--text-muted); }
-.mob-empty .icon { font-size:36px; margin-bottom:8px; }
-.mob-bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--bg-card); border-top:1px solid var(--border); display:flex; padding:8px 0 max(8px,env(safe-area-inset-bottom)); z-index:100; }
-.mob-nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; color:var(--text-muted); font-size:10px; font-weight:600; text-transform:uppercase; padding:4px 0; }
-.mob-nav-item.active { color:var(--green-600); }
-.mob-nav-item .nav-icon { font-size:20px; }
-.mob-loading { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; }
-.mob-loading p { color:var(--text-muted); font-size:13px; margin-top:12px; }
-.admin-badge { background:rgba(31,77,58,.1); border:1px solid rgba(31,77,58,.2); border-radius:99px; padding:3px 10px; font-size:10px; font-weight:700; color:#1F4D3A; }
+.resi-date-badge { width:38px;height:38px;border-radius:9px;background:#f0fdf4;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:700;color:#15803d;line-height:1.2; }
+.resi-info { flex:1;min-width:0; }
+.resi-number { font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.resi-meta { font-size:11px;color:var(--text3);margin-top:2px; }
+
+/* ═══ TABS ═══ */
+.tab-row { display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none; }
+.tab-row::-webkit-scrollbar { display:none; }
+.tab-pill { flex-shrink:0;padding:5px 14px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--card);color:var(--text3);transition:all .15s; }
+.tab-pill.active { background:var(--greenlit);border-color:var(--greenlit);color:#fff; }
+
+/* ═══ MOBILE NAV ═══ */
+.sv-mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  z-index: 100;
+}
+@media (max-width:768px) { .sv-mobile-nav { display: flex; } }
+.nav-item { flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;text-transform:uppercase;padding:4px 0; }
+.nav-item.active { color:var(--greenlit); }
+.nav-item .ni { font-size:18px; }
+
+/* ═══ LOADING ═══ */
+.loading-overlay { position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999; }
+.loading-overlay .lo-logo { font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--green2);margin-bottom:16px; }
+.loading-overlay p { font-size:12px;color:var(--text3);margin-top:10px; }
 </style>
 </head>
 <body>
 
 <!-- LOADING -->
-<div class="mob-loading" id="loadingScreen" style="display:none">
-  <div style="font-size:40px;margin-bottom:16px">📦</div>
-  <div class="spinner" style="width:28px;height:28px;border-width:3px"></div>
+<div class="loading-overlay" id="loadingOverlay" style="display:none">
+  <div class="lo-logo">KEMO<span style="color:var(--gold)">ENIK</span></div>
+  <div class="spinner" style="width:26px;height:26px;border-width:3px"></div>
   <p id="loadingText">Memuat data…</p>
 </div>
 
-<!-- HEADER -->
-<div class="mob-header">
-  <div class="mob-header-top">
-    <div class="mob-header-logo">
-      <div class="mob-logo-icon">📦</div>
-      <span class="mob-logo-text">ScanResi</span>
-    </div>
-    <div class="mob-header-actions">
-      <span class="admin-badge">Admin View</span>
-      <button class="mob-icon-btn" id="darkModeToggle">🌙</button>
-      <button class="mob-icon-btn" onclick="manualRefresh()">🔄</button>
-      <button class="mob-icon-btn" onclick="window.location='admin-dashboard.html'" title="Kembali ke Admin">🖥️</button>
-    </div>
-  </div>
-  <div class="mob-header-name">Melihat data seller:</div>
-  <div class="mob-seller-name" id="hdrName">— Pilih Seller —</div>
-</div>
+<div class="sv-layout">
 
-<!-- CONTENT -->
-<div class="mob-content">
+  <!-- SIDEBAR (desktop only) -->
+  <aside class="sv-sidebar">
+    <div class="sv-brand">
+      KEMO<span>ENIK</span>
+      <div class="sv-brand-sub">Seller View</div>
+    </div>
 
-  <div class="seller-selector">
-    <label>Pilih Seller</label>
-    <select class="select" id="sellerSelect" onchange="onSellerChange(this.value)">
-      <option value="">Memuat seller…</option>
-    </select>
-  </div>
+    <div class="sv-label">Pilih Seller</div>
+    <div class="sv-field">
+      <label>Seller</label>
+      <select class="select" id="sellerSelect" onchange="onSellerChange(this.value)">
+        <option value="">Memuat seller…</option>
+      </select>
+    </div>
 
-  <div class="year-bar">
-    <label>Tahun</label>
-    <select class="select" id="yearSel" onchange="onYearChange(this.value)" style="margin-bottom:0"></select>
-  </div>
+    <div class="sv-seller-name" id="sidebarSellerBox" style="display:none">
+      <div class="sv-seller-label">Sedang dilihat</div>
+      <div class="sv-seller-val" id="sidebarSellerVal">—</div>
+    </div>
 
-  <div class="mob-stat-wide">
-    <div>
-      <div class="wlabel">Total Penjualan</div>
-      <div class="wvalue" id="wTotalPenjualan">Rp —</div>
-      <div class="wsub" id="wResiCount">— resi total</div>
+    <div class="sv-label">Tahun</div>
+    <div class="sv-field">
+      <label>Tahun Aktif</label>
+      <select class="select" id="yearSel" onchange="onYearChange(this.value)"></select>
     </div>
-    <div style="font-size:36px">💰</div>
-  </div>
 
-  <div class="mob-stats">
-    <div class="mob-stat lunas">
-      <div class="mob-stat-label">Total Resi</div>
-      <div class="mob-stat-value" id="mTotalResi">—</div>
-      <div class="mob-stat-sub">semua transaksi</div>
-    </div>
-    <div class="mob-stat belum">
-      <div class="mob-stat-label">Belum Bayar</div>
-      <div class="mob-stat-value" id="mBelumCount">—</div>
-      <div class="mob-stat-sub" id="mBelumNominal">Rp —</div>
-    </div>
-    <div class="mob-stat lunas">
-      <div class="mob-stat-label">Sudah Lunas</div>
-      <div class="mob-stat-value" id="mLunasCount">—</div>
-      <div class="mob-stat-sub" id="mLunasNominal">Rp —</div>
-    </div>
-    <div class="mob-stat">
-      <div class="mob-stat-label">Hari Ini</div>
-      <div class="mob-stat-value" id="mHariIni">—</div>
-      <div class="mob-stat-sub">resi baru</div>
-    </div>
-  </div>
+    <a class="sv-back-btn" href="admin-dashboard.html">
+      🖥️ Kembali ke Admin
+    </a>
+  </aside>
 
-  <div class="mob-section">
-    <div class="section-title">Penjualan 7 Hari Terakhir</div>
-    <canvas id="chartHarian"></canvas>
-  </div>
+  <!-- MAIN -->
+  <div class="sv-main">
 
-  <div class="mob-section">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div class="section-title" style="margin-bottom:0">Data Resi</div>
-      <button class="btn btn-outline btn-sm" onclick="doExport()">📥 Export</button>
-    </div>
-    <div class="section-tabs">
-      <div class="tab-pill active" onclick="setTab('semua',this)">Semua</div>
-      <div class="tab-pill" onclick="setTab('LUNAS',this)">LUNAS</div>
-      <div class="tab-pill" onclick="setTab('BELUM',this)">BELUM</div>
-    </div>
-    <div class="mob-filter">
-      <div style="position:relative;flex:1">
-        <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px">🔍</span>
-        <input type="text" class="input" id="resiSearch" placeholder="Cari nomor resi…" oninput="renderResiList()" style="padding-left:30px"/>
+    <!-- TOPBAR -->
+    <div class="sv-topbar">
+      <div class="sv-topbar-title">Seller View</div>
+      <span class="sv-topbar-seller" id="topbarSeller"></span>
+      <div class="sv-topbar-actions">
+        <span class="admin-chip">Admin</span>
+        <button class="icon-btn" id="darkModeToggle">🌙</button>
+        <button class="icon-btn" onclick="manualRefresh()" title="Refresh">🔄</button>
+        <button class="icon-btn" onclick="doExport()" title="Export CSV">📥</button>
+        <a href="admin-dashboard.html" class="icon-btn" title="Kembali ke Admin">🖥️</a>
       </div>
     </div>
-    <div id="resiListContainer">
-      <div class="mob-empty"><div class="icon">👆</div><p>Pilih seller untuk melihat data</p></div>
+
+    <!-- MOBILE HEADER -->
+    <div class="sv-mob-header">
+      <div class="sv-mob-header-top">
+        <div class="sv-mob-brand">
+          <div class="sv-mob-icon">📦</div>
+          <span class="sv-mob-txt">ScanResi</span>
+        </div>
+        <div class="sv-mob-actions">
+          <button class="sv-mob-btn" id="darkModeToggleMob">🌙</button>
+          <button class="sv-mob-btn" onclick="manualRefresh()">🔄</button>
+          <a href="admin-dashboard.html" class="sv-mob-btn">🖥️</a>
+        </div>
+      </div>
+      <div class="sv-mob-sub">Melihat data seller:</div>
+      <div class="sv-mob-name" id="mobSellerName">— Pilih Seller —</div>
     </div>
-    <div id="mobPagination" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px"></div>
-  </div>
 
-</div>
+    <!-- CONTENT -->
+    <div class="sv-content">
 
-<nav class="mob-bottom-nav">
-  <div class="mob-nav-item active"><div class="nav-icon">📊</div><span>Dashboard</span></div>
-  <div class="mob-nav-item" onclick="window.location='admin-dashboard.html'"><div class="nav-icon">🖥️</div><span>Admin</span></div>
-  <div class="mob-nav-item" onclick="doExport()"><div class="nav-icon">📥</div><span>Export</span></div>
+      <!-- MOBILE SELECTORS -->
+      <div class="mob-selectors">
+        <div class="mob-sel-row">
+          <div>
+            <label>Seller</label>
+            <select class="select" id="sellerSelectMob" onchange="onSellerChange(this.value)">
+              <option value="">Pilih Seller…</option>
+            </select>
+          </div>
+          <div>
+            <label>Tahun</label>
+            <select class="select" id="yearSelMob" onchange="onYearChange(this.value)"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card c-green"><div class="stat-label">Total Resi</div><div class="stat-value" id="sTotalResi">—</div><div class="stat-sub">semua transaksi</div><div class="stat-icon">📦</div></div>
+        <div class="stat-card c-gold"><div class="stat-label">Total Penjualan</div><div class="stat-value" id="sTotalPenjualan">—</div><div class="stat-sub" id="sResiCount">—</div><div class="stat-icon">💰</div></div>
+        <div class="stat-card c-blue"><div class="stat-label">Sudah Lunas</div><div class="stat-value" id="sLunas">—</div><div class="stat-sub" id="sLunasNominal">—</div><div class="stat-icon">✅</div></div>
+        <div class="stat-card c-red"><div class="stat-label">Belum Bayar</div><div class="stat-value" id="sBelum">—</div><div class="stat-sub" id="sBelumNominal">—</div><div class="stat-icon">⏳</div></div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="sec-title">Penjualan 7 Hari Terakhir</div>
+          <div class="chart-container"><canvas id="chartHarian"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="sec-title">Komposisi Status</div>
+          <div class="chart-container"><canvas id="chartStatus"></canvas></div>
+        </div>
+      </div>
+
+      <!-- TABLE (desktop) -->
+      <div class="table-section desktop-table">
+        <div class="table-header">
+          <div class="sec-title" style="margin-bottom:0;flex:1">Data Resi</div>
+          <div class="filter-row">
+            <input type="text" class="input" id="tSearch" placeholder="🔍 Cari resi…" oninput="applyFilters()" style="width:170px"/>
+            <select class="select" id="tStatus" onchange="applyFilters()">
+              <option value="">Semua Status</option>
+              <option value="LUNAS">LUNAS</option>
+              <option value="BELUM">BELUM</option>
+            </select>
+            <input type="date" class="input" id="tDateFrom" onchange="applyFilters()" style="width:140px"/>
+            <input type="date" class="input" id="tDateTo"   onchange="applyFilters()" style="width:140px"/>
+            <button class="btn btn-outline btn-sm" onclick="resetFilters()">Reset</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Nomor Resi</th>
+                <th>Produk</th>
+                <th>Qty</th>
+                <th>Harga</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr><td colspan="7"><div class="empty-state"><div class="ei">👆</div><p>Pilih seller untuk melihat data</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer" id="tableFooter"></div>
+      </div>
+
+      <!-- RESI LIST (mobile) -->
+      <div class="mob-resi-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="sec-title" style="margin-bottom:0">Data Resi</div>
+          <button class="btn btn-outline btn-sm" onclick="doExport()">📥 Export</button>
+        </div>
+        <div class="tab-row">
+          <div class="tab-pill active" onclick="setTab('semua',this)">Semua</div>
+          <div class="tab-pill" onclick="setTab('LUNAS',this)">LUNAS</div>
+          <div class="tab-pill" onclick="setTab('BELUM',this)">BELUM</div>
+        </div>
+        <div style="position:relative;margin-bottom:12px">
+          <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:12px">🔍</span>
+          <input type="text" class="input" id="mobSearch" placeholder="Cari nomor resi…" oninput="renderMobList()" style="padding-left:30px"/>
+        </div>
+        <div id="mobResiList"><div class="empty-state"><div class="ei">👆</div><p>Pilih seller untuk melihat data</p></div></div>
+        <div id="mobPagination" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px"></div>
+      </div>
+
+    </div><!-- /sv-content -->
+  </div><!-- /sv-main -->
+</div><!-- /sv-layout -->
+
+<!-- MOBILE NAV -->
+<nav class="sv-mobile-nav">
+  <div class="nav-item active"><div class="ni">📊</div><span>Data</span></div>
+  <div class="nav-item" onclick="doExport()"><div class="ni">📥</div><span>Export</span></div>
+  <div class="nav-item" onclick="window.location='admin-dashboard.html'"><div class="ni">🖥️</div><span>Admin</span></div>
 </nav>
 
 <script src="api.js"></script>
 <script src="dashboard.js"></script>
 <script>
-let currentSeller="", currentYear="", sellerResi=[], activeTab="semua", mobPaginator;
-const MOB_PAGE=10;
+/* ═══ STATE ═══ */
+let currentSeller="", currentYear="", sellerResi=[], filteredResi=[], activeTab="semua", paginator;
+const PAGE_SIZE=15;
 
+/* ═══ INIT ═══ */
 async function init() {
   initDarkMode();
+  // Sync dark mode toggle mobile
+  const btnMob = document.getElementById("darkModeToggleMob");
+  if (btnMob) {
+    btnMob.textContent = document.documentElement.getAttribute("data-theme")==="dark" ? "☀️" : "🌙";
+    btnMob.addEventListener("click", () => {
+      document.getElementById("darkModeToggle").click();
+      btnMob.textContent = document.documentElement.getAttribute("data-theme")==="dark" ? "☀️" : "🌙";
+    });
+  }
+
   try {
     const [sellers, tahunList] = await Promise.all([loadSellers(), loadTahun()]);
-    const sel = document.getElementById("sellerSelect");
-    sel.innerHTML = '<option value="">— Pilih Seller —</option>' +
+
+    // Populate seller dropdowns (desktop + mobile)
+    const opts = '<option value="">— Pilih Seller —</option>' +
       sellers.map(s=>{ const n=typeof s==="string"?s:s.nama; return `<option value="${n}">${n}</option>`; }).join("");
-    const ySel = document.getElementById("yearSel");
-    ySel.innerHTML = tahunList.map(t=>`<option value="${t}">${t}</option>`).join("");
-    currentYear = tahunList[0]||"2026";
-    // Auto-select dari URL param: seller-dashboard.html?seller=NAMANYA
+    document.getElementById("sellerSelect").innerHTML    = opts;
+    document.getElementById("sellerSelectMob").innerHTML = opts;
+
+    // Populate year dropdowns
+    const yOpts = tahunList.map(t=>`<option value="${t}">${t}</option>`).join("");
+    document.getElementById("yearSel").innerHTML    = yOpts;
+    document.getElementById("yearSelMob").innerHTML = yOpts;
+    currentYear = tahunList[0] || "2026";
+
+    // Auto-select dari URL param: ?seller=NAMANYA
     const param = new URLSearchParams(window.location.search).get("seller");
-    if (param) { sel.value=param; await onSellerChange(param); }
+    if (param) {
+      document.getElementById("sellerSelect").value    = param;
+      document.getElementById("sellerSelectMob").value = param;
+      await onSellerChange(param);
+    }
   } catch(e) { showToast("Gagal memuat data awal","error"); }
 }
 
+/* ═══ SELLER CHANGE ═══ */
 async function onSellerChange(seller) {
   if (!seller) return;
-  currentSeller=seller;
-  document.getElementById("hdrName").textContent=seller;
-  document.getElementById("loadingScreen").style.display="flex";
-  document.getElementById("loadingText").textContent="Memuat data "+seller+"…";
+  currentSeller = seller;
+
+  // Sync both dropdowns
+  document.getElementById("sellerSelect").value    = seller;
+  document.getElementById("sellerSelectMob").value = seller;
+
+  // Update UI labels
+  document.getElementById("topbarSeller").textContent  = "— " + seller;
+  document.getElementById("mobSellerName").textContent  = seller;
+  const box = document.getElementById("sidebarSellerBox");
+  document.getElementById("sidebarSellerVal").textContent = seller;
+  box.style.display = "block";
+
+  document.getElementById("loadingOverlay").style.display = "flex";
+  document.getElementById("loadingText").textContent = "Memuat data " + seller + "…";
   try {
-    sellerResi = await loadResi({ seller:currentSeller, tahun:currentYear });
-    renderStats(); renderChart(); renderResiList();
+    sellerResi = await loadResi({ seller: currentSeller, tahun: currentYear });
+    renderAll();
   } catch(e) { showToast("Gagal memuat data","error"); }
-  finally { document.getElementById("loadingScreen").style.display="none"; }
+  finally { document.getElementById("loadingOverlay").style.display = "none"; }
 }
 
+/* ═══ YEAR CHANGE ═══ */
 async function onYearChange(year) {
-  currentYear=year;
+  currentYear = year;
+  document.getElementById("yearSel").value    = year;
+  document.getElementById("yearSelMob").value = year;
   if (currentSeller) await onSellerChange(currentSeller);
 }
 
+/* ═══ RENDER ALL ═══ */
+function renderAll() {
+  renderStats();
+  renderCharts();
+  applyFilters();
+  renderMobList();
+}
+
+/* ═══ STATS ═══ */
+function renderStats() {
+  const data   = sellerResi;
+  const lunas  = data.filter(r=>r.status==="LUNAS");
+  const belum  = data.filter(r=>r.status==="BELUM");
+  const totalP = data.reduce((s,r)=>s+(r.total||0),0);
+  document.getElementById("sTotalResi").textContent      = data.length;
+  document.getElementById("sTotalPenjualan").textContent = formatRupiah(totalP);
+  document.getElementById("sResiCount").textContent      = data.length + " resi";
+  document.getElementById("sLunas").textContent          = lunas.length;
+  document.getElementById("sLunasNominal").textContent   = formatRupiah(lunas.reduce((s,r)=>s+(r.total||0),0));
+  document.getElementById("sBelum").textContent          = belum.length;
+  document.getElementById("sBelumNominal").textContent   = formatRupiah(belum.reduce((s,r)=>s+(r.total||0),0));
+}
+
+/* ═══ CHARTS ═══ */
+function renderCharts() {
+  // Line chart harian
+  const harian = computeHarian(sellerResi, 7);
+  const grad   = document.getElementById("chartHarian")?.getContext("2d")?.createLinearGradient(0,0,0,200);
+  if (grad) { grad.addColorStop(0,"rgba(200,169,106,.3)"); grad.addColorStop(1,"rgba(200,169,106,0)"); }
+  makeLineChart("chartHarian", harian.map(h=>h.label), [{
+    label:"Penjualan", data:harian.map(h=>h.total),
+    borderColor:"#C8A96A", backgroundColor:grad||"rgba(200,169,106,.15)",
+    fill:true, tension:.4,
+    pointBackgroundColor:"#fff", pointBorderColor:"#C8A96A", pointBorderWidth:2, pointRadius:4
+  }]);
+
+  // Doughnut status
+  const lunas  = sellerResi.filter(r=>r.status==="LUNAS").length;
+  const belum  = sellerResi.filter(r=>r.status==="BELUM").length;
+  const ctx2   = document.getElementById("chartStatus")?.getContext("2d");
+  if (ctx2) {
+    if (!window._charts) window._charts = {};
+    if (window._charts["chartStatus"]) window._charts["chartStatus"].destroy();
+    window._charts["chartStatus"] = new Chart(ctx2, {
+      type:"doughnut",
+      data:{ labels:["LUNAS","BELUM"], datasets:[{ data:[lunas,belum], backgroundColor:["#1F4D3A","#C8A96A"], borderWidth:0 }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{ position:"bottom", labels:{ font:{family:"'Inter'",size:11}, color:"#8A9A92", padding:16 } },
+          tooltip:{ callbacks:{ label: c => ` ${c.label}: ${c.raw} resi` } }
+        },
+        cutout:"65%"
+      }
+    });
+  }
+}
+
+function computeHarian(data, days) {
+  const result = [];
+  for (let i=days-1; i>=0; i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const key   = d.toISOString().slice(0,10);
+    const label = d.toLocaleDateString("id-ID",{day:"2-digit",month:"short"});
+    const total = data.filter(r=>r.tanggal&&r.tanggal.slice(0,10)===key).reduce((s,r)=>s+(r.total||0),0);
+    result.push({label,total});
+  }
+  return result;
+}
+
+/* ═══ TABLE FILTERS (desktop) ═══ */
+function applyFilters() {
+  const search   = document.getElementById("tSearch")?.value.toLowerCase()||"";
+  const status   = document.getElementById("tStatus")?.value||"";
+  const dateFrom = document.getElementById("tDateFrom")?.value||"";
+  const dateTo   = document.getElementById("tDateTo")?.value||"";
+  filteredResi   = filterResi(sellerResi, { search, status, dateFrom, dateTo });
+  paginator      = new Paginator(filteredResi, PAGE_SIZE);
+  renderTablePage();
+}
+
+function resetFilters() {
+  ["tSearch","tStatus","tDateFrom","tDateTo"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
+  applyFilters();
+}
+
+function renderTablePage() {
+  const data = paginator?.currentData||[];
+  const body = document.getElementById("tableBody");
+  if (!data.length) {
+    body.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="ei">📭</div><p>Tidak ada data</p></div></td></tr>`;
+    document.getElementById("tableFooter").innerHTML=""; return;
+  }
+  body.innerHTML = data.map(r=>`
+    <tr>
+      <td>${formatDate(r.tanggal)}</td>
+      <td class="mono">${r.nomor_resi}</td>
+      <td>${r.produk}</td>
+      <td style="text-align:center">${r.qty||1}</td>
+      <td>${formatRupiah(r.harga)}</td>
+      <td><b>${formatRupiah(r.total)}</b></td>
+      <td><span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span></td>
+    </tr>`).join("");
+  paginator.renderControls("tableFooter","goToPage");
+}
+
+function goToPage(p) { paginator?.setPage(p); renderTablePage(); }
+
+/* ═══ MOBILE LIST ═══ */
+function setTab(tab,el) {
+  activeTab=tab;
+  document.querySelectorAll(".tab-pill").forEach(t=>t.classList.remove("active"));
+  if(el) el.classList.add("active");
+  renderMobList();
+}
+
+function renderMobList() {
+  const search = document.getElementById("mobSearch")?.value.toLowerCase()||"";
+  let data = sellerResi;
+  if (activeTab!=="semua") data=data.filter(r=>r.status===activeTab);
+  if (search) data=data.filter(r=>r.nomor_resi?.toLowerCase().includes(search)||r.produk?.toLowerCase().includes(search));
+  const mp = new Paginator(data, 15);
+  const cont = document.getElementById("mobResiList");
+  if (!mp.currentData.length) {
+    cont.innerHTML=`<div class="empty-state"><div class="ei">📭</div><p>Tidak ada data</p></div>`;
+    document.getElementById("mobPagination").innerHTML=""; return;
+  }
+  cont.innerHTML = mp.currentData.map(r=>{
+    const d=new Date(r.tanggal);
+    const day=isNaN(d)?"":d.getDate();
+    const mon=isNaN(d)?"":d.toLocaleDateString("id-ID",{month:"short"});
+    return `<div class="resi-item">
+      <div class="resi-date-badge"><div>${day}</div><div>${mon}</div></div>
+      <div class="resi-info">
+        <div class="resi-number">${r.nomor_resi}</div>
+        <div class="resi-meta">${r.produk} · ${formatRupiah(r.total||r.harga)}</div>
+      </div>
+      <span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span>
+    </div>`;
+  }).join("");
+  const total=mp.totalPages,cur=mp.currentPage,pag=document.getElementById("mobPagination");
+  pag.innerHTML = total<=1?"" : `<button class="page-btn" onclick="mobGoPage(${cur-1})" ${cur===1?"disabled":""}>‹</button><span style="font-size:12px;color:var(--text3);padding:0 8px">${cur}/${total}</span><button class="page-btn" onclick="mobGoPage(${cur+1})" ${cur===total?"disabled":""}>›</button>`;
+}
+
+let _mobPag;
+function mobGoPage(p) { if(_mobPag){_mobPag.setPage(p);renderMobList();} }
+
+/* ═══ SILENT REFRESH ═══ */
 async function silentRefresh() {
   if (!currentSeller) return;
   try {
     const newData = await loadResi({ seller:currentSeller, tahun:currentYear });
     if (JSON.stringify(sellerResi)!==JSON.stringify(newData)) {
-      sellerResi=newData; renderStats(); renderChart(); renderResiList();
+      sellerResi=newData; renderAll();
     }
-  } catch(e) {}
+  } catch(e){}
 }
-
 async function manualRefresh() { await silentRefresh(); showToast("Data diperbarui"); }
 
-function renderStats() {
-  const lunas=sellerResi.filter(r=>r.status==="LUNAS");
-  const belum=sellerResi.filter(r=>r.status==="BELUM");
-  const today=new Date().toISOString().slice(0,10);
-  const totalP=sellerResi.reduce((s,r)=>s+(r.total||0),0);
-  document.getElementById("wTotalPenjualan").textContent=formatRupiah(totalP);
-  document.getElementById("wResiCount").textContent=sellerResi.length+" resi total";
-  document.getElementById("mTotalResi").textContent=sellerResi.length;
-  document.getElementById("mLunasCount").textContent=lunas.length;
-  document.getElementById("mLunasNominal").textContent=formatRupiah(lunas.reduce((s,r)=>s+(r.total||0),0));
-  document.getElementById("mBelumCount").textContent=belum.length;
-  document.getElementById("mBelumNominal").textContent=formatRupiah(belum.reduce((s,r)=>s+(r.total||0),0));
-  document.getElementById("mHariIni").textContent=sellerResi.filter(r=>r.tanggal?.slice(0,10)===today).length;
+/* ═══ EXPORT ═══ */
+function doExport() {
+  if (!sellerResi.length) { showToast("Tidak ada data","warn"); return; }
+  exportToCSV(sellerResi,`${currentSeller}-${currentYear}.csv`);
+  showToast("Export berhasil");
 }
 
-function renderChart() {
-  const harian=computePenjualanHarian(sellerResi,7);
-  const grad=document.getElementById("chartHarian")?.getContext("2d")?.createLinearGradient(0,0,0,160);
-  if(grad){grad.addColorStop(0,"rgba(22,163,74,.3)");grad.addColorStop(1,"rgba(22,163,74,0)");}
-  makeLineChart("chartHarian",harian.map(h=>h.label),[{label:"Penjualan",data:harian.map(h=>h.total),borderColor:"#16a34a",backgroundColor:grad||"rgba(22,163,74,.15)",fill:true,tension:.4,pointBackgroundColor:"#fff",pointBorderColor:"#16a34a",pointBorderWidth:2,pointRadius:4}]);
-}
-
-function setTab(tab,el){activeTab=tab;document.querySelectorAll(".tab-pill").forEach(t=>t.classList.remove("active"));if(el)el.classList.add("active");renderResiList();}
-
-function renderResiList(){
-  const search=document.getElementById("resiSearch").value.toLowerCase();
-  let data=sellerResi;
-  if(activeTab!=="semua")data=data.filter(r=>r.status===activeTab);
-  if(search)data=data.filter(r=>r.nomor_resi?.toLowerCase().includes(search)||r.produk?.toLowerCase().includes(search));
-  mobPaginator=new Paginator(data,MOB_PAGE); renderResiPage();
-}
-
-function renderResiPage(){
-  const data=mobPaginator.currentData;
-  const cont=document.getElementById("resiListContainer");
-  if(!data.length){cont.innerHTML=`<div class="mob-empty"><div class="icon">📭</div><p>Tidak ada data</p></div>`;document.getElementById("mobPagination").innerHTML="";return;}
-  cont.innerHTML=data.map(r=>{const d=new Date(r.tanggal);const day=isNaN(d)?"":d.getDate();const mon=isNaN(d)?"":d.toLocaleDateString("id-ID",{month:"short"});return`<div class="resi-item"><div class="resi-date-badge"><div>${day}</div><div>${mon}</div></div><div class="resi-info"><div class="resi-number">${r.nomor_resi}</div><div class="resi-meta">${r.produk} · ${formatRupiah(r.total||r.harga)}</div></div><span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span></div>`;}).join("");
-  const total=mobPaginator.totalPages,cur=mobPaginator.currentPage,pag=document.getElementById("mobPagination");
-  if(total<=1){pag.innerHTML="";return;}
-  pag.innerHTML=`<button class="page-btn" onclick="mobGoPage(${cur-1})" ${cur===1?"disabled":""}>‹</button><span style="font-size:12px;color:var(--text-muted);padding:0 8px">${cur}/${total}</span><button class="page-btn" onclick="mobGoPage(${cur+1})" ${cur===total?"disabled":""}>›</button>`;
-}
-
-function mobGoPage(p){mobPaginator.setPage(p);renderResiPage();window.scrollTo({top:400,behavior:"smooth"});}
-function doExport(){if(!sellerResi.length){showToast("Tidak ada data","warn");return;}exportToCSV(sellerResi,`${currentSeller}-${currentYear}.csv`);showToast("Export berhasil");}
-
+/* ═══ START ═══ */
 init();
-setInterval(silentRefresh,5000);
+setInterval(silentRefresh, 5000);
 </script>
 </body>
 </html>
