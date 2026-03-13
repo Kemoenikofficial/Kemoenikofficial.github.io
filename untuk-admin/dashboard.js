@@ -124,3 +124,19 @@ function filterResi(data, { search="", seller="", status="", dateFrom="", dateTo
     return ms && msl && mst && md;
   });
 }
+
+/* ── HARIAN ── */
+function computeHarian(data, days=7) {
+  const result = [];
+  for (let i=days-1; i>=0; i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const key   = d.toISOString().slice(0,10);
+    const label = d.toLocaleDateString("id-ID",{day:"2-digit",month:"short"});
+    const total = data.filter(r=>r.tanggal&&r.tanggal.slice(0,10)===key).reduce((s,r)=>s+(r.total||0),0);
+    result.push({label,total});
+  }
+  return result;
+}
+
+// alias untuk kompatibilitas
+const computePenjualanHarian = computeHarian;
