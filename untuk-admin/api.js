@@ -1,234 +1,156 @@
 /**
- * api.js — Google Sheets API Bridge
- * Replace API_URL with your deployed Google Apps Script Web App URL
+ * api.js — KEMOENIK Admin API Bridge
+ * Taruh di folder: untuk-admin/
+ * Ganti API_URL dengan URL Apps Script kamu
+ * Set USE_MOCK = false setelah deploy
  */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwN_rSWb2-QFCuBma_TeDyTD9q6FQr7v5yZXXezaedxX_0YDm5VbSjkVX4lWQDaMrK_/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzSB5-HRcBHs7fA2SWJToHcFaTGg4FHzesI7dhwH9MMsJKNzU-qoxlWS49Rz0X9Pq79/exec";
+const USE_MOCK = false; // ganti false setelah deploy
 
-// ──────────────────────────────────────────────────────────────
-// CORE FETCH HELPER
-// ──────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════
+   CORE FETCH
+═══════════════════════════════════════════ */
 
 async function apiFetch(params = {}) {
   const url = new URL(API_URL);
   Object.entries(params).forEach(([k, v]) => url.searchParams.append(k, v));
-  try {
-    const res = await fetch(url.toString());
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.error("API Error:", err);
-    throw err;
-  }
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json();
 }
 
-async function apiPost(body = {}) {
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.error("API POST Error:", err);
-    throw err;
-  }
+/* ═══════════════════════════════════════════
+   ENDPOINTS
+═══════════════════════════════════════════ */
+
+async function apiGetResi(filters = {})    { return apiFetch({ action: "getResi",     ...filters }); }
+async function apiGetStats(filters = {})   { return apiFetch({ action: "getStats",    ...filters }); }
+async function apiGetSellers()             { return apiFetch({ action: "seller" }); }
+async function apiGetProduk()              { return apiFetch({ action: "produk" }); }
+async function apiGetTahun()               { return apiFetch({ action: "tahun" }); }
+async function apiTandaiLunas(seller, jumlah, tahun) {
+  return apiFetch({ action: "tandaiLunas", seller, jumlah, tahun: tahun || "" });
 }
 
-// ──────────────────────────────────────────────────────────────
-// RESI / TRANSACTIONS
-// ──────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════
+   MOCK DATA
+═══════════════════════════════════════════ */
 
-async function getResi(filters = {}) {
-  return apiFetch({ action: "getResi", ...filters });
-}
+const MOCK_SELLERS = [
+  { id: "S01", nama: "LUNISCA2026-01" },
+  { id: "S02", nama: "ALNISHOP2026-02" },
+  { id: "S03", nama: "SEHATBARENG" },
+];
 
-async function getResiSeller(seller) {
-  return apiFetch({ action: "getResi", seller });
-}
+const MOCK_RESI = [
+  { tanggal:"2026-03-13", nomor_resi:"JX748599721", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"BELUM" },
+  { tanggal:"2026-03-13", nomor_resi:"JNE32875502", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
+  { tanggal:"2026-03-12", nomor_resi:"JNE23047595", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:30000, total:30000, status:"LUNAS" },
+  { tanggal:"2026-03-12", nomor_resi:"JNE23047596", seller:"ALNISHOP2026-02", produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"BELUM" },
+  { tanggal:"2026-03-11", nomor_resi:"PJX52840348", seller:"ALNISHOP2026-02", produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
+  { tanggal:"2026-03-11", nomor_resi:"SJX10293847", seller:"SEHATBARENG",     produk:"KEMONIK SLIM", qty:1, harga:30000, total:30000, status:"LUNAS" },
+  { tanggal:"2026-03-10", nomor_resi:"JNE20394857", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
+  { tanggal:"2026-03-10", nomor_resi:"JNE20394858", seller:"ALNISHOP2026-02", produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"BELUM" },
+  { tanggal:"2026-03-09", nomor_resi:"JTX99887766", seller:"SEHATBARENG",     produk:"KEMONIK SLIM", qty:1, harga:30000, total:30000, status:"BELUM" },
+  { tanggal:"2026-03-09", nomor_resi:"PJX11223344", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
+  { tanggal:"2026-03-08", nomor_resi:"JNE55667788", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:30000, total:30000, status:"BELUM" },
+  { tanggal:"2026-03-08", nomor_resi:"SJX99001122", seller:"ALNISHOP2026-02", produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
+];
 
-// Bulk mark as LUNAS
-// seller: seller name, jumlah: number of items to mark
-async function tandaiLunas(seller, jumlah) {
-  return apiPost({ action: "tandaiLunas", seller, jumlah: Number(jumlah) });
-}
-
-// ──────────────────────────────────────────────────────────────
-// SELLERS
-// ──────────────────────────────────────────────────────────────
-
-async function getSellers() {
-  return apiFetch({ action: "seller" });
-}
-
-async function getSellerNames() {
-  return apiFetch({ action: "seller" });
-}
-
-// ──────────────────────────────────────────────────────────────
-// PRODUK
-// ──────────────────────────────────────────────────────────────
-
-async function getProduk() {
-  return apiFetch({ action: "produk" });
-}
-
-// ──────────────────────────────────────────────────────────────
-// ANALYTICS (computed client-side from RESI data)
-// ──────────────────────────────────────────────────────────────
-
-function computeStats(resiData) {
-  const totalResi = resiData.length;
-  const sellers = [...new Set(resiData.map(r => r.seller))];
-  const totalPenjualan = resiData.reduce((s, r) => s + Number(r.total || r.harga || 0), 0);
-  const totalBelumBayar = resiData
-    .filter(r => r.status === "BELUM")
-    .reduce((s, r) => s + Number(r.total || r.harga || 0), 0);
-  const countBelum = resiData.filter(r => r.status === "BELUM").length;
-
-  // Resi hari ini
-  const today = new Date().toLocaleDateString("id-ID");
-  const resiHariIni = resiData.filter(r => {
-    const d = new Date(r.tanggal);
-    return d.toLocaleDateString("id-ID") === today;
-  }).length;
-
+function mockStats(data, seller = "") {
+  const filtered = seller ? data.filter(r => r.seller === seller) : data;
+  const total_penjualan = filtered.reduce((s,r) => s + r.total, 0);
+  const total_lunas     = filtered.filter(r => r.status === "LUNAS").reduce((s,r) => s + r.total, 0);
+  const total_belum     = filtered.filter(r => r.status === "BELUM").reduce((s,r) => s + r.total, 0);
+  const perMap = {};
+  filtered.forEach(r => {
+    if (!perMap[r.seller]) perMap[r.seller] = { seller: r.seller, resi:0, penjualan:0, lunas:0, belum:0 };
+    perMap[r.seller].resi++;
+    perMap[r.seller].penjualan += r.total;
+    if (r.status === "LUNAS") perMap[r.seller].lunas += r.total;
+    else perMap[r.seller].belum += r.total;
+  });
   return {
-    totalResi,
-    totalSeller: sellers.length,
-    totalPenjualan,
-    totalBelumBayar,
-    countBelum,
-    resiHariIni,
+    total_resi:      filtered.length,
+    total_penjualan, total_lunas, total_belum,
+    per_seller:      Object.values(perMap).sort((a,b) => b.penjualan - a.penjualan),
+    tahun:           "2026"
   };
 }
 
-function computePenjualanPerSeller(resiData) {
-  const map = {};
-  resiData.forEach(r => {
-    if (!map[r.seller]) map[r.seller] = 0;
-    map[r.seller] += Number(r.total || r.harga || 0);
-  });
-  return Object.entries(map).map(([seller, total]) => ({ seller, total }));
-}
-
-function computePenjualanHarian(resiData, days = 7) {
-  const map = {};
-  resiData.forEach(r => {
-    const d = new Date(r.tanggal);
-    const label = d.toLocaleDateString("id-ID", { weekday: "short", day: "numeric" });
-    if (!map[label]) map[label] = { label, total: 0, date: d };
-    map[label].total += Number(r.total || r.harga || 0);
-  });
-  return Object.values(map)
-    .sort((a, b) => a.date - b.date)
-    .slice(-days);
-}
-
-function computeOverdue(resiData) {
-  const map = {};
-  resiData
-    .filter(r => r.status === "BELUM")
-    .forEach(r => {
-      if (!map[r.seller]) map[r.seller] = 0;
-      map[r.seller] += Number(r.total || r.harga || 0);
-    });
-  return Object.entries(map)
-    .map(([seller, total]) => ({ seller, total }))
-    .sort((a, b) => b.total - a.total);
-}
-
-// ──────────────────────────────────────────────────────────────
-// FORMAT HELPERS
-// ──────────────────────────────────────────────────────────────
-
-function formatRupiah(n) {
-  if (!n && n !== 0) return "Rp 0";
-  return "Rp " + Number(n).toLocaleString("id-ID");
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return "-";
-  const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
-  return d.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
-}
-
-function formatDateShort(dateStr) {
-  if (!dateStr) return "-";
-  const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
-  return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
-}
-
-// ──────────────────────────────────────────────────────────────
-// EXCEL EXPORT (client-side using SheetJS if available)
-// ──────────────────────────────────────────────────────────────
-
-function exportToCSV(data, filename = "export.csv") {
-  if (!data || !data.length) return;
-  const headers = Object.keys(data[0]);
-  const rows = data.map(r => headers.map(h => `"${(r[h] ?? "").toString().replace(/"/g, '""')}"`).join(","));
-  const csv = [headers.join(","), ...rows].join("\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-// ──────────────────────────────────────────────────────────────
-// MOCK DATA (for demo when API is unavailable)
-// ──────────────────────────────────────────────────────────────
-
-const MOCK_RESI = [
-  { tanggal: "2024-04-25", nomor_resi: "JX748599721", seller: "LUNISCA2026-01", produk: "KEMONIK SLIM", qty: 1, harga: 70000, total: 70000, status: "BELUM" },
-  { tanggal: "2024-04-25", nomor_resi: "JNE32875502", seller: "LUNISCA2026-01", produk: "KEMONIK SLIM", qty: 1, harga: 70000, total: 70000, status: "LUNAS" },
-  { tanggal: "2024-04-25", nomor_resi: "JNE23047595", seller: "LUNISCA2026-01", produk: "KEMONIK SLIM", qty: 1, harga: 30000, total: 30000, status: "LUNAS" },
-  { tanggal: "2024-04-25", nomor_resi: "JNE23047596", seller: "ALNISHOP2026-02", produk: "KEMONIK SLIM", qty: 1, harga: 70000, total: 70000, status: "BELUM" },
-  { tanggal: "2024-04-24", nomor_resi: "PJX52840348", seller: "ALNISHOP2026-02", produk: "KEMONIK SLIM", qty: 1, harga: 70000, total: 70000, status: "LUNAS" },
-  { tanggal: "2024-04-24", nomor_resi: "SJX10293847", seller: "SEHATBARENG", produk: "KEMONIK SLIM", qty: 1, harga: 30000, total: 30000, status: "LUNAS" },
-  { tanggal: "2024-04-23", nomor_resi: "JNE20394857", seller: "LUNISCA2026-01", produk: "KEMONIK SLIM", qty: 1, harga: 70000, total: 70000, status: "LUNAS" },
-  { tanggal: "2024-04-23", nomor_resi: "JNE20394858", seller: "ALNISHOP2026-02", produk: "KEMONIK SLIM", qty: 1, harga: 70000, total: 70000, status: "BELUM" },
-  { tanggal: "2024-04-22", nomor_resi: "JTX99887766", seller: "SEHATBARENG", produk: "KEMONIK SLIM", qty: 1, harga: 30000, total: 30000, status: "BELUM" },
-  { tanggal: "2024-04-22", nomor_resi: "PJX11223344", seller: "LUNISCA2026-01", produk: "KEMONIK SLIM", qty: 1, harga: 70000, total: 70000, status: "LUNAS" },
-  { tanggal: "2024-04-21", nomor_resi: "JNE55667788", seller: "LUNISCA2026-01", produk: "KEMONIK SLIM", qty: 1, harga: 30000, total: 30000, status: "BELUM" },
-  { tanggal: "2024-04-21", nomor_resi: "SJX99001122", seller: "ALNISHOP2026-02", produk: "KEMONIK SLIM", qty: 1, harga: 70000, total: 70000, status: "LUNAS" },
-];
-
-const MOCK_SELLERS = ["LUNISCA2026-01", "ALNISHOP2026-02", "SEHATBARENG"];
-
-// Use mock data by default; set to false when real API is ready
-const USE_MOCK = false;
-
-async function loadResi(filters = {}) {
-  if (USE_MOCK) {
-    let data = [...MOCK_RESI];
-    if (filters.seller) data = data.filter(r => r.seller === filters.seller);
-    return data;
-  }
-  return getResi(filters);
-}
+/* ═══════════════════════════════════════════
+   WRAPPER DENGAN MOCK FALLBACK
+═══════════════════════════════════════════ */
 
 async function loadSellers() {
   if (USE_MOCK) return MOCK_SELLERS;
-  return getSellerNames();
+  return apiGetSellers();
 }
 
-async function doTandaiLunas(seller, jumlah) {
+async function loadResi(filters = {}) {
+  if (USE_MOCK) {
+    let d = [...MOCK_RESI];
+    if (filters.seller) d = d.filter(r => r.seller === filters.seller);
+    if (filters.status) d = d.filter(r => r.status === filters.status);
+    return d;
+  }
+  return apiGetResi(filters);
+}
+
+async function loadStats(filters = {}) {
+  if (USE_MOCK) return mockStats(MOCK_RESI, filters.seller || "");
+  return apiGetStats(filters);
+}
+
+async function loadTahun() {
+  if (USE_MOCK) return ["2026"];
+  return apiGetTahun();
+}
+
+async function doTandaiLunas(seller, jumlah, tahun) {
   if (USE_MOCK) {
     let count = 0;
     for (let r of MOCK_RESI) {
       if (r.seller === seller && r.status === "BELUM" && count < jumlah) {
-        r.status = "LUNAS";
-        count++;
+        r.status = "LUNAS"; count++;
       }
     }
     return { status: "ok", updated: count };
   }
-  return tandaiLunas(seller, jumlah);
+  return apiTandaiLunas(seller, jumlah, tahun);
+}
+
+/* ═══════════════════════════════════════════
+   FORMAT HELPERS
+═══════════════════════════════════════════ */
+
+function formatRupiah(n) {
+  return "Rp " + Number(n || 0).toLocaleString("id-ID");
+}
+
+function formatDate(s) {
+  if (!s) return "-";
+  const d = new Date(s);
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString("id-ID", { day:"2-digit", month:"2-digit", year:"numeric" });
+}
+
+function formatDateShort(s) {
+  if (!s) return "-";
+  const d = new Date(s);
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString("id-ID", { day:"2-digit", month:"short" });
+}
+
+function exportToCSV(data, filename = "export.csv") {
+  if (!data || !data.length) return;
+  const headers = Object.keys(data[0]);
+  const rows    = data.map(r => headers.map(h => `"${(r[h] ?? "").toString().replace(/"/g,'""')}"`).join(","));
+  const csv     = [headers.join(","), ...rows].join("\n");
+  const a       = document.createElement("a");
+  a.href        = URL.createObjectURL(new Blob([csv], { type:"text/csv;charset=utf-8;" }));
+  a.download    = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
