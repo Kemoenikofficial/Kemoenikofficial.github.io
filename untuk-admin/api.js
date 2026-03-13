@@ -5,7 +5,7 @@
  * Set USE_MOCK = false setelah deploy
  */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzSB5-HRcBHs7fA2SWJToHcFaTGg4FHzesI7dhwH9MMsJKNzU-qoxlWS49Rz0X9Pq79/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwGhEHrNA7jvFKQv5OMliVOukHMyW3uETAT127VY6MJeNrm3ZeW_LtXFbCK8fIy-H_t/exec";
 const USE_MOCK = false; // ganti false setelah deploy
 
 /* ═══════════════════════════════════════════
@@ -110,13 +110,17 @@ async function loadTahun() {
 
 async function doTandaiLunas(seller, jumlah, tahun) {
   if (USE_MOCK) {
-    let count = 0;
-    for (let r of MOCK_RESI) {
-      if (r.seller === seller && r.status === "BELUM" && count < jumlah) {
-        r.status = "LUNAS"; count++;
-      }
+    const belum = MOCK_RESI
+      .filter(r => r.seller===seller && r.status==="BELUM")
+      .sort((a,b) => new Date(a.tanggal)-new Date(b.tanggal));
+    let sisa=jumlah, resiCount=0, qtyDilunasi=0;
+    for (const r of belum) {
+      if (sisa<=0) break;
+      const qty = r.qty||1;
+      if (qty<=sisa) { r.status="LUNAS"; sisa-=qty; resiCount++; qtyDilunasi+=qty; }
+      else break;
     }
-    return { status: "ok", updated: count };
+    return { status:"ok", updated:resiCount, qty_dilunasi:qtyDilunasi, sisa_kurang:sisa>0?sisa:0 };
   }
   return apiTandaiLunas(seller, jumlah, tahun);
 }
