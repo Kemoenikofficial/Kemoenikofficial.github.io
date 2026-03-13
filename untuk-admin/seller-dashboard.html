@@ -3,81 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>Seller Dashboard — KEMOENIK</title>
+<title>Seller View — KEMOENIK Admin</title>
 <link rel="stylesheet" href="style.css"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-/* ── LOGIN SCREEN ── */
-.login-screen {
-  min-height:100vh;
-  background:linear-gradient(160deg, #1F4D3A 0%, #163628 50%, #0f2a1f 100%);
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  padding:24px;
-  position:relative; overflow:hidden;
-}
-.login-screen::before {
-  content:'';
-  position:absolute; top:-60px; right:-60px;
-  width:220px; height:220px; border-radius:50%;
-  background:rgba(200,169,106,.08);
-}
-.login-screen::after {
-  content:'';
-  position:absolute; bottom:-40px; left:-40px;
-  width:160px; height:160px; border-radius:50%;
-  background:rgba(255,255,255,.04);
-}
-.login-box {
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(20px);
-  border:1px solid rgba(200,169,106,.25);
-  border-radius:24px;
-  padding:36px 28px;
-  width:100%; max-width:380px;
-  position:relative; z-index:1;
-}
-.login-brand { text-align:center; margin-bottom:28px; }
-.login-brand .logo { font-size:28px; font-weight:800; color:#fff; letter-spacing:.5px; }
-.login-brand .logo span { color:#C8A96A; }
-.login-brand .sub { font-size:11px; color:rgba(255,255,255,.4); margin-top:4px; letter-spacing:.1em; text-transform:uppercase; }
-.login-field { margin-bottom:14px; }
-.login-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:rgba(255,255,255,.5); display:block; margin-bottom:6px; }
-.login-input {
-  width:100%; padding:13px 15px;
-  background:rgba(255,255,255,.08);
-  border:1.5px solid rgba(255,255,255,.15);
-  border-radius:12px;
-  font-family:'Plus Jakarta Sans',sans-serif; font-size:14px;
-  color:#fff; outline:none;
-  transition:border-color .2s;
-}
-.login-input::placeholder { color:rgba(255,255,255,.3); }
-.login-input:focus { border-color:#C8A96A; background:rgba(255,255,255,.1); }
-.login-btn {
-  width:100%; padding:14px;
-  background:linear-gradient(135deg,#A8843F,#C8A96A);
-  border:none; border-radius:12px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:15px; font-weight:700; color:#fff;
-  cursor:pointer; margin-top:6px;
-  transition:all .2s;
-  box-shadow:0 6px 20px rgba(200,169,106,.3);
-}
-.login-btn:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(200,169,106,.4); }
-.login-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
-.login-err { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); border-radius:10px; padding:10px 13px; font-size:12px; color:#fca5a5; text-align:center; margin-top:10px; display:none; }
-
-/* ── DASHBOARD ── */
-.dash-screen { display:none; min-height:100vh; background:var(--bg); }
-.dash-screen.show { display:block; }
-
-/* TOP HEADER */
-.mob-header {
-  background:linear-gradient(135deg,#166534,#16a34a);
-  padding:20px 16px 52px;
-  position:relative; overflow:hidden;
-}
+body { background:var(--bg); }
+.mob-header { background:linear-gradient(135deg,#166534,#16a34a); padding:20px 16px 52px; position:relative; overflow:hidden; }
 .mob-header::before { content:''; position:absolute; top:-30px; right:-30px; width:140px; height:140px; border-radius:50%; background:rgba(255,255,255,.07); }
 .mob-header::after  { content:''; position:absolute; bottom:-20px; left:-20px; width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,.05); }
 .mob-header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; position:relative; z-index:1; }
@@ -88,11 +19,7 @@
 .mob-icon-btn { width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,.15); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:15px; }
 .mob-header-name { color:rgba(255,255,255,.75); font-size:13px; margin-bottom:4px; position:relative; z-index:1; }
 .mob-seller-name { color:#fff; font-size:22px; font-weight:800; letter-spacing:-.02em; position:relative; z-index:1; }
-
-/* CONTENT */
 .mob-content { margin-top:-36px; padding:0 12px 100px; position:relative; z-index:1; }
-
-/* STAT CARDS */
 .mob-stat-wide { background:var(--bg-card); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin-bottom:12px; border:1px solid var(--border-light); display:flex; align-items:center; justify-content:space-between; }
 .mob-stat-wide .wlabel { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); }
 .mob-stat-wide .wvalue { font-size:20px; font-weight:800; color:var(--text-primary); }
@@ -104,443 +31,242 @@
 .mob-stat-sub { font-size:10px; color:var(--text-muted); margin-top:3px; }
 .mob-stat.lunas .mob-stat-value { color:var(--green-600); }
 .mob-stat.belum .mob-stat-value { color:#d97706; }
-
-/* SECTION */
 .mob-section { background:var(--bg-card); border-radius:var(--radius); padding:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); border:1px solid var(--border-light); }
 .mob-section canvas { height:160px !important; }
-
-/* RESI LIST */
 .resi-item { display:flex; align-items:center; padding:12px 0; border-top:1px solid var(--border-light); gap:12px; }
 .resi-item:first-of-type { border-top:none; }
 .resi-date-badge { width:40px; height:40px; border-radius:10px; background:var(--green-50); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; font-size:10px; font-weight:700; color:var(--green-700); line-height:1.2; }
-[data-theme="dark"] .resi-date-badge { background:rgba(22,163,74,.15); }
 .resi-info { flex:1; min-width:0; }
 .resi-number { font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .resi-meta { font-size:11px; color:var(--text-muted); margin-top:2px; }
-
-/* FILTER */
 .mob-filter { display:flex; gap:8px; margin-bottom:12px; }
-.mob-filter .input, .mob-filter .select { font-size:13px; padding:9px 12px; }
-
-/* TABS */
-.section-tabs { display:flex; gap:6px; margin-bottom:14px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.section-tabs { display:flex; gap:6px; margin-bottom:14px; overflow-x:auto; scrollbar-width:none; }
 .section-tabs::-webkit-scrollbar { display:none; }
 .tab-pill { flex-shrink:0; padding:6px 14px; border-radius:99px; font-size:12px; font-weight:600; cursor:pointer; border:1.5px solid var(--border); background:var(--bg-card); color:var(--text-muted); transition:all .15s; }
 .tab-pill.active { background:var(--green-600); border-color:var(--green-600); color:#fff; }
-
-/* YEAR SELECT */
+.seller-selector { background:var(--bg-card); border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; box-shadow:var(--shadow-sm); border:1px solid var(--border-light); }
+.seller-selector label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); display:block; margin-bottom:8px; }
 .year-bar { display:flex; align-items:center; gap:8px; background:var(--bg-card); border-radius:var(--radius); padding:10px 14px; margin-bottom:12px; border:1px solid var(--border-light); }
 .year-bar label { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; white-space:nowrap; }
-.year-bar .select { margin-bottom:0; }
-
-/* EMPTY */
 .mob-empty { text-align:center; padding:32px 16px; color:var(--text-muted); }
 .mob-empty .icon { font-size:36px; margin-bottom:8px; }
-
-/* BOTTOM NAV */
 .mob-bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--bg-card); border-top:1px solid var(--border); display:flex; padding:8px 0 max(8px,env(safe-area-inset-bottom)); z-index:100; }
-.mob-nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; color:var(--text-muted); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:4px 0; }
+.mob-nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; color:var(--text-muted); font-size:10px; font-weight:600; text-transform:uppercase; padding:4px 0; }
 .mob-nav-item.active { color:var(--green-600); }
 .mob-nav-item .nav-icon { font-size:20px; }
-
-/* LOADING */
 .mob-loading { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; }
-[data-theme="dark"] .mob-loading { background:#0d1b0d; }
-.mob-loading .logo { font-size:40px; margin-bottom:16px; }
 .mob-loading p { color:var(--text-muted); font-size:13px; margin-top:12px; }
+.admin-badge { background:rgba(31,77,58,.1); border:1px solid rgba(31,77,58,.2); border-radius:99px; padding:3px 10px; font-size:10px; font-weight:700; color:#1F4D3A; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <div class="login-brand">
-      <div class="logo">KEMO<span>ENIK</span></div>
-      <div class="sub">Seller Dashboard</div>
-    </div>
-    <div class="login-field">
-      <label class="login-label">Nama Seller</label>
-      <input type="text" class="login-input" id="loginNama" placeholder="Masukkan nama seller…" autocomplete="username"/>
-    </div>
-    <div class="login-field">
-      <label class="login-label">Password</label>
-      <input type="password" class="login-input" id="loginPass" placeholder="Masukkan password…" autocomplete="current-password"
-        onkeydown="if(event.key==='Enter')doLogin()"/>
-    </div>
-    <button class="login-btn" id="loginBtn" onclick="doLogin()">Masuk</button>
-    <div class="login-err" id="loginErr"></div>
-  </div>
+<!-- LOADING -->
+<div class="mob-loading" id="loadingScreen" style="display:none">
+  <div style="font-size:40px;margin-bottom:16px">📦</div>
+  <div class="spinner" style="width:28px;height:28px;border-width:3px"></div>
+  <p id="loadingText">Memuat data…</p>
 </div>
 
-<!-- DASHBOARD SCREEN -->
-<div class="dash-screen" id="dashScreen">
-
-  <!-- LOADING -->
-  <div class="mob-loading" id="loadingScreen" style="display:none">
-    <div class="logo">📦</div>
-    <div class="spinner" style="width:28px;height:28px;border-width:3px"></div>
-    <p id="loadingText">Memuat data…</p>
-  </div>
-
-  <!-- HEADER -->
-  <div class="mob-header">
-    <div class="mob-header-top">
-      <div class="mob-header-logo">
-        <div class="mob-logo-icon">📦</div>
-        <span class="mob-logo-text">ScanResi</span>
-      </div>
-      <div class="mob-header-actions">
-        <button class="mob-icon-btn" id="darkModeToggle">🌙</button>
-        <button class="mob-icon-btn" onclick="manualRefresh()">🔄</button>
-        <button class="mob-icon-btn" onclick="doLogout()">🚪</button>
-      </div>
+<!-- HEADER -->
+<div class="mob-header">
+  <div class="mob-header-top">
+    <div class="mob-header-logo">
+      <div class="mob-logo-icon">📦</div>
+      <span class="mob-logo-text">ScanResi</span>
     </div>
-    <div class="mob-header-name">Selamat datang,</div>
-    <div class="mob-seller-name" id="hdrName">—</div>
-  </div>
-
-  <!-- CONTENT -->
-  <div class="mob-content">
-
-    <!-- YEAR SELECTOR -->
-    <div class="year-bar">
-      <label>Tahun</label>
-      <select class="select" id="yearSel" onchange="onYearChange(this.value)" style="margin-bottom:0"></select>
-    </div>
-
-    <!-- WIDE STAT -->
-    <div class="mob-stat-wide">
-      <div>
-        <div class="wlabel">Total Penjualan</div>
-        <div class="wvalue" id="wTotalPenjualan">Rp —</div>
-        <div class="wsub" id="wResiCount">— resi total</div>
-      </div>
-      <div style="font-size:36px">💰</div>
-    </div>
-
-    <!-- STAT GRID -->
-    <div class="mob-stats">
-      <div class="mob-stat lunas">
-        <div class="mob-stat-label">Total Resi</div>
-        <div class="mob-stat-value" id="mTotalResi">—</div>
-        <div class="mob-stat-sub">semua transaksi</div>
-      </div>
-      <div class="mob-stat belum">
-        <div class="mob-stat-label">Belum Bayar</div>
-        <div class="mob-stat-value" id="mBelumCount">—</div>
-        <div class="mob-stat-sub" id="mBelumNominal">Rp —</div>
-      </div>
-      <div class="mob-stat lunas">
-        <div class="mob-stat-label">Sudah Lunas</div>
-        <div class="mob-stat-value" id="mLunasCount">—</div>
-        <div class="mob-stat-sub" id="mLunasNominal">Rp —</div>
-      </div>
-      <div class="mob-stat">
-        <div class="mob-stat-label">Hari Ini</div>
-        <div class="mob-stat-value" id="mHariIni">—</div>
-        <div class="mob-stat-sub">resi baru</div>
-      </div>
-    </div>
-
-    <!-- CHART -->
-    <div class="mob-section">
-      <div class="section-title">Penjualan 7 Hari Terakhir</div>
-      <canvas id="chartHarian"></canvas>
-    </div>
-
-    <!-- RESI LIST -->
-    <div class="mob-section">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div class="section-title" style="margin-bottom:0">Data Resi</div>
-        <button class="btn btn-outline btn-sm" onclick="doExport()">📥 Export</button>
-      </div>
-
-      <div class="section-tabs">
-        <div class="tab-pill active" onclick="setTab('semua',this)">Semua</div>
-        <div class="tab-pill" onclick="setTab('LUNAS',this)">LUNAS</div>
-        <div class="tab-pill" onclick="setTab('BELUM',this)">BELUM</div>
-      </div>
-
-      <div class="mob-filter">
-        <div style="position:relative;flex:1">
-          <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px">🔍</span>
-          <input type="text" class="input" id="resiSearch" placeholder="Cari nomor resi…" oninput="renderResiList()" style="padding-left:30px"/>
-        </div>
-      </div>
-
-      <div id="resiListContainer">
-        <div class="mob-empty"><div class="icon">📭</div><p>Memuat data…</p></div>
-      </div>
-      <div id="mobPagination" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px"></div>
-    </div>
-
-  </div><!-- /mob-content -->
-
-  <!-- BOTTOM NAV -->
-  <nav class="mob-bottom-nav">
-    <div class="mob-nav-item active">
-      <div class="nav-icon">📊</div><span>Dashboard</span>
-    </div>
-    <div class="mob-nav-item" onclick="setTab('BELUM',document.querySelector('.tab-pill:nth-child(3)'));document.querySelector('.tab-pill:nth-child(3)').click()">
-      <div class="nav-icon">⏳</div><span>Belum</span>
-    </div>
-    <div class="mob-nav-item" onclick="doExport()">
-      <div class="nav-icon">📥</div><span>Export</span>
-    </div>
-  </nav>
-
-</div><!-- /dash-screen -->
-
-<!-- LOGOUT MODAL -->
-<div class="modal-overlay" id="modalLogout">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <h3 style="font-size:17px;font-weight:700;margin-bottom:8px;color:var(--text-primary)">Keluar?</h3>
-    <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">Kamu akan keluar dari dashboard seller.</p>
-    <div style="display:flex;gap:10px">
-      <button class="btn btn-outline w-full" onclick="closeModal('modalLogout')">Batal</button>
-      <button class="btn btn-primary w-full" onclick="confirmLogout()">Keluar</button>
+    <div class="mob-header-actions">
+      <span class="admin-badge">Admin View</span>
+      <button class="mob-icon-btn" id="darkModeToggle">🌙</button>
+      <button class="mob-icon-btn" onclick="manualRefresh()">🔄</button>
+      <button class="mob-icon-btn" onclick="window.location='admin-dashboard.html'" title="Kembali ke Admin">🖥️</button>
     </div>
   </div>
+  <div class="mob-header-name">Melihat data seller:</div>
+  <div class="mob-seller-name" id="hdrName">— Pilih Seller —</div>
 </div>
+
+<!-- CONTENT -->
+<div class="mob-content">
+
+  <div class="seller-selector">
+    <label>Pilih Seller</label>
+    <select class="select" id="sellerSelect" onchange="onSellerChange(this.value)">
+      <option value="">Memuat seller…</option>
+    </select>
+  </div>
+
+  <div class="year-bar">
+    <label>Tahun</label>
+    <select class="select" id="yearSel" onchange="onYearChange(this.value)" style="margin-bottom:0"></select>
+  </div>
+
+  <div class="mob-stat-wide">
+    <div>
+      <div class="wlabel">Total Penjualan</div>
+      <div class="wvalue" id="wTotalPenjualan">Rp —</div>
+      <div class="wsub" id="wResiCount">— resi total</div>
+    </div>
+    <div style="font-size:36px">💰</div>
+  </div>
+
+  <div class="mob-stats">
+    <div class="mob-stat lunas">
+      <div class="mob-stat-label">Total Resi</div>
+      <div class="mob-stat-value" id="mTotalResi">—</div>
+      <div class="mob-stat-sub">semua transaksi</div>
+    </div>
+    <div class="mob-stat belum">
+      <div class="mob-stat-label">Belum Bayar</div>
+      <div class="mob-stat-value" id="mBelumCount">—</div>
+      <div class="mob-stat-sub" id="mBelumNominal">Rp —</div>
+    </div>
+    <div class="mob-stat lunas">
+      <div class="mob-stat-label">Sudah Lunas</div>
+      <div class="mob-stat-value" id="mLunasCount">—</div>
+      <div class="mob-stat-sub" id="mLunasNominal">Rp —</div>
+    </div>
+    <div class="mob-stat">
+      <div class="mob-stat-label">Hari Ini</div>
+      <div class="mob-stat-value" id="mHariIni">—</div>
+      <div class="mob-stat-sub">resi baru</div>
+    </div>
+  </div>
+
+  <div class="mob-section">
+    <div class="section-title">Penjualan 7 Hari Terakhir</div>
+    <canvas id="chartHarian"></canvas>
+  </div>
+
+  <div class="mob-section">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="section-title" style="margin-bottom:0">Data Resi</div>
+      <button class="btn btn-outline btn-sm" onclick="doExport()">📥 Export</button>
+    </div>
+    <div class="section-tabs">
+      <div class="tab-pill active" onclick="setTab('semua',this)">Semua</div>
+      <div class="tab-pill" onclick="setTab('LUNAS',this)">LUNAS</div>
+      <div class="tab-pill" onclick="setTab('BELUM',this)">BELUM</div>
+    </div>
+    <div class="mob-filter">
+      <div style="position:relative;flex:1">
+        <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px">🔍</span>
+        <input type="text" class="input" id="resiSearch" placeholder="Cari nomor resi…" oninput="renderResiList()" style="padding-left:30px"/>
+      </div>
+    </div>
+    <div id="resiListContainer">
+      <div class="mob-empty"><div class="icon">👆</div><p>Pilih seller untuk melihat data</p></div>
+    </div>
+    <div id="mobPagination" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px"></div>
+  </div>
+
+</div>
+
+<nav class="mob-bottom-nav">
+  <div class="mob-nav-item active"><div class="nav-icon">📊</div><span>Dashboard</span></div>
+  <div class="mob-nav-item" onclick="window.location='admin-dashboard.html'"><div class="nav-icon">🖥️</div><span>Admin</span></div>
+  <div class="mob-nav-item" onclick="doExport()"><div class="nav-icon">📥</div><span>Export</span></div>
+</nav>
 
 <script src="api.js"></script>
 <script src="dashboard.js"></script>
 <script>
-/* ═══ CONST ═══ */
-const SESS = "kemoenik_seller_v2";
+let currentSeller="", currentYear="", sellerResi=[], activeTab="semua", mobPaginator;
+const MOB_PAGE=10;
 
-/* ═══ STATE ═══ */
-let currentSeller = "";
-let sellerResi    = [];
-let activeTab     = "semua";
-let mobPaginator;
-let currentYear   = "";
-const MOB_PAGE   = 10;
-
-/* ═══ BOOT ═══ */
-function boot() {
+async function init() {
   initDarkMode();
-  const saved = sessionStorage.getItem(SESS);
-  if (saved) {
-    try {
-      const { seller, year } = JSON.parse(saved);
-      currentSeller = seller;
-      currentYear   = year || "";
-      showDash(seller);
-    } catch(e) { sessionStorage.removeItem(SESS); }
-  }
-}
-
-/* ═══ LOGIN ═══ */
-async function doLogin() {
-  const nama = document.getElementById("loginNama").value.trim();
-  const pass = document.getElementById("loginPass").value.trim();
-  const errEl = document.getElementById("loginErr");
-  const btn   = document.getElementById("loginBtn");
-  if (!nama || !pass) { showErrLogin("Isi nama seller dan password dulu"); return; }
-  btn.disabled = true;
-  btn.textContent = "Memeriksa…";
-  errEl.style.display = "none";
   try {
-    const res = await apiLogin(nama, pass);
-    if (res.status === "ok") {
-      currentSeller = res.seller;
-      sessionStorage.setItem(SESS, JSON.stringify({ seller: res.seller, year: currentYear }));
-      showDash(res.seller);
-    } else {
-      showErrLogin(res.pesan || "Nama seller atau password salah");
-    }
-  } catch(e) {
-    showErrLogin("Gagal koneksi. Coba lagi.");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Masuk";
-  }
-}
-
-function showErrLogin(msg) {
-  const el = document.getElementById("loginErr");
-  el.textContent = msg;
-  el.style.display = "block";
-}
-
-/* ═══ SHOW DASHBOARD ═══ */
-async function showDash(seller) {
-  document.getElementById("loginScreen").style.display = "none";
-  document.getElementById("dashScreen").classList.add("show");
-  document.getElementById("hdrName").textContent = seller;
-  document.getElementById("loadingScreen").style.display = "flex";
-  document.getElementById("loadingText").textContent = "Memuat data " + seller + "…";
-
-  try {
-    // Load tahun list
-    const tahunList = await apiGetTahun();
+    const [sellers, tahunList] = await Promise.all([loadSellers(), loadTahun()]);
+    const sel = document.getElementById("sellerSelect");
+    sel.innerHTML = '<option value="">— Pilih Seller —</option>' +
+      sellers.map(s=>{ const n=typeof s==="string"?s:s.nama; return `<option value="${n}">${n}</option>`; }).join("");
     const ySel = document.getElementById("yearSel");
-    ySel.innerHTML = tahunList.map(t => `<option value="${t}">${t}</option>`).join("");
-    if (!currentYear || !tahunList.includes(currentYear)) currentYear = tahunList[0] || "";
-    ySel.value = currentYear;
-
-    // Load resi
-    sellerResi = await apiGetResi(seller, currentYear);
-    renderStats();
-    renderChart();
-    renderResiList();
-  } catch(e) {
-    showToast("Gagal memuat data","error");
-  } finally {
-    document.getElementById("loadingScreen").style.display = "none";
-  }
+    ySel.innerHTML = tahunList.map(t=>`<option value="${t}">${t}</option>`).join("");
+    currentYear = tahunList[0]||"2026";
+    // Auto-select dari URL param: seller-dashboard.html?seller=NAMANYA
+    const param = new URLSearchParams(window.location.search).get("seller");
+    if (param) { sel.value=param; await onSellerChange(param); }
+  } catch(e) { showToast("Gagal memuat data awal","error"); }
 }
 
-/* ═══ YEAR CHANGE ═══ */
-async function onYearChange(year) {
-  currentYear = year;
-  sessionStorage.setItem(SESS, JSON.stringify({ seller: currentSeller, year: currentYear }));
-  document.getElementById("loadingScreen").style.display = "flex";
-  document.getElementById("loadingText").textContent = "Memuat data " + currentYear + "…";
+async function onSellerChange(seller) {
+  if (!seller) return;
+  currentSeller=seller;
+  document.getElementById("hdrName").textContent=seller;
+  document.getElementById("loadingScreen").style.display="flex";
+  document.getElementById("loadingText").textContent="Memuat data "+seller+"…";
   try {
-    sellerResi = await apiGetResi(currentSeller, currentYear);
+    sellerResi = await loadResi({ seller:currentSeller, tahun:currentYear });
     renderStats(); renderChart(); renderResiList();
-  } catch(e) { showToast("Gagal ganti tahun","error"); }
-  finally { document.getElementById("loadingScreen").style.display = "none"; }
+  } catch(e) { showToast("Gagal memuat data","error"); }
+  finally { document.getElementById("loadingScreen").style.display="none"; }
 }
 
-/* ═══ SILENT REFRESH ═══ */
+async function onYearChange(year) {
+  currentYear=year;
+  if (currentSeller) await onSellerChange(currentSeller);
+}
+
 async function silentRefresh() {
   if (!currentSeller) return;
   try {
-    const newData = await apiGetResi(currentSeller, currentYear);
-    if (JSON.stringify(sellerResi) !== JSON.stringify(newData)) {
-      sellerResi = newData;
-      renderStats(); renderChart(); renderResiList();
+    const newData = await loadResi({ seller:currentSeller, tahun:currentYear });
+    if (JSON.stringify(sellerResi)!==JSON.stringify(newData)) {
+      sellerResi=newData; renderStats(); renderChart(); renderResiList();
     }
-  } catch(e) { /* diam */ }
+  } catch(e) {}
 }
 
-async function manualRefresh() {
-  await silentRefresh();
-  showToast("Data diperbarui");
-}
+async function manualRefresh() { await silentRefresh(); showToast("Data diperbarui"); }
 
-/* ═══ STATS ═══ */
 function renderStats() {
-  const data    = sellerResi;
-  const lunas   = data.filter(r => r.status === "LUNAS");
-  const belum   = data.filter(r => r.status === "BELUM");
-  const today   = new Date().toISOString().slice(0,10);
-  const hariIni = data.filter(r => r.tanggal?.slice(0,10) === today).length;
-  const totalP  = data.reduce((s,r)=>s+(r.total||0),0);
-
-  document.getElementById("wTotalPenjualan").textContent  = formatRupiah(totalP);
-  document.getElementById("wResiCount").textContent       = data.length + " resi total";
-  document.getElementById("mTotalResi").textContent       = data.length;
-  document.getElementById("mLunasCount").textContent      = lunas.length;
-  document.getElementById("mLunasNominal").textContent    = formatRupiah(lunas.reduce((s,r)=>s+(r.total||0),0));
-  document.getElementById("mBelumCount").textContent      = belum.length;
-  document.getElementById("mBelumNominal").textContent    = formatRupiah(belum.reduce((s,r)=>s+(r.total||0),0));
-  document.getElementById("mHariIni").textContent         = hariIni;
+  const lunas=sellerResi.filter(r=>r.status==="LUNAS");
+  const belum=sellerResi.filter(r=>r.status==="BELUM");
+  const today=new Date().toISOString().slice(0,10);
+  const totalP=sellerResi.reduce((s,r)=>s+(r.total||0),0);
+  document.getElementById("wTotalPenjualan").textContent=formatRupiah(totalP);
+  document.getElementById("wResiCount").textContent=sellerResi.length+" resi total";
+  document.getElementById("mTotalResi").textContent=sellerResi.length;
+  document.getElementById("mLunasCount").textContent=lunas.length;
+  document.getElementById("mLunasNominal").textContent=formatRupiah(lunas.reduce((s,r)=>s+(r.total||0),0));
+  document.getElementById("mBelumCount").textContent=belum.length;
+  document.getElementById("mBelumNominal").textContent=formatRupiah(belum.reduce((s,r)=>s+(r.total||0),0));
+  document.getElementById("mHariIni").textContent=sellerResi.filter(r=>r.tanggal?.slice(0,10)===today).length;
 }
 
-/* ═══ CHART ═══ */
 function renderChart() {
-  const harian = computeHarian(sellerResi, 7);
-  const grad   = document.getElementById("chartHarian")?.getContext("2d")?.createLinearGradient(0,0,0,160);
-  if (grad) { grad.addColorStop(0,"rgba(22,163,74,.3)"); grad.addColorStop(1,"rgba(22,163,74,0)"); }
-  makeLineChart("chartHarian",
-    harian.map(h=>h.label),
-    [{ label:"Penjualan", data:harian.map(h=>h.total),
-       borderColor:"#16a34a", backgroundColor:grad||"rgba(22,163,74,.15)",
-       fill:true, tension:.4,
-       pointBackgroundColor:"#fff", pointBorderColor:"#16a34a", pointBorderWidth:2, pointRadius:4 }]
-  );
+  const harian=computePenjualanHarian(sellerResi,7);
+  const grad=document.getElementById("chartHarian")?.getContext("2d")?.createLinearGradient(0,0,0,160);
+  if(grad){grad.addColorStop(0,"rgba(22,163,74,.3)");grad.addColorStop(1,"rgba(22,163,74,0)");}
+  makeLineChart("chartHarian",harian.map(h=>h.label),[{label:"Penjualan",data:harian.map(h=>h.total),borderColor:"#16a34a",backgroundColor:grad||"rgba(22,163,74,.15)",fill:true,tension:.4,pointBackgroundColor:"#fff",pointBorderColor:"#16a34a",pointBorderWidth:2,pointRadius:4}]);
 }
 
-/* ═══ RESI LIST ═══ */
-function setTab(tab, el) {
-  activeTab = tab;
-  document.querySelectorAll(".tab-pill").forEach(t=>t.classList.remove("active"));
-  if (el) el.classList.add("active");
-  renderResiList();
+function setTab(tab,el){activeTab=tab;document.querySelectorAll(".tab-pill").forEach(t=>t.classList.remove("active"));if(el)el.classList.add("active");renderResiList();}
+
+function renderResiList(){
+  const search=document.getElementById("resiSearch").value.toLowerCase();
+  let data=sellerResi;
+  if(activeTab!=="semua")data=data.filter(r=>r.status===activeTab);
+  if(search)data=data.filter(r=>r.nomor_resi?.toLowerCase().includes(search)||r.produk?.toLowerCase().includes(search));
+  mobPaginator=new Paginator(data,MOB_PAGE); renderResiPage();
 }
 
-function renderResiList() {
-  const search = document.getElementById("resiSearch").value.toLowerCase();
-  let data = sellerResi;
-  if (activeTab !== "semua") data = data.filter(r=>r.status===activeTab);
-  if (search) data = data.filter(r=>
-    r.nomor_resi?.toLowerCase().includes(search) ||
-    r.produk?.toLowerCase().includes(search)
-  );
-  mobPaginator = new Paginator(data, MOB_PAGE);
-  renderResiPage();
+function renderResiPage(){
+  const data=mobPaginator.currentData;
+  const cont=document.getElementById("resiListContainer");
+  if(!data.length){cont.innerHTML=`<div class="mob-empty"><div class="icon">📭</div><p>Tidak ada data</p></div>`;document.getElementById("mobPagination").innerHTML="";return;}
+  cont.innerHTML=data.map(r=>{const d=new Date(r.tanggal);const day=isNaN(d)?"":d.getDate();const mon=isNaN(d)?"":d.toLocaleDateString("id-ID",{month:"short"});return`<div class="resi-item"><div class="resi-date-badge"><div>${day}</div><div>${mon}</div></div><div class="resi-info"><div class="resi-number">${r.nomor_resi}</div><div class="resi-meta">${r.produk} · ${formatRupiah(r.total||r.harga)}</div></div><span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span></div>`;}).join("");
+  const total=mobPaginator.totalPages,cur=mobPaginator.currentPage,pag=document.getElementById("mobPagination");
+  if(total<=1){pag.innerHTML="";return;}
+  pag.innerHTML=`<button class="page-btn" onclick="mobGoPage(${cur-1})" ${cur===1?"disabled":""}>‹</button><span style="font-size:12px;color:var(--text-muted);padding:0 8px">${cur}/${total}</span><button class="page-btn" onclick="mobGoPage(${cur+1})" ${cur===total?"disabled":""}>›</button>`;
 }
 
-function renderResiPage() {
-  const data = mobPaginator.currentData;
-  const container = document.getElementById("resiListContainer");
-  if (!data.length) {
-    container.innerHTML = `<div class="mob-empty"><div class="icon">📭</div><p>Tidak ada data</p></div>`;
-    document.getElementById("mobPagination").innerHTML = "";
-    return;
-  }
-  container.innerHTML = data.map(r => {
-    const d   = new Date(r.tanggal);
-    const day = isNaN(d) ? "" : d.getDate();
-    const mon = isNaN(d) ? "" : d.toLocaleDateString("id-ID",{month:"short"});
-    return `
-      <div class="resi-item">
-        <div class="resi-date-badge"><div>${day}</div><div>${mon}</div></div>
-        <div class="resi-info">
-          <div class="resi-number">${r.nomor_resi}</div>
-          <div class="resi-meta">${r.produk} · ${formatRupiah(r.total||r.harga)}</div>
-        </div>
-        <span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span>
-      </div>`;
-  }).join("");
+function mobGoPage(p){mobPaginator.setPage(p);renderResiPage();window.scrollTo({top:400,behavior:"smooth"});}
+function doExport(){if(!sellerResi.length){showToast("Tidak ada data","warn");return;}exportToCSV(sellerResi,`${currentSeller}-${currentYear}.csv`);showToast("Export berhasil");}
 
-  const total = mobPaginator.totalPages;
-  const cur   = mobPaginator.currentPage;
-  const pag   = document.getElementById("mobPagination");
-  if (total <= 1) { pag.innerHTML = ""; return; }
-  pag.innerHTML = `
-    <button class="page-btn" onclick="mobGoPage(${cur-1})" ${cur===1?"disabled":""}>‹</button>
-    <span style="font-size:12px;color:var(--text-muted);padding:0 8px">${cur} / ${total}</span>
-    <button class="page-btn" onclick="mobGoPage(${cur+1})" ${cur===total?"disabled":""}>›</button>
-  `;
-}
-
-function mobGoPage(p) {
-  mobPaginator.setPage(p);
-  renderResiPage();
-  window.scrollTo({ top:400, behavior:"smooth" });
-}
-
-/* ═══ EXPORT ═══ */
-function doExport() {
-  if (!sellerResi.length) { showToast("Tidak ada data","warn"); return; }
-  exportToCSV(sellerResi, `${currentSeller}-${currentYear}.csv`);
-  showToast("Export berhasil");
-}
-
-/* ═══ LOGOUT ═══ */
-function doLogout()     { openModal("modalLogout"); }
-function confirmLogout() {
-  closeModal("modalLogout");
-  sessionStorage.removeItem(SESS);
-  currentSeller = "";
-  sellerResi    = [];
-  document.getElementById("dashScreen").classList.remove("show");
-  document.getElementById("loginScreen").style.display = "flex";
-  document.getElementById("loginNama").value = "";
-  document.getElementById("loginPass").value = "";
-  document.getElementById("loginErr").style.display = "none";
-}
-
-/* ═══ START ═══ */
-boot();
-setInterval(silentRefresh, 5000);
+init();
+setInterval(silentRefresh,5000);
 </script>
 </body>
 </html>
