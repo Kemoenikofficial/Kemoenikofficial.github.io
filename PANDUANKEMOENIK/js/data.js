@@ -2,7 +2,7 @@
 // DATA STATIS UNTUK APLIKASI KEMOENIK
 // ============================================================
 
-// URL halaman aktivitas
+// URL halaman aktivasi (login/verifikasi voucher)
 const APP_URL = '/PANDUANKEMOENIK/aktivasi/index.html';
 
 // Data FAQ
@@ -58,19 +58,19 @@ const faqData = [
 // ============================================================
 const targetOlahragaData = {
   ringan: [
-    {hari:'Sen', aktivitas:'Jalan kaki 30 menit'},
-    {hari:'Sel', aktivitas:'Lymphatic 15 menit'},
-    {hari:'Rab', aktivitas:'Istirahat aktif — jalan santai'},
-    {hari:'Kam', aktivitas:'Jalan kaki 30 menit'},
-    {hari:'Jum', aktivitas:'Jumping jack 3 set'},
-    {hari:'Sab', aktivitas:'Jalan kaki 45 menit'},
+    {hari:'Sen', aktivitas:'Jalan kaki Santai Minimal 30 - 45 menit'},
+    {hari:'Sel', aktivitas:'Lymphatic Exercise Minimal 15 -20 menit (fokus pada gerakan tangan & pernapasan'},
+    {hari:'Rab', aktivitas:'Istirahat aktif — jalan santai (perengangan/streching sekitar 10 menit)'},
+    {hari:'Kam', aktivitas:'Jalan kaki Santai Minimal 30 - 45 menit'},
+    {hari:'Jum', aktivitas:'Jumping jack 3 set (masing-masing 1 menit + jalan kaki santai 15 menit'},
+    {hari:'Sab', aktivitas:'Jalan kaki santai 45 menit (durasi lebih panjang di akhir pekan)'},
     {hari:'Min', aktivitas:'Istirahat total'}
   ],
   standar: [
-    {hari:'Sen', aktivitas:'Jalan kaki 30 menit + Jumping jack 3 set'},
-    {hari:'Sel', aktivitas:'Lompat tali 10 menit + Lymphatic 10 menit'},
-    {hari:'Rab', aktivitas:'Jalan kaki 30 menit'},
-    {hari:'Kam', aktivitas:'Jumping jack 4 set + Lompat tali 10 menit'},
+    {hari:'Sen', aktivitas:'Jalan kaki santai 40 - 60 menit + Jumping jack 3 set (masing-masing 1 menit)'},
+    {hari:'Sel', aktivitas:'Lompat tali 10 menit + Lymphatic exercise 10 menit (sebagai pendingin)'},
+    {hari:'Rab', aktivitas:'Jalan kaki minimal 30 - 45 menit'},
+    {hari:'Kam', aktivitas:'Jumping jack 4 set (masing-masing 1 menit) + Lompat tali 10 menit'},
     {hari:'Jum', aktivitas:'Jalan kaki 45 menit + Lymphatic 15 menit'},
     {hari:'Sab', aktivitas:'Lompat tali 15 menit + Jumping jack 3 set'},
     {hari:'Min', aktivitas:'Istirahat — Lymphatic sebelum tidur'}
@@ -416,4 +416,32 @@ const tipsKontenData = [
       'Hindari makan berat atau kafein 2–3 jam sebelum tidur'
     ]
   }
+];
+
+// ========== DAILY CHALLENGE DATA ==========
+const challengeItems = [
+  { id: 'kapsul',    icon: '🌿', label: 'Minum kapsul KEMOENIK sesuai aturan' },
+  { id: 'air',       icon: '💧', label: 'Minum air minimal 2 liter hari ini' },
+  { id: 'olahraga',  icon: '💪', label: 'Olahraga sesuai jadwal hari ini' },
+  { id: 'gorengan',  icon: '🍽️', label: 'Tidak makan gorengan hari ini' },
+  { id: 'gula',      icon: '🍬', label: 'Mengurangi gula hari ini' },
+  { id: 'minuman',   icon: '🥤', label: 'Tidak minum minuman manis' }
+];
+
+const badgeConfig = [
+  { id: 'pemula',      icon: '🌱', label: 'Pemula Aktif',    desc: '1 hari penuh (6/6 challenge)' },
+  { id: 'rajinMinum',  icon: '💊', label: 'Rajin Minum',     desc: '7 hari berturut minum kapsul' },
+  { id: 'atletPemula', icon: '🏃', label: 'Atlet Pemula',    desc: '4 sesi olahraga minggu ini' },
+  { id: 'pejuangDiet', icon: '🥗', label: 'Pejuang Diet',    desc: 'Tidak gorengan 5 hari berturut' },
+  { id: 'konsisten',   icon: '🔥', label: 'Konsisten',       desc: '5 hari penuh berturut-turut' },
+  { id: 'juaraMinggu', icon: '🏆', label: 'Juara Minggu',    desc: 'Semua target minggu tercapai' },
+  { id: 'dietWarrior', icon: '👑', label: 'Diet Warrior',    desc: '4 minggu konsisten' }
+];
+
+const motivasiChallenge = [
+  'Luar biasa! Kamu sudah selangkah lebih dekat ke tubuh impianmu! 🎉',
+  'Yeay! Semua challenge hari ini selesai! KEMOENIK bangga sama kamu! 🥳',
+  'Perfect day! Konsistensimu hari ini akan terasa 2 minggu lagi! 💪',
+  'Challenge selesai! Kamu bukan cuma diet, kamu membangun kebiasaan sehat! 🌟',
+  'Wow, full challenge! Tidur nyenyak malam ini, besok lebih semangat lagi! 😴✨'
 ];
