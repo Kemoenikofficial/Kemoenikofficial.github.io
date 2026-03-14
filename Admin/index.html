@@ -941,6 +941,7 @@
                             <th>Tanggal Aktif</th>
                             <th>Tanggal Expired</th>
                             <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="searchResults">
@@ -1483,7 +1484,7 @@
             tbody.innerHTML = '';
             
             if (results.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Tidak ada hasil ditemukan</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">Tidak ada hasil ditemukan</td></tr>';
             } else {
                 results.forEach(v => {
                     const row = tbody.insertRow();
@@ -1492,6 +1493,7 @@
                         match => `<span class="highlight">${match}</span>`
                     );
                     const actualStatus = getActualStatus(v);
+                    const isActive = actualStatus.text === 'ACTIVE';
                     
                     row.innerHTML = `
                         <td><strong>${highlightedKode}</strong></td>
@@ -1500,7 +1502,15 @@
                         <td>${v.tanggalAktif || '-'}</td>
                         <td>${v.tanggalExpired || '-'}</td>
                         <td><span class="status-badge ${actualStatus.class}">${actualStatus.text}</span></td>
+                        <td></td>
                     `;
+                    if (isActive) {
+                        const btn = document.createElement('button');
+                        btn.textContent = '🔄 Reset Device';
+                        btn.style.cssText = 'background:#EEF2FF;color:#4F46E5;border:1px solid #C7D2FE;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;';
+                        btn.onclick = function() { resetDevice(v.kode); };
+                        row.cells[row.cells.length - 1].appendChild(btn);
+                    }
                 });
             }
             
