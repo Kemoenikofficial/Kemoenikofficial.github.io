@@ -1326,6 +1326,151 @@ function gantiOlahraga() {
 window.tundaOlahraga = tundaOlahraga;
 window.gantiOlahraga = gantiOlahraga;
 
+// ========== DAILY CHALLENGE HELPERS ==========
+function getChallengeKey() {
+  var d = new Date();
+  return 'kemoenik_challenge_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+function loadChallenge() {
+  var key = getChallengeKey();
+  var raw = localStorage.getItem(key);
+  if (raw) { try { return JSON.parse(raw); } catch(e) {} }
+  return { done: [false,false,false,false,false,false], startedAt: Date.now() };
+}
+function saveChallenge(data) {
+  localStorage.setItem(getChallengeKey(), JSON.stringify(data));
+}
+function toggleChallenge(idx) {
+  var data = loadChallenge();
+  data.done[idx] = !data.done[idx];
+  saveChallenge(data);
+  // Cek badge
+  checkBadges(data);
+  // Cek apakah semua selesai
+  var allDone = data.done.every(function(v){ return v; });
+  if (allDone) {
+    var msg = motivasiChallenge[Math.floor(Math.random()*motivasiChallenge.length)];
+    showChallengePopup(msg);
+  }
+  renderHomeJadwal();
+}
+function checkBadges(data) {
+  var badges = loadBadges();
+  var today = new Date();
+  // 1. Pemula Aktif — 1 hari penuh
+  if (data.done.every(function(v){return v;})) badges.pemula = true;
+  // 2. Rajin Minum — 7 hari berturut kapsul
+  var kapsulStreak = 0;
+  for (var i = 0; i < 7; i++) {
+    var d2 = new Date(today); d2.setDate(d2.getDate()-i);
+    var k2 = 'kemoenik_challenge_'+d2.getFullYear()+'-'+(d2.getMonth()+1)+'-'+d2.getDate();
+    var r2 = localStorage.getItem(k2);
+    if (r2) { try { var c2 = JSON.parse(r2); if (c2.done[0]) { kapsulStreak++; continue; } } catch(e) {} }
+    break;
+  }
+  if (kapsulStreak >= 7) badges.rajinMinum = true;
+  // 3. Pejuang Diet — tidak gorengan 5 hari berturut
+  var gorenganStreak = 0;
+  for (var j = 0; j < 5; j++) {
+    var d3 = new Date(today); d3.setDate(d3.getDate()-j);
+    var k3 = 'kemoenik_challenge_'+d3.getFullYear()+'-'+(d3.getMonth()+1)+'-'+d3.getDate();
+    var r3 = localStorage.getItem(k3);
+    if (r3) { try { var c3 = JSON.parse(r3); if (c3.done[3]) { gorenganStreak++; continue; } } catch(e) {} }
+    break;
+  }
+  if (gorenganStreak >= 5) badges.pejuangDiet = true;
+  // 4. Konsisten — 5 hari penuh berturut
+  var konsistenStreak = 0;
+  for (var k = 0; k < 5; k++) {
+    var d4 = new Date(today); d4.setDate(d4.getDate()-k);
+    var k4 = 'kemoenik_challenge_'+d4.getFullYear()+'-'+(d4.getMonth()+1)+'-'+d4.getDate();
+    var r4 = localStorage.getItem(k4);
+    if (r4) { try { var c4 = JSON.parse(r4); if (c4.done.every(function(v){return v;})) { konsistenStreak++; continue; } } catch(e) {} }
+    break;
+  }
+  if (konsistenStreak >= 5) badges.konsisten = true;
+  // Atlet Pemula — cek dari progress minggu olahraga
+  var prog = hitungProgressMinggu();
+  if (prog.terpenuhi >= 4) badges.atletPemula = true;
+  saveBadges(badges);
+}
+function loadBadges() {
+  var raw = localStorage.getItem('kemoenik_badges');
+  if (raw) { try { return JSON.parse(raw); } catch(e) {} }
+  return {};
+}
+function saveBadges(b) { localStorage.setItem('kemoenik_badges', JSON.stringify(b)); }
+function showChallengePopup(msg) {
+  var existing = document.getElementById('challengePopup');
+  if (existing) existing.remove();
+  var el = document.createElement('div');
+  el.id = 'challengePopup';
+  el.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;';
+  el.innerHTML = '<div style="background:white;border-radius:20px;padding:28px 24px;text-align:center;max-width:320px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">'
+    + '<div style="font-size:52px;margin-bottom:12px;">🎉</div>'
+    + '<div style="font-size:17px;font-weight:800;color:#1F4D3A;margin-bottom:8px;">Challenge Hari Ini Selesai!</div>'
+    + '<div style="font-size:13px;color:#6B7280;line-height:1.6;margin-bottom:20px;">'+msg+'</div>'
+    + '<button onclick="document.getElementById(\'challengePopup\').remove()" style="background:linear-gradient(135deg,#1F4D3A,#2D6A4F);color:white;border:none;border-radius:12px;padding:12px 32px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;">Yeay! 💪</button>'
+    + '</div>';
+  document.body.appendChild(el);
+}
+function renderChallengeSection(data) {
+  var doneCnt = data.done.filter(function(v){return v;}).length;
+  var pct = Math.round(doneCnt/6*100);
+  var badges = loadBadges();
+  var earnedBadges = badgeConfig.filter(function(b){ return badges[b.id]; });
+  var html = '';
+  // Header section
+  html += '<div style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);">';
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">';
+  html += '<div style="font-size:12px;font-weight:800;color:var(--text);letter-spacing:0.3px;">⚡ Challenge Harian</div>';
+  html += '<div style="font-size:11px;font-weight:700;color:'+(doneCnt===6?'#059669':'var(--green)')+';">'+doneCnt+'/6 selesai</div>';
+  html += '</div>';
+  // Progress bar challenge
+  html += '<div style="height:6px;background:#E5E7EB;border-radius:99px;margin-bottom:12px;overflow:hidden;">';
+  html += '<div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#1F4D3A,#34D399);border-radius:99px;transition:width 0.4s ease;"></div>';
+  html += '</div>';
+  // 6 checklist items
+  html += '<div style="display:flex;flex-direction:column;gap:6px;">';
+  for (var i = 0; i < challengeItems.length; i++) {
+    var item = challengeItems[i];
+    var isDone = data.done[i];
+    html += '<div onclick="toggleChallenge('+i+')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:'+(isDone?'#ECFDF5':'#F9FAFB')+';border:1.5px solid '+(isDone?'#6EE7B7':'#E5E7EB')+';border-radius:10px;cursor:pointer;transition:all 0.2s;">';
+    // Checkbox
+    html += '<div style="width:20px;height:20px;border-radius:6px;border:2px solid '+(isDone?'#059669':'#D1D5DB')+';background:'+(isDone?'#059669':'white')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;">';
+    if (isDone) html += '<svg width="11" height="11" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    html += '</div>';
+    // Icon + label
+    html += '<span style="font-size:14px;">'+item.icon+'</span>';
+    html += '<span style="font-size:12px;font-weight:'+(isDone?'600':'500')+';color:'+(isDone?'#065F46':'var(--text)')+';text-decoration:'+(isDone?'line-through':'none')+';flex:1;line-height:1.4;">'+item.label+'</span>';
+    html += '</div>';
+  }
+  html += '</div>';
+  // Badge display (jika ada)
+  if (earnedBadges.length > 0) {
+    html += '<div style="margin-top:12px;padding:10px 12px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;border-radius:10px;">';
+    html += '<div style="font-size:11px;font-weight:700;color:#92400E;margin-bottom:6px;">🏅 Badge Diperoleh</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+    for (var b = 0; b < earnedBadges.length; b++) {
+      var badge = earnedBadges[b];
+      html += '<div title="'+badge.desc+'" style="background:white;border:1px solid #FDE68A;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:600;color:#78350F;display:flex;align-items:center;gap:4px;">';
+      html += badge.icon + ' ' + badge.label;
+      html += '</div>';
+    }
+    html += '</div></div>';
+  }
+  // Pesan motivasi jika semua done
+  if (doneCnt === 6) {
+    html += '<div style="margin-top:10px;background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:10px 12px;text-align:center;">';
+    html += '<div style="font-size:13px;font-weight:700;color:#065F46;">✅ Semua challenge selesai!</div>';
+    html += '<div style="font-size:11px;color:#059669;margin-top:2px;">Kamu luar biasa hari ini! 🌟</div>';
+    html += '</div>';
+  }
+  html += '</div>'; // close section
+  return html;
+}
+window.toggleChallenge = toggleChallenge;
+
 // ========== MAIN: Render Home Jadwal ==========
 function renderHomeJadwal() {
   var el = document.getElementById('homeJadwalContent');
@@ -1402,10 +1547,17 @@ function renderHomeJadwal() {
       html += '</div>';
     }
 
-    // ---- 8. TOMBOL JADWAL LENGKAP ----
+    // ---- 8. DAILY CHALLENGE ----
+    var challengeData = loadChallenge();
+    html += renderChallengeSection(challengeData);
+
+    // ---- 9. TOMBOL JADWAL LENGKAP ----
+    html += '<div style="margin-top:14px;">';
+    html += '<button onclick="openPanel(\'\'panelJadwalOlahraga\'\')" style="width:100%;padding:10px;background:var(--green);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;">';
     html += '<button onclick="openPanel(\'panelJadwalOlahraga\')" style="width:100%;padding:10px;background:var(--green);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;">';
     html += '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
     html += 'Jadwal Lengkap Seminggu</button>';
+    html += '</div>';
 
     setSafeHTML(el, html);
   } catch(err) {
