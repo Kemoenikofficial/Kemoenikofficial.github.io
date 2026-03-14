@@ -910,6 +910,7 @@
                                         <th>Tanggal Aktif</th>
                                         <th>Tanggal Expired</th>
                                         <th>Status</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="recentTable">
@@ -958,7 +959,7 @@
         // ========================================================================
         // KONFIGURASI - GANTI URL INI DENGAN URL APPS SCRIPT ANDA
         // ========================================================================
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyLWP13TxK9vWbgcOjJh9dozqkTJ9VM_b6L-FcUQlmY19by3ylvgZAm9YgqfOlr-72J/exec';
         
         // ========================================================================
         // GLOBAL VARIABLES
@@ -1397,6 +1398,7 @@
             recentUsed.forEach(v => {
                 const row = tbody.insertRow();
                 const actualStatus = getActualStatus(v);
+                const isActive = actualStatus.text === 'ACTIVE';
                 
                 row.innerHTML = `
                     <td><strong>${v.kode}</strong></td>
@@ -1405,8 +1407,36 @@
                     <td>${v.tanggalAktif || '-'}</td>
                     <td>${v.tanggalExpired || '-'}</td>
                     <td><span class="status-badge ${actualStatus.class}">${actualStatus.text}</span></td>
+                    <td></td>
                 `;
+                if (isActive) {
+                    const btn = document.createElement('button');
+                    btn.textContent = '🔄 Reset Device';
+                    btn.style.cssText = 'background:#EEF2FF;color:#4F46E5;border:1px solid #C7D2FE;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;';
+                    btn.onclick = function() { resetDevice(v.kode); };
+                    row.cells[row.cells.length - 1].appendChild(btn);
+                }
             });
+        }
+
+        async function resetDevice(kode) {
+            if (!confirm('Reset device binding untuk voucher ' + kode + '? User perlu login ulang dari device manapun setelah ini.')) return;
+            try {
+                const res = await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'resetDevice', kode: kode })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    alert('✅ Device berhasil di-reset! User bisa login dari perangkat baru sekarang.');
+                    loadDashboardData();
+                } else {
+                    alert('❌ Gagal reset: ' + data.message);
+                }
+            } catch(err) {
+                alert('❌ Error: ' + err.message);
+            }
         }
 
         function getActualStatus(v) {
