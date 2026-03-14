@@ -1,1089 +1,1051 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KEMOENIK - Panduan Diet Personal</title>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7JZQXBQ57"></script>
+    <title>Verifikasi Kode Konsultasi - Kemoenik</title>
+    
+    <!-- Google Analytics (ganti G-XXXXXXXXXX dengan ID Anda) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-R7JZQXBQ57');
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-
-    <!-- ✅ KEAMANAN: Session Guard — harus dijalankan sebelum halaman dirender -->
-    <script>
-        (function() {
-            // Secret key — harus sama persis dengan yang ada di aktivitas.html
-            var SECRET_KEY = 'KMN_s3cr3t_2025_x9z';
-
-            // Hash sederhana — harus identik dengan fungsi di aktivitas.html
-            function hashSimple(str) {
-                var hash = 0;
-                for (var i = 0; i < str.length; i++) {
-                    var chr = str.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + chr;
-                    hash |= 0;
-                }
-                hash = hash ^ str.length ^ 0x4B4D4E;
-                return (hash >>> 0).toString(16).padStart(8, '0') +
-                       (str.length * 31 + 7).toString(16).padStart(4, '0');
-            }
-
-            function generateToken(wa, voucher) {
-                return hashSimple(wa + '::' + voucher + '::' + SECRET_KEY);
-            }
-
-            function redirectToLogin() {
-                window.location.replace('/aktivasi/index.html');
-            }
-
-            // a. Ambil session dari localStorage
-            var raw = localStorage.getItem('userSession');
-            if (!raw) {
-                // b. Session tidak ada → redirect
-                redirectToLogin();
-                return;
-            }
-
-            var session;
-            try {
-                session = JSON.parse(raw);
-            } catch(e) {
-                localStorage.removeItem('userSession');
-                redirectToLogin();
-                return;
-            }
-
-            // c. Cek expired
-            if (!session.expired || Date.now() > session.expired) {
-                localStorage.removeItem('userSession');
-                redirectToLogin();
-                return;
-            }
-
-            // d & e. Hitung ulang token dan bandingkan
-            var expectedToken = generateToken(session.wa, session.voucher);
-            if (!session.token || session.token !== expectedToken) {
-                localStorage.removeItem('userSession');
-                redirectToLogin();
-                return;
-            }
-
-            // f. Semua valid — izinkan akses, tidak perlu lakukan apa-apa
-        })();
-    </script>
-<body>
-    <!-- ACCESS SCREEN -->
-    <div id="accessScreen" style="display:none;">
-        <div class="as-logo">KEMO<span>ENIK</span></div>
-        <div class="as-icon">🔒</div>
-        <div class="as-title">Akses Diperlukan</div>
-        <div class="as-desc">Kamu perlu verifikasi kode konsultasi terlebih dahulu di halaman Log Aktivitas untuk membuka akses panduan diet personalmu.</div>
-        <button class="as-btn" onclick="goToAktivitas()">
-            <i class="fas fa-arrow-right" style="margin-right:8px;"></i>Verifikasi di Log Aktivitas
-        </button>
-    </div>
-
-    <div id="app" style="display:none;">
-        <div id="overlay" onclick="closeDrawer()"></div>
-        <!-- DRAWER -->
-        <div id="drawer">
-            <div class="d-top">
-                <div class="d-avatar">🌿</div>
-                <div class="d-name" id="dName">—</div>
-                <div class="d-sub" id="dSub">Program Diet KEMOENIK</div>
-            </div>
-            <div class="d-body">
-                <div class="d-group">Menu Utama</div>
-                <div class="d-item on" id="di-home" onclick="go('home');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Beranda</div>
-                <div class="d-item" id="di-profil" onclick="go('profil');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profil Metabolisme</div>
-                <div class="d-item" id="di-tips" onclick="go('tips');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>Tips Diet</div>
-                <div class="d-item" id="di-program" onclick="go('program');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Program Saya</div>
-                <div class="d-item" id="di-kuis" onclick="go('kuis');closeDrawer()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>Isi Kuis</div>
-                <div class="d-sep"></div>
-                <div class="d-group">Informasi</div>
-                <div class="d-item" onclick="go('home');closeDrawer();setTimeout(()=>{ document.getElementById('faqHomeSection').scrollIntoView({behavior:'smooth'}); },200)"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>FAQ</div>
-                <div class="d-item" onclick="closeDrawer();openBeli()"><span class="d-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>Beli KEMOENIK</div>
-                <div class="d-item" onclick="closeDrawer();window.open('https://wa.me/6281546450547','_blank')"><span class="d-ico">💬</span>Konsultasi WA</div>
-                <div class="d-sep"></div>
-            </div>
-        </div>
-
-        <!-- TOPBAR -->
-        <div id="topbar">
-            <div class="tb-btn" onclick="openDrawer()" style="flex-direction:column;gap:4px;padding:11px;">
-                <div style="width:16px;height:1.5px;background:var(--text2);border-radius:1px;"></div>
-                <div style="width:16px;height:1.5px;background:var(--text2);border-radius:1px;"></div>
-                <div style="width:10px;height:1.5px;background:var(--text2);border-radius:1px;"></div>
-            </div>
-            <!-- IN-APP REMINDER -->
-            <div id="inAppReminder" style="display:none;position:fixed;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold2),#B8860B);color:white;padding:14px 20px;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:999;max-width:90vw;width:380px;animation:slideDown 0.3s ease;">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <div style="font-size:28px;">💊</div>
-                    <div style="flex:1;">
-                        <div style="font-size:13px;font-weight:700;margin-bottom:2px;" id="reminderTitle">Waktunya KEMOENIK!</div>
-                        <div style="font-size:12px;opacity:0.95;line-height:1.4;" id="reminderBody">Minum 3 kapsul sesudah makan</div>
-                    </div>
-                    <button onclick="dismissReminder()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">✕</button>
-                </div>
-                <div style="margin-top:10px;display:flex;gap:8px;">
-                    <button onclick="markReminderDone()" style="flex:1;padding:8px;background:rgba(255,255,255,0.25);border:none;border-radius:8px;color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">✓ Sudah Minum</button>
-                    <button onclick="snoozeReminder()" style="flex:1;padding:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">⏰ Tunda 15m</button>
-                </div>
-            </div>
-            <div class="tb-logo">KEMO<span>ENIK</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:1px;">
-                <div class="tb-btn" onclick="openBeli()" style="font-size:18px;padding:8px 10px;">🛒</div>
-                <div id="topbarStatus" style="display:flex;align-items:center;gap:3px;padding:0 6px 4px;"></div>
-            </div>
-        </div>
-
-        <div id="content">
-            <!-- HERO -->
-            <div class="hero">
-                <div class="hero-top">
-                    <div>
-                        <div class="hero-greeting">Profil Metabolisme</div>
-                        <div class="hero-name" id="heroName">— <span id="heroTypeName">—</span></div>
-                    </div>
-                    <div class="hero-badge" id="heroBadge">—</div>
-                </div>
-                <div class="stats-row">
-                    <div class="stat-card"><div class="sc-val" id="statKkal">—</div><div class="sc-key">Kkal/Hari</div></div>
-                    <div class="stat-card gold"><div class="sc-val" id="statSkor">—</div><div class="sc-key">Skor & Akurasi</div></div>
-                    <div class="stat-card"><div class="sc-val" id="statMetode">—</div><div class="sc-key">Metode</div></div>
-                </div>
-            </div>
-
-            <!-- ESTIMASI PANEL -->
-            <div class="estimasi-panel">
-                <div class="est-item">
-                    <div class="est-val" id="estMinggu">—</div>
-                    <div class="est-key">Target/Minggu</div>
-                </div>
-                <div class="est-item">
-                    <div class="est-val" id="estTanggal">—</div>
-                    <div class="est-key">Est. Tercapai</div>
-                </div>
-                <div class="est-item">
-                    <div class="est-val" id="estLingkar">—</div>
-                    <div class="est-key">Est. Lingkar Perut</div>
-                </div>
-            </div>
-
-            <!-- PILL NAV -->
-            <div class="pill-wrap">
-                <button class="pill on" onclick="go('home')">Home</button>
-                <button class="pill" onclick="go('profil')">Profil</button>
-                <button class="pill" onclick="go('tips')">Tips Diet</button>
-                <button class="pill" onclick="go('program')">Program</button>
-            </div>
-
-            <!-- ===================== HOME PAGE ===================== -->
-            <div class="page on" id="page-home">
-                <div class="greeting-card">
-                    <div>
-                        <div class="gc-hello">Halo, <span id="userName">—</span>! 👋</div>
-                        <div class="gc-sub" id="greetingDesc">Selamat datang di panduan diet<br><strong>KEMOENIK</strong> — hari ini kita jaga komitmenmu 💪</div>
-                    </div>
-                </div>
-                <div class="sec-title">Progres Program Diet</div>
-                <div class="progress-card" onclick="go('program')">
-                    <div class="prog-card-top">
-                        <div>
-                            <div class="pct-label">Hari ini</div>
-                            <div class="pct-day">Hari <span id="progHari">—</span> <span class="pct-of">dari <span id="progTotal">—</span></span></div>
-                        </div>
-                        <div class="pct-badge" id="progPct">—%</div>
-                    </div>
-                    <div class="prog-track">
-                        <div class="prog-fill" id="progFill" style="width:0%"></div>
-                        <div class="prog-thumb" id="progThumb" style="left:0%"></div>
-                    </div>
-                    <div class="prog-labels">
-                        <span>Hari 1</span>
-                        <span>Hari <span id="progTotalLabel">—</span></span>
-                    </div>
-                    <div class="eval-row">
-                        <div class="eval-item">
-                            <div class="eval-val" id="evalMingguLabel">—</div>
-                            <div class="eval-key">Periode</div>
-                        </div>
-                        <div class="eval-div"></div>
-                        <div class="eval-item">
-                            <div class="eval-val" id="evalPenurunan" style="color:var(--green);">— kg</div>
-                            <div class="eval-key">Akumulasi</div>
-                        </div>
-                        <div class="eval-div"></div>
-                        <div class="eval-item">
-                            <div class="eval-val" id="evalBerat">— kg</div>
-                            <div class="eval-key">Berat skrg</div>
-                        </div>
-                        <div class="eval-div"></div>
-                        <div class="eval-item">
-                            <div class="eval-val" id="evalTarget" style="color:var(--text3);">— kg</div>
-                            <div class="eval-key">Target</div>
-                        </div>
-                    </div>
-                </div>
-                <div id="progStartStopContainer" style="margin-bottom:14px;"></div>
-                <div class="shortcut-grid" style="grid-template-columns:1fr 1fr;">
-                    <div class="sc-card" onclick="go('kuis')">
-                        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-                        </div>
-                        <div class="sc-card-name">Kuis Tipe</div>
-                        <div class="sc-card-sub">Temukan tipe metabolismemu</div>
-                        <span class="sc-card-arr">›</span>
-                    </div>
-                    <div class="sc-card" onclick="openPanel('panelKalkulator')">
-                        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#DCFCE7,#A7F3D0);">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>
-                        </div>
-                        <div class="sc-card-name">Kalkulator</div>
-                        <div class="sc-card-sub">Hitung kalori & target dietmu</div>
-                        <span class="sc-card-arr">›</span>
-                    </div>
-                    <div class="sc-card" onclick="openPanel('panelKalkulator')">
-                        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#ECFDF5,#A7F3D0);">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-                        </div>
-                        <div class="sc-card-name">Hasil Nutrisi</div>
-                        <div id="shortcutMakro" class="sc-card-sub">Protein, Lemak, Karbohidrat</div>
-                        <span class="sc-card-arr">›</span>
-                    </div>
-                    <div class="sc-card" onclick="openFaq()">
-                        <div class="sc-card-ico-wrap" style="background:linear-gradient(135deg,#F5F3FF,#DDD6FE);">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                        </div>
-                        <div class="sc-card-name">FAQ</div>
-                        <div class="sc-card-sub">Pertanyaan yang sering ditanya</div>
-                        <span class="sc-card-arr">›</span>
-                    </div>
-                </div>
-                <div class="sec-title-row">
-                    <div class="sec-title" style="margin-bottom:0;">Misi Hari Ini</div>
-                    <div class="sec-link" onclick="go('program')">Lihat semua ›</div>
-                </div>
-                <div class="prog-selector" style="margin-bottom:10px;">
-                    <button id="btnProgNormal" class="prog-selector-btn active" onclick="pilihProgramHome('normal')">💪 Normal</button>
-                    <button id="btnProgIF" class="prog-selector-btn inactive" onclick="pilihProgramHome('if')">🌙 IF 16:8</button>
-                </div>
-                <div class="mission-set show" id="misiNormal"></div>
-                <div class="mission-set" id="misiIF"></div>
-                <div class="sec-title-row" style="margin-top:20px;">
-                    <div class="sec-title" style="margin-bottom:0;">Jadwal Olahraga Hari Ini</div>
-                    <div class="sec-link" onclick="openPanel('panelJadwalOlahraga')">Lihat semua ›</div>
-                </div>
-                <div id="homeJadwalWrap" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:6px;">
-                    <div id="homeJadwalContent" style="padding:14px 16px;"></div>
-                </div>
-                
-                <div class="sec-title-row" style="margin-top:4px;">
-                    <div class="sec-title" style="margin-bottom:0;">Tips Hari Ini</div>
-                    <div class="sec-link" onclick="go('tips')">Lihat semua ›</div>
-                </div>
-                <div class="tip-card-home">
-                    <div class="tip-ico">💡</div>
-                    <div>
-                        <div class="tip-label">Reminder Diet</div>
-                        <div class="tip-text" id="dailyTipText">Minum KEMOENIK sesudah makan untuk penyerapan optimal. Jangan skip meski tidak lapar — konsistensi adalah kunci!</div>
-                    </div>
-                </div>
-                <div class="sec-title">Reminder Konsumsi</div>
-                <div class="reminder-list">
-                    <div class="reminder-item">
-                        <div class="rem-time-wrap"><div class="rem-time">07.30</div><div class="rem-time-sub">Pagi</div></div>
-                        <div class="rem-line-wrap"><div class="rem-dot done-dot"></div><div class="rem-line"></div></div>
-                        <div class="rem-card done-card">
-                            <div class="rem-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 7 3 2 4c1 4 4 7 10 8zM12 12c0-5 5-9 10-8-1 4-4 7-10 8z"/></svg></div>
-                            <div><div class="rem-name">Minum KEMOENIK Pagi</div><div class="rem-sub">3 kapsul sesudah sarapan + air hangat</div></div>
-                        </div>
-                    </div>
-                    <div class="reminder-item">
-                        <div class="rem-time-wrap"><div class="rem-time" style="color:var(--gold2);">18.30</div><div class="rem-time-sub" style="color:var(--gold2);">Malam</div></div>
-                        <div class="rem-line-wrap"><div class="rem-dot active-dot"></div><div class="rem-line"></div></div>
-                        <div class="rem-card active-card">
-                            <div class="rem-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 7 3 2 4c1 4 4 7 10 8zM12 12c0-5 5-9 10-8-1 4-4 7-10 8z"/></svg></div>
-                            <div><div class="rem-name">Minum KEMOENIK Malam</div><div class="rem-sub">3 kapsul sesudah makan malam + air putih</div></div>
-                            <div class="rem-ping"></div>
-                        </div>
-                    </div>
-                </div>
-                <div style="margin-top:24px;" id="faqHomeSection">
-                    <div class="sec-title-row">
-                        <div class="sec-title" style="margin-bottom:0;">FAQ — Pertanyaan Umum</div>
-                    </div>
-                    <div class="faq-section" id="faqContainer"></div>
-                </div>
-                <div style="background:linear-gradient(135deg,#FFF7ED,#FEF2F2);border:1px solid #FED7AA;border-radius:16px;padding:20px;margin-top:16px;">
-                    <div style="font-size:13px;font-weight:700;color:#9A3412;text-align:center;margin-bottom:14px;">🛒 Stok Kapsul Menipis? Jangan Sampai Kehabisan!</div>
-                    <div class="shop-grid">
-                        <a href="https://s.shopee.co.id/4VXlRpSx3t" target="_blank" class="shop-btn shop-shopee"><i class="fas fa-shopping-bag"></i> Shopee</a>
-                        <a href="https://vt.tiktok.com/ZS9deV3a9Mxea-W7dhT/" target="_blank" class="shop-btn shop-tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
-                    </div>
-                    <div class="shop-warning"><i class="fas fa-exclamation-circle" style="margin-right:6px;"></i>Stok menipis! Segera restock KEMOENIK kamu</div>
-                </div>
-                <div style="height:16px;"></div>
-            </div>
-
-            <!-- ===================== PROFIL PAGE ===================== -->
-            <div class="page" id="page-profil">
-                <div id="profilBelumKuis" style="text-align:center;padding:40px 20px;display:block;">
-                    <div style="font-size:56px;margin-bottom:16px;">🧬</div>
-                    <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:8px;">Profil Metabolisme Belum Ada</div>
-                    <div style="font-size:13px;color:var(--text3);margin-bottom:6px;line-height:1.7;">Isi kuis tipe metabolisme terlebih dahulu untuk mendapatkan analisis lengkap tentang tubuhmu.</div>
-                    <div style="background:var(--offwhite);border-radius:12px;padding:14px;margin:16px 0;text-align:left;">
-                        <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">Yang kamu dapatkan dari kuis:</div>
-                        <div style="font-size:12px;color:var(--text3);line-height:1.9;">
-                            📈 <strong>Trait Bar Metabolisme</strong> — 5 karakteristik metabolismemu<br>
-                            🧬 <strong>Tipe & Karakteristik</strong> — profil lengkap + anjuran & pantangan<br>
-                            🎯 <strong>Skor & Akurasi</strong> — kesesuaian program KEMOENIK untukmu<br>
-                            ⚖️ <strong>Metode Diet</strong> — otomatis terisi di kalkulator
-                        </div>
-                    </div>
-                    <button class="btn-primary" style="max-width:260px;" onclick="go('kuis')">
-                        <i class="fas fa-pencil-alt"></i> Isi Kuis Sekarang (3 menit)
-                    </button>
-                </div>
-                <div id="profilContent" style="display:none;">
-                    <button class="btn-outline" style="margin-bottom:12px;width:100%;" onclick="resetAndEditQuiz()">
-                        <i class="fas fa-pencil-alt"></i> Edit / Ulangi Quiz
-                    </button>
-                    <!-- Indikator status aktif -->
-                    <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
-                        <div id="profilStatusIndicator" style="display:flex; align-items:center; gap:4px; background:var(--offwhite); padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600;"></div>
-                    </div>
-                    <div class="acc" id="acc-trait">
-                        <div class="acc-hd" onclick="tog('acc-trait')">
-                            <div class="acc-icon" style="background:rgba(232,160,32,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2" stroke-linecap="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
-                            <div class="acc-info">
-                                <div class="acc-title">Trait Bar Metabolisme</div>
-                                <div class="acc-sub" id="traitBarSub">Karakteristik metabolismemu</div>
-                            </div>
-                            <div class="acc-toggle">+</div>
-                        </div>
-                        <div class="acc-body" id="traitBarContent"><div class="ph">—</div></div>
-                    </div>
-                    <div class="acc" id="acc-karakter">
-                        <div class="acc-hd" onclick="tog('acc-karakter')">
-                            <div class="acc-icon" style="background:rgba(46,139,53,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2" stroke-linecap="round"><path d="M2 15c6.667-6 13.333 0 20-6M2 9c6.667 6 13.333 0 20 6"/></svg></div>
-                            <div class="acc-info">
-                                <div class="acc-title">Tipe & Karakteristik</div>
-                                <div class="acc-sub" id="tipeKarakterSub">Tipe metabolismemu</div>
-                            </div>
-                            <div class="acc-toggle">+</div>
-                        </div>
-                        <div class="acc-body" id="tipeKarakterContent"><div class="ph">—</div></div>
-                    </div>
-                    <div class="acc" id="acc-skor">
-                        <div class="acc-hd" onclick="tog('acc-skor');setTimeout(animScore,80)">
-                            <div class="acc-icon" style="background:rgba(59,130,246,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
-                            <div class="acc-info">
-                                <div class="acc-title">Skor & Akurasi</div>
-                                <div class="acc-sub" id="skorSub">Kesesuaian program dengan metabolismemu</div>
-                            </div>
-                            <div class="acc-toggle">+</div>
-                        </div>
-                        <div class="acc-body">
-                            <div class="score-block">
-                                <div class="score-ring-wrap">
-                                    <svg viewBox="0 0 120 120">
-                                        <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" style="stop-color:#2E8B35"/>
-                                            <stop offset="100%" style="stop-color:#E8A020"/>
-                                        </linearGradient></defs>
-                                        <circle class="sr-bg" cx="60" cy="60" r="52"/>
-                                        <circle class="sr-fill" id="srFill" cx="60" cy="60" r="52"/>
-                                    </svg>
-                                    <div class="score-center">
-                                        <div class="score-pct" id="scorePct">—</div>
-                                        <div class="score-lbl">Akurasi</div>
-                                    </div>
-                                </div>
-                                <div class="score-desc" id="scoreDesc">Isi kuis untuk mendapatkan skor akurasi program dietmu.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ===================== TIPS PAGE ===================== -->
-            <div class="page" id="page-tips">
-                <div id="tipsNotifBanner" class="notif-banner" style="display:none;">
-                    <div class="notif-icon">💡</div>
-                    <div class="notif-text">Tips diet ini dipersonalisasi berdasarkan tipe metabolismemu dari hasil kuis.</div>
-                    <button class="notif-close" onclick="this.parentElement.style.display='none'">✕</button>
-                </div>
-                <!-- konten tips dari JS -->
-                <div class="acc" id="acc-defisit">
-                    <div class="acc-hd" onclick="tog('acc-defisit')">
-                        <div class="acc-icon" style="background:rgba(239,68,68,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round"><path d="M12 2c-4 6-6 9-6 13a6 6 0 0 0 12 0c0-4-2-7-6-13z"/></svg></div>
-                        <div class="acc-info">
-                            <div class="acc-title">Defisit Kalori</div>
-                            <div class="acc-sub">Cara defisit kalori yang benar & efektif</div>
-                        </div>
-                        <div class="acc-toggle">+</div>
-                    </div>
-                    <div class="acc-body"></div>
-                </div>
-                <div class="acc" id="acc-gula">
-                    <div class="acc-hd" onclick="tog('acc-gula')">
-                        <div class="acc-icon" style="background:rgba(232,160,32,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C07E10" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
-                        <div class="acc-info">
-                            <div class="acc-title">Panduan Kurangi Gula</div>
-                            <div class="acc-sub">Musuh terbesar diet yang sering terlewat</div>
-                        </div>
-                        <div class="acc-toggle">+</div>
-                    </div>
-                    <div class="acc-body"></div>
-                </div>
-                <div class="acc" id="acc-ola">
-                    <div class="acc-hd" onclick="tog('acc-ola')">
-                        <div class="acc-icon" style="background:rgba(59,130,246,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8m-4-5l4 3 4-3"/><path d="M8 18l-2 3M16 18l2 3"/></svg></div>
-                        <div class="acc-info">
-                            <div class="acc-title">Panduan Olahraga</div>
-                            <div class="acc-sub">Olahraga yang direkomendasikan untuk diet</div>
-                        </div>
-                        <div class="acc-toggle">+</div>
-                    </div>
-                    <div class="acc-body"></div>
-                </div>
-                <div class="acc" id="acc-minum">
-                    <div class="acc-hd" onclick="tog('acc-minum')">
-                        <div class="acc-icon" style="background:rgba(46,139,53,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8B35" stroke-width="2" stroke-linecap="round"><path d="M12 22V12M12 12C12 7 7 3 2 4c1 4 4 7 10 8zM12 12c0-5 5-9 10-8-1 4-4 7-10 8z"/></svg></div>
-                        <div class="acc-info">
-                            <div class="acc-title">Cara Minum KEMOENIK</div>
-                            <div class="acc-sub">Jadwal & aturan konsumsi optimal</div>
-                        </div>
-                        <div class="acc-toggle">+</div>
-                    </div>
-                    <div class="acc-body"></div>
-                </div>
-                <div class="acc" id="acc-if">
-                    <div class="acc-hd" onclick="tog('acc-if')">
-                        <div class="acc-icon" style="background:rgba(124,58,237,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                        <div class="acc-info">
-                            <div class="acc-title">Opsi: Intermittent Fasting</div>
-                            <div class="acc-sub">Tidak wajib, tapi bisa percepat hasil</div>
-                        </div>
-                        <div class="acc-toggle">+</div>
-                    </div>
-                    <div class="acc-body"></div>
-                </div>
-                <div id="tipsExtraContainer"></div>
-                <!-- tipsKontenContainer lama disembunyikan via JS -->
-                <div id="tipsKontenContainer" style="display:none;"></div>
-            </div>
-
-            <!-- ===================== PROGRAM PAGE ===================== -->
-            <div class="page" id="page-program">
-                <div class="prog-banner">
-                    <div class="pb-label">Program Diet Kamu</div>
-                    <div class="pb-name" id="progNama">—</div>
-                    <div class="pb-desc" id="progDesc">Generate kalkulator untuk memulai program</div>
-                </div>
-                <div class="notif-banner" id="progNotif" style="display:none;">
-                    <div class="notif-icon">⚠️</div>
-                    <div class="notif-text">Baca seluruh panduan ini agar program dietmu terarahkan dengan sempurna!</div>
-                    <button class="notif-close" onclick="this.parentElement.style.display='none'">✕</button>
-                </div>
-                <div class="notif-banner" id="kuisFirstNotif" style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid var(--gold);display:none;">
-                    <div class="notif-icon">📝</div>
-                    <div class="notif-text" style="color:#78350F;"><strong>Isi Kuis Dulu!</strong> Kuis menentukan tipe metabolisme & metode diet terbaik untukmu sebelum kalkulasi kalori.</div>
-                    <button class="notif-close" onclick="go('kuis')" style="background:var(--gold2);color:#FFF;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;border:none;cursor:pointer;">Isi Kuis →</button>
-                </div>
-                <div class="sec-title">Yang Kamu Dapatkan</div>
-                <div class="prev-list">
-                    <div class="prev-item" onclick="openPanel('panelKalkulator')">
-                        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg></div>
-                        <div><div class="pi-name">Kalkulasi Kalori Personal</div><div class="pi-sub" id="piSubKalori">Hitung kebutuhan kalori & target mingguanmu</div></div>
-                        <span class="pi-arr">›</span>
-                    </div>
-                    <div class="prev-item" onclick="openPanel('panelTimeline')">
-                        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-                        <div><div class="pi-name">Timeline Program</div><div class="pi-sub" id="piSubTimeline">Fase & jadwal program dietmu</div></div>
-                        <span class="pi-arr">›</span>
-                    </div>
-                    <div class="prev-item" onclick="openPanel('panelMenu')">
-                        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M3 6h18v13a2 2 0 01-2 2H5a2 2 0 01-2-2V6z"/><line x1="3" y1="11" x2="21" y2="11"/><line x1="12" y1="6" x2="12" y2="21"/></svg></div>
-                        <div><div class="pi-name">Panduan Menu Harian</div><div class="pi-sub" id="piSubMenu">Menu makan personal berdasarkan kalorimu</div></div>
-                        <span class="pi-arr">›</span>
-                    </div>
-                    <div class="prev-item" onclick="openPanel('panelJadwalOlahraga')">
-                        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8m-4-5l4 3 4-3"/><path d="M8 18l-2 3M16 18l2 3"/></svg></div>
-                        <div><div class="pi-name">Jadwal Olahraga</div><div class="pi-sub">Rencana olahraga mingguan berdasarkan tipe metabolismemu</div></div>
-                        <span class="pi-arr">›</span>
-                    </div>
-                    <div class="prev-item" onclick="openPanel('panelPanduanLengkap')">
-                        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>
-                        <div><div class="pi-name">Panduan Harian Lengkap</div><div class="pi-sub">Menu lengkap 10 hari: Ekonomis, Standar, Premium & Custom</div></div>
-                        <span class="pi-arr">›</span>
-                    </div>
-                    <div class="prev-item" onclick="openPanel('panelEvaluasi')">
-                        <div class="pi-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-                        <div><div class="pi-name">Evaluasi Mingguan</div><div class="pi-sub" id="piSubEval">Catat & pantau perkembangan berat badanmu</div></div>
-                        <span class="pi-arr">›</span>
-                    </div>
-                </div>
-                <button class="cta-btn" onclick="openPanel('panelKalkulator')">
-                    <i class="fas fa-calculator" style="margin-right:8px;"></i>Mulai / Update Program Diet
-                </button>
-                <div class="cta-note">Generate kalkulator untuk mengaktifkan semua fitur program</div>
-                <div style="height:8px;"></div>
-            </div>
-
-            <!-- ===================== KUIS PAGE ===================== -->
-            <div class="page" id="page-kuis">
-                <div id="quizIntro">
-                    <div class="prog-banner" style="background:linear-gradient(135deg,var(--gold2) 0%,#8A5E14 100%);">
-                        <div class="pb-label">Quiz Metabolisme</div>
-                        <div class="pb-name">Temukan Tipe Kamu</div>
-                        <div class="pb-desc">15 pertanyaan untuk mengetahui tipe metabolisme & program terbaik untukmu</div>
-                    </div>
-                    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;">
-                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;margin-bottom:14px;">
-                            <div><div style="font-size:22px;font-weight:800;color:var(--green3);">15</div><div style="font-size:10px;color:var(--text3);">Pertanyaan</div></div>
-                            <div><div style="font-size:22px;font-weight:800;color:var(--gold2);">7</div><div style="font-size:10px;color:var(--text3);">Tipe</div></div>
-                            <div><div style="font-size:22px;font-weight:800;color:var(--green3);">3'</div><div style="font-size:10px;color:var(--text3);">Menit</div></div>
-                        </div>
-                        <div style="font-size:12px;color:var(--text3);line-height:1.7;text-align:center;">Jawab jujur sesuai kondisi tubuhmu saat ini. Hasil quiz akan membantu menyusun program diet yang paling sesuai denganmu.</div>
-                    </div>
-                    <button class="btn-primary" onclick="startQuiz()"><i class="fas fa-play"></i> Mulai Quiz Sekarang</button>
-                </div>
-                <div id="quizRunning" style="display:none;">
-                    <div class="quiz-progress-wrap">
-                        <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:12px;font-weight:600;color:var(--text3);">Pertanyaan <span id="qCurrent">1</span> dari 15</span>
-                            <span style="font-size:12px;font-weight:700;color:var(--green);" id="qPct">0%</span>
-                        </div>
-                        <div class="quiz-bar-bg">
-                            <div class="quiz-bar-fill" id="qFill" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <div class="quiz-q-body">
-                        <div class="quiz-q-num" id="qNum">PERTANYAAN 01</div>
-                        <div class="quiz-q-text" id="qText"></div>
-                        <div id="qOptions"></div>
-                    </div>
-                    <div class="quiz-nav">
-                        <button class="quiz-btn-back" id="btnBack" onclick="goBack()" style="display:none;"><i class="fas fa-arrow-left"></i></button>
-                        <button class="quiz-btn-next" id="btnNext" onclick="goNext()" disabled>Lanjut <i class="fas fa-arrow-right"></i></button>
-                    </div>
-                </div>
-                <div id="quizResult" style="display:none;">
-                    <div class="quiz-result-hero">
-                        <div class="qr-badge">PROFIL METABOLISME</div>
-                        <div class="qr-type" id="qrTypeName">Tipe <em>—</em></div>
-                        <div class="qr-tagline" id="qrTagline">—</div>
-                        <div class="qr-gauge">
-                            <div class="qr-circle" id="qrScore">72</div>
-                            <div class="qr-gauge-info">
-                                <div class="qr-gauge-title">Skor Kesesuaian Program</div>
-                                <div class="qr-gauge-metode" id="qrMetodeName">—</div>
-                                <div class="qr-gauge-bar-bg">
-                                    <div class="qr-gauge-bar-fill" id="qrGaugeBar" style="width:0%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="result-tabs">
-                        <button class="rt-btn on" onclick="showResultTab('profil',this)">Profil</button>
-                        <button class="rt-btn" onclick="showResultTab('tips',this)">Tips</button>
-                        <button class="rt-btn" onclick="showResultTab('program',this)">Program</button>
-                    </div>
-                    <div class="result-tab-panel on" id="rtProfil"><div id="quizTraitCards"></div></div>
-                    <div class="result-tab-panel" id="rtTips"><div id="quizTipsContent"></div></div>
-                    <div class="result-tab-panel" id="rtProgram"><div id="quizProgramContent"></div></div>
-                    <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px;">
-                        <button class="btn-primary" onclick="selesaiQuiz()"><i class="fas fa-rocket"></i> Mulai Program Diet Saya!</button>
-                        <button class="btn-outline" id="btnResetQuiz" onclick="resetQuizData()" style="display:none;"><i class="fas fa-redo"></i> Reset Quiz</button>
-                        <button class="btn-outline" onclick="ulangQuiz()">Ulangi Quiz (Tanpa Simpan)</button>
-                    </div>
-                </div>
-            </div>
-        </div><!-- end content -->
-
-        <!-- BOTTOM NAV -->
-        <div id="bnav">
-            <div class="bn on" id="bn-home" onclick="go('home')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="bn-lbl">Home</div></div>
-            <div class="bn" id="bn-profil" onclick="go('profil')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="bn-lbl">Profil</div></div>
-            <div class="bn" id="bn-tips" onclick="go('tips')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="bn-lbl">Tips</div></div>
-            <div class="bn" id="bn-program" onclick="go('program')"><div class="bn-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="bn-lbl">Program</div></div>
-            <div class="bn" id="bn-kuis" onclick="go('kuis')" style="position:relative;"><div class="bn-ico" style="position:relative;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><div id="statusDot" style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:#9CA3AF;border:1.5px solid var(--bg);"></div></div><div class="bn-lbl">Kuis</div></div>
-        </div>
-    </div><!-- end app -->
-
-    <!-- ===================== MODALS / PANELS ===================== -->
-    <!-- PANEL KALKULATOR -->
-    <div class="modal-panel" id="panelKalkulator">
-        <div class="modal-sheet">
-            <div class="ms-pull"></div>
-            <div class="ms-head">
-                <div class="ms-title">⚖️ Kalkulasi Kalori Personal</div>
-                <div class="ms-sub">Hitung kebutuhan kalori & target program dietmu</div>
-            </div>
-            <div class="ms-body">
-                <div id="kalNotifKuis" style="display:none;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid var(--gold);border-radius:12px;padding:12px 14px;margin-bottom:14px;">
-                    <div style="display:flex;gap:10px;align-items:center;">
-                        <div style="font-size:20px;flex-shrink:0;">📝</div>
-                        <div style="flex:1;">
-                            <div style="font-size:13px;font-weight:700;color:#78350F;margin-bottom:3px;">Disarankan: Isi Kuis Dulu</div>
-                            <div style="font-size:12px;color:#92400E;line-height:1.5;">Kuis akan menentukan <strong>tipe metabolisme</strong> & <strong>metode diet terbaik</strong> untukmu. Hasil kuis otomatis mengisi kolom Metode Diet di bawah.</div>
-                        </div>
-                    </div>
-                    <button onclick="closePanel('panelKalkulator');go('kuis')" style="margin-top:10px;width:100%;padding:9px;background:var(--gold2);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">📝 Isi Kuis Sekarang →</button>
-                    <button onclick="document.getElementById('kalNotifKuis').style.display='none'" style="margin-top:6px;width:100%;padding:7px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">Lanjut Kalkulator Saja</button>
-                </div>
-                <div id="kalkulatorForm">
-                    <div class="form-group">
-                        <label class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-input" id="inputNama" placeholder="Contoh: Anita Susanti">
-                    </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Jenis Kelamin</label>
-                            <select class="form-input" id="inputGender">
-                                <option value="perempuan">Perempuan</option>
-                                <option value="laki">Laki-laki</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Usia (tahun)</label>
-                            <input type="number" class="form-input" id="inputUsia" placeholder="25">
-                        </div>
-                    </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Berat Badan (kg)</label>
-                            <input type="number" class="form-input" id="inputBerat" placeholder="65" step="0.1">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tinggi Badan (cm)</label>
-                            <input type="number" class="form-input" id="inputTinggi" placeholder="160">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Aktivitas Harian</label>
-                        <select class="form-input" id="inputAktivitas">
-                            <option value="">— Pilih Level Aktivitas —</option>
-                            <option value="1.2">Tidak Aktif</option>
-                            <option value="1.375" selected>Ringan (1–2x Olahraga)</option>
-                            <option value="1.55">Sedang (3–5x Olahraga)</option>
-                            <option value="1.725">Berat (6–7x Olahraga)</option>
-                            <option value="1.9">Sangat Berat (Atlet)</option>
-                        </select>
-                        <div id="aktAccordion" style="margin-top:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-                            <div onclick="var b=document.getElementById('aktBody');var a=document.getElementById('aktArr');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'›':'⌄';" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:var(--offwhite);font-size:12px;font-weight:600;color:var(--green2);">
-                                <span style="display:flex;align-items:center;gap:6px;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                    Keterangan Level Aktivitas
-                                </span>
-                                <span id="aktArr" style="font-size:16px;font-weight:400;color:var(--text3);">›</span>
-                            </div>
-                            <div id="aktBody" style="display:none;padding:12px 14px;background:white;font-size:12px;color:var(--text3);line-height:1.9;border-top:1px solid var(--border);">
-                                <div style="margin-bottom:6px;"><span style="font-weight:700;color:var(--text);">Tidak Aktif:</span> Kerja duduk, hampir tidak olahraga, aktivitas minim sehari-hari</div>
-                                <div style="margin-bottom:6px;"><span style="font-weight:700;color:var(--green);">Ringan (1–2x):</span> Jalan 30 menit, yoga ringan, gym santai, kardio ringan</div>
-                                <div style="margin-bottom:6px;"><span style="font-weight:700;color:var(--gold2);">Sedang (3–5x):</span> Angkat beban rutin, lari 30–45 menit, kombinasi cardio + strength</div>
-                                <div style="margin-bottom:6px;"><span style="font-weight:700;color:#E07B39;">Berat (6–7x):</span> Latihan intens tiap hari, pekerja fisik berat + gym</div>
-                                <div><span style="font-weight:700;color:#DC2626;">Sangat Berat:</span> Atlet profesional, pekerja fisik ekstrem</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Target BB (kg)</label>
-                            <input type="number" class="form-input" id="inputTarget" placeholder="55" step="0.1">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Kecepatan Diet</label>
-                            <select class="form-input" id="inputMetode">
-                                <option value="ringan">Ringan (300 kkal defisit)</option>
-                                <option value="standar" selected>Standar (500 kkal defisit)</option>
-                                <option value="agresif">Agresif (700 kkal defisit)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:0;">
-                        <button class="btn-primary" onclick="hitungKalkulator()" id="btnHitung" style="flex:1;"><i class="fas fa-calculator"></i> Generate Program</button>
-                        <button class="btn-outline" id="btnResetKal" onclick="resetKalkulator()" style="display:none;"><i class="fas fa-redo"></i> Reset</button>
-                    </div>
-                </div>
-                <div id="hasilKalkulator" style="display:none;margin-top:16px;">
-                    <div style="background:linear-gradient(135deg,var(--green),var(--green3));border-radius:16px;padding:18px;margin-bottom:14px;color:white;">
-                        <div style="font-size:11px;opacity:0.7;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">Hasil Kalkulasi</div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
-                            <div><div style="font-size:22px;font-weight:800;" id="hasilKkal">—</div><div style="font-size:11px;opacity:0.75;">kkal/hari (target diet)</div></div>
-                            <div><div style="font-size:22px;font-weight:800;" id="hasilMinggu">—</div><div style="font-size:11px;opacity:0.75;">minggu program</div></div>
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                            <div><div style="font-size:16px;font-weight:700;" id="hasilTanggal">—</div><div style="font-size:11px;opacity:0.75;">Est. target tercapai</div></div>
-                            <div><div style="font-size:16px;font-weight:700;" id="hasilLingkar">—</div><div style="font-size:11px;opacity:0.75;">Est. lingkar perut</div></div>
-                        </div>
-                    </div>
-                    <div style="background:var(--offwhite);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;font-size:12px;color:var(--text3);line-height:1.7;">
-                        <strong style="color:var(--green2);">BMR:</strong> <span id="hasilBMR">—</span> kkal/hari &nbsp;|&nbsp; 
-                        <strong style="color:var(--green2);">TDEE:</strong> <span id="hasilTDEE">—</span> kkal/hari &nbsp;|&nbsp;
-                        <strong style="color:var(--green2);">Defisit:</strong> <span id="hasilDefisit">—</span> kkal/hari
-                    </div>
-                    <!-- MAKRONUTRISI HASIL -->
-                    <div style="background:white;border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;">
-                        <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">📊 Makronutrisi Harian</div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
-                            <div style="background:#F0FDF4;border-radius:10px;padding:10px 4px;">
-                                <div style="font-size:18px;font-weight:800;color:#10B981;" id="hasilProtein">—</div>
-                                <div style="font-size:10px;color:#065F46;font-weight:600;margin-top:2px;">Protein</div>
-                                <div style="font-size:9px;color:#9CA3AF;">4 kkal/g</div>
-                            </div>
-                            <div style="background:#FFFBEB;border-radius:10px;padding:10px 4px;">
-                                <div style="font-size:18px;font-weight:800;color:#D97706;" id="hasilLemak">—</div>
-                                <div style="font-size:10px;color:#92400E;font-weight:600;margin-top:2px;">Lemak</div>
-                                <div style="font-size:9px;color:#9CA3AF;">9 kkal/g</div>
-                            </div>
-                            <div style="background:#EFF6FF;border-radius:10px;padding:10px 4px;">
-                                <div style="font-size:18px;font-weight:800;color:#3B82F6;" id="hasilKarbo">—</div>
-                                <div style="font-size:10px;color:#1E40AF;font-weight:600;margin-top:2px;">Karbo</div>
-                                <div style="font-size:9px;color:#9CA3AF;">4 kkal/g</div>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn-primary" id="btnSimpanKal" onclick="simpanKalkulator(this)"><i class="fas fa-save"></i> Simpan & Mulai Program</button>
-                    <button class="btn-outline" style="margin-top:8px;" onclick="document.getElementById('hasilKalkulator').style.display='none';document.getElementById('kalkulatorForm').style.display='block'">Edit Data</button>
-                </div>
-            </div>
-            <div style="height:16px;"></div>
-            <div style="padding:0 20px;"><button class="btn-outline" onclick="closePanel('panelKalkulator')">Tutup</button></div>
-            <div style="height:16px;"></div>
-        </div>
-    </div>
-
-    <!-- PANEL TIMELINE -->
-    <div class="modal-panel" id="panelTimeline">
-        <div class="modal-sheet">
-            <div class="ms-pull"></div>
-            <div class="ms-head">
-                <div class="ms-title">📅 Timeline Program</div>
-                <div class="ms-sub">Fase & jadwal program diet KEMOENIK</div>
-            </div>
-            <div class="ms-body">
-                <div class="timeline">
-                    <div class="tl-item">
-                        <div class="tl-dot done">✓</div>
-                        <div class="tl-content">
-                            <div class="tl-title">Fase 1: Detoksifikasi Awal (Minggu 1–2)</div>
-                            <div class="tl-desc">Tubuh mulai beradaptasi dengan herbal KEMOENIK. Efek detoks: sering BAK, BAB lebih lancar, badan terasa lebih ringan. <strong>TETAP KONSISTEN!</strong></div>
-                        </div>
-                    </div>
-                    <div class="tl-item">
-                        <div class="tl-dot">2</div>
-                        <div class="tl-content">
-                            <div class="tl-title">Fase 2: Pembakaran Lemak (Minggu 3–4)</div>
-                            <div class="tl-desc">Metabolisme mulai meningkat. Terasa lebih berenergi. Berat badan mulai turun konsisten. Lingkar perut mulai mengecil.</div>
-                        </div>
-                    </div>
-                    <div class="tl-item">
-                        <div class="tl-dot">3</div>
-                        <div class="tl-content">
-                            <div class="tl-title">Fase 3: Stabilisasi (Minggu 5–8)</div>
-                            <div class="tl-desc">Tubuh semakin efisien membakar lemak. Nafsu makan lebih terkontrol. Tubuh mulai terbentuk. Evaluasi & maintain program.</div>
-                        </div>
-                    </div>
-                    <div class="tl-item">
-                        <div class="tl-dot">🎯</div>
-                        <div class="tl-content">
-                            <div class="tl-title">Fase 4: Target Tercapai</div>
-                            <div class="tl-desc">Berat badan ideal tercapai! Lanjutkan pola makan sehat dan aktivitas rutin agar tidak yo-yo. KEMOENIK bisa dilanjutkan 1x/hari untuk maintenance.</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="background:#FEF3C7;border-radius:10px;padding:12px 14px;font-size:12px;color:#92400E;line-height:1.7;">
-                    ⏱️ <strong>Timeline aktif</strong> mulai dari tanggal generate kalkulator: <span id="timelineStartDate" style="font-weight:700;">—</span><br>
-                    Target selesai: <span id="timelineEndDate" style="font-weight:700;">—</span>
-                </div>
-            </div>
-            <div style="height:16px;"></div>
-            <div style="padding:0 20px;display:flex;gap:10px;">
-                <button class="btn-primary" style="flex:1;" onclick="closePanel('panelTimeline');go('home');"><i class="fas fa-play"></i> Mulai</button>
-                <button class="btn-outline" style="flex:1;" onclick="closePanel('panelTimeline')">Tutup</button>
-            </div>
-            <div style="height:16px;"></div>
-        </div>
-    </div>
-
-    <!-- PANEL JADWAL OLAHRAGA -->
-    <div class="modal-panel" id="panelJadwalOlahraga">
-        <div class="modal-sheet">
-            <div class="ms-pull"></div>
-            <div class="ms-head">
-                <div class="ms-title">🏃 Jadwal Olahraga</div>
-                <div class="ms-sub">Program olahraga sesuai tipe metabolismemu</div>
-            </div>
-            <div class="ms-body">
-                <div style="display:flex;gap:10px;margin-bottom:14px;">
-                    <div id="olahragaNormalBtn" style="flex:1;padding:10px;background:var(--green);color:#FFF;border-radius:10px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;border:2px solid var(--green);" onclick="toggleOlahraga('normal')">Program Normal</div>
-                    <div id="olahragaIFBtn" style="flex:1;padding:10px;background:var(--white);color:var(--text3);border-radius:10px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;border:2px solid var(--border);" onclick="toggleOlahraga('if')">Program IF 16:8</div>
-                </div>
-                <div id="jadwalNormalWrap">
-                    <div style="background:var(--offwhite);border-radius:12px;padding:14px;margin-bottom:12px;">
-                        <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:10px;">📅 Jadwal Mingguan (Normal)</div>
-                        <div style="display:flex;flex-direction:column;gap:0;" id="jadwalNormalList"></div>
-                    </div>
-                </div>
-                <div id="jadwalIFWrap" style="display:none;">
-                    <div style="background:#F5F3FF;border-radius:12px;padding:14px;margin-bottom:12px;">
-                        <div style="font-size:12px;font-weight:700;color:#7C3AED;margin-bottom:6px;">⏰ Jadwal IF 16:8 + Olahraga</div>
-                        <div style="font-size:12px;color:#4C1D95;line-height:1.6;margin-bottom:10px;">Makan window jam 10.00–18.00. Olahraga pagi saat puasa untuk maksimalkan pembakaran lemak.</div>
-                        <div style="display:flex;flex-direction:column;gap:8px;">
-                            <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:50px;font-size:11px;font-weight:700;color:#7C3AED;padding-top:2px;">05.30</div><div style="flex:1;font-size:12px;color:#4C1D95;line-height:1.5;">Bangun, minum air putih hangat</div></div>
-                            <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:50px;font-size:11px;font-weight:700;color:#7C3AED;padding-top:2px;">06.00</div><div style="flex:1;font-size:12px;color:#4C1D95;line-height:1.5;">Olahraga pagi (jalan kaki / jumping jack) — saat perut kosong optimal bakar lemak</div></div>
-                            <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:50px;font-size:11px;font-weight:700;color:var(--green);padding-top:2px;">10.00</div><div style="flex:1;font-size:12px;color:var(--green2);line-height:1.5;"><strong>BUKA PUASA</strong> — Protein + sayuran. Minum KEMOENIK sesudah makan.</div></div>
-                            <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:50px;font-size:11px;font-weight:700;color:var(--text3);padding-top:2px;">16.00</div><div style="flex:1;font-size:12px;color:var(--text3);line-height:1.5;">Lymphatic drainage ringan 15 menit</div></div>
-                            <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:50px;font-size:11px;font-weight:700;color:var(--gold2);padding-top:2px;">17.30</div><div style="flex:1;font-size:12px;color:var(--text2);line-height:1.5;"><strong>MAKAN TERAKHIR</strong> — Protein ringan, sayuran. Minum KEMOENIK.</div></div>
-                            <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:50px;font-size:11px;font-weight:700;color:#991B1B;padding-top:2px;">18.00</div><div style="flex:1;font-size:12px;color:#7F1D1D;line-height:1.5;"><strong>MULAI PUASA 16 JAM</strong> — Hanya air putih, teh/kopi tanpa gula</div></div>
-                        </div>
-                    </div>
-                </div>
-                <div id="rekomendasiBox" style="border-radius:10px;padding:12px 14px;font-size:12px;line-height:1.6;background:#F0FDF4;border:1px solid #86EFAC;color:#065F46;">
-                    <span id="rekomendasiText">Sistem merekomendasikan: <strong>Normal</strong> — defisit kalori + olahraga rutin sudah cukup efektif untuk tipe kamu tanpa perlu puasa.</span>
-                </div>
-                <button class="btn-primary" style="margin-top:14px;" onclick="closePanel('panelJadwalOlahraga');go('home');setTimeout(()=>document.getElementById('misiNormal').scrollIntoView({behavior:'smooth'}),200)"><i class="fas fa-rocket"></i> Mulai Program Sekarang</button>
-            </div>
-            <div style="height:16px;"></div>
-            <div style="padding:0 20px;"><button class="btn-outline" onclick="closePanel('panelJadwalOlahraga')">Tutup</button></div>
-            <div style="height:16px;"></div>
-        </div>
-    </div>
-
-    <!-- PANEL EVALUASI MINGGUAN -->
-    <div class="modal-panel" id="panelEvaluasi">
-        <div class="modal-sheet">
-            <div class="ms-pull"></div>
-            <div class="ms-head">
-                <div class="ms-title">📊 Evaluasi Mingguan</div>
-                <div class="ms-sub" id="evalWeekDisplay">Catat perkembangan berat badan minggu ini</div>
-            </div>
-            <div class="ms-body">
-                <div id="editModeIndicator" style="display:none;background:rgba(232,160,32,0.15);border:1px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--gold2);font-weight:600;margin-bottom:12px;"><i class="fas fa-edit" style="margin-right:6px;"></i>Mode Edit — Minggu <span id="editWeekNumber">1</span></div>
-                <div class="eval-form-card">
-                    <div class="form-grid">
-                        <div class="form-group"><label class="form-label">Berat Awal Minggu (kg)</label><input type="number" id="weekStartWeight" class="form-input" step="0.1" placeholder="0.0"></div>
-                        <div class="form-group"><label class="form-label">Berat Akhir Minggu (kg)</label><input type="number" id="weekEndWeight" class="form-input" step="0.1" placeholder="0.0" oninput="calcWeeklyLoss()"></div>
-                    </div>
-                    <div id="weeklyLossResult" style="display:none;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:10px;padding:10px 12px;margin-bottom:12px;"><span style="font-size:12px;font-weight:700;color:var(--green);">Penurunan Minggu Ini: </span><span id="weeklyLossValue" style="font-size:14px;font-weight:800;color:var(--green);">0 kg</span></div>
-                    <div class="form-group"><label class="form-label">Kondisi Tubuh (Centang yang sesuai)</label>
-                        <div class="condition-grid">
-                            <div class="cond-item" onclick="toggleCond(this,'energi')"><div class="cond-check"><i class="fas fa-check" style="font-size:9px;"></i></div><span class="cond-text">Energi Stabil</span></div>
-                            <div class="cond-item" onclick="toggleCond(this,'nafsu')"><div class="cond-check"><i class="fas fa-check" style="font-size:9px;"></i></div><span class="cond-text">Nafsu Terkontrol</span></div>
-                            <div class="cond-item" onclick="toggleCond(this,'efek')"><div class="cond-check"><i class="fas fa-check" style="font-size:9px;"></i></div><span class="cond-text">Tanpa Efek Samping</span></div>
-                            <div class="cond-item" onclick="toggleCond(this,'tidur')"><div class="cond-check"><i class="fas fa-check" style="font-size:9px;"></i></div><span class="cond-text">Tidur Cukup</span></div>
-                        </div>
-                    </div>
-                    <div class="form-group"><label class="form-label">Kendala / Catatan Minggu Ini</label><textarea id="weeklyObstacle" class="form-input" rows="3" placeholder="Ceritakan kendala atau catatan yang kamu punya minggu ini..."></textarea></div>
-                    <div style="display:flex;gap:8px;"><button class="btn-primary" onclick="saveWeeklyEval()"><i class="fas fa-save"></i> Simpan</button><button id="btnCancelEdit" class="btn-outline" onclick="cancelEdit()" style="display:none;">Batal</button></div>
-                    <div style="margin-top:14px;padding:14px;background:#ECFDF5;border-radius:10px;text-align:center;"><div style="font-size:13px;color:#065F46;margin-bottom:8px;">Butuh bantuan atau konsultasi?</div><a href="https://wa.me/6281546450547" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;padding:10px 18px;border-radius:8px;font-weight:600;text-decoration:none;font-size:13px;"><i class="fab fa-whatsapp"></i>Hubungi Konsultan</a></div>
-                </div>
-                <div style="margin-top:4px;"><div class="sec-title">Riwayat Evaluasi</div><div id="weeklyHistoryList"><div class="ph">Belum ada riwayat evaluasi</div></div></div>
-                <div style="margin-top:16px;"><div class="sec-title">Tips Sukses Diet</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">💧</div><div style="font-size:12px;font-weight:700;">Hidrasi</div><div style="font-size:11px;color:var(--text3);">Minum 8 gelas air putih sehari</div></div>
-                        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">😴</div><div style="font-size:12px;font-weight:700;">Tidur</div><div style="font-size:11px;color:var(--text3);">Istirahat 7–8 jam/malam</div></div>
-                        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">🚶</div><div style="font-size:12px;font-weight:700;">Aktivitas</div><div style="font-size:11px;color:var(--text3);">Min. 30 menit aktivitas fisik</div></div>
-                        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">🚫</div><div style="font-size:12px;font-weight:700;">Hindari</div><div style="font-size:11px;color:var(--text3);">Gula, gorengan, soda</div></div>
-                    </div>
-                </div>
-            </div>
-            <div style="height:16px;"></div>
-            <div style="padding:0 20px;"><button class="btn-outline" onclick="closePanel('panelEvaluasi')">Tutup</button></div>
-            <div style="height:16px;"></div>
-        </div>
-    </div>
-
-    <!-- PANEL PANDUAN MENU HARIAN -->
-    <div class="modal-panel" id="panelMenu">
-        <div class="modal-sheet">
-            <div class="ms-pull"></div>
-            <div class="ms-head"><div class="ms-title">🍱 Panduan Menu Harian</div><div class="ms-sub">Menu makan personal sesuai kalori targetmu</div></div>
-            <div class="ms-body">
-                <div style="background:linear-gradient(135deg,#ECFDF5,#FEF3C7);padding:14px;border-radius:12px;border:1px solid #A7F3D0;margin-bottom:14px;"><div style="font-size:13px;font-weight:700;color:#065F46;margin-bottom:4px;">Program Transformasi Bersama KEMOENIK</div><div style="font-size:12px;color:#047857;">Target: <strong id="mealTargetDisplay">—</strong> kkal/hari</div><div style="margin-top:10px;padding:10px;background:white;border-radius:8px;font-size:12px;color:#065F46;line-height:1.6;"><strong>Catatan:</strong><br>Jika target 1300–1500 kkal: Kurangi porsi nasi jadi setengah dari tabel.<br>Jika target 1800–2000 kkal: Tambah 1 butir telur rebus atau porsi sayuran 1.5x.</div></div>
-                <div class="sec-title">Contoh Menu Hari Ini</div>
-                <div id="menuHariIni"></div>
-                <div style="background:var(--offwhite);border-radius:10px;padding:12px 14px;margin-top:10px;"><div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px;">📝 Catatan Alternatif Menu</div><div style="font-size:12px;color:var(--text3);line-height:1.7;">Tidak harus mengikuti menu di atas persis! Yang penting <strong>kalori tetap terjaga</strong> sesuai target. Bisa ganti dengan makanan lain setara kalori. Nasi → roti gandum, ayam → ikan/tahu/tempe. Yang terpenting: <strong>defisit kalori + konsistensi minum herbal!</strong></div></div>
-                <div style="margin-top:14px;"><button class="btn-primary" onclick="closePanel('panelMenu');openPanel('panelPanduanLengkap')"><i class="fas fa-book-open"></i> Lihat Menu Lengkap 10 Hari</button></div>
-            </div>
-            <div style="height:16px;"></div>
-            <div style="padding:0 20px;"><button class="btn-outline" onclick="closePanel('panelMenu')">Tutup</button></div>
-        </div>
-    </div>
-
-    <!-- PANEL PANDUAN LENGKAP -->
-    <div class="modal-panel" id="panelPanduanLengkap">
-        <div class="modal-sheet">
-            <div class="ms-pull"></div>
-            <div class="ms-head"><div class="ms-title">📋 Panduan Menu Lengkap</div><div class="ms-sub">10 Varian Menu: Ekonomis, Standar, Premium & Custom</div></div>
-            <div class="ms-body">
-                <div style="background:linear-gradient(135deg,#ECFDF5,#FEF3C7);padding:14px;border-radius:12px;border:1px solid #A7F3D0;margin-bottom:14px;font-size:12px;color:#065F46;">Target Kalori: <strong id="targetKcalLengkap">—</strong> kkal/hari &nbsp;|&nbsp; Durasi: 10 Varian Menu</div>
-                <div class="menu-tabs-wrap">
-                    <button class="menu-tab-btn on" onclick="switchMenuTab('ekonomis',this)">Ekonomis</button>
-                    <button class="menu-tab-btn" onclick="switchMenuTab('standar',this)">Standar</button>
-                    <button class="menu-tab-btn" onclick="switchMenuTab('premium',this)">Premium</button>
-                    <button class="menu-tab-btn" onclick="switchMenuTab('custom',this)">Custom Menu</button>
-                </div>
-                <div id="tabMenuEkonomis">
-                    <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;">MENU EKONOMIS — Budget Rendah</div>
-                    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">Bahan lokal pasar, harga terjangkau, nutrisi maksimal.</div>
-                    <div class="menu-table-wrap">
-                        <table class="menu-table">
-                            <thead><tr><th>#</th><th>Sarapan</th><th>Snack Pagi</th><th>Makan Siang</th><th>Snack Sore</th><th>Makan Malam</th></tr></thead>
-                            <tbody>
-                                <tr><td>1</td><td>2 Telur Rebus + 1 Pisang</td><td>Jeruk + Kacang Tanah</td><td>Nasi Putih + Tahu/Tempe Bacem + Sayur Bayam</td><td>Pepaya Potong</td><td>Ikan Kembung Bakar + Labu Siam + Kentang</td></tr>
-                                <tr><td>2</td><td>2 Telur Rebus + 1 Ubi Cilembu</td><td>Pisang Goreng (Air Fryer)</td><td>Nasi Putih + Orek Tempe + Sayur Asem</td><td>Singkong Rebus</td><td>Ayam Bakar (Tanpa Kulit) + Lalapan + Sambal</td></tr>
-                                <tr><td>3</td><td>2 Telur Rebus + Jagung Rebus</td><td>Buah Semangka</td><td>Bihun Jagung + Telur Dadar + Tumis Kangkung</td><td>Kacang Hijau (No Santan)</td><td>Ikan Lele Bakar + Cah Genjer + Nasi Putih</td></tr>
-                                <tr><td>4</td><td>2 Telur Rebus + Singkong Rebus</td><td>Buah Melon</td><td>Nasi Putih + Pepes Tahu + Sayur Lodeh (Bening)</td><td>Jagung Manis Pipil</td><td>Telur Ceplok Air + Tumis Sawi Putih + Kentang</td></tr>
-                                <tr><td>5</td><td>2 Telur Rebus + Roti Tawar</td><td>Salak 2 butir</td><td>Nasi Putih + Pindang Tongkol + Sayur Sop</td><td>Pisang Rebus</td><td>Pepes Jamur + Tahu Kuning + Sambal</td></tr>
-                                <tr><td>6</td><td>2 Telur Rebus + Pepaya</td><td>Bengkoang</td><td>Nasi Putih + Ayam Suwir + Tumis Kacang Panjang</td><td>Edamame Rebus</td><td>Ikan Mujair Goreng + Wortel & Buncis Rebus</td></tr>
-                                <tr><td>7</td><td>2 Telur Rebus + ½ Alpukat</td><td>Jambu Air</td><td>Gado-Gado (Bumbu Sedikit) + Lontong</td><td>Kerupuk Putih (1)</td><td>Sup Ceker Ayam + Sayuran + Nasi Putih</td></tr>
-                                <tr><td>8</td><td>2 Telur Rebus + Ubi Ungu</td><td>Buah Naga ½</td><td>Nasi Putih + Ikan Asin Kecil + Sayur Kelor</td><td>Pisang Ambon</td><td>Ayam Bumbu Kuning + Sambal + Lalap</td></tr>
-                                <tr><td>9</td><td>2 Telur Rebus + Bubur Sumsum</td><td>Mangga Lokal</td><td>Nasi Putih + Tumis Kerang + Daun Singkong</td><td>Bakwan Sayur (1)</td><td>Ikan Nila Bakar + Tumis Terong + Nasi Putih</td></tr>
-                                <tr><td>10</td><td>2 Telur Rebus + Pisang Kukus</td><td>Kurma 3 butir</td><td>Nasi Putih + Kentang Balado + Sayur Sop</td><td>Ketan Putih (Sedikit)</td><td>Ayam Ungkep + Sayur Gambas + Nasi Putih</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div id="tabMenuStandar" style="display:none;">
-                    <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;">MENU STANDAR — Budget Menengah</div>
-                    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">Bahan supermarket, praktis, tinggi protein.</div>
-                    <div class="menu-table-wrap">
-                        <table class="menu-table">
-                            <thead><tr><th>#</th><th>Sarapan</th><th>Snack Pagi</th><th>Makan Siang</th><th>Snack Sore</th><th>Makan Malam</th></tr></thead>
-                            <tbody>
-                                <tr><td>1</td><td>2 Telur Rebus + Pisang Cavendish</td><td>Apel + Almond</td><td>Nasi Merah + Dada Ayam Grill + Buncis</td><td>Yogurt Plain + Granola</td><td>Ikan Kakap Kukus + Salad + Kentang</td></tr>
-                                <tr><td>2</td><td>2 Telur Rebus + Oatmeal</td><td>Pear + Kacang Mete</td><td>Nasi Merah + Sapi Lada Hitam + Pakcoy</td><td>Smoothie Pisang</td><td>Steak Ayam + Mix Veggies + Mashed Potato</td></tr>
-                                <tr><td>3</td><td>2 Telur Rebus + Roti Gandum</td><td>Kiwi + Pistachio</td><td>Pasta Gandum + Udang + Brokoli</td><td>Protein Bar</td><td>Ikan Dory Panggang + Asparagus + Jagung</td></tr>
-                                <tr><td>4</td><td>2 Telur Rebus + Buah Naga</td><td>Anggur + Keju Slice</td><td>Nasi Merah + Ayam Teriyaki + Stir Fry Sayur</td><td>Salad Buah Low Fat</td><td>Sup Ikan + Sawi + Nasi Merah</td></tr>
-                                <tr><td>5</td><td>2 Telur Rebus + Sereal Gandum</td><td>Jeruk + Edamame</td><td>Nasi Merah + Ikan Gurame Bakar + Kangkung</td><td>Dark Chocolate</td><td>Beef Patty (Homemade) + Salad + Ubi</td></tr>
-                                <tr><td>6</td><td>2 Telur Rebus + Pancake Protein</td><td>Blueberry + Almond</td><td>Nasi Merah + Opor Ayam (Low Fat) + Labu</td><td>Greek Yogurt</td><td>Ayam Bakar + Plecing + Nasi Merah</td></tr>
-                                <tr><td>7</td><td>2 Telur Rebus + Smoothie Bowl</td><td>Strawberry + Kuaci</td><td>Sandwich Gandum + Tuna + Selada</td><td>Jus Alpukat (No Sugar)</td><td>Ikan Bawal Bakar + Tumis Jamur + Nasi Merah</td></tr>
-                                <tr><td>8</td><td>2 Telur Rebus + Muesli</td><td>Apel Hijau + Peanut Butter</td><td>Nasi Merah + Ayam Rosemary + Wortel</td><td>Puding Chia Seed</td><td>Salad Caesar + Ayam Grill + Telur Rebus</td></tr>
-                                <tr><td>9</td><td>2 Telur Rebus + Alpukat Kocok</td><td>Melon + Granola Bar</td><td>Nasi Merah + Semur Daging + Sawi</td><td>Smoothie Nanas</td><td>Ikan Nila Asam Manis + Brokoli + Nasi Merah</td></tr>
-                                <tr><td>10</td><td>2 Telur Rebus + Granola</td><td>Pisang + Selai Kacang</td><td>Nasi Merah + Udang Saus Tiram + Capcay</td><td>Yogurt Drink</td><td>Steak Tempe & Daging + Salad + Kentang</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div id="tabMenuPremium" style="display:none;">
-                    <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;">MENU PREMIUM — Budget Atas</div>
-                    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">Superfood, bahan organik, seafood laut dalam.</div>
-                    <div class="menu-table-wrap">
-                        <table class="menu-table">
-                            <thead><tr><th>#</th><th>Sarapan</th><th>Snack Pagi</th><th>Makan Siang</th><th>Snack Sore</th><th>Makan Malam</th></tr></thead>
-                            <tbody>
-                                <tr><td>1</td><td>2 Telur Rebus + Alpukat Mentega</td><td>Mix Berries + Walnut</td><td>Quinoa + Salmon Steak + Asparagus</td><td>Greek Yogurt + Chia Seed</td><td>Tuna Seared + Edamame Salad + Ubi Ungu</td></tr>
-                                <tr><td>2</td><td>2 Telur Rebus + Smoked Salmon</td><td>Cherry + Macadamia</td><td>Shirataki Rice + Wagyu Beef + Kale</td><td>Smoothie Kale & Whey</td><td>Lobster Grilled + Salad Organik + Baby Potato</td></tr>
-                                <tr><td>3</td><td>2 Telur Rebus + Almond Butter Toast</td><td>Buah Tin + Pecans</td><td>Brown Rice + Gindara Grill + Baby Corn</td><td>Cold Pressed Juice</td><td>Scallops + Puree Kembang Kol + Edamame</td></tr>
-                                <tr><td>4</td><td>2 Telur Rebus + Dragon Fruit Bowl</td><td>Raspberry + Almonds</td><td>Quinoa + Bebek Panggang + Bok Choy</td><td>Sorbet Buah Asli</td><td>Sirloin Steak + Truffle Veggies + Sweet Potato</td></tr>
-                                <tr><td>5</td><td>2 Telur Rebus + Sourdough Toast</td><td>Delima (Pomegranate)</td><td>Shirataki + Kepiting Soka + Wakame</td><td>Matcha Latte (Almond)</td><td>Grilled Cod Fish + Zucchini Noodles + Quinoa</td></tr>
-                                <tr><td>6</td><td>2 Telur Rebus + Acai Bowl</td><td>Blackberry + Pistachio</td><td>Quinoa + Lamb Chop + Paprika</td><td>Greek Yogurt + Honey</td><td>Salmon Sashimi + Salad Wakame + Sup Miso</td></tr>
-                                <tr><td>7</td><td>2 Telur Rebus + Chia Pudding</td><td>Peach + Brazil Nuts</td><td>Shirataki + Udang Galah + Asparagus</td><td>Keto Cake Slice</td><td>Roasted Turkey + Brussel Sprouts + Pumpkin</td></tr>
-                                <tr><td>8</td><td>2 Telur Rebus + Guacamole</td><td>Apricot + Hazelnuts</td><td>Brown Rice + Barramundi + Salad Organik</td><td>Smoothie Avocado</td><td>Tenderloin Steak + Mushroom + Baby Carrot</td></tr>
-                                <tr><td>9</td><td>2 Telur Rebus + Quinoa Porridge</td><td>Blueberries + Pine Nuts</td><td>Shirataki + Venison (Rusa) + Kale</td><td>Almond Milk Pudding</td><td>Grilled Octopus + Salad Mediterania + Hummus</td></tr>
-                                <tr><td>10</td><td>2 Telur Rebus + Protein Muffin</td><td>Goji Berries + Walnut</td><td>Quinoa + Chicken Sous Vide + Brokoli</td><td>Coconut Water</td><td>Sea Bass Griled + Salad Quinoa + Mashed Potato</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div id="tabMenuCustom" style="display:none;">
-                    <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;">CUSTOM MENU — Pilih Sendiri</div>
-                    <div style="font-size:12px;color:var(--text3);margin-bottom:14px;">Pilih bahan makanan dan hitung total kalori otomatis.</div>
-                    <div style="background:linear-gradient(135deg,var(--green),var(--green3));color:white;border-radius:12px;padding:14px;margin-bottom:14px;">
-                        <div style="font-size:13px;font-weight:600;margin-bottom:8px;">🎯 Target Kalori Harian</div>
-                        <div style="display:flex;gap:10px;align-items:center;">
-                            <input type="number" id="cmTargetCal" placeholder="Contoh: 1450" style="flex:1;padding:10px;border:none;border-radius:8px;font-size:14px;font-family:inherit;text-align:center;font-weight:700;color:var(--text);" oninput="cmSetTarget(this.value)">
-                            <span id="cmCurrentTarget" style="font-size:18px;font-weight:800;opacity:0.9;">— kcal</span>
-                        </div>
-                    </div>
-                    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;margin-bottom:10px;" id="cmCatFilter">
-                        <button onclick="cmFilterCat('all',this)" style="padding:6px 14px;background:var(--green);color:#FFF;border:none;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;">Semua</button>
-                        <button onclick="cmFilterCat('protein-hewani',this)" style="padding:6px 14px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;color:var(--text3);">Protein Hewani</button>
-                        <button onclick="cmFilterCat('protein-nabati',this)" style="padding:6px 14px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;color:var(--text3);">Protein Nabati</button>
-                        <button onclick="cmFilterCat('karbohidrat',this)" style="padding:6px 14px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;color:var(--text3);">Karbohidrat</button>
-                        <button onclick="cmFilterCat('sayuran',this)" style="padding:6px 14px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;color:var(--text3);">Sayuran</button>
-                        <button onclick="cmFilterCat('buah',this)" style="padding:6px 14px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;color:var(--text3);">Buah</button>
-                        <button onclick="cmFilterCat('lemak',this)" style="padding:6px 14px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;color:var(--text3);">Lemak</button>
-                    </div>
-                    <div id="cmFoodGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:320px;overflow-y:auto;margin-bottom:12px;"></div>
-                    <div style="background:linear-gradient(135deg,#3B82F6,#1D4ED8);color:white;border-radius:12px;padding:14px;">
-                        <div style="font-size:12px;font-weight:600;margin-bottom:10px;">📊 Ringkasan</div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-                            <div style="background:rgba(255,255,255,0.2);padding:10px;border-radius:8px;text-align:center;"><div style="font-size:10px;opacity:0.9;">Target</div><div style="font-size:22px;font-weight:800;" id="cmDisplayTarget">—</div></div>
-                            <div style="background:rgba(255,255,255,0.2);padding:10px;border-radius:8px;text-align:center;"><div style="font-size:10px;opacity:0.9;">Terpakai</div><div style="font-size:22px;font-weight:800;" id="cmDisplayUsed">0</div></div>
-                        </div>
-                        <div style="background:rgba(255,255,255,0.3);height:12px;border-radius:6px;overflow:hidden;margin-bottom:8px;"><div id="cmProgressBar" style="height:100%;background:white;border-radius:6px;width:0%;transition:width 0.4s;"></div></div>
-                        <div id="cmStatus" style="background:rgba(46,204,113,0.3);padding:8px;border-radius:8px;text-align:center;font-size:11px;font-weight:600;margin-bottom:10px;">✅ Dalam batas aman</div>
-                        <button onclick="cmReset()" style="width:100%;padding:8px;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.4);color:white;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">🗑️ Reset Menu</button>
-                    </div>
-                    <div style="margin-top:12px;padding:12px 14px;background:#FEF3C7;border-radius:8px;border:1px solid #FCD34D;font-size:12px;color:#92400E;line-height:1.6;"><strong>Tips:</strong> Telur dimasak matang sempurna agar protein terserap 100%. Budget bukan halangan untuk langsing — yang terpenting Defisit Kalori dan Konsistensi minum KEMOENIK!</div>
-                </div>
-            </div>
-            <div style="height:16px;"></div>
-            <div style="padding:0 20px;"><button class="btn-outline" onclick="closePanel('panelPanduanLengkap')">Tutup</button></div>
-        </div>
-    </div>
-
-    <!-- MODAL BELI -->
-    <div class="modal-panel" id="modalBeli">
-        <div class="modal-sheet">
-            <div class="ms-pull"></div>
-            <div class="ms-head"><div class="ms-title">🛒 Beli KEMOENIK</div><div class="ms-sub">Jangan sampai stok habis di tengah program!</div></div>
-            <div class="ms-body">
-                <div style="background:linear-gradient(135deg,#FFF7ED,#FEF2F2);border:1px solid #FED7AA;border-radius:14px;padding:18px;margin-bottom:14px;text-align:center;">
-                    <div style="font-size:36px;margin-bottom:10px;">🌿</div>
-                    <div style="font-size:15px;font-weight:800;color:#9A3412;margin-bottom:6px;">KEMOENIK — Herbal Pelangsing Premium</div>
-                    <div style="font-size:12px;color:#92400E;line-height:1.7;">Formula 5 herbal alami: Teh Hijau, Jati Belanda, Kemuning, Temulawak & Tempuyung. Bantu bakar lemak, kontrol nafsu makan & detoks tubuh secara alami.</div>
-                </div>
-                <div class="shop-grid">
-                    <a href="https://s.shopee.co.id/4VXlRpSx3t" target="_blank" class="shop-btn shop-shopee"><i class="fas fa-shopping-bag"></i> Shopee</a>
-                    <a href="https://vt.tiktok.com/ZS9deV3a9Mxea-W7dhT/" target="_blank" class="shop-btn shop-tiktok"><i class="fab fa-tiktok"></i> TikTok Shop</a>
-                </div>
-                <div style="background:#FEE2E2;border:1px solid #FECACA;border-radius:10px;padding:10px 12px;margin-top:10px;font-size:12px;color:#991B1B;text-align:center;font-weight:600;">⚠️ Stok terbatas! Segera restock sebelum habis</div>
-            </div>
-            <div style="height:16px;"></div>
-            <div style="padding:0 20px;"><button class="btn-outline" onclick="closePanel('modalBeli')">Tutup</button></div>
-        </div>
-    </div>
-
-    <!-- ✅ Handler untuk parameter dari aktivitas -->
-    <script>
-    (function() {
-        // Handle redirect dari aktivitas dengan parameter
-        var params = new URLSearchParams(window.location.search);
-        var wa = params.get('wa');
-        var voucher = params.get('voucher');
-        var mode = params.get('mode') || 'continue';
-        
-        // Jika ada parameter dari aktivitas, simpan ke localStorage
-        if (wa && voucher) {
-            localStorage.setItem('kemoenik_wa', wa);
-            localStorage.setItem('kemoenik_voucher', voucher);
-            localStorage.setItem('kemoenik_mode', mode);
-            localStorage.setItem('kemoenik_expiry', String(Date.now() + 7 * 24 * 60 * 60 * 1000));
-            
-            // Clean URL (hapus parameter dari address bar)
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    })();
+        gtag('config', 'G-XXXXXXXXXX');
     </script>
     
-    <script src="js/data.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/app.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts — sama dengan panduan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== CSS VARIABLES — sama persis dengan panduan ===== */
+        :root {
+            --bg:       #F6F4EF;
+            --card:     #FFFFFF;
+            --offwhite: #F9F8F5;
+            --green:    #1F4D3A;
+            --green2:   #1F4D3A;
+            --green3:   #163628;
+            --greenlit: #2E6B53;
+            --gold:     #C8A96A;
+            --gold2:    #A8843F;
+            --border:   #DDE4DA;
+            --border2:  #C5D1C1;
+            --text:     #1E2B26;
+            --text2:    #2A3D34;
+            --text3:    #8A9A92;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body:    'Inter', system-ui, sans-serif;
+            --shadow-md: 0 8px 20px rgba(15,40,25,0.08);
+            --shadow-lg: 0 12px 40px rgba(15,40,25,0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px 40px;
+            color: var(--text);
+        }
+
+        .container {
+            background: var(--card);
+            padding: 36px 28px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        /* ===== LOGO ===== */
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo img {
+            width: 80px;
+            border-radius: 50%;
+            margin-bottom: 12px;
+            border: 2px solid var(--border);
+        }
+
+        .logo h2 {
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--green2);
+            letter-spacing: 0.5px;
+        }
+
+        .logo h2 span {
+            color: var(--gold);
+        }
+
+        .logo p {
+            font-size: 13px;
+            color: var(--text3);
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 7px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text3);
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px 13px 42px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            font-size: 14px;
+            background: var(--offwhite);
+            font-family: var(--font-body);
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        input::placeholder {
+            color: var(--text3);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--green);
+            background: var(--card);
+            box-shadow: 0 0 0 3px rgba(31,77,58,0.1);
+        }
+
+        /* ===== BUTTON ===== */
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-body);
+            letter-spacing: 0.3px;
+        }
+
+        button:hover {
+            background: var(--green3);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.loading .btn-text {
+            display: none;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin: 0 auto;
+        }
+
+        button.loading .spinner {
+            display: block;
+        }
+
+        /* ===== RESULT BOX ===== */
+        .result-box {
+            margin-top: 20px;
+            padding: 16px 18px;
+            border-radius: 12px;
+            color: #fff;
+            text-align: left;
+            line-height: 1.6;
+            font-size: 13px;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #1F4D3A, #2E6B53);
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #A8843F, #C8A96A);
+        }
+
+        .error {
+            background: linear-gradient(135deg, #C0392B, #9B2335);
+        }
+
+        /* ===== BTN LANJUT ===== */
+        .btn-lanjut {
+            display: none;
+            margin-top: 12px;
+            text-align: center;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1.5px solid var(--gold);
+            color: var(--gold2);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            background: var(--card);
+            transition: all 0.2s;
+            font-family: var(--font-body);
+        }
+
+        .btn-lanjut:hover {
+            background: var(--green);
+            color: #fff;
+            border-color: var(--green);
+        }
+
+        .btn-lanjut.show {
+            display: block;
+        }
+
+        /* ===== PRIVACY TEXT ===== */
+        .privacy-text {
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 5px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* ===== DIVIDER ===== */
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 24px 0 20px;
+        }
+
+        /* ===== FAQ Section ===== */
+        .faq-section {
+            margin-top: 24px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .faq-title {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .accordion {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 13px 14px;
+            background: var(--offwhite);
+            border: none;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text2);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+            font-family: var(--font-body);
+        }
+
+        .accordion-header:hover {
+            background: #EEF1EE;
+        }
+
+        .accordion-header i {
+            transition: transform 0.3s;
+            color: var(--gold2);
+            font-size: 12px;
+        }
+
+        .accordion-header.active i {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            background: var(--card);
+            transition: max-height 0.3s ease-out, padding 0.3s;
+            font-size: 13px;
+            color: var(--text3);
+            line-height: 1.7;
+        }
+
+        .accordion-body.show {
+            max-height: 200px;
+            padding: 14px 15px;
+        }
+
+        /* ===== SOCIAL LINKS ===== */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text2);
+            background: var(--offwhite);
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .social-links a:hover {
+            background: var(--green);
+            color: #fff;
+            border-color: var(--green);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15,30,20,0.65);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card);
+            padding: 32px 28px;
+            border-radius: 20px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .modal-icon {
+            font-size: 44px;
+            color: var(--gold2);
+            margin-bottom: 14px;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: var(--text3);
+            margin-bottom: 20px;
+            line-height: 1.65;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-body);
+        }
+
+        .modal-btn-primary {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .modal-btn-primary:hover {
+            background: var(--green3);
+        }
+
+        .modal-btn-secondary {
+            background: var(--offwhite);
+            color: var(--text2);
+            border: 1.5px solid var(--border);
+        }
+
+        .modal-btn-secondary:hover {
+            background: #EEF1EE;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text3);
+        }
+
+        .footer a {
+            color: var(--gold2);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: var(--green);
+        }
+
+        /* ===== NOTIF TOAST ===== */
+        .notif-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--green);
+            color: white;
+            padding: 13px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            display: none;
+            z-index: 2000;
+            animation: slideInRight 0.3s ease;
+            font-family: var(--font-body);
+        }
+
+        .notif-toast.show {
+            display: block;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo Kemoenik">
+            <h2>KEMO<span>ENIK</span></h2>
+            <p>Verifikasi Kode Konsultasi</p>
+        </div>
+
+        <!-- Form Input -->
+        <div class="form-group">
+            <label>Nama Lengkap</label>
+            <div class="input-wrapper">
+                <i class="fas fa-user"></i>
+                <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Nomor WhatsApp</label>
+            <div class="input-wrapper">
+                <i class="fab fa-whatsapp"></i>
+                <input type="tel" id="wa" placeholder="Contoh: 08123456789" required>
+            </div>
+            <p class="privacy-text">
+                <i class="fas fa-shield-alt"></i> Nomor WA hanya digunakan untuk sinkronisasi data diet Anda, data akan hilang jika dipake hp orang lain, hapus penyimpanan broser, ganti hp, mohon jaga data diet kalian.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label>Kode Konsultasi</label>
+            <div class="input-wrapper">
+                <i class="fas fa-ticket-alt"></i>
+                <input type="text" id="kode" placeholder="Masukkan kode unik" required>
+            </div>
+        </div>
+
+        <!-- Tombol Cek -->
+        <button id="btnCek" onclick="cekKode()">
+            <span class="btn-text">Cek Kode</span>
+            <div class="spinner"></div>
+        </button>
+
+        <!-- Tombol Lanjut (muncul setelah sukses) -->
+        <a id="btnLanjut" class="btn-lanjut" onclick="handleLanjut()">
+            <i class="fas fa-book-open"></i> Buka Panduan
+        </a>
+
+        <!-- Result Box -->
+        <div id="result" class="result-box"></div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <div class="faq-title">Masa Aktif & Data (Sistem Voucher)</div>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        1. Kenapa saya tidak bisa login/terkunci?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">
+                        Voucher Anda sudah melewati batas 7 hari. Masukkan kode baru dari kemasan.
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        2. Apakah data berat badan hilang kalau voucher habis?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">
+                        Tenang! Pakai nomor WA yang sama, data lama akan otomatis muncul kembali.
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        3. Boleh pakai No WA berbeda untuk voucher baru?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">
+                        Disarankan pakai WA yang sama agar grafik transformasi tidak terputus.
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        4. Halaman web putih/blank saat scan QR?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">
+                        Bersihkan cache browser atau buka langsung di Google Chrome.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Links -->
+            <div class="social-links">
+                <a href="https://www.instagram.com/kemoenik26" target="_blank">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+                <a href="https://www.tiktok.com/@kemoenik" target="_blank">
+                    <i class="fab fa-tiktok"></i> TikTok
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Butuh bantuan? 
+            <a href="https://wa.me/6281546450547?text=Halo%20admin,%20saya%20butuh%20bantuan%20kode%20konsultasi" target="_blank">
+                Hubungi kami
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal Pilihan Program -->
+    <div id="programChoiceModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fas fa-history"></i></div>
+            <div class="modal-title">Data Lama Ditemukan</div>
+            <div class="modal-desc">
+                Nomor WA ini sudah memiliki data program sebelumnya. Apakah Anda ingin melanjutkan program lama atau memulai program baru?
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" onclick="continueOldProgram()">
+                    Lanjutkan Lama
+                </button>
+                <button class="modal-btn modal-btn-primary" onclick="startNewProgram()">
+                    Mulai Baru
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifikasi Toast -->
+    <div id="notifToast" class="notif-toast"></div>
+
+    <script>
+        // ==========================================
+        // KONFIGURASI - SESUAIKAN DENGAN SETUP ANDA
+        // ==========================================
+        const CONFIG = {
+            // URL ke halaman panduan (relative path)
+            PANDUAN_URL: '/PANDUANKEMOENIK/index.html',
+            APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwtSycdeNBbJjOJPA8bDJ7szBTqGn4JK8JioxT5XQd9_FGnetuC8FW0MER0md9ciT9B/exec',
+            VOUCHER_DAYS: 7
+        };
+
+        // Variabel untuk menyimpan data sementara
+        let tempData = {
+            wa: '',
+            kode: '',
+            nama: '',
+            isReturningUser: false
+        };
+
+        // ==========================================
+        // FUNGSI UTILITAS
+        // ==========================================
+        
+        // Normalisasi nomor WA ke format 62
+        function normalizeWA(wa) {
+            wa = wa.replace(/\D/g, '');
+            if (wa.startsWith('08')) return '62' + wa.substring(1);
+            if (wa.startsWith('+62')) return wa.substring(1);
+            if (wa.startsWith('62')) return wa;
+            if (wa.startsWith('0')) return '62' + wa.substring(1);
+            return wa;
+        }
+
+        // ==========================================
+        // SISTEM KEAMANAN SESSION
+        // ==========================================
+
+        // Secret key — hanya ada di kode JS, tidak dikirim ke server
+        const SECRET_KEY = 'KMN_s3cr3t_2025_x9z';
+
+        // Hash sederhana deterministik tanpa library eksternal
+        function hashSimple(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const chr = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + chr;
+                hash |= 0;
+            }
+            hash = hash ^ str.length ^ 0x4B4D4E;
+            return (hash >>> 0).toString(16).padStart(8, '0') +
+                   (str.length * 31 + 7).toString(16).padStart(4, '0');
+        }
+
+        // Buat token dari wa + voucher + secretKey
+        function generateToken(wa, voucher) {
+            return hashSimple(wa + '::' + voucher + '::' + SECRET_KEY);
+        }
+
+        // Buat dan simpan session ke localStorage
+        function createSession(wa, voucher) {
+            const token = generateToken(wa, voucher);
+            const session = {
+                wa: wa,
+                voucher: voucher,
+                expired: Date.now() + (CONFIG.VOUCHER_DAYS * 24 * 60 * 60 * 1000),
+                token: token
+            };
+            localStorage.setItem('userSession', JSON.stringify(session));
+        }
+
+        // Device fingerprint berbasis info browser (konsisten per device)
+        function getDeviceId() {
+            const raw = [
+                navigator.userAgent,
+                screen.width + 'x' + screen.height,
+                Intl.DateTimeFormat().resolvedOptions().timeZone,
+                navigator.language
+            ].join('|');
+            // Simple hash
+            let hash = 0;
+            for (let i = 0; i < raw.length; i++) {
+                hash = ((hash << 5) - hash) + raw.charCodeAt(i);
+                hash |= 0;
+            }
+            return 'FP_' + Math.abs(hash).toString(36);
+        }
+
+        // Device binding sekarang dicek di server (Google Sheets)
+        // Fungsi ini tidak lagi dipakai secara lokal
+        function checkDeviceBinding(wa, voucher) {
+            return { ok: true, existing: false };
+        }
+
+        // Format tanggal ke bahasa Indonesia
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+        }
+
+        // Toggle accordion
+        function toggleAccordion(btn) {
+            const body = btn.nextElementSibling;
+            const isActive = btn.classList.contains('active');
+            
+            // Tutup semua accordion
+            document.querySelectorAll('.accordion-body').forEach(b => {
+                b.classList.remove('show');
+                b.style.maxHeight = '0';
+                b.style.padding = '0 15px';
+            });
+            document.querySelectorAll('.accordion-header').forEach(h => {
+                h.classList.remove('active');
+            });
+            
+            // Buka yang diklik jika belum aktif
+            if (!isActive) {
+                btn.classList.add('active');
+                body.classList.add('show');
+                body.style.maxHeight = '200px';
+                body.style.padding = '15px';
+            }
+        }
+
+        // Tampilkan notifikasi toast
+        function showToast(message) {
+            const toast = document.getElementById('notifToast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Tampilkan hasil (success/warning/error)
+        function showResult(type, message) {
+            const result = document.getElementById('result');
+            result.className = 'result-box show ' + type;
+            result.innerHTML = message;
+        }
+
+        // Sembunyikan hasil
+        function hideResult() {
+            const result = document.getElementById('result');
+            result.className = 'result-box';
+            result.innerHTML = '';
+        }
+
+        // ==========================================
+        // FUNGSI UTAMA - CEK KODE
+        // ==========================================
+        async function cekKode() {
+            const nama = document.getElementById('nama').value.trim();
+            const wa = document.getElementById('wa').value.trim();
+            const kode = document.getElementById('kode').value.trim();
+            const btn = document.getElementById('btnCek');
+            const btnLanjut = document.getElementById('btnLanjut');
+
+            // Reset tampilan
+            hideResult();
+            btnLanjut.classList.remove('show');
+
+            // Validasi input
+            if (nama.length < 3) {
+                showResult('error', '❌ Nama minimal 3 karakter');
+                return;
+            }
+            if (wa.replace(/\D/g, '').length < 10) {
+                showResult('error', '❌ Nomor WA tidak valid (minimal 10 digit)');
+                return;
+            }
+            if (kode.length < 6) {
+                showResult('error', '❌ Kode tidak valid (minimal 6 karakter)');
+                return;
+            }
+
+            const normalizedWA = normalizeWA(wa);
+            
+            // Tampilkan loading
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                // Panggil Google Apps Script untuk verifikasi
+                const deviceId = getDeviceId();
+                const response = await fetch(
+                    `${CONFIG.APPS_SCRIPT_URL}?action=verify&kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(normalizedWA)}&device_id=${encodeURIComponent(deviceId)}&_=${Date.now()}`
+                );
+                
+                const data = await response.json();
+                
+                // Hilangkan loading
+                btn.classList.remove('loading');
+                btn.disabled = false;
+
+                // Proses hasil
+                processVerificationResult(data, nama, normalizedWA, kode);
+
+            } catch (error) {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                showResult('error', '❌ Gagal terhubung ke server. Cek koneksi internet Anda.');
+                console.error('Error:', error);
+            }
+        }
+
+        // Proses hasil verifikasi
+        function processVerificationResult(data, nama, wa, kode) {
+            const expDate = formatDate(data.tanggal_expired || new Date(Date.now() + CONFIG.VOUCHER_DAYS * 24 * 60 * 60 * 1000));
+            
+            // Simpan data sementara
+            tempData = {
+                wa: wa,
+                kode: kode,
+                nama: nama,
+                isReturningUser: false
+            };
+
+            // Handle berdasarkan status dari server
+            switch(data.status) {
+                case 'SUCCESS':
+                case 'ACTIVE_SAME_WA':
+                    // Device binding sudah dicek di server
+                    // Cek apakah user punya data di localStorage
+                    const storageKey = `kemoenik_user_${wa}`;
+                    const existingData = localStorage.getItem(storageKey);
+                    const parsedExisting = existingData ? JSON.parse(existingData) : null;
+                    const hasExistingData = parsedExisting && parsedExisting.kalkulator !== null && parsedExisting.kalkulator !== undefined;
+                    // Cek juga key lama
+                    const oldKalData = localStorage.getItem('kemoenik_kal_data');
+                    const hasOldData = oldKalData ? (JSON.parse(oldKalData).dietCal !== undefined) : false;
+                    
+                    tempData.isReturningUser = data.status === 'ACTIVE_SAME_WA' || hasExistingData || hasOldData;
+                    
+                    const welcomeMsg = tempData.isReturningUser
+                        ? `👋 Selamat datang kembali, <strong>${nama}</strong>!<br><br>🌟 Voucher aktif hingga <strong>${expDate}</strong>.<br>Data lama akan dilanjutkan.`
+                        : `👋 Selamat datang, <strong>${nama}</strong>!<br><br>🌟 Voucher aktif hingga <strong>${expDate}</strong>.<br>Mari buat program baru.`;
+                    
+                    showResult('success', welcomeMsg);
+                    document.getElementById('btnLanjut').classList.add('show');
+                    
+                    // Tracking Google Analytics
+                    gtag('event', 'voucher_activated', {
+                        event_category: 'engagement',
+                        event_label: tempData.isReturningUser ? 'returning_user' : 'new_user'
+                    });
+                    break;
+
+                case 'ACTIVE_DIFFERENT_WA':
+                    showResult('error', '❌ Kode ini sudah digunakan oleh nomor WA lain.');
+                    break;
+
+                case 'DEVICE_MISMATCH':
+                    showResult('error', '❌ Akun ini sudah aktif di perangkat lain.<br><small style="color:#9CA3AF;">Hubungi admin KEMOENIK untuk reset perangkat.</small>');
+                    break;
+
+                case 'EXPIRED':
+                    showResult('warning', '⏰ Kode sudah expired. Silakan gunakan kode baru dari kemasan KEMOENIK.');
+                    break;
+
+                case 'INVALID':
+                    showResult('error', '❌ Kode tidak ditemukan di sistem. Periksa kembali kode Anda.');
+                    break;
+
+                case 'USED':
+                    showResult('warning', '⚠️ Kode ini sudah pernah digunakan. Setiap kode hanya untuk 1 perangkat.');
+                    break;
+
+                default:
+                    showResult('error', '❌ Terjadi kesalahan sistem. Silakan coba lagi.');
+            }
+        }
+
+        // ==========================================
+        // FUNGSI REDIRECT DAN MODAL
+        // ==========================================
+        
+        // Handle tombol lanjut
+        function handleLanjut() {
+            // Sebelum redirect, pastikan binding masih valid (opsional, untuk keamanan)
+            const binding = checkDeviceBinding(tempData.wa, tempData.kode);
+            if (!binding.ok) {
+                // Jika binding gagal, tampilkan error dan jangan redirect
+                let errorMsg = binding.reason === 'wa_mismatch' 
+                    ? 'Nomor WA tidak sesuai dengan binding.' 
+                    : 'Perangkat tidak sesuai dengan binding.';
+                showResult('error', '❌ ' + errorMsg);
+                document.getElementById('btnLanjut').classList.remove('show');
+                return;
+            }
+
+            if (tempData.isReturningUser) {
+                // Tampilkan modal pilihan untuk user yang sudah pernah daftar
+                document.getElementById('programChoiceModal').classList.add('show');
+            } else {
+                // Langsung redirect untuk user baru
+                redirectToPanduan('new');
+            }
+        }
+
+        // Pilihan: Lanjutkan program lama
+        function continueOldProgram() {
+            document.getElementById('programChoiceModal').classList.remove('show');
+            redirectToPanduan('continue');
+        }
+
+        // Pilihan: Mulai program baru
+        function startNewProgram() {
+            document.getElementById('programChoiceModal').classList.remove('show');
+            // Hapus SEMUA data lama di localStorage
+            localStorage.removeItem('kemoenik_user_' + tempData.wa);
+            localStorage.removeItem('kemoenik_kal_data');
+            localStorage.removeItem('kemoenik_quiz');
+            localStorage.removeItem('kemoenik_state_v2');
+            localStorage.removeItem('kemoenik_program_pilihan');
+            redirectToPanduan('new');
+        }
+
+        // Redirect ke halaman panduan
+        function redirectToPanduan(mode) {
+            // Simpan data ke localStorage untuk digunakan di halaman panduan
+            localStorage.setItem('kemoenik_wa', tempData.wa);
+            localStorage.setItem('kemoenik_voucher', tempData.kode);
+            localStorage.setItem('kemoenik_nama', tempData.nama);
+            localStorage.setItem('kemoenik_mode', mode);
+            localStorage.setItem('kemoenik_login_time', Date.now());
+            // ✅ TAMBAHAN: Simpan expiry
+            localStorage.setItem('kemoenik_expiry', String(Date.now() + CONFIG.VOUCHER_DAYS * 24 * 60 * 60 * 1000));
+
+            // ✅ KEAMANAN: Buat session token sebelum redirect
+            createSession(tempData.wa, tempData.kode);
+
+            // Buat URL dengan parameter
+            const params = new URLSearchParams({
+                wa: tempData.wa,
+                voucher: tempData.kode,
+                mode: mode,
+                t: Date.now()
+            });
+
+            // Redirect
+            window.location.href = `${CONFIG.PANDUAN_URL}?${params.toString()}`;
+        }
+
+        // Tutup modal jika klik di luar
+        document.getElementById('programChoiceModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+
+        // ==========================================
+        // CEK STATUS SAAT HALAMAN DIMUAT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cek apakah ada parameter di URL (untuk refresh/back)
+            const urlParams = new URLSearchParams(window.location.search);
+            const waParam = urlParams.get('wa');
+            const voucherParam = urlParams.get('voucher');
+            
+            if (waParam && voucherParam) {
+                // Auto-fill jika ada parameter
+                document.getElementById('wa').value = waParam;
+                document.getElementById('kode').value = voucherParam;
+            }
+            
+            // Cek localStorage untuk auto-login (opsional)
+            const savedWA = localStorage.getItem('kemoenik_wa');
+            const savedVoucher = localStorage.getItem('kemoenik_voucher');
+            const loginTime = localStorage.getItem('kemoenik_login_time');
+            
+            if (savedWA && savedVoucher && loginTime) {
+                const daysSinceLogin = (Date.now() - parseInt(loginTime)) / (1000 * 60 * 60 * 24);
+                
+                // Jika masih dalam masa aktif (7 hari), bisa auto-redirect
+                if (daysSinceLogin < CONFIG.VOUCHER_DAYS) {
+                    // Tampilkan notifikasi bahwa session masih aktif
+                    showToast('Session masih aktif. Klik Buka Panduan untuk melanjutkan.');
+                    document.getElementById('wa').value = savedWA;
+                    document.getElementById('kode').value = savedVoucher;
+                }
+            }
+        });
+
+        // Expose fungsi ke global scope untuk onclick handler
+        window.cekKode = cekKode;
+        window.handleLanjut = handleLanjut;
+        window.continueOldProgram = continueOldProgram;
+        window.startNewProgram = startNewProgram;
+        window.toggleAccordion = toggleAccordion;
+        // ✅ TAMBAHAN: Expose fungsi device
+        window.getDeviceId = getDeviceId;
+        window.checkDeviceBinding = checkDeviceBinding;
+    </script>
 </body>
 </html>
