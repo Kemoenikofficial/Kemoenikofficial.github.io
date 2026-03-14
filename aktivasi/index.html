@@ -539,7 +539,7 @@
                 <input type="tel" id="wa" placeholder="Contoh: 08123456789" required>
             </div>
             <p class="privacy-text">
-                <i class="fas fa-shield-alt"></i> Nomor WA hanya digunakan untuk sinkronisasi data diet Anda.
+                <i class="fas fa-shield-alt"></i> Nomor WA hanya digunakan untuk sinkronisasi data diet Anda, data akan hilang jika dipake hp orang lain, hapus penyimpanan broser, ganti hp, mohon jaga data diet kalian.
             </p>
         </div>
 
@@ -655,8 +655,8 @@
         // ==========================================
         const CONFIG = {
             // URL ke halaman panduan (relative path)
-            PANDUAN_URL: '/PANDUANKEMOENIK/index.html',   // Diubah dari absolute ke relative
-            APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec',
+            PANDUAN_URL: '/PANDUANKEMOENIK/index.html',
+            APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyLWP13TxK9vWbgcOjJh9dozqkTJ9VM_b6L-FcUQlmY19by3ylvgZAm9YgqfOlr-72J/exec',
             VOUCHER_DAYS: 7
         };
 
@@ -719,41 +719,26 @@
             localStorage.setItem('userSession', JSON.stringify(session));
         }
 
-        // ✅ TAMBAHAN: Mendapatkan atau membuat device ID unik
+        // Device fingerprint berbasis info browser (konsisten per device)
         function getDeviceId() {
-            let id = localStorage.getItem('kemoenik_device_id');
-            if (!id) {
-                id = 'D_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-                localStorage.setItem('kemoenik_device_id', id);
+            const raw = [
+                navigator.userAgent,
+                screen.width + 'x' + screen.height,
+                Intl.DateTimeFormat().resolvedOptions().timeZone,
+                navigator.language
+            ].join('|');
+            // Simple hash
+            let hash = 0;
+            for (let i = 0; i < raw.length; i++) {
+                hash = ((hash << 5) - hash) + raw.charCodeAt(i);
+                hash |= 0;
             }
-            return id;
+            return 'FP_' + Math.abs(hash).toString(36);
         }
 
-        // ✅ TAMBAHAN: Memeriksa dan mengikat voucher ke device + WA
+        // Device binding sekarang dicek di server (Google Sheets)
+        // Fungsi ini tidak lagi dipakai secara lokal
         function checkDeviceBinding(wa, voucher) {
-            const key = 'kemoenik_bind_' + voucher;
-            const stored = localStorage.getItem(key);
-            const deviceId = getDeviceId();
-            
-            if (stored) {
-                const data = JSON.parse(stored);
-                if (data.wa !== wa) {
-                    return { ok: false, reason: 'wa_mismatch', message: 'Kode ini sudah digunakan nomor WA lain' };
-                }
-                if (data.device !== deviceId) {
-                    return { ok: false, reason: 'device_mismatch', message: 'Kode ini sudah aktif di perangkat lain' };
-                }
-                return { ok: true, existing: true };
-            }
-            
-            // First time - create binding
-            localStorage.setItem(key, JSON.stringify({
-                wa: wa,
-                device: deviceId,
-                activatedAt: Date.now(),
-                expiry: Date.now() + (7 * 24 * 60 * 60 * 1000)
-            }));
-            
             return { ok: true, existing: false };
         }
 
@@ -852,8 +837,9 @@
 
             try {
                 // Panggil Google Apps Script untuk verifikasi
+                const deviceId = getDeviceId();
                 const response = await fetch(
-                    `${CONFIG.APPS_SCRIPT_URL}?action=verify&kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(normalizedWA)}&_=${Date.now()}`
+                    `${CONFIG.APPS_SCRIPT_URL}?action=verify&kode=${encodeURIComponent(kode)}&nama=${encodeURIComponent(nama)}&wa=${encodeURIComponent(normalizedWA)}&device_id=${encodeURIComponent(deviceId)}&_=${Date.now()}`
                 );
                 
                 const data = await response.json();
@@ -889,13 +875,7 @@
             switch(data.status) {
                 case 'SUCCESS':
                 case 'ACTIVE_SAME_WA':
-                    // ✅ TAMBAHAN: Cek device binding
-                    const bindingCheck = checkDeviceBinding(wa, kode);
-                    if (!bindingCheck.ok) {
-                        showResult('error', '❌ ' + bindingCheck.message);
-                        return; // Stop, tidak lanjut ke redirect
-                    }
-                    
+                    // Device binding sudah dicek di server
                     // Cek apakah user punya data di localStorage
                     const storageKey = `kemoenik_user_${wa}`;
                     const existingData = localStorage.getItem(storageKey);
@@ -923,6 +903,10 @@
 
                 case 'ACTIVE_DIFFERENT_WA':
                     showResult('error', '❌ Kode ini sudah digunakan oleh nomor WA lain.');
+                    break;
+
+                case 'DEVICE_MISMATCH':
+                    showResult('error', '❌ Akun ini sudah aktif di perangkat lain.<br><small style="color:#9CA3AF;">Hubungi admin KEMOENIK untuk reset perangkat.</small>');
                     break;
 
                 case 'EXPIRED':
