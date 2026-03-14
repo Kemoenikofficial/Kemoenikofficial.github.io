@@ -959,7 +959,7 @@
         // ========================================================================
         // KONFIGURASI - GANTI URL INI DENGAN URL APPS SCRIPT ANDA
         // ========================================================================
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyLWP13TxK9vWbgcOjJh9dozqkTJ9VM_b6L-FcUQlmY19by3ylvgZAm9YgqfOlr-72J/exec';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbwtSycdeNBbJjOJPA8bDJ7szBTqGn4JK8JioxT5XQd9_FGnetuC8FW0MER0md9ciT9B/exec';
         
         // ========================================================================
         // GLOBAL VARIABLES
@@ -1422,11 +1422,10 @@
         async function resetDevice(kode) {
             if (!confirm('Reset device binding untuk voucher ' + kode + '? User perlu login ulang dari device manapun setelah ini.')) return;
             try {
-                const res = await fetch(GAS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'resetDevice', kode: kode })
-                });
+                const res = await fetch(
+                    GAS_URL + '?action=resetDevice&kode=' + encodeURIComponent(kode) + '&_=' + Date.now(),
+                    { redirect: 'follow' }
+                );
                 const data = await res.json();
                 if (data.status === 'success') {
                     alert('✅ Device berhasil di-reset! User bisa login dari perangkat baru sekarang.');
