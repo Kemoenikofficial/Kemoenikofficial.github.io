@@ -162,6 +162,12 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
   <div class="header-sub">Scanner Resi Otomatis</div>
 </div>
 
+<!-- MODE TOGGLE -->
+<div style="display:flex;gap:0;margin:12px 16px 0;border-radius:12px;overflow:hidden;border:2px solid #16a34a">
+  <button id="btnModeNormal" onclick="setMode('normal')" style="flex:1;padding:10px;border:none;background:#16a34a;color:#fff;font-weight:700;font-size:13px;cursor:pointer">📦 SCAN RESI</button>
+  <button id="btnModeReturn" onclick="setMode('return')" style="flex:1;padding:10px;border:none;background:#fff;color:#16a34a;font-weight:700;font-size:13px;cursor:pointer">🔄 SCAN RETURN</button>
+</div>
+
 <div class="content">
 
   <!-- RESI RESULT -->
@@ -212,6 +218,29 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
     </div>
   </div>
 
+  <!-- FORM RETURN -->
+  <div class="card" id="formReturn" style="display:none">
+    <div class="section-title" style="color:#d97706">🔄 Scan Return</div>
+    <p style="font-size:12px;color:#6b7280;margin-bottom:12px">Scan nomor resi yang dikembalikan. Resi harus berstatus <b>LUNAS</b>.</p>
+
+    <label class="form-label">Alasan Return</label>
+    <select id="selAlasan" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #d1d5db;font-size:14px;margin-bottom:12px">
+      <option value="Tidak ada penerima">Tidak ada penerima</option>
+      <option value="Alamat tidak ditemukan">Alamat tidak ditemukan</option>
+      <option value="Ditolak penerima">Ditolak penerima</option>
+      <option value="Rusak di pengiriman">Rusak di pengiriman</option>
+      <option value="Lainnya">Lainnya</option>
+    </select>
+
+    <div class="resi-result empty" id="returnResult" style="margin-bottom:12px">
+      <span class="resi-icon">🔄</span>
+      <div>
+        <div class="resi-label">Resi Return</div>
+        <div class="resi-no" id="returnDisplay">Scan resi yang dikembalikan…</div>
+      </div>
+    </div>
+  </div>
+
   <!-- TOTAL -->
   <div class="total-card">
     <div>
@@ -241,10 +270,11 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
 
 <script>
 /* ═══ CONFIG ═══ */
-const API = "https://script.google.com/macros/s/AKfycbzQPLKPF18H-4Qolyr_4e3cy4Ovdiahhea8LvmL9FJ17vUAD5qEjM14IFD4LyBIoiiD/exec";
+const API = "https://script.google.com/macros/s/AKfycbwtSycdeNBbJjOJPA8bDJ7szBTqGn4JK8JioxT5XQd9_FGnetuC8FW0MER0md9ciT9B/exec";
 
 /* ═══ STATE ═══ */
 let lastBarcode  = "";
+let scanMode     = "normal"; // normal | return
 let scannerObj   = null;
 let isScanning   = false;
 let totalSesi    = 0;
@@ -298,6 +328,51 @@ function updateHarga() {
   } else {
     document.getElementById("valSeller").textContent = "—";
     document.getElementById("valAdmin").textContent  = "—";
+  }
+}
+
+function setMode(mode) {
+  scanMode = mode;
+  const isReturn = mode === "return";
+  document.getElementById("btnModeNormal").style.background = isReturn ? "#fff" : "#16a34a";
+  document.getElementById("btnModeNormal").style.color      = isReturn ? "#16a34a" : "#fff";
+  document.getElementById("btnModeReturn").style.background = isReturn ? "#16a34a" : "#fff";
+  document.getElementById("btnModeReturn").style.color      = isReturn ? "#fff" : "#16a34a";
+  document.getElementById("formReturn").style.display       = isReturn ? "block" : "none";
+  document.querySelector(".card").style.display             = isReturn ? "none" : "block";
+  // Reset
+  lastBarcode = "";
+  document.getElementById("resiDisplay").textContent   = "Arahkan kamera ke barcode…";
+  document.getElementById("returnDisplay").textContent = "Scan resi yang dikembalikan…";
+  document.getElementById("resiResult").className      = "resi-result empty";
+  document.getElementById("returnResult").className    = "resi-result empty";
+}
+
+async function handleReturn(resiNo) {
+  const alasan = document.getElementById("selAlasan").value;
+  setStatus("Memproses return…", "loading");
+  try {
+    const url = `${API}?action=scanReturn&resi=${encodeURIComponent(resiNo)}&alasan=${encodeURIComponent(alasan)}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+    if (data.status === "ok") {
+      document.getElementById("returnDisplay").textContent = resiNo;
+      document.getElementById("returnResult").className   = "resi-result success";
+      setStatus("Return berhasil!", "success");
+      beep("success");
+      showNotif(`✅ Return: ${data.produk} x${data.qty} — ${data.seller}`, "success");
+      // Tambah ke riwayat
+      addRiwayat(resiNo, `RETURN — ${data.produk} x${data.qty}`, "return");
+      lastBarcode = resiNo;
+    } else {
+      document.getElementById("returnResult").className = "resi-result error";
+      setStatus("Gagal: " + data.pesan, "error");
+      beep("error");
+      showNotif("❌ " + data.pesan, "error");
+    }
+  } catch(e) {
+    setStatus("Error koneksi", "error");
+    beep("error");
   }
 }
 
@@ -355,7 +430,14 @@ function onScanError() { /* diam */ }
 
 async function onScanSuccess(decodedText) {
   if (isSaving) return;
-  if (decodedText === lastBarcode) return; // cegah scan ulang resi sama
+  if (decodedText === lastBarcode) return;
+
+  // Mode return
+  if (scanMode === "return") {
+    lastBarcode = decodedText;
+    await handleReturn(decodedText);
+    return;
+  }
 
   lastBarcode = decodedText;
   isSaving    = true;
