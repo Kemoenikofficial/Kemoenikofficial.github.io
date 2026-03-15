@@ -332,6 +332,22 @@ function updateHarga() {
 }
 
 function setMode(mode) {
+  // Stop scanner dulu kalau sedang berjalan
+  if (scannerObj) {
+    scannerObj.clear().catch(() => {});
+    scannerObj = null;
+    isScanning = false;
+    document.getElementById("btnScan").style.display = "block";
+    document.getElementById("btnStop").style.display = "none";
+    document.getElementById("scannerCard").style.display = "none";
+    // Beri jeda agar DOM bersih sebelum ganti mode
+    setTimeout(() => _applyMode(mode), 300);
+    return;
+  }
+  _applyMode(mode);
+}
+
+function _applyMode(mode) {
   scanMode = mode;
   const isReturn = mode === "return";
   document.getElementById("btnModeNormal").style.background = isReturn ? "#fff" : "#16a34a";
