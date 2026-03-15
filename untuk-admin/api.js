@@ -5,7 +5,7 @@
  * Set USE_MOCK = false setelah deploy
  */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzQPLKPF18H-4Qolyr_4e3cy4Ovdiahhea8LvmL9FJ17vUAD5qEjM14IFD4LyBIoiiD/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxBbG9GiW_fNu3hood8AXwMoMUXyl8iAc9VeaOIWqfO-3E1J4ra13wtsuZWRIddwSJZ/exec";
 const USE_MOCK = false; // ganti false setelah deploy
 
 /* ═══════════════════════════════════════════
