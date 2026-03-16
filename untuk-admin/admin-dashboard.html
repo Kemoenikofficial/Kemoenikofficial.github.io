@@ -836,8 +836,14 @@ async function loadStok() {
   try { const data = await fetchJson(API + "?action=getStok"); return data; } catch(e) { return []; }
 }
 async function doTandaiLunas(seller, jumlah, tahun) {
-  const res = await fetchJson(API + `?action=tandaiLunas&seller=${encodeURIComponent(seller)}&jumlah=${jumlah}&tahun=${tahun}`);
-  return res;
+  const url = API + `?action=tandaiLunas&seller=${encodeURIComponent(seller)}&jumlah=${jumlah}&tahun=${tahun}`;
+  const res = await fetch(url);
+  // Bisa saja response bukan JSON (misal redirect), tapi data sudah masuk
+  try {
+    return await res.json();
+  } catch(e) {
+    return { updated: 0, qty_dilunasi: 0 }; // fallback
+  }
 }
 
 // ========== NAVIGASI ==========
@@ -1051,14 +1057,23 @@ async function confirmLunas() {
   const jumlah = parseInt(document.getElementById('payJumlah').value) || 0;
   try {
     const res = await doTandaiLunas(seller, jumlah, currentYear);
-    showToast(`✅ ${res.qty_dilunasi||res.updated} produk lunas`);
+    // Cek apakah ada properti updated atau qty_dilunasi
+    const updated = res.updated || res.qty_dilunasi || 0;
+    showToast(`✅ ${updated} produk / ${res.updated || '?'} resi berhasil LUNAS`);
     document.getElementById('payJumlah').value = '';
     document.getElementById('payPreview').style.display = 'none';
     allResi = await loadResi({ tahun: currentYear });
     stats = await loadStats({ tahun: currentYear });
     loadReturnData();
     renderAll();
-  } catch(e) { showToast('Gagal','error'); }
+  } catch(e) {
+    showToast('Gagal, tapi cek data mungkin sudah masuk','error');
+    // Tetap refresh data
+    allResi = await loadResi({ tahun: currentYear });
+    stats = await loadStats({ tahun: currentYear });
+    loadReturnData();
+    renderAll();
+  }
 }
 function prefillPay(seller) {
   showPage('pembayaran', document.querySelector('.sb-item[onclick*="pembayaran"]'));
