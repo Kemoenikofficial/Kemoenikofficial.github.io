@@ -1,1749 +1,776 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>SCAN RESI — KEMOENIK</title>
-<script src="https://unpkg.com/html5-qrcode"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KEMOENIK — SCAN RESI</title>
+<!-- PASTIKAN PAKAI VERSION INI -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f4f0;min-height:100vh;}
-
-/* HEADER */
-.header{
-  background:linear-gradient(135deg,#15803d,#16a34a);
-  padding:16px 18px 48px;
-  position:relative;overflow:hidden;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
-.header::before{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07);}
-.header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.05);}
-.header-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
-.header-brand{color:#fff;font-size:18px;font-weight:800;letter-spacing:.5px;}
-.header-brand span{color:#bbf7d0;}
-.header-sub{color:rgba(255,255,255,.7);font-size:11px;margin-top:6px;position:relative;z-index:1;}
-.status-chip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border-radius:99px;padding:4px 10px;font-size:11px;color:#fff;font-weight:600;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:#bbf7d0;}
-.status-dot.scanning{background:#fbbf24;animation:blink .8s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-
-/* CONTENT */
-.content{margin-top:-32px;padding:0 14px 32px;position:relative;z-index:1;}
-
-/* CARD */
-.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
-
-/* SCANNER BOX */
-.scanner-card{background:#fff;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
-#reader{width:100%;}
-#reader video{border-radius:0 !important;}
-
-/* RESI RESULT */
-.resi-result{
-  display:flex;align-items:center;gap:10px;
-  background:#f0fdf4;border:1.5px solid #bbf7d0;
-  border-radius:12px;padding:12px 14px;
-  margin-bottom:12px;
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f4f0;
+    min-height: 100vh;
 }
-.resi-result.empty{background:#f9fafb;border-color:#e5e7eb;}
-.resi-result.duplikat{background:#fef2f2;border-color:#fecaca;}
-.resi-icon{font-size:20px;flex-shrink:0;}
-.resi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;}
-.resi-no{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#111827;}
-
-/* FORM */
-.form-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:5px;display:block;}
-select,input[type=number]{
-  width:100%;padding:11px 13px;
-  border:1.5px solid #e5e7eb;border-radius:10px;
-  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
-  background:#f9fafb;color:#111827;outline:none;
-  transition:border-color .2s,background .2s;
-  -webkit-appearance:none;appearance:none;
-  margin-bottom:10px;
+.header {
+    background: linear-gradient(135deg, #15803d, #16a34a);
+    padding: 16px 18px 40px;
+    color: white;
 }
-select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-shadow:0 0 0 3px rgba(22,163,74,.1);}
-
-.harga-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.harga-opt{
-  border:1.5px solid #e5e7eb;border-radius:10px;padding:11px 12px;
-  cursor:pointer;text-align:center;transition:all .15s;background:#f9fafb;
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.harga-opt.active{border-color:#16a34a;background:#f0fdf4;}
-.harga-opt .ho-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:3px;}
-.harga-opt .ho-val{font-size:16px;font-weight:800;color:#111827;}
-.harga-opt.active .ho-val{color:#16a34a;}
-
-/* TOTAL */
-.total-card{
-  background:linear-gradient(135deg,#15803d,#16a34a);
-  border-radius:14px;padding:16px 18px;
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:12px;
+.header-brand {
+    font-weight: 800;
+    font-size: 20px;
 }
-.total-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.7);}
-.total-val{font-size:24px;font-weight:800;color:#fff;}
-.total-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
-
-/* BUTTONS */
-.btn-scan{
-  width:100%;padding:15px;
-  background:linear-gradient(135deg,#15803d,#16a34a);
-  color:#fff;border:none;border-radius:12px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:16px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  box-shadow:0 4px 14px rgba(22,163,74,.3);
-  transition:all .2s;margin-bottom:10px;
+.header-brand span {
+    color: #bbf7d0;
 }
-.btn-scan:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.4);}
-.btn-scan:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-.btn-stop{background:linear-gradient(135deg,#b91c1c,#dc2626);}
-.btn-reset{
-  width:100%;padding:11px;background:#f9fafb;
-  color:#6b7280;border:1.5px solid #e5e7eb;border-radius:12px;
-  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;
-  cursor:pointer;transition:all .15s;
+.status-chip {
+    background: rgba(255,255,255,0.15);
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
-.btn-reset:hover{border-color:#16a34a;color:#16a34a;}
-
-/* HISTORY */
-.history-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 0;border-top:1px solid #f3f4f6;
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 10px;
+    background: #bbf7d0;
 }
-.history-item:first-of-type{border-top:none;}
-.h-icon{width:34px;height:34px;background:#f0fdf4;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-.h-info{flex:1;min-width:0;}
-.h-resi{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.h-meta{font-size:11px;color:#9ca3af;margin-top:1px;}
-.h-amount{font-size:13px;font-weight:700;color:#16a34a;flex-shrink:0;}
-.h-dup{color:#ef4444;}
-
-/* NOTIFICATION */
-.notif{
-  position:fixed;top:16px;left:50%;transform:translateX(-50%);
-  background:#fff;border:1px solid #e5e7eb;
-  border-left:4px solid #16a34a;
-  border-radius:10px;padding:12px 16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.12);
-  font-size:13px;font-weight:600;
-  display:flex;align-items:center;gap:8px;
-  z-index:9999;min-width:260px;max-width:90vw;
-  animation:slideDown .3s ease;
-  white-space:nowrap;
+.status-dot.scanning {
+    background: #fbbf24;
+    animation: blink 1s infinite;
 }
-.notif.error{border-left-color:#ef4444;}
-.notif.warn{border-left-color:#f59e0b;}
-@keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
-@keyframes slideUp{from{opacity:1;}to{opacity:0;transform:translateX(-50%) translateY(-10px);}}
-
-/* SPINNER */
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-.section-title{font-size:14px;font-weight:700;color:#111827;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
-.section-title::before{content:'';display:block;width:3px;height:14px;background:#16a34a;border-radius:2px;}
+@keyframes blink { 50% { opacity: 0.4; } }
+.content {
+    margin-top: -24px;
+    padding: 0 16px 24px;
+}
+.mode-toggle {
+    display: flex;
+    gap: 0;
+    border: 2px solid #16a34a;
+    border-radius: 40px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+.mode-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.mode-btn.active {
+    background: #16a34a;
+    color: white;
+}
+.mode-btn:not(.active) {
+    background: white;
+    color: #16a34a;
+}
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+}
+.resi-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f0fdf4;
+    border: 2px solid #bbf7d0;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.resi-box.empty {
+    background: #f9fafb;
+    border-color: #e5e7eb;
+}
+.resi-icon {
+    font-size: 24px;
+}
+.resi-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #9ca3af;
+    letter-spacing: 0.5px;
+}
+.resi-number {
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: 700;
+    word-break: break-all;
+}
+#scanner-container {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    display: none;
+}
+#reader {
+    width: 100%;
+    min-height: 300px;
+}
+.form-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #9ca3af;
+    margin-bottom: 6px;
+    display: block;
+    letter-spacing: 0.5px;
+}
+select, input {
+    width: 100%;
+    padding: 14px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 14px;
+    font-size: 15px;
+    background: #f9fafb;
+    margin-bottom: 16px;
+    outline: none;
+}
+select:focus, input:focus {
+    border-color: #16a34a;
+    background: white;
+}
+.harga-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.harga-opt {
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    background: #f9fafb;
+}
+.harga-opt.active {
+    border-color: #16a34a;
+    background: #f0fdf4;
+}
+.harga-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #9ca3af;
+}
+.harga-value {
+    font-size: 18px;
+    font-weight: 800;
+    margin-top: 4px;
+}
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.qty-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.qty-input {
+    flex: 1;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 0;
+}
+.total-card {
+    background: linear-gradient(135deg, #15803d, #16a34a);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.total-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+}
+.total-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+}
+.total-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+}
+.btn-primary {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #15803d, #16a34a);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(22,163,74,0.3);
+}
+.btn-primary.stop {
+    background: linear-gradient(135deg, #b91c1c, #dc2626);
+}
+.btn-secondary {
+    width: 100%;
+    padding: 16px;
+    background: white;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid #f3f4f6;
+}
+.history-item:first-child {
+    border-top: none;
+}
+.history-icon {
+    width: 40px;
+    height: 40px;
+    background: #f0fdf4;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+.history-info {
+    flex: 1;
+}
+.history-resi {
+    font-family: monospace;
+    font-weight: 700;
+}
+.history-produk {
+    font-size: 12px;
+    color: #9ca3af;
+}
+.history-amount {
+    font-weight: 700;
+    color: #16a34a;
+}
+.history-amount.duplikat {
+    color: #ef4444;
+}
+.notif {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 14px 24px;
+    border-radius: 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    font-weight: 600;
+    z-index: 9999;
+    border-left: 4px solid #16a34a;
+    max-width: 90%;
+    white-space: nowrap;
+}
+.notif.error {
+    border-left-color: #ef4444;
+}
+.notif.warn {
+    border-left-color: #f59e0b;
+}
+#formReturn {
+    display: none;
+}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-top">
-    <div>
-      <div class="header-brand">KEMO<span>ENIK</span></div>
+    <div class="header-top">
+        <div class="header-brand">KEMO<span>ENIK</span></div>
+        <div class="status-chip" id="statusChip">
+            <div class="status-dot" id="statusDot"></div>
+            <span id="statusText">Memuat...</span>
+        </div>
     </div>
-    <div class="status-chip" id="statusChip">
-      <div class="status-dot" id="statusDot"></div>
-      <span id="statusText">Memuat data...</span>
-    </div>
-  </div>
-  <div class="header-sub">Scanner Resi Otomatis</div>
-</div>
-
-<!-- MODE TOGGLE -->
-<div style="display:flex;gap:0;margin:12px 16px 0;border-radius:12px;overflow:hidden;border:2px solid #16a34a">
-  <button id="btnModeNormal" onclick="setMode('normal')" style="flex:1;padding:10px;border:none;background:#16a34a;color:#fff;font-weight:700;font-size:13px;cursor:pointer">📦 SCAN RESI</button>
-  <button id="btnModeReturn" onclick="setMode('return')" style="flex:1;padding:10px;border:none;background:#fff;color:#16a34a;font-weight:700;font-size:13px;cursor:pointer">🔄 SCAN RETURN</button>
+    <div style="font-size: 13px; opacity: 0.8; margin-top: 8px;">Scanner Resi Otomatis</div>
 </div>
 
 <div class="content">
-
-  <!-- RESI RESULT -->
-  <div class="resi-result empty" id="resiResult">
-    <span class="resi-icon">📷</span>
-    <div>
-      <div class="resi-label">Nomor Resi</div>
-      <div class="resi-no" id="resiDisplay">Arahkan kamera ke barcode…</div>
-    </div>
-  </div>
-
-  <!-- SCANNER -->
-  <div class="scanner-card" id="scannerCard" style="display:none">
-    <div id="reader"></div>
-  </div>
-
-  <!-- FORM -->
-  <div class="card">
-    <div class="section-title">Detail Transaksi</div>
-
-    <label class="form-label">Seller</label>
-    <select id="selSeller">
-      <option value="">Memuat seller…</option>
-    </select>
-
-    <label class="form-label">Produk</label>
-    <select id="selProduk">
-      <option value="">Memuat produk…</option>
-    </select>
-
-    <label class="form-label">Pilih Harga</label>
-    <div class="harga-row" id="hargaRow">
-      <div class="harga-opt active" id="optSeller" onclick="pilihHarga('seller')">
-        <div class="ho-label">Harga Seller</div>
-        <div class="ho-val" id="valSeller">—</div>
-      </div>
-      <div class="harga-opt" id="optAdmin" onclick="pilihHarga('admin')">
-        <div class="ho-label">Harga Admin</div>
-        <div class="ho-val" id="valAdmin">—</div>
-      </div>
+    
+    <!-- MODE TOGGLE -->
+    <div class="mode-toggle">
+        <button class="mode-btn active" id="btnModeNormal" onclick="setMode('normal')">📦 SCAN RESI</button>
+        <button class="mode-btn" id="btnModeReturn" onclick="setMode('return')">🔄 SCAN RETURN</button>
     </div>
 
-    <label class="form-label">Qty per Resi</label>
-    <div style="display:flex;align-items:center;gap:8px">
-      <button onclick="ubahQty(-1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">−</button>
-      <input type="number" id="inputQty" value="1" min="1" max="100" style="flex:1;text-align:center;font-size:20px;font-weight:800;color:#111827"/>
-      <button onclick="ubahQty(1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">+</button>
+    <!-- RESI DISPLAY -->
+    <div class="resi-box empty" id="resiBox">
+        <span class="resi-icon" id="resiIcon">📷</span>
+        <div>
+            <div class="resi-label">NOMOR RESI</div>
+            <div class="resi-number" id="resiNumber">Arahkan kamera ke barcode...</div>
+        </div>
     </div>
-  </div>
 
-  <!-- FORM RETURN -->
-  <div class="card" id="formReturn" style="display:none">
-    <div class="section-title" style="color:#d97706">🔄 Scan Return</div>
-    <p style="font-size:12px;color:#6b7280;margin-bottom:12px">Scan nomor resi yang dikembalikan. Resi harus berstatus <b>LUNAS</b>.</p>
-
-    <label class="form-label">Alasan Return</label>
-    <select id="selAlasan" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #d1d5db;font-size:14px;margin-bottom:12px">
-      <option value="Tidak ada penerima">Tidak ada penerima</option>
-      <option value="Alamat tidak ditemukan">Alamat tidak ditemukan</option>
-      <option value="Ditolak penerima">Ditolak penerima</option>
-      <option value="Rusak di pengiriman">Rusak di pengiriman</option>
-      <option value="Lainnya">Lainnya</option>
-    </select>
-
-    <div class="resi-result empty" id="returnResult" style="margin-bottom:12px">
-      <span class="resi-icon">🔄</span>
-      <div>
-        <div class="resi-label">Resi Return</div>
-        <div class="resi-no" id="returnDisplay">Scan resi yang dikembalikan…</div>
-      </div>
+    <!-- SCANNER -->
+    <div id="scanner-container">
+        <div id="reader"></div>
     </div>
-  </div>
 
-  <!-- TOTAL -->
-  <div class="total-card">
-    <div>
-      <div class="total-label">Total Sesi Ini</div>
-      <div class="total-val" id="totalVal">Rp 0</div>
-      <div class="total-sub" id="totalSub">0 resi berhasil</div>
+    <!-- FORM SCAN RESI -->
+    <div id="formNormal">
+        <div class="card">
+            <label class="form-label">SELLER</label>
+            <select id="sellerSelect">
+                <option value="">Memuat seller...</option>
+            </select>
+
+            <label class="form-label">PRODUK</label>
+            <select id="produkSelect">
+                <option value="">Memuat produk...</option>
+            </select>
+
+            <label class="form-label">PILIH HARGA</label>
+            <div class="harga-row">
+                <div class="harga-opt active" id="hargaSeller" onclick="pilihHarga('seller')">
+                    <div class="harga-label">HARGA SELLER</div>
+                    <div class="harga-value" id="sellerPrice">—</div>
+                </div>
+                <div class="harga-opt" id="hargaAdmin" onclick="pilihHarga('admin')">
+                    <div class="harga-label">HARGA ADMIN</div>
+                    <div class="harga-value" id="adminPrice">—</div>
+                </div>
+            </div>
+
+            <label class="form-label">QTY PER RESI</label>
+            <div class="qty-control">
+                <button class="qty-btn" onclick="ubahQty(-1)">−</button>
+                <input type="number" id="qtyInput" class="qty-input" value="1" min="1" max="100">
+                <button class="qty-btn" onclick="ubahQty(1)">+</button>
+            </div>
+        </div>
     </div>
-    <div style="font-size:36px">📦</div>
-  </div>
 
-  <!-- BUTTONS -->
-  <button class="btn-scan" id="btnScan" onclick="startScan()">
-    📷 Mulai Scan
-  </button>
-  <button class="btn-scan btn-stop" id="btnStop" style="display:none" onclick="stopScan()">
-    ⏹ Stop Scan
-  </button>
-  <button class="btn-reset" onclick="resetSesi()">🔄 Reset Sesi</button>
+    <!-- FORM RETURN -->
+    <div id="formReturn">
+        <div class="card">
+            <label class="form-label">ALASAN RETURN</label>
+            <select id="alasanSelect">
+                <option value="Tidak ada penerima">Tidak ada penerima</option>
+                <option value="Alamat tidak ditemukan">Alamat tidak ditemukan</option>
+                <option value="Ditolak penerima">Ditolak penerima</option>
+                <option value="Rusak di pengiriman">Rusak di pengiriman</option>
+                <option value="Lainnya">Lainnya</option>
+            </select>
 
-  <!-- HISTORY -->
-  <div class="card" style="margin-top:12px" id="historyCard" style="display:none">
-    <div class="section-title">Riwayat Sesi</div>
-    <div id="historyList"></div>
-  </div>
+            <div class="resi-box empty" id="returnBox" style="margin-bottom:0;">
+                <span class="resi-icon">🔄</span>
+                <div>
+                    <div class="resi-label">RESI RETURN</div>
+                    <div class="resi-number" id="returnNumber">Scan resi yang diretur...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOTAL -->
+    <div class="total-card">
+        <div>
+            <div class="total-label">TOTAL SESI INI</div>
+            <div class="total-value" id="totalValue">Rp 0</div>
+            <div class="total-sub" id="totalSub">0 resi berhasil</div>
+        </div>
+        <div style="font-size: 42px;">📦</div>
+    </div>
+
+    <!-- BUTTONS -->
+    <button class="btn-primary" id="startBtn" onclick="startScan()">
+        📷 Mulai Scan
+    </button>
+    <button class="btn-primary stop" id="stopBtn" style="display:none;" onclick="stopScan()">
+        ⏹ Stop Scan
+    </button>
+    <button class="btn-secondary" onclick="resetSesi()">
+        🔄 Reset Sesi
+    </button>
+
+    <!-- HISTORY -->
+    <div class="card" id="historyCard" style="display:none; margin-top:16px;">
+        <div style="font-weight:700; margin-bottom:12px;">Riwayat Sesi</div>
+        <div id="historyList"></div>
+    </div>
 
 </div>
 
 <script>
-/* ═══ CONFIG ═══ */
-const API = "<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>SCAN RESI — KEMOENIK</title>
-<script src="https://unpkg.com/html5-qrcode"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f4f0;min-height:100vh;}
-
-/* HEADER */
-.header{
-  background:linear-gradient(135deg,#15803d,#16a34a);
-  padding:16px 18px 48px;
-  position:relative;overflow:hidden;
-}
-.header::before{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07);}
-.header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.05);}
-.header-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
-.header-brand{color:#fff;font-size:18px;font-weight:800;letter-spacing:.5px;}
-.header-brand span{color:#bbf7d0;}
-.header-sub{color:rgba(255,255,255,.7);font-size:11px;margin-top:6px;position:relative;z-index:1;}
-.status-chip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border-radius:99px;padding:4px 10px;font-size:11px;color:#fff;font-weight:600;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:#bbf7d0;}
-.status-dot.scanning{background:#fbbf24;animation:blink .8s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-
-/* CONTENT */
-.content{margin-top:-32px;padding:0 14px 32px;position:relative;z-index:1;}
-
-/* CARD */
-.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
-
-/* SCANNER BOX */
-.scanner-card{background:#fff;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
-#reader{width:100%;}
-#reader video{border-radius:0 !important;}
-
-/* RESI RESULT */
-.resi-result{
-  display:flex;align-items:center;gap:10px;
-  background:#f0fdf4;border:1.5px solid #bbf7d0;
-  border-radius:12px;padding:12px 14px;
-  margin-bottom:12px;
-}
-.resi-result.empty{background:#f9fafb;border-color:#e5e7eb;}
-.resi-result.duplikat{background:#fef2f2;border-color:#fecaca;}
-.resi-icon{font-size:20px;flex-shrink:0;}
-.resi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;}
-.resi-no{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#111827;}
-
-/* FORM */
-.form-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:5px;display:block;}
-select,input[type=number]{
-  width:100%;padding:11px 13px;
-  border:1.5px solid #e5e7eb;border-radius:10px;
-  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
-  background:#f9fafb;color:#111827;outline:none;
-  transition:border-color .2s,background .2s;
-  -webkit-appearance:none;appearance:none;
-  margin-bottom:10px;
-}
-select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-shadow:0 0 0 3px rgba(22,163,74,.1);}
-
-.harga-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.harga-opt{
-  border:1.5px solid #e5e7eb;border-radius:10px;padding:11px 12px;
-  cursor:pointer;text-align:center;transition:all .15s;background:#f9fafb;
-}
-.harga-opt.active{border-color:#16a34a;background:#f0fdf4;}
-.harga-opt .ho-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:3px;}
-.harga-opt .ho-val{font-size:16px;font-weight:800;color:#111827;}
-.harga-opt.active .ho-val{color:#16a34a;}
-
-/* TOTAL */
-.total-card{
-  background:linear-gradient(135deg,#15803d,#16a34a);
-  border-radius:14px;padding:16px 18px;
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:12px;
-}
-.total-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.7);}
-.total-val{font-size:24px;font-weight:800;color:#fff;}
-.total-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
-
-/* BUTTONS */
-.btn-scan{
-  width:100%;padding:15px;
-  background:linear-gradient(135deg,#15803d,#16a34a);
-  color:#fff;border:none;border-radius:12px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:16px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  box-shadow:0 4px 14px rgba(22,163,74,.3);
-  transition:all .2s;margin-bottom:10px;
-}
-.btn-scan:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.4);}
-.btn-scan:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-.btn-stop{background:linear-gradient(135deg,#b91c1c,#dc2626);}
-.btn-reset{
-  width:100%;padding:11px;background:#f9fafb;
-  color:#6b7280;border:1.5px solid #e5e7eb;border-radius:12px;
-  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;
-  cursor:pointer;transition:all .15s;
-}
-.btn-reset:hover{border-color:#16a34a;color:#16a34a;}
-
-/* HISTORY */
-.history-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 0;border-top:1px solid #f3f4f6;
-}
-.history-item:first-of-type{border-top:none;}
-.h-icon{width:34px;height:34px;background:#f0fdf4;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-.h-info{flex:1;min-width:0;}
-.h-resi{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.h-meta{font-size:11px;color:#9ca3af;margin-top:1px;}
-.h-amount{font-size:13px;font-weight:700;color:#16a34a;flex-shrink:0;}
-.h-dup{color:#ef4444;}
-
-/* NOTIFICATION */
-.notif{
-  position:fixed;top:16px;left:50%;transform:translateX(-50%);
-  background:#fff;border:1px solid #e5e7eb;
-  border-left:4px solid #16a34a;
-  border-radius:10px;padding:12px 16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.12);
-  font-size:13px;font-weight:600;
-  display:flex;align-items:center;gap:8px;
-  z-index:9999;min-width:260px;max-width:90vw;
-  animation:slideDown .3s ease;
-  white-space:nowrap;
-}
-.notif.error{border-left-color:#ef4444;}
-.notif.warn{border-left-color:#f59e0b;}
-@keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
-@keyframes slideUp{from{opacity:1;}to{opacity:0;transform:translateX(-50%) translateY(-10px);}}
-
-/* SPINNER */
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-.section-title{font-size:14px;font-weight:700;color:#111827;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
-.section-title::before{content:'';display:block;width:3px;height:14px;background:#16a34a;border-radius:2px;}
-</style>
-</head>
-<body>
-
-<div class="header">
-  <div class="header-top">
-    <div>
-      <div class="header-brand">KEMO<span>ENIK</span></div>
-    </div>
-    <div class="status-chip" id="statusChip">
-      <div class="status-dot" id="statusDot"></div>
-      <span id="statusText">Memuat data...</span>
-    </div>
-  </div>
-  <div class="header-sub">Scanner Resi Otomatis</div>
-</div>
-
-<!-- MODE TOGGLE -->
-<div style="display:flex;gap:0;margin:12px 16px 0;border-radius:12px;overflow:hidden;border:2px solid #16a34a">
-  <button id="btnModeNormal" onclick="setMode('normal')" style="flex:1;padding:10px;border:none;background:#16a34a;color:#fff;font-weight:700;font-size:13px;cursor:pointer">📦 SCAN RESI</button>
-  <button id="btnModeReturn" onclick="setMode('return')" style="flex:1;padding:10px;border:none;background:#fff;color:#16a34a;font-weight:700;font-size:13px;cursor:pointer">🔄 SCAN RETURN</button>
-</div>
-
-<div class="content">
-
-  <!-- RESI RESULT -->
-  <div class="resi-result empty" id="resiResult">
-    <span class="resi-icon">📷</span>
-    <div>
-      <div class="resi-label">Nomor Resi</div>
-      <div class="resi-no" id="resiDisplay">Arahkan kamera ke barcode…</div>
-    </div>
-  </div>
-
-  <!-- SCANNER -->
-  <div class="scanner-card" id="scannerCard" style="display:none">
-    <div id="reader"></div>
-  </div>
-
-  <!-- FORM -->
-  <div class="card">
-    <div class="section-title">Detail Transaksi</div>
-
-    <label class="form-label">Seller</label>
-    <select id="selSeller">
-      <option value="">Memuat seller…</option>
-    </select>
-
-    <label class="form-label">Produk</label>
-    <select id="selProduk">
-      <option value="">Memuat produk…</option>
-    </select>
-
-    <label class="form-label">Pilih Harga</label>
-    <div class="harga-row" id="hargaRow">
-      <div class="harga-opt active" id="optSeller" onclick="pilihHarga('seller')">
-        <div class="ho-label">Harga Seller</div>
-        <div class="ho-val" id="valSeller">—</div>
-      </div>
-      <div class="harga-opt" id="optAdmin" onclick="pilihHarga('admin')">
-        <div class="ho-label">Harga Admin</div>
-        <div class="ho-val" id="valAdmin">—</div>
-      </div>
-    </div>
-
-    <label class="form-label">Qty per Resi</label>
-    <div style="display:flex;align-items:center;gap:8px">
-      <button onclick="ubahQty(-1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">−</button>
-      <input type="number" id="inputQty" value="1" min="1" max="100" style="flex:1;text-align:center;font-size:20px;font-weight:800;color:#111827"/>
-      <button onclick="ubahQty(1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">+</button>
-    </div>
-  </div>
-
-  <!-- FORM RETURN -->
-  <div class="card" id="formReturn" style="display:none">
-    <div class="section-title" style="color:#d97706">🔄 Scan Return</div>
-    <p style="font-size:12px;color:#6b7280;margin-bottom:12px">Scan nomor resi yang dikembalikan. Resi harus berstatus <b>LUNAS</b>.</p>
-
-    <label class="form-label">Alasan Return</label>
-    <select id="selAlasan" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #d1d5db;font-size:14px;margin-bottom:12px">
-      <option value="Tidak ada penerima">Tidak ada penerima</option>
-      <option value="Alamat tidak ditemukan">Alamat tidak ditemukan</option>
-      <option value="Ditolak penerima">Ditolak penerima</option>
-      <option value="Rusak di pengiriman">Rusak di pengiriman</option>
-      <option value="Lainnya">Lainnya</option>
-    </select>
-
-    <div class="resi-result empty" id="returnResult" style="margin-bottom:12px">
-      <span class="resi-icon">🔄</span>
-      <div>
-        <div class="resi-label">Resi Return</div>
-        <div class="resi-no" id="returnDisplay">Scan resi yang dikembalikan…</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOTAL -->
-  <div class="total-card">
-    <div>
-      <div class="total-label">Total Sesi Ini</div>
-      <div class="total-val" id="totalVal">Rp 0</div>
-      <div class="total-sub" id="totalSub">0 resi berhasil</div>
-    </div>
-    <div style="font-size:36px">📦</div>
-  </div>
-
-  <!-- BUTTONS -->
-  <button class="btn-scan" id="btnScan" onclick="startScan()">
-    📷 Mulai Scan
-  </button>
-  <button class="btn-scan btn-stop" id="btnStop" style="display:none" onclick="stopScan()">
-    ⏹ Stop Scan
-  </button>
-  <button class="btn-reset" onclick="resetSesi()">🔄 Reset Sesi</button>
-
-  <!-- HISTORY -->
-  <div class="card" style="margin-top:12px" id="historyCard" style="display:none">
-    <div class="section-title">Riwayat Sesi</div>
-    <div id="historyList"></div>
-  </div>
-
-</div>
-
-<script>
-/* ═══ CONFIG ═══ */
-const API = "<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>SCAN RESI — KEMOENIK</title>
-<script src="https://unpkg.com/html5-qrcode"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f4f0;min-height:100vh;}
-
-/* HEADER */
-.header{
-  background:linear-gradient(135deg,#15803d,#16a34a);
-  padding:16px 18px 48px;
-  position:relative;overflow:hidden;
-}
-.header::before{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07);}
-.header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.05);}
-.header-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
-.header-brand{color:#fff;font-size:18px;font-weight:800;letter-spacing:.5px;}
-.header-brand span{color:#bbf7d0;}
-.header-sub{color:rgba(255,255,255,.7);font-size:11px;margin-top:6px;position:relative;z-index:1;}
-.status-chip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border-radius:99px;padding:4px 10px;font-size:11px;color:#fff;font-weight:600;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:#bbf7d0;}
-.status-dot.scanning{background:#fbbf24;animation:blink .8s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-
-/* CONTENT */
-.content{margin-top:-32px;padding:0 14px 32px;position:relative;z-index:1;}
-
-/* CARD */
-.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
-
-/* SCANNER BOX */
-.scanner-card{background:#fff;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
-#reader{width:100%;}
-#reader video{border-radius:0 !important;}
-
-/* RESI RESULT */
-.resi-result{
-  display:flex;align-items:center;gap:10px;
-  background:#f0fdf4;border:1.5px solid #bbf7d0;
-  border-radius:12px;padding:12px 14px;
-  margin-bottom:12px;
-}
-.resi-result.empty{background:#f9fafb;border-color:#e5e7eb;}
-.resi-result.duplikat{background:#fef2f2;border-color:#fecaca;}
-.resi-icon{font-size:20px;flex-shrink:0;}
-.resi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;}
-.resi-no{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#111827;}
-
-/* FORM */
-.form-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:5px;display:block;}
-select,input[type=number]{
-  width:100%;padding:11px 13px;
-  border:1.5px solid #e5e7eb;border-radius:10px;
-  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
-  background:#f9fafb;color:#111827;outline:none;
-  transition:border-color .2s,background .2s;
-  -webkit-appearance:none;appearance:none;
-  margin-bottom:10px;
-}
-select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-shadow:0 0 0 3px rgba(22,163,74,.1);}
-
-.harga-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.harga-opt{
-  border:1.5px solid #e5e7eb;border-radius:10px;padding:11px 12px;
-  cursor:pointer;text-align:center;transition:all .15s;background:#f9fafb;
-}
-.harga-opt.active{border-color:#16a34a;background:#f0fdf4;}
-.harga-opt .ho-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:3px;}
-.harga-opt .ho-val{font-size:16px;font-weight:800;color:#111827;}
-.harga-opt.active .ho-val{color:#16a34a;}
-
-/* TOTAL */
-.total-card{
-  background:linear-gradient(135deg,#15803d,#16a34a);
-  border-radius:14px;padding:16px 18px;
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:12px;
-}
-.total-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.7);}
-.total-val{font-size:24px;font-weight:800;color:#fff;}
-.total-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
-
-/* BUTTONS */
-.btn-scan{
-  width:100%;padding:15px;
-  background:linear-gradient(135deg,#15803d,#16a34a);
-  color:#fff;border:none;border-radius:12px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:16px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  box-shadow:0 4px 14px rgba(22,163,74,.3);
-  transition:all .2s;margin-bottom:10px;
-}
-.btn-scan:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.4);}
-.btn-scan:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-.btn-stop{background:linear-gradient(135deg,#b91c1c,#dc2626);}
-.btn-reset{
-  width:100%;padding:11px;background:#f9fafb;
-  color:#6b7280;border:1.5px solid #e5e7eb;border-radius:12px;
-  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;
-  cursor:pointer;transition:all .15s;
-}
-.btn-reset:hover{border-color:#16a34a;color:#16a34a;}
-
-/* HISTORY */
-.history-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 0;border-top:1px solid #f3f4f6;
-}
-.history-item:first-of-type{border-top:none;}
-.h-icon{width:34px;height:34px;background:#f0fdf4;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-.h-info{flex:1;min-width:0;}
-.h-resi{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.h-meta{font-size:11px;color:#9ca3af;margin-top:1px;}
-.h-amount{font-size:13px;font-weight:700;color:#16a34a;flex-shrink:0;}
-.h-dup{color:#ef4444;}
-
-/* NOTIFICATION */
-.notif{
-  position:fixed;top:16px;left:50%;transform:translateX(-50%);
-  background:#fff;border:1px solid #e5e7eb;
-  border-left:4px solid #16a34a;
-  border-radius:10px;padding:12px 16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.12);
-  font-size:13px;font-weight:600;
-  display:flex;align-items:center;gap:8px;
-  z-index:9999;min-width:260px;max-width:90vw;
-  animation:slideDown .3s ease;
-  white-space:nowrap;
-}
-.notif.error{border-left-color:#ef4444;}
-.notif.warn{border-left-color:#f59e0b;}
-@keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
-@keyframes slideUp{from{opacity:1;}to{opacity:0;transform:translateX(-50%) translateY(-10px);}}
-
-/* SPINNER */
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-.section-title{font-size:14px;font-weight:700;color:#111827;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
-.section-title::before{content:'';display:block;width:3px;height:14px;background:#16a34a;border-radius:2px;}
-</style>
-</head>
-<body>
-
-<div class="header">
-  <div class="header-top">
-    <div>
-      <div class="header-brand">KEMO<span>ENIK</span></div>
-    </div>
-    <div class="status-chip" id="statusChip">
-      <div class="status-dot" id="statusDot"></div>
-      <span id="statusText">Memuat data...</span>
-    </div>
-  </div>
-  <div class="header-sub">Scanner Resi Otomatis</div>
-</div>
-
-<!-- MODE TOGGLE -->
-<div style="display:flex;gap:0;margin:12px 16px 0;border-radius:12px;overflow:hidden;border:2px solid #16a34a">
-  <button id="btnModeNormal" onclick="setMode('normal')" style="flex:1;padding:10px;border:none;background:#16a34a;color:#fff;font-weight:700;font-size:13px;cursor:pointer">📦 SCAN RESI</button>
-  <button id="btnModeReturn" onclick="setMode('return')" style="flex:1;padding:10px;border:none;background:#fff;color:#16a34a;font-weight:700;font-size:13px;cursor:pointer">🔄 SCAN RETURN</button>
-</div>
-
-<div class="content">
-
-  <!-- RESI RESULT -->
-  <div class="resi-result empty" id="resiResult">
-    <span class="resi-icon">📷</span>
-    <div>
-      <div class="resi-label">Nomor Resi</div>
-      <div class="resi-no" id="resiDisplay">Arahkan kamera ke barcode…</div>
-    </div>
-  </div>
-
-  <!-- SCANNER -->
-  <div class="scanner-card" id="scannerCard" style="display:none">
-    <div id="reader"></div>
-  </div>
-
-  <!-- FORM -->
-  <div class="card">
-    <div class="section-title">Detail Transaksi</div>
-
-    <label class="form-label">Seller</label>
-    <select id="selSeller">
-      <option value="">Memuat seller…</option>
-    </select>
-
-    <label class="form-label">Produk</label>
-    <select id="selProduk">
-      <option value="">Memuat produk…</option>
-    </select>
-
-    <label class="form-label">Pilih Harga</label>
-    <div class="harga-row" id="hargaRow">
-      <div class="harga-opt active" id="optSeller" onclick="pilihHarga('seller')">
-        <div class="ho-label">Harga Seller</div>
-        <div class="ho-val" id="valSeller">—</div>
-      </div>
-      <div class="harga-opt" id="optAdmin" onclick="pilihHarga('admin')">
-        <div class="ho-label">Harga Admin</div>
-        <div class="ho-val" id="valAdmin">—</div>
-      </div>
-    </div>
-
-    <label class="form-label">Qty per Resi</label>
-    <div style="display:flex;align-items:center;gap:8px">
-      <button onclick="ubahQty(-1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">−</button>
-      <input type="number" id="inputQty" value="1" min="1" max="100" style="flex:1;text-align:center;font-size:20px;font-weight:800;color:#111827"/>
-      <button onclick="ubahQty(1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">+</button>
-    </div>
-  </div>
-
-  <!-- FORM RETURN -->
-  <div class="card" id="formReturn" style="display:none">
-    <div class="section-title" style="color:#d97706">🔄 Scan Return</div>
-    <p style="font-size:12px;color:#6b7280;margin-bottom:12px">Scan nomor resi yang dikembalikan. Resi harus berstatus <b>LUNAS</b>.</p>
-
-    <label class="form-label">Alasan Return</label>
-    <select id="selAlasan" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #d1d5db;font-size:14px;margin-bottom:12px">
-      <option value="Tidak ada penerima">Tidak ada penerima</option>
-      <option value="Alamat tidak ditemukan">Alamat tidak ditemukan</option>
-      <option value="Ditolak penerima">Ditolak penerima</option>
-      <option value="Rusak di pengiriman">Rusak di pengiriman</option>
-      <option value="Lainnya">Lainnya</option>
-    </select>
-
-    <div class="resi-result empty" id="returnResult" style="margin-bottom:12px">
-      <span class="resi-icon">🔄</span>
-      <div>
-        <div class="resi-label">Resi Return</div>
-        <div class="resi-no" id="returnDisplay">Scan resi yang dikembalikan…</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOTAL -->
-  <div class="total-card">
-    <div>
-      <div class="total-label">Total Sesi Ini</div>
-      <div class="total-val" id="totalVal">Rp 0</div>
-      <div class="total-sub" id="totalSub">0 resi berhasil</div>
-    </div>
-    <div style="font-size:36px">📦</div>
-  </div>
-
-  <!-- BUTTONS -->
-  <button class="btn-scan" id="btnScan" onclick="startScan()">
-    📷 Mulai Scan
-  </button>
-  <button class="btn-scan btn-stop" id="btnStop" style="display:none" onclick="stopScan()">
-    ⏹ Stop Scan
-  </button>
-  <button class="btn-reset" onclick="resetSesi()">🔄 Reset Sesi</button>
-
-  <!-- HISTORY -->
-  <div class="card" style="margin-top:12px" id="historyCard" style="display:none">
-    <div class="section-title">Riwayat Sesi</div>
-    <div id="historyList"></div>
-  </div>
-
-</div>
-
-<script>
-/* ═══ CONFIG ═══ */
-const API = "https://script.google.com/macros/s/AKfycbxBbG9GiW_fNu3hood8AXwMoMUXyl8iAc9VeaOIWqfO-3E1J4ra13wtsuZWRIddwSJZ/exec";
-
-/* ═══ STATE ═══ */
-let lastBarcode  = "";
-let scanMode     = "normal"; // normal | return
-let scannerObj   = null;
-let isScanning   = false;
-let totalSesi    = 0;
-let countSesi    = 0;
-let sejarahSesi  = [];
-let produkData   = [];
-let hargaMode    = "seller"; // seller | admin
-let isSaving     = false;
-
-/* ═══ INIT ═══ */
-window.addEventListener("load", () => {
-  setStatus("Memuat data...", true);
-  Promise.all([loadSeller(), loadProduk()])
-    .then(() => setStatus("Siap", false))
-    .catch(() => setStatus("Gagal memuat", false));
+// ========== CONFIG ==========
+const API = "https://script.google.com/macros/s/AKfycbxBbG9GiW_fNu3hood8AXwMoMUXyl8iAc9VeaOIWqfO-3E1J4ra13wtsuZWRIddwSJZ/exec"; // GANTI DENGAN URL ANDA
+
+// ========== STATE ==========
+let lastBarcode = "";
+let scanMode = "normal";
+let scanner = null;
+let isScanning = false;
+let totalSesi = 0;
+let countSesi = 0;
+let sejarahSesi = [];
+let produkData = [];
+let hargaMode = "seller";
+
+// ========== INIT ==========
+window.addEventListener('load', function() {
+    setStatus("Memuat data...", true);
+    loadSeller();
+    loadProduk();
+    setMode('normal');
 });
 
-/* ═══ LOAD SELLER ═══ */
+// ========== LOAD SELLER ==========
 async function loadSeller() {
-  try {
-    const res  = await fetch(API + "?action=seller");
-    const data = await res.json();
-    const sel  = document.getElementById("selSeller");
-    sel.innerHTML = '<option value="">— Pilih Seller —</option>' +
-      data.map(s => `<option value="${s.nama}">${s.nama}</option>`).join("");
-  } catch(e) {
-    showNotif("Gagal load seller", "error");
-    throw e;
-  }
+    try {
+        const res = await fetch(API + "?action=seller");
+        const data = await res.json();
+        const select = document.getElementById('sellerSelect');
+        select.innerHTML = '<option value="">— Pilih Seller —</option>' + 
+            data.map(s => `<option value="${s.nama}">${s.nama}</option>`).join('');
+        setStatus("Siap", false);
+    } catch (e) {
+        console.error(e);
+        showNotif("Gagal load seller", "error");
+        setStatus("Error", false);
+    }
 }
 
-/* ═══ LOAD PRODUK ═══ */
+// ========== LOAD PRODUK ==========
 async function loadProduk() {
-  try {
-    const res  = await fetch(API + "?action=produk");
-    produkData = await res.json();
-    const sel  = document.getElementById("selProduk");
-    sel.innerHTML = '<option value="">— Pilih Produk —</option>' +
-      produkData.map(p => `<option value="${p.nama}">${p.nama}</option>`).join("");
-    sel.addEventListener("change", updateHarga);
-    updateHarga();
-  } catch(e) {
-    showNotif("Gagal load produk", "error");
-    throw e;
-  }
+    try {
+        const res = await fetch(API + "?action=produk");
+        produkData = await res.json();
+        const select = document.getElementById('produkSelect');
+        select.innerHTML = '<option value="">— Pilih Produk —</option>' + 
+            produkData.map(p => `<option value="${p.nama}">${p.nama}</option>`).join('');
+        select.addEventListener('change', updateHarga);
+        updateHarga();
+    } catch (e) {
+        console.error(e);
+        showNotif("Gagal load produk", "error");
+    }
 }
 
-/* ═══ UPDATE HARGA ═══ */
+// ========== UPDATE HARGA ==========
 function updateHarga() {
-  const nama   = document.getElementById("selProduk").value;
-  const produk = produkData.find(p => p.nama === nama);
-  if (produk) {
-    document.getElementById("valSeller").textContent = fRp(produk.harga_seller);
-    document.getElementById("valAdmin").textContent  = fRp(produk.harga_admin);
-  } else {
-    document.getElementById("valSeller").textContent = "—";
-    document.getElementById("valAdmin").textContent  = "—";
-  }
+    const nama = document.getElementById('produkSelect').value;
+    const produk = produkData.find(p => p.nama === nama);
+    if (produk) {
+        document.getElementById('sellerPrice').innerText = formatRupiah(produk.harga_seller);
+        document.getElementById('adminPrice').innerText = formatRupiah(produk.harga_admin);
+    } else {
+        document.getElementById('sellerPrice').innerText = '—';
+        document.getElementById('adminPrice').innerText = '—';
+    }
 }
 
+// ========== SET MODE ==========
 function setMode(mode) {
-  scanMode = mode;
-  const isReturn = mode === "return";
-  document.getElementById("btnModeNormal").style.background = isReturn ? "#fff" : "#16a34a";
-  document.getElementById("btnModeNormal").style.color      = isReturn ? "#16a34a" : "#fff";
-  document.getElementById("btnModeReturn").style.background = isReturn ? "#16a34a" : "#fff";
-  document.getElementById("btnModeReturn").style.color      = isReturn ? "#fff" : "#16a34a";
-  document.getElementById("formReturn").style.display       = isReturn ? "block" : "none";
-  document.querySelector(".card").style.display             = isReturn ? "none" : "block";
-  // Reset
-  lastBarcode = "";
-  document.getElementById("resiDisplay").textContent   = "Arahkan kamera ke barcode…";
-  document.getElementById("returnDisplay").textContent = "Scan resi yang dikembalikan…";
-  document.getElementById("resiResult").className      = "resi-result empty";
-  document.getElementById("returnResult").className    = "resi-result empty";
-}
-
-async function handleReturn(resiNo) {
-  const alasan = document.getElementById("selAlasan").value;
-  setStatus("Memproses return…", true);
-  try {
-    const url = `${API}?action=scanReturn&resi=${encodeURIComponent(resiNo)}&alasan=${encodeURIComponent(alasan)}`;
-    const res  = await fetch(url);
-    const data = await res.json();
-    if (data.status === "ok") {
-      document.getElementById("returnDisplay").textContent = resiNo;
-      document.getElementById("returnResult").className   = "resi-result success";
-      setStatus("Return berhasil!", false);
-      bunyiBeepSukses();
-      showNotif(`✅ Return: ${data.produk} x${data.qty} — ${data.seller}`, "success");
-      lastBarcode = resiNo;
-    } else {
-      document.getElementById("returnResult").className = "resi-result error";
-      setStatus("Gagal: " + data.pesan, false);
-      bunyiBeepError();
-      showNotif("❌ " + data.pesan, "error");
-    }
-  } catch(e) {
-    setStatus("Error koneksi", false);
-    bunyiBeepError();
-    showNotif("❌ Gagal koneksi", "error");
-  }
-}
-
-function ubahQty(delta) {
-  const el  = document.getElementById('inputQty');
-  let val   = parseInt(el.value) || 1;
-  val       = Math.min(100, Math.max(1, val + delta));
-  el.value  = val;
-}
-
-function pilihHarga(mode) {
-  hargaMode = mode;
-  document.getElementById("optSeller").classList.toggle("active", mode === "seller");
-  document.getElementById("optAdmin").classList.toggle("active",  mode === "admin");
-}
-
-function getHargaTerpilih() {
-  const nama   = document.getElementById("selProduk").value;
-  const produk = produkData.find(p => p.nama === nama);
-  if (!produk) return 0;
-  return hargaMode === "seller" ? produk.harga_seller : produk.harga_admin;
-}
-
-/* ═══ SCANNER ═══ */
-function startScan() {
-  const seller = document.getElementById("selSeller").value;
-  const produk = document.getElementById("selProduk").value;
-  if (!seller) { showNotif("Pilih seller dulu!", "warn"); return; }
-  if (!produk) { showNotif("Pilih produk dulu!", "warn"); return; }
-  if (getHargaTerpilih() === 0) { showNotif("Harga produk 0, cek data produk", "warn"); return; }
-
-  document.getElementById("scannerCard").style.display = "block";
-  document.getElementById("btnScan").style.display  = "none";
-  document.getElementById("btnStop").style.display  = "flex";
-  setStatus("Scanning…", true);
-
-  scannerObj = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-  scannerObj.render(onScanSuccess, onScanError);
-  isScanning = true;
-}
-
-function stopScan() {
-  if (scannerObj) {
-    scannerObj.clear().catch(() => {});
-    scannerObj = null;
-  }
-  document.getElementById("scannerCard").style.display = "none";
-  document.getElementById("btnScan").style.display  = "flex";
-  document.getElementById("btnStop").style.display  = "none";
-  setStatus("Siap", false);
-  isScanning = false;
-}
-
-function onScanError() { /* diam */ }
-
-async function onScanSuccess(decodedText) {
-  if (isSaving) return;
-  if (decodedText === lastBarcode) return;
-
-  // Mode return
-  if (scanMode === "return") {
-    lastBarcode = decodedText;
-    await handleReturn(decodedText);
-    return;
-  }
-
-  lastBarcode = decodedText;
-  isSaving    = true;
-
-  bunyiBeep();
-  setResiDisplay(decodedText, "");
-
-  const seller = document.getElementById("selSeller").value;
-  const produk = document.getElementById("selProduk").value;
-  const harga  = getHargaTerpilih();
-
-  try {
-    const qty  = Math.min(100, Math.max(1, parseInt(document.getElementById('inputQty')?.value) || 1));
-    const url = `${API}?action=scan&resi=${encodeURIComponent(decodedText)}&seller=${encodeURIComponent(seller)}&produk=${encodeURIComponent(produk)}&harga=${harga}&qty=${qty}`;
-    const res  = await fetch(url);
-    const data = await res.json();
-
-    if (data.status === "ok") {
-      totalSesi += harga;
-      countSesi++;
-      sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "ok" });
-      updateTotal();
-      renderHistory();
-      setResiDisplay(decodedText, "ok");
-      showNotif("✅ " + decodedText + " tersimpan", "success");
-      bunyiBeepSukses();
-      setTimeout(() => { lastBarcode = ""; }, 2000);
-    } else if (data.status === "duplikat") {
-      sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "duplikat" });
-      renderHistory();
-      setResiDisplay(decodedText, "duplikat");
-      showNotif("⚠️ Resi sudah ada!", "warn");
-      bunyiBeepError();
-      setTimeout(() => { lastBarcode = ""; }, 2000);
-    } else {
-      showNotif("❌ " + (data.pesan || "Gagal simpan"), "error");
-      bunyiBeepError();
-      lastBarcode = "";
-    }
-  } catch(e) {
-    showNotif("❌ Gagal koneksi", "error");
+    scanMode = mode;
+    
+    // Update button style
+    document.getElementById('btnModeNormal').classList.toggle('active', mode === 'normal');
+    document.getElementById('btnModeReturn').classList.toggle('active', mode === 'return');
+    
+    // Show/hide forms
+    document.getElementById('formNormal').style.display = mode === 'normal' ? 'block' : 'none';
+    document.getElementById('formReturn').style.display = mode === 'return' ? 'block' : 'none';
+    
+    // Reset display
     lastBarcode = "";
-  } finally {
-    isSaving = false;
-  }
+    if (mode === 'normal') {
+        document.getElementById('resiNumber').innerText = "Arahkan kamera ke barcode...";
+        document.getElementById('resiBox').className = "resi-box empty";
+        document.getElementById('resiIcon').innerText = "📷";
+    } else {
+        document.getElementById('returnNumber').innerText = "Scan resi yang diretur...";
+        document.getElementById('returnBox').className = "resi-box empty";
+    }
+    
+    if (isScanning) stopScan();
 }
 
-/* ═══ UI ═══ */
+// ========== HANDLE RETURN ==========
+async function handleReturn(resi) {
+    const alasan = document.getElementById('alasanSelect').value;
+    setStatus("Memproses return...", true);
+    
+    try {
+        const url = `${API}?action=scanReturn&resi=${encodeURIComponent(resi)}&alasan=${encodeURIComponent(alasan)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if (data.status === "ok") {
+            document.getElementById('returnNumber').innerText = resi;
+            document.getElementById('returnBox').className = "resi-box";
+            setStatus("Return berhasil!", false);
+            beepSukses();
+            showNotif(`✅ Return: ${data.produk} x${data.qty}`, "success");
+            lastBarcode = resi;
+        } else {
+            document.getElementById('returnBox').className = "resi-box empty";
+            setStatus("Gagal", false);
+            beepError();
+            showNotif("❌ " + data.pesan, "error");
+        }
+    } catch (e) {
+        console.error(e);
+        setStatus("Error", false);
+        beepError();
+        showNotif("❌ Gagal koneksi", "error");
+    }
+}
+
+// ========== UBAH QTY ==========
+function ubahQty(delta) {
+    const input = document.getElementById('qtyInput');
+    let val = parseInt(input.value) || 1;
+    val = Math.min(100, Math.max(1, val + delta));
+    input.value = val;
+}
+
+// ========== PILIH HARGA ==========
+function pilihHarga(mode) {
+    hargaMode = mode;
+    document.getElementById('hargaSeller').classList.toggle('active', mode === 'seller');
+    document.getElementById('hargaAdmin').classList.toggle('active', mode === 'admin');
+}
+
+// ========== GET HARGA TERPILIH ==========
+function getHargaTerpilih() {
+    const nama = document.getElementById('produkSelect').value;
+    const produk = produkData.find(p => p.nama === nama);
+    if (!produk) return 0;
+    return hargaMode === 'seller' ? produk.harga_seller : produk.harga_admin;
+}
+
+// ========== START SCAN ==========
+function startScan() {
+    if (scanMode === 'normal') {
+        const seller = document.getElementById('sellerSelect').value;
+        const produk = document.getElementById('produkSelect').value;
+        if (!seller) { showNotif("Pilih seller!", "warn"); return; }
+        if (!produk) { showNotif("Pilih produk!", "warn"); return; }
+        if (getHargaTerpilih() === 0) { showNotif("Harga 0, cek produk", "warn"); return; }
+    }
+    
+    document.getElementById('scanner-container').style.display = 'block';
+    document.getElementById('startBtn').style.display = 'none';
+    document.getElementById('stopBtn').style.display = 'block';
+    setStatus("Scanning...", true);
+    
+    // HAPUS SCANNER LAMA JIKA ADA
+    const reader = document.getElementById('reader');
+    reader.innerHTML = '';
+    
+    scanner = new Html5QrcodeScanner("reader", { 
+        fps: 10, 
+        qrbox: 250,
+        rememberLastUsedCamera: true,
+        showTorchButtonIfSupported: true
+    });
+    
+    scanner.render(onScanSuccess, onScanError);
+    isScanning = true;
+}
+
+// ========== STOP SCAN ==========
+function stopScan() {
+    if (scanner) {
+        scanner.clear().catch(() => {});
+        scanner = null;
+    }
+    document.getElementById('scanner-container').style.display = 'none';
+    document.getElementById('startBtn').style.display = 'block';
+    document.getElementById('stopBtn').style.display = 'none';
+    setStatus("Siap", false);
+    isScanning = false;
+}
+
+// ========== ON SCAN SUCCESS ==========
+async function onScanSuccess(decodedText) {
+    if (decodedText === lastBarcode) return;
+    
+    if (scanMode === 'return') {
+        lastBarcode = decodedText;
+        await handleReturn(decodedText);
+        return;
+    }
+    
+    lastBarcode = decodedText;
+    beep();
+    
+    document.getElementById('resiNumber').innerText = decodedText;
+    document.getElementById('resiBox').className = "resi-box";
+    document.getElementById('resiIcon').innerText = "✅";
+    
+    const seller = document.getElementById('sellerSelect').value;
+    const produk = document.getElementById('produkSelect').value;
+    const harga = getHargaTerpilih();
+    const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+    
+    try {
+        const url = `${API}?action=scan&resi=${encodeURIComponent(decodedText)}&seller=${encodeURIComponent(seller)}&produk=${encodeURIComponent(produk)}&harga=${harga}&qty=${qty}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if (data.status === "ok") {
+            totalSesi += harga;
+            countSesi++;
+            sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "ok" });
+            updateTotal();
+            renderHistory();
+            showNotif("✅ Resi tersimpan", "success");
+            beepSukses();
+            setTimeout(() => { lastBarcode = ""; }, 2000);
+        } else if (data.status === "duplikat") {
+            sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "duplikat" });
+            renderHistory();
+            document.getElementById('resiBox').className = "resi-box empty";
+            document.getElementById('resiIcon').innerText = "⚠️";
+            showNotif("⚠️ Resi sudah ada", "warn");
+            beepError();
+            setTimeout(() => { 
+                lastBarcode = "";
+                document.getElementById('resiIcon').innerText = "📷";
+            }, 2000);
+        } else {
+            showNotif("❌ " + (data.pesan || "Gagal"), "error");
+            beepError();
+            lastBarcode = "";
+        }
+    } catch (e) {
+        console.error(e);
+        showNotif("❌ Gagal koneksi", "error");
+        lastBarcode = "";
+    }
+}
+
+function onScanError(error) {
+    // diam saja
+}
+
+// ========== UI FUNCTIONS ==========
 function setStatus(text, scanning) {
-  document.getElementById("statusText").textContent = text;
-  document.getElementById("statusDot").className = "status-dot" + (scanning ? " scanning" : "");
-}
-
-function setResiDisplay(resi, status) {
-  const el   = document.getElementById("resiResult");
-  const disp = document.getElementById("resiDisplay");
-  disp.textContent = resi;
-  el.className = "resi-result" + (status === "duplikat" ? " duplikat" : status === "ok" ? "" : " empty");
-  document.getElementById("resiDisplay").parentElement.previousElementSibling.textContent =
-    status === "ok" ? "✅" : status === "duplikat" ? "⚠️" : "📷";
+    document.getElementById('statusText').innerText = text;
+    document.getElementById('statusDot').className = "status-dot" + (scanning ? " scanning" : "");
 }
 
 function updateTotal() {
-  document.getElementById("totalVal").textContent = fRp(totalSesi);
-  document.getElementById("totalSub").textContent = countSesi + " resi berhasil";
+    document.getElementById('totalValue').innerText = formatRupiah(totalSesi);
+    document.getElementById('totalSub').innerText = countSesi + " resi berhasil";
 }
 
 function renderHistory() {
-  const card = document.getElementById("historyCard");
-  card.style.display = "block";
-  const list = document.getElementById("historyList");
-  list.innerHTML = sejarahSesi.slice(0, 20).map(h => `
-    <div class="history-item">
-      <div class="h-icon">${h.status === "duplikat" ? "⚠️" : "✅"}</div>
-      <div class="h-info">
-        <div class="h-resi">${h.resi}</div>
-        <div class="h-meta">${h.produk}</div>
-      </div>
-      <div class="h-amount ${h.status === "duplikat" ? "h-dup" : ""}">
-        ${h.status === "duplikat" ? "DUPLIKAT" : fRp(h.harga)}
-      </div>
-    </div>`).join("");
+    const card = document.getElementById('historyCard');
+    card.style.display = 'block';
+    const list = document.getElementById('historyList');
+    list.innerHTML = sejarahSesi.slice(0, 20).map(h => `
+        <div class="history-item">
+            <div class="history-icon">${h.status === 'duplikat' ? '⚠️' : '✅'}</div>
+            <div class="history-info">
+                <div class="history-resi">${h.resi}</div>
+                <div class="history-produk">${h.produk}</div>
+            </div>
+            <div class="history-amount ${h.status === 'duplikat' ? 'duplikat' : ''}">
+                ${h.status === 'duplikat' ? 'DUPLIKAT' : formatRupiah(h.harga)}
+            </div>
+        </div>
+    `).join('');
 }
 
 function resetSesi() {
-  if (isScanning) stopScan();
-  totalSesi   = 0;
-  countSesi   = 0;
-  sejarahSesi = [];
-  lastBarcode = "";
-  updateTotal();
-  document.getElementById("resiResult").className = "resi-result empty";
-  document.getElementById("resiDisplay").textContent = "Arahkan kamera ke barcode…";
-  document.getElementById("historyCard").style.display = "none";
-  document.getElementById("historyList").innerHTML = "";
-  setStatus("Siap", false);
-}
-
-/* ═══ NOTIF ═══ */
-function showNotif(msg, type = "success") {
-  const existing = document.querySelector(".notif");
-  if (existing) existing.remove();
-  const el = document.createElement("div");
-  el.className = `notif ${type !== "success" ? type : ""}`;
-  el.innerHTML = `<span>${msg}</span>`;
-  document.body.appendChild(el);
-  setTimeout(() => {
-    el.style.animation = "slideUp .3s ease forwards";
-    setTimeout(() => el.remove(), 300);
-  }, 2500);
-}
-
-/* ═══ BUNYI ═══ */
-function bunyiBeep(freq = 900, dur = 120, type = "square") {
-  try {
-    const ctx  = new AudioContext();
-    const osc  = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    setTimeout(() => { osc.stop(); ctx.close(); }, dur);
-  } catch(e) {}
-}
-function bunyiBeepSukses() {
-  bunyiBeep(900, 80, "sine");
-  setTimeout(() => bunyiBeep(1200, 100, "sine"), 90);
-}
-function bunyiBeepError() {
-  bunyiBeep(300, 200, "sawtooth");
-}
-
-/* ═══ FORMAT ═══ */
-function fRp(n) { return "Rp " + Number(n || 0).toLocaleString("id-ID"); }
-</script>
-</body>
-</html>
-";
-
-/* ═══ STATE ═══ */
-let lastBarcode  = "";
-let scanMode     = "normal"; // normal | return
-let scannerObj   = null;
-let isScanning   = false;
-let totalSesi    = 0;
-let countSesi    = 0;
-let sejarahSesi  = [];
-let produkData   = [];
-let hargaMode    = "seller"; // seller | admin
-let isSaving     = false;
-
-/* ═══ INIT ═══ */
-window.addEventListener("load", () => {
-  setStatus("Memuat data...", true);
-  Promise.all([loadSeller(), loadProduk()])
-    .then(() => setStatus("Siap", false))
-    .catch(() => setStatus("Gagal memuat", false));
-});
-
-/* ═══ LOAD SELLER ═══ */
-async function loadSeller() {
-  try {
-    const res  = await fetch(API + "?action=seller");
-    const data = await res.json();
-    const sel  = document.getElementById("selSeller");
-    sel.innerHTML = '<option value="">— Pilih Seller —</option>' +
-      data.map(s => `<option value="${s.nama}">${s.nama}</option>`).join("");
-  } catch(e) {
-    showNotif("Gagal load seller", "error");
-    throw e;
-  }
-}
-
-/* ═══ LOAD PRODUK ═══ */
-async function loadProduk() {
-  try {
-    const res  = await fetch(API + "?action=produk");
-    produkData = await res.json();
-    const sel  = document.getElementById("selProduk");
-    sel.innerHTML = '<option value="">— Pilih Produk —</option>' +
-      produkData.map(p => `<option value="${p.nama}">${p.nama}</option>`).join("");
-    sel.addEventListener("change", updateHarga);
-    updateHarga();
-  } catch(e) {
-    showNotif("Gagal load produk", "error");
-    throw e;
-  }
-}
-
-/* ═══ UPDATE HARGA ═══ */
-function updateHarga() {
-  const nama   = document.getElementById("selProduk").value;
-  const produk = produkData.find(p => p.nama === nama);
-  if (produk) {
-    document.getElementById("valSeller").textContent = fRp(produk.harga_seller);
-    document.getElementById("valAdmin").textContent  = fRp(produk.harga_admin);
-  } else {
-    document.getElementById("valSeller").textContent = "—";
-    document.getElementById("valAdmin").textContent  = "—";
-  }
-}
-
-function setMode(mode) {
-  scanMode = mode;
-  const isReturn = mode === "return";
-  document.getElementById("btnModeNormal").style.background = isReturn ? "#fff" : "#16a34a";
-  document.getElementById("btnModeNormal").style.color      = isReturn ? "#16a34a" : "#fff";
-  document.getElementById("btnModeReturn").style.background = isReturn ? "#16a34a" : "#fff";
-  document.getElementById("btnModeReturn").style.color      = isReturn ? "#fff" : "#16a34a";
-  document.getElementById("formReturn").style.display       = isReturn ? "block" : "none";
-  document.querySelector(".card").style.display             = isReturn ? "none" : "block";
-  // Reset
-  lastBarcode = "";
-  document.getElementById("resiDisplay").textContent   = "Arahkan kamera ke barcode…";
-  document.getElementById("returnDisplay").textContent = "Scan resi yang dikembalikan…";
-  document.getElementById("resiResult").className      = "resi-result empty";
-  document.getElementById("returnResult").className    = "resi-result empty";
-}
-
-async function handleReturn(resiNo) {
-  const alasan = document.getElementById("selAlasan").value;
-  setStatus("Memproses return…", true);
-  try {
-    const url = `${API}?action=scanReturn&resi=${encodeURIComponent(resiNo)}&alasan=${encodeURIComponent(alasan)}`;
-    const res  = await fetch(url);
-    const data = await res.json();
-    if (data.status === "ok") {
-      document.getElementById("returnDisplay").textContent = resiNo;
-      document.getElementById("returnResult").className   = "resi-result success";
-      setStatus("Return berhasil!", false);
-      bunyiBeepSukses();
-      showNotif(`✅ Return: ${data.produk} x${data.qty} — ${data.seller}`, "success");
-      lastBarcode = resiNo;
-    } else {
-      document.getElementById("returnResult").className = "resi-result error";
-      setStatus("Gagal: " + data.pesan, false);
-      bunyiBeepError();
-      showNotif("❌ " + data.pesan, "error");
-    }
-  } catch(e) {
-    setStatus("Error koneksi", false);
-    bunyiBeepError();
-    showNotif("❌ Gagal koneksi", "error");
-  }
-}
-
-function ubahQty(delta) {
-  const el  = document.getElementById('inputQty');
-  let val   = parseInt(el.value) || 1;
-  val       = Math.min(100, Math.max(1, val + delta));
-  el.value  = val;
-}
-
-function pilihHarga(mode) {
-  hargaMode = mode;
-  document.getElementById("optSeller").classList.toggle("active", mode === "seller");
-  document.getElementById("optAdmin").classList.toggle("active",  mode === "admin");
-}
-
-function getHargaTerpilih() {
-  const nama   = document.getElementById("selProduk").value;
-  const produk = produkData.find(p => p.nama === nama);
-  if (!produk) return 0;
-  return hargaMode === "seller" ? produk.harga_seller : produk.harga_admin;
-}
-
-/* ═══ SCANNER ═══ */
-function startScan() {
-  const seller = document.getElementById("selSeller").value;
-  const produk = document.getElementById("selProduk").value;
-  if (!seller) { showNotif("Pilih seller dulu!", "warn"); return; }
-  if (!produk) { showNotif("Pilih produk dulu!", "warn"); return; }
-  if (getHargaTerpilih() === 0) { showNotif("Harga produk 0, cek data produk", "warn"); return; }
-
-  document.getElementById("scannerCard").style.display = "block";
-  document.getElementById("btnScan").style.display  = "none";
-  document.getElementById("btnStop").style.display  = "flex";
-  setStatus("Scanning…", true);
-
-  scannerObj = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-  scannerObj.render(onScanSuccess, onScanError);
-  isScanning = true;
-}
-
-function stopScan() {
-  if (scannerObj) {
-    scannerObj.clear().catch(() => {});
-    scannerObj = null;
-  }
-  document.getElementById("scannerCard").style.display = "none";
-  document.getElementById("btnScan").style.display  = "flex";
-  document.getElementById("btnStop").style.display  = "none";
-  setStatus("Siap", false);
-  isScanning = false;
-}
-
-function onScanError() { /* diam */ }
-
-async function onScanSuccess(decodedText) {
-  if (isSaving) return;
-  if (decodedText === lastBarcode) return;
-
-  // Mode return
-  if (scanMode === "return") {
-    lastBarcode = decodedText;
-    await handleReturn(decodedText);
-    return;
-  }
-
-  lastBarcode = decodedText;
-  isSaving    = true;
-
-  bunyiBeep();
-  setResiDisplay(decodedText, "");
-
-  const seller = document.getElementById("selSeller").value;
-  const produk = document.getElementById("selProduk").value;
-  const harga  = getHargaTerpilih();
-
-  try {
-    const qty  = Math.min(100, Math.max(1, parseInt(document.getElementById('inputQty')?.value) || 1));
-    const url = `${API}?action=scan&resi=${encodeURIComponent(decodedText)}&seller=${encodeURIComponent(seller)}&produk=${encodeURIComponent(produk)}&harga=${harga}&qty=${qty}`;
-    const res  = await fetch(url);
-    const data = await res.json();
-
-    if (data.status === "ok") {
-      totalSesi += harga;
-      countSesi++;
-      sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "ok" });
-      updateTotal();
-      renderHistory();
-      setResiDisplay(decodedText, "ok");
-      showNotif("✅ " + decodedText + " tersimpan", "success");
-      bunyiBeepSukses();
-      setTimeout(() => { lastBarcode = ""; }, 2000);
-    } else if (data.status === "duplikat") {
-      sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "duplikat" });
-      renderHistory();
-      setResiDisplay(decodedText, "duplikat");
-      showNotif("⚠️ Resi sudah ada!", "warn");
-      bunyiBeepError();
-      setTimeout(() => { lastBarcode = ""; }, 2000);
-    } else {
-      showNotif("❌ " + (data.pesan || "Gagal simpan"), "error");
-      bunyiBeepError();
-      lastBarcode = "";
-    }
-  } catch(e) {
-    showNotif("❌ Gagal koneksi", "error");
+    if (isScanning) stopScan();
+    totalSesi = 0;
+    countSesi = 0;
+    sejarahSesi = [];
     lastBarcode = "";
-  } finally {
-    isSaving = false;
-  }
+    updateTotal();
+    document.getElementById('historyCard').style.display = 'none';
+    document.getElementById('historyList').innerHTML = '';
+    document.getElementById('resiNumber').innerText = "Arahkan kamera ke barcode...";
+    document.getElementById('resiBox').className = "resi-box empty";
+    document.getElementById('resiIcon').innerText = "📷";
 }
 
-/* ═══ UI ═══ */
-function setStatus(text, scanning) {
-  document.getElementById("statusText").textContent = text;
-  document.getElementById("statusDot").className = "status-dot" + (scanning ? " scanning" : "");
-}
-
-function setResiDisplay(resi, status) {
-  const el   = document.getElementById("resiResult");
-  const disp = document.getElementById("resiDisplay");
-  disp.textContent = resi;
-  el.className = "resi-result" + (status === "duplikat" ? " duplikat" : status === "ok" ? "" : " empty");
-  document.getElementById("resiDisplay").parentElement.previousElementSibling.textContent =
-    status === "ok" ? "✅" : status === "duplikat" ? "⚠️" : "📷";
-}
-
-function updateTotal() {
-  document.getElementById("totalVal").textContent = fRp(totalSesi);
-  document.getElementById("totalSub").textContent = countSesi + " resi berhasil";
-}
-
-function renderHistory() {
-  const card = document.getElementById("historyCard");
-  card.style.display = "block";
-  const list = document.getElementById("historyList");
-  list.innerHTML = sejarahSesi.slice(0, 20).map(h => `
-    <div class="history-item">
-      <div class="h-icon">${h.status === "duplikat" ? "⚠️" : "✅"}</div>
-      <div class="h-info">
-        <div class="h-resi">${h.resi}</div>
-        <div class="h-meta">${h.produk}</div>
-      </div>
-      <div class="h-amount ${h.status === "duplikat" ? "h-dup" : ""}">
-        ${h.status === "duplikat" ? "DUPLIKAT" : fRp(h.harga)}
-      </div>
-    </div>`).join("");
-}
-
-function resetSesi() {
-  if (isScanning) stopScan();
-  totalSesi   = 0;
-  countSesi   = 0;
-  sejarahSesi = [];
-  lastBarcode = "";
-  updateTotal();
-  document.getElementById("resiResult").className = "resi-result empty";
-  document.getElementById("resiDisplay").textContent = "Arahkan kamera ke barcode…";
-  document.getElementById("historyCard").style.display = "none";
-  document.getElementById("historyList").innerHTML = "";
-  setStatus("Siap", false);
-}
-
-/* ═══ NOTIF ═══ */
+// ========== NOTIF ==========
 function showNotif(msg, type = "success") {
-  const existing = document.querySelector(".notif");
-  if (existing) existing.remove();
-  const el = document.createElement("div");
-  el.className = `notif ${type !== "success" ? type : ""}`;
-  el.innerHTML = `<span>${msg}</span>`;
-  document.body.appendChild(el);
-  setTimeout(() => {
-    el.style.animation = "slideUp .3s ease forwards";
-    setTimeout(() => el.remove(), 300);
-  }, 2500);
+    const notif = document.createElement('div');
+    notif.className = `notif ${type}`;
+    notif.innerText = msg;
+    document.body.appendChild(notif);
+    setTimeout(() => notif.remove(), 2500);
 }
 
-/* ═══ BUNYI ═══ */
-function bunyiBeep(freq = 900, dur = 120, type = "square") {
-  try {
-    const ctx  = new AudioContext();
-    const osc  = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    setTimeout(() => { osc.stop(); ctx.close(); }, dur);
-  } catch(e) {}
+// ========== BEEP ==========
+function beep(freq = 900, dur = 100) {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = freq;
+        gain.gain.value = 0.2;
+        osc.start();
+        setTimeout(() => {
+            osc.stop();
+            ctx.close();
+        }, dur);
+    } catch (e) {}
 }
-function bunyiBeepSukses() {
-  bunyiBeep(900, 80, "sine");
-  setTimeout(() => bunyiBeep(1200, 100, "sine"), 90);
+function beepSukses() {
+    beep(900, 80);
+    setTimeout(() => beep(1200, 100), 90);
 }
-function bunyiBeepError() {
-  bunyiBeep(300, 200, "sawtooth");
-}
-
-/* ═══ FORMAT ═══ */
-function fRp(n) { return "Rp " + Number(n || 0).toLocaleString("id-ID"); }
-</script>
-</body>
-</html>
-";
-
-/* ═══ STATE ═══ */
-let lastBarcode  = "";
-let scanMode     = "normal"; // normal | return
-let scannerObj   = null;
-let isScanning   = false;
-let totalSesi    = 0;
-let countSesi    = 0;
-let sejarahSesi  = [];
-let produkData   = [];
-let hargaMode    = "seller"; // seller | admin
-let isSaving     = false;
-
-/* ═══ INIT ═══ */
-window.addEventListener("load", () => {
-  setStatus("Memuat data...", true);
-  Promise.all([loadSeller(), loadProduk()])
-    .then(() => setStatus("Siap", false))
-    .catch(() => setStatus("Gagal memuat", false));
-});
-
-/* ═══ LOAD SELLER ═══ */
-async function loadSeller() {
-  try {
-    const res  = await fetch(API + "?action=seller");
-    const data = await res.json();
-    const sel  = document.getElementById("selSeller");
-    sel.innerHTML = '<option value="">— Pilih Seller —</option>' +
-      data.map(s => `<option value="${s.nama}">${s.nama}</option>`).join("");
-  } catch(e) {
-    showNotif("Gagal load seller", "error");
-    throw e;
-  }
+function beepError() {
+    beep(300, 200);
 }
 
-/* ═══ LOAD PRODUK ═══ */
-async function loadProduk() {
-  try {
-    const res  = await fetch(API + "?action=produk");
-    produkData = await res.json();
-    const sel  = document.getElementById("selProduk");
-    sel.innerHTML = '<option value="">— Pilih Produk —</option>' +
-      produkData.map(p => `<option value="${p.nama}">${p.nama}</option>`).join("");
-    sel.addEventListener("change", updateHarga);
-    updateHarga();
-  } catch(e) {
-    showNotif("Gagal load produk", "error");
-    throw e;
-  }
+// ========== FORMAT ==========
+function formatRupiah(n) {
+    return "Rp " + (n || 0).toLocaleString('id-ID');
 }
-
-/* ═══ UPDATE HARGA ═══ */
-function updateHarga() {
-  const nama   = document.getElementById("selProduk").value;
-  const produk = produkData.find(p => p.nama === nama);
-  if (produk) {
-    document.getElementById("valSeller").textContent = fRp(produk.harga_seller);
-    document.getElementById("valAdmin").textContent  = fRp(produk.harga_admin);
-  } else {
-    document.getElementById("valSeller").textContent = "—";
-    document.getElementById("valAdmin").textContent  = "—";
-  }
-}
-
-function setMode(mode) {
-  scanMode = mode;
-  const isReturn = mode === "return";
-  document.getElementById("btnModeNormal").style.background = isReturn ? "#fff" : "#16a34a";
-  document.getElementById("btnModeNormal").style.color      = isReturn ? "#16a34a" : "#fff";
-  document.getElementById("btnModeReturn").style.background = isReturn ? "#16a34a" : "#fff";
-  document.getElementById("btnModeReturn").style.color      = isReturn ? "#fff" : "#16a34a";
-  document.getElementById("formReturn").style.display       = isReturn ? "block" : "none";
-  document.querySelector(".card").style.display             = isReturn ? "none" : "block";
-  // Reset
-  lastBarcode = "";
-  document.getElementById("resiDisplay").textContent   = "Arahkan kamera ke barcode…";
-  document.getElementById("returnDisplay").textContent = "Scan resi yang dikembalikan…";
-  document.getElementById("resiResult").className      = "resi-result empty";
-  document.getElementById("returnResult").className    = "resi-result empty";
-}
-
-async function handleReturn(resiNo) {
-  const alasan = document.getElementById("selAlasan").value;
-  setStatus("Memproses return…", true);
-  try {
-    const url = `${API}?action=scanReturn&resi=${encodeURIComponent(resiNo)}&alasan=${encodeURIComponent(alasan)}`;
-    const res  = await fetch(url);
-    const data = await res.json();
-    if (data.status === "ok") {
-      document.getElementById("returnDisplay").textContent = resiNo;
-      document.getElementById("returnResult").className   = "resi-result success";
-      setStatus("Return berhasil!", false);
-      bunyiBeepSukses();
-      showNotif(`✅ Return: ${data.produk} x${data.qty} — ${data.seller}`, "success");
-      lastBarcode = resiNo;
-    } else {
-      document.getElementById("returnResult").className = "resi-result error";
-      setStatus("Gagal: " + data.pesan, false);
-      bunyiBeepError();
-      showNotif("❌ " + data.pesan, "error");
-    }
-  } catch(e) {
-    setStatus("Error koneksi", false);
-    bunyiBeepError();
-    showNotif("❌ Gagal koneksi", "error");
-  }
-}
-
-function ubahQty(delta) {
-  const el  = document.getElementById('inputQty');
-  let val   = parseInt(el.value) || 1;
-  val       = Math.min(100, Math.max(1, val + delta));
-  el.value  = val;
-}
-
-function pilihHarga(mode) {
-  hargaMode = mode;
-  document.getElementById("optSeller").classList.toggle("active", mode === "seller");
-  document.getElementById("optAdmin").classList.toggle("active",  mode === "admin");
-}
-
-function getHargaTerpilih() {
-  const nama   = document.getElementById("selProduk").value;
-  const produk = produkData.find(p => p.nama === nama);
-  if (!produk) return 0;
-  return hargaMode === "seller" ? produk.harga_seller : produk.harga_admin;
-}
-
-/* ═══ SCANNER ═══ */
-function startScan() {
-  const seller = document.getElementById("selSeller").value;
-  const produk = document.getElementById("selProduk").value;
-  if (!seller) { showNotif("Pilih seller dulu!", "warn"); return; }
-  if (!produk) { showNotif("Pilih produk dulu!", "warn"); return; }
-  if (getHargaTerpilih() === 0) { showNotif("Harga produk 0, cek data produk", "warn"); return; }
-
-  document.getElementById("scannerCard").style.display = "block";
-  document.getElementById("btnScan").style.display  = "none";
-  document.getElementById("btnStop").style.display  = "flex";
-  setStatus("Scanning…", true);
-
-  scannerObj = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-  scannerObj.render(onScanSuccess, onScanError);
-  isScanning = true;
-}
-
-function stopScan() {
-  if (scannerObj) {
-    scannerObj.clear().catch(() => {});
-    scannerObj = null;
-  }
-  document.getElementById("scannerCard").style.display = "none";
-  document.getElementById("btnScan").style.display  = "flex";
-  document.getElementById("btnStop").style.display  = "none";
-  setStatus("Siap", false);
-  isScanning = false;
-}
-
-function onScanError() { /* diam */ }
-
-async function onScanSuccess(decodedText) {
-  if (isSaving) return;
-  if (decodedText === lastBarcode) return;
-
-  // Mode return
-  if (scanMode === "return") {
-    lastBarcode = decodedText;
-    await handleReturn(decodedText);
-    return;
-  }
-
-  lastBarcode = decodedText;
-  isSaving    = true;
-
-  bunyiBeep();
-  setResiDisplay(decodedText, "");
-
-  const seller = document.getElementById("selSeller").value;
-  const produk = document.getElementById("selProduk").value;
-  const harga  = getHargaTerpilih();
-
-  try {
-    const qty  = Math.min(100, Math.max(1, parseInt(document.getElementById('inputQty')?.value) || 1));
-    const url = `${API}?action=scan&resi=${encodeURIComponent(decodedText)}&seller=${encodeURIComponent(seller)}&produk=${encodeURIComponent(produk)}&harga=${harga}&qty=${qty}`;
-    const res  = await fetch(url);
-    const data = await res.json();
-
-    if (data.status === "ok") {
-      totalSesi += harga;
-      countSesi++;
-      sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "ok" });
-      updateTotal();
-      renderHistory();
-      setResiDisplay(decodedText, "ok");
-      showNotif("✅ " + decodedText + " tersimpan", "success");
-      bunyiBeepSukses();
-      setTimeout(() => { lastBarcode = ""; }, 2000);
-    } else if (data.status === "duplikat") {
-      sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "duplikat" });
-      renderHistory();
-      setResiDisplay(decodedText, "duplikat");
-      showNotif("⚠️ Resi sudah ada!", "warn");
-      bunyiBeepError();
-      setTimeout(() => { lastBarcode = ""; }, 2000);
-    } else {
-      showNotif("❌ " + (data.pesan || "Gagal simpan"), "error");
-      bunyiBeepError();
-      lastBarcode = "";
-    }
-  } catch(e) {
-    showNotif("❌ Gagal koneksi", "error");
-    lastBarcode = "";
-  } finally {
-    isSaving = false;
-  }
-}
-
-/* ═══ UI ═══ */
-function setStatus(text, scanning) {
-  document.getElementById("statusText").textContent = text;
-  document.getElementById("statusDot").className = "status-dot" + (scanning ? " scanning" : "");
-}
-
-function setResiDisplay(resi, status) {
-  const el   = document.getElementById("resiResult");
-  const disp = document.getElementById("resiDisplay");
-  disp.textContent = resi;
-  el.className = "resi-result" + (status === "duplikat" ? " duplikat" : status === "ok" ? "" : " empty");
-  document.getElementById("resiDisplay").parentElement.previousElementSibling.textContent =
-    status === "ok" ? "✅" : status === "duplikat" ? "⚠️" : "📷";
-}
-
-function updateTotal() {
-  document.getElementById("totalVal").textContent = fRp(totalSesi);
-  document.getElementById("totalSub").textContent = countSesi + " resi berhasil";
-}
-
-function renderHistory() {
-  const card = document.getElementById("historyCard");
-  card.style.display = "block";
-  const list = document.getElementById("historyList");
-  list.innerHTML = sejarahSesi.slice(0, 20).map(h => `
-    <div class="history-item">
-      <div class="h-icon">${h.status === "duplikat" ? "⚠️" : "✅"}</div>
-      <div class="h-info">
-        <div class="h-resi">${h.resi}</div>
-        <div class="h-meta">${h.produk}</div>
-      </div>
-      <div class="h-amount ${h.status === "duplikat" ? "h-dup" : ""}">
-        ${h.status === "duplikat" ? "DUPLIKAT" : fRp(h.harga)}
-      </div>
-    </div>`).join("");
-}
-
-function resetSesi() {
-  if (isScanning) stopScan();
-  totalSesi   = 0;
-  countSesi   = 0;
-  sejarahSesi = [];
-  lastBarcode = "";
-  updateTotal();
-  document.getElementById("resiResult").className = "resi-result empty";
-  document.getElementById("resiDisplay").textContent = "Arahkan kamera ke barcode…";
-  document.getElementById("historyCard").style.display = "none";
-  document.getElementById("historyList").innerHTML = "";
-  setStatus("Siap", false);
-}
-
-/* ═══ NOTIF ═══ */
-function showNotif(msg, type = "success") {
-  const existing = document.querySelector(".notif");
-  if (existing) existing.remove();
-  const el = document.createElement("div");
-  el.className = `notif ${type !== "success" ? type : ""}`;
-  el.innerHTML = `<span>${msg}</span>`;
-  document.body.appendChild(el);
-  setTimeout(() => {
-    el.style.animation = "slideUp .3s ease forwards";
-    setTimeout(() => el.remove(), 300);
-  }, 2500);
-}
-
-/* ═══ BUNYI ═══ */
-function bunyiBeep(freq = 900, dur = 120, type = "square") {
-  try {
-    const ctx  = new AudioContext();
-    const osc  = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    setTimeout(() => { osc.stop(); ctx.close(); }, dur);
-  } catch(e) {}
-}
-function bunyiBeepSukses() {
-  bunyiBeep(900, 80, "sine");
-  setTimeout(() => bunyiBeep(1200, 100, "sine"), 90);
-}
-function bunyiBeepError() {
-  bunyiBeep(300, 200, "sawtooth");
-}
-
-/* ═══ FORMAT ═══ */
-function fRp(n) { return "Rp " + Number(n || 0).toLocaleString("id-ID"); }
 </script>
 </body>
 </html>
