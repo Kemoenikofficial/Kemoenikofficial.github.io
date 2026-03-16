@@ -156,7 +156,7 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
     </div>
     <div class="status-chip" id="statusChip">
       <div class="status-dot" id="statusDot"></div>
-      <span id="statusText">Siap</span>
+      <span id="statusText">Memuat data...</span>
     </div>
   </div>
   <div class="header-sub">Scanner Resi Otomatis</div>
@@ -286,8 +286,10 @@ let isSaving     = false;
 
 /* ═══ INIT ═══ */
 window.addEventListener("load", () => {
-  loadSeller();
-  loadProduk();
+  setStatus("Memuat data...", true);
+  Promise.all([loadSeller(), loadProduk()])
+    .then(() => setStatus("Siap", false))
+    .catch(() => setStatus("Gagal memuat", false));
 });
 
 /* ═══ LOAD SELLER ═══ */
@@ -300,6 +302,7 @@ async function loadSeller() {
       data.map(s => `<option value="${s.nama}">${s.nama}</option>`).join("");
   } catch(e) {
     showNotif("Gagal load seller", "error");
+    throw e;
   }
 }
 
@@ -315,6 +318,7 @@ async function loadProduk() {
     updateHarga();
   } catch(e) {
     showNotif("Gagal load produk", "error");
+    throw e;
   }
 }
 
@@ -361,7 +365,6 @@ async function handleReturn(resiNo) {
       setStatus("Return berhasil!", false);
       bunyiBeepSukses();
       showNotif(`✅ Return: ${data.produk} x${data.qty} — ${data.seller}`, "success");
-      // (tidak perlu menambah ke riwayat sesi karena mode return terpisah)
       lastBarcode = resiNo;
     } else {
       document.getElementById("returnResult").className = "resi-result error";
@@ -464,7 +467,6 @@ async function onScanSuccess(decodedText) {
       setResiDisplay(decodedText, "ok");
       showNotif("✅ " + decodedText + " tersimpan", "success");
       bunyiBeepSukses();
-      // Reset lastBarcode setelah 2 detik agar bisa scan resi berbeda
       setTimeout(() => { lastBarcode = ""; }, 2000);
     } else if (data.status === "duplikat") {
       sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "duplikat" });
@@ -534,6 +536,7 @@ function resetSesi() {
   document.getElementById("resiDisplay").textContent = "Arahkan kamera ke barcode…";
   document.getElementById("historyCard").style.display = "none";
   document.getElementById("historyList").innerHTML = "";
+  setStatus("Siap", false);
 }
 
 /* ═══ NOTIF ═══ */
