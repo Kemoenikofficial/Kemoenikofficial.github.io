@@ -132,6 +132,9 @@
 
 /* ── YEAR BADGE ── */
 .year-badge { display:inline-flex; align-items:center; gap:5px; background:rgba(200,169,106,.12); border:1px solid var(--gold); border-radius:99px; padding:3px 11px; font-size:11px; font-weight:700; color:var(--gold2); }
+
+/* ── BADGE RETURN ── */
+.badge-return { background:#fef3c7; color:#92400e; border:1px solid #fcd34d; }
 </style>
 </head>
 <body>
@@ -171,6 +174,9 @@
         <span class="si">📦</span> Stok Produk
       </a>
       <div class="sb-label">Monitoring</div>
+      <a class="sb-item" onclick="showPage('return',this)">
+        <span class="si">↩️</span> Data Return
+      </a>
       <a class="sb-item" onclick="showPage('live',this)">
         <span class="si">📦</span> Live Resi
       </a>
@@ -257,6 +263,7 @@
               <option value="">Semua Status</option>
               <option value="BELUM">BELUM</option>
               <option value="LUNAS">LUNAS</option>
+              <option value="RETURN">RETURN</option>
             </select>
             <input type="date" class="input" id="tDateFrom" onchange="applyFilters()" style="width:140px"/>
             <input type="date" class="input" id="tDateTo"   onchange="applyFilters()" style="width:140px"/>
@@ -327,8 +334,18 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Seller</th><th>Total Resi</th><th>Total Penjualan</th><th>Lunas</th><th>Belum Bayar</th><th>Aksi</th></tr></thead>
-            <tbody id="sellerTableBody"><tr><td colspan="6" class="empty-state">Memuat…</td></tr></tbody>
+            <thead>
+              <tr>
+                <th>Seller</th>
+                <th>Total Resi</th>
+                <th>Total Penjualan</th>
+                <th>Lunas</th>
+                <th>Belum Bayar</th>
+                <th>Return (Resi)</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="sellerTableBody"><tr><td colspan="7" class="empty-state">Memuat…</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -345,7 +362,7 @@
       </div>
     </div>
 
-  <!-- PAGE STOK -->
+    <!-- PAGE STOK -->
     <div class="page" id="page-stok">
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
@@ -378,6 +395,50 @@
       </div>
     </div>
 
+    <!-- PAGE: RETURN -->
+    <div class="page" id="page-return">
+      <!-- Summary Cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+        <div class="kpi-card"><div class="kpi-label">Total Return (Resi)</div><div class="kpi-val" id="returnTotalResi">—</div><div class="kpi-sub">tahun <span id="returnYearLabel">2026</span></div></div>
+        <div class="kpi-card"><div class="kpi-label">Total Produk Dikembalikan</div><div class="kpi-val" id="returnTotalQty">—</div><div class="kpi-sub">unit</div></div>
+        <div class="kpi-card"><div class="kpi-label">Seller dengan Return</div><div class="kpi-val" id="returnSellerCount">—</div><div class="kpi-sub">aktif</div></div>
+      </div>
+
+      <div class="table-section">
+        <div class="table-header">
+          <div class="sec-title" style="margin-bottom:0;flex:1">Data Return</div>
+          <div class="filter-row">
+            <input type="text" class="input" id="returnSearch" placeholder="🔍 Cari resi, seller…" oninput="applyReturnFilters()" style="width:180px"/>
+            <select class="select" id="returnSeller" onchange="applyReturnFilters()">
+              <option value="">Semua Seller</option>
+            </select>
+            <input type="date" class="input" id="returnDateFrom" onchange="applyReturnFilters()" style="width:140px"/>
+            <input type="date" class="input" id="returnDateTo"   onchange="applyReturnFilters()" style="width:140px"/>
+            <button class="btn btn-outline btn-sm" onclick="resetReturnFilters()">Reset</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tanggal Return</th>
+                <th>Nomor Resi</th>
+                <th>Seller</th>
+                <th>Produk</th>
+                <th>Qty</th>
+                <th>Alasan</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="returnTableBody">
+              <tr><td colspan="7" class="empty-state">Memuat data return…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer" id="returnTableFooter"></div>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /layout -->
 
@@ -406,8 +467,13 @@ let currentYear   = "2026";
 let stats         = {};
 const PAGE_SIZE   = 10;
 
+let returnData = [];
+let filteredReturn = [];
+let returnPaginator = null;
+const RETURN_PAGE_SIZE = 10;
+
 /* ═══ NAVIGATION ═══ */
-const pageTitles = { dashboard:"Dashboard", transaksi:"Transaksi", pembayaran:"Tandai Lunas", seller:"Ringkasan Seller", live:"Live Monitor", stok:"Stok Produk" };
+const pageTitles = { dashboard:"Dashboard", transaksi:"Transaksi", pembayaran:"Tandai Lunas", seller:"Ringkasan Seller", live:"Live Monitor", stok:"Stok Produk", return:"Data Return" };
 function showPage(id, el) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".sb-item").forEach(i => i.classList.remove("active"));
@@ -415,6 +481,7 @@ function showPage(id, el) {
   if (el) el.classList.add("active");
   document.getElementById("pageTitle").textContent = pageTitles[id] || id;
   if (id === "stok" && !stokData.length) loadAndRenderStok();
+  if (id === "return" && !returnData.length) loadReturnData(currentYear);
 }
 
 /* ═══ INIT ═══ */
@@ -433,6 +500,7 @@ async function initDashboard() {
     // Load data
     allResi = await loadResi({ tahun: currentYear });
     stats   = await loadStats({ tahun: currentYear });
+    await loadReturnData(currentYear);
 
     renderAll();
   } catch(e) {
@@ -460,6 +528,7 @@ async function onYearChange(year) {
   try {
     allResi = await loadResi({ tahun: currentYear });
     stats   = await loadStats({ tahun: currentYear });
+    await loadReturnData(currentYear);
     renderAll();
   } catch(e) { showToast("Gagal ganti tahun","error"); }
   finally { document.getElementById("loadingOverlay").style.display = "none"; }
@@ -563,8 +632,9 @@ function renderTablePage() {
     document.getElementById("tableFooter").innerHTML = "";
     return;
   }
-  body.innerHTML = data.map(r => `
-    <tr>
+  body.innerHTML = data.map(r => {
+    let badgeClass = r.status === 'LUNAS' ? 'lunas' : (r.status === 'RETURN' ? 'return' : 'belum');
+    return `<tr>
       <td>${formatDate(r.tanggal)}</td>
       <td class="mono">${r.nomor_resi}</td>
       <td><b>${r.seller}</b></td>
@@ -572,8 +642,9 @@ function renderTablePage() {
       <td style="text-align:center">${r.qty||1}</td>
       <td>${formatRupiah(r.harga)}</td>
       <td><b>${formatRupiah(r.total)}</b></td>
-      <td><span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span></td>
-    </tr>`).join("");
+      <td><span class="badge badge-${badgeClass}">${r.status}</span></td>
+    </tr>`;
+  }).join("");
   paginator.renderControls("tableFooter", "goToPage");
 }
 
@@ -604,15 +675,17 @@ function renderLive() {
   const recent = [...allResi].slice(0, 8);
   const el     = document.getElementById("liveList");
   const elFull = document.getElementById("liveFullList");
-  const html   = (arr) => arr.map(r => `
-    <div class="live-item">
+  const html   = (arr) => arr.map(r => {
+    let badgeClass = r.status === 'LUNAS' ? 'lunas' : (r.status === 'RETURN' ? 'return' : 'belum');
+    return `<div class="live-item">
       <div class="live-dot-badge"></div>
       <div style="flex:1;min-width:0">
         <div class="live-resi">${r.nomor_resi}</div>
         <div class="live-meta">${r.seller} · ${r.produk} · ${formatDate(r.tanggal)}</div>
       </div>
-      <span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span>
-    </div>`).join("");
+      <span class="badge badge-${badgeClass}">${r.status}</span>
+    </div>`;
+  }).join("");
   if (el)     el.innerHTML     = recent.length ? html(recent)   : `<div class="empty-state"><div class="ei">📦</div><p>Belum ada resi</p></div>`;
   if (elFull) elFull.innerHTML = allResi.length ? html(allResi.slice(0,50)) : `<div class="empty-state"><div class="ei">📦</div><p>Belum ada resi</p></div>`;
 }
@@ -621,7 +694,7 @@ function renderLive() {
 function renderSellerDropdowns(sellers) {
   const names   = sellers.map(s => typeof s === "string" ? s : s.nama);
   const optHtml = '<option value="">— Pilih Seller —</option>' + names.map(n => `<option value="${n}">${n}</option>`).join("");
-  ["tSeller","paySeller"].forEach(id => {
+  ["tSeller","paySeller","returnSeller"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = id === "tSeller"
       ? '<option value="">Semua Seller</option>' + names.map(n => `<option value="${n}">${n}</option>`).join("")
@@ -684,6 +757,7 @@ async function confirmLunas() {
     document.getElementById("payPreview").style.display = "none";
     allResi = await loadResi({ tahun: currentYear });
     stats   = await loadStats({ tahun: currentYear });
+    await loadReturnData(currentYear);
     renderAll();
   } catch(e) {
     showToast("Gagal tandai lunas — cek Apps Script","error");
@@ -718,7 +792,16 @@ function prefillPay(seller) {
 function renderSellerTable() {
   const perSeller = stats.per_seller || [];
   const body      = document.getElementById("sellerTableBody");
-  if (!perSeller.length) { body.innerHTML = `<tr><td colspan="6" class="empty-state">Tidak ada data</td></tr>`; return; }
+  if (!perSeller.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">Tidak ada data</td></tr>`; return; }
+
+  // Hitung return per seller dari returnData
+  const returnPerSeller = {};
+  returnData.forEach(r => {
+    if (!returnPerSeller[r.seller]) returnPerSeller[r.seller] = { return_resi: 0, return_qty: 0 };
+    returnPerSeller[r.seller].return_resi++;
+    returnPerSeller[r.seller].return_qty += r.qty || 1;
+  });
+
   body.innerHTML = perSeller.map(s => `
     <tr class="seller-stat-row" onclick="viewSeller('${s.seller}')">
       <td><b>${s.seller}</b></td>
@@ -726,6 +809,7 @@ function renderSellerTable() {
       <td><b>${formatRupiah(s.penjualan)}</b></td>
       <td style="color:#059669">${formatRupiah(s.lunas)}</td>
       <td style="color:var(--red)">${formatRupiah(s.belum)}</td>
+      <td style="text-align:center">${returnPerSeller[s.seller]?.return_resi || 0}</td>
       <td><button class="btn btn-sm btn-outline" onclick="event.stopPropagation();viewSeller('${s.seller}')">Lihat Detail</button></td>
     </tr>`).join("");
 }
@@ -757,7 +841,6 @@ function doExportCSV() {
   exportToCSV(filteredResi.length ? filteredResi : allResi, `resi-${currentYear}.csv`);
   showToast("Export berhasil");
 }
-
 
 /* ═══ STOK ═══ */
 let stokData = [];
@@ -809,7 +892,86 @@ function renderStok() {
   }).join("");
 }
 
-// stok dimuat saat klik menu (lihat showPage asli)
+/* ═══ RETURN FUNCTIONS ═══ */
+async function loadReturnData(year) {
+  try {
+    const data = await fetchJson(`${API}?action=getReturn&tahun=${year}`);
+    returnData = data || [];
+    // Hitung summary
+    const totalResi = returnData.length;
+    const totalQty = returnData.reduce((s, r) => s + (r.qty || 1), 0);
+    const sellers = new Set(returnData.map(r => r.seller));
+    document.getElementById('returnTotalResi').textContent = totalResi.toLocaleString('id-ID');
+    document.getElementById('returnTotalQty').textContent = totalQty.toLocaleString('id-ID');
+    document.getElementById('returnSellerCount').textContent = sellers.size;
+    document.getElementById('returnYearLabel').textContent = year;
+    applyReturnFilters();
+  } catch (e) {
+    showToast('Gagal memuat data return', 'error');
+  }
+}
+
+function applyReturnFilters() {
+  const search = (document.getElementById('returnSearch')?.value || '').toLowerCase();
+  const seller = document.getElementById('returnSeller')?.value || '';
+  const dateFrom = document.getElementById('returnDateFrom')?.value || '';
+  const dateTo = document.getElementById('returnDateTo')?.value || '';
+
+  filteredReturn = returnData.filter(r => {
+    if (search && !r.nomor_resi.toLowerCase().includes(search) && !r.seller.toLowerCase().includes(search)) return false;
+    if (seller && r.seller !== seller) return false;
+    if (dateFrom && r.tanggal_return.slice(0,10) < dateFrom) return false;
+    if (dateTo && r.tanggal_return.slice(0,10) > dateTo) return false;
+    return true;
+  });
+
+  returnPaginator = new Paginator(filteredReturn, RETURN_PAGE_SIZE);
+  renderReturnTablePage();
+}
+
+function renderReturnTablePage() {
+  const data = returnPaginator?.currentData || [];
+  const tbody = document.getElementById('returnTableBody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="ei">📭</div><p>Tidak ada data return</p></div></td></tr>`;
+    document.getElementById('returnTableFooter').innerHTML = '';
+    return;
+  }
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td>${formatDate(r.tanggal_return)}</td>
+      <td class="mono">${r.nomor_resi}</td>
+      <td><b>${r.seller}</b></td>
+      <td>${r.produk}</td>
+      <td style="text-align:center">${r.qty}</td>
+      <td>${r.alasan || '-'}</td>
+      <td><span class="badge badge-return">RETURN</span></td>
+    </tr>
+  `).join('');
+  returnPaginator.renderControls('returnTableFooter', 'goToReturnPage');
+}
+
+function goToReturnPage(p) {
+  returnPaginator?.setPage(p);
+  renderReturnTablePage();
+}
+
+function resetReturnFilters() {
+  ['returnSearch', 'returnSeller', 'returnDateFrom', 'returnDateTo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  applyReturnFilters();
+}
+
+/* ═══ UTILS ═══ */
+function formatDate(d) {
+  if (!d) return '-';
+  return new Date(d).toLocaleDateString('id-ID', { year:'numeric', month:'2-digit', day:'2-digit' });
+}
+function formatRupiah(n) { return 'Rp ' + (n||0).toLocaleString('id-ID'); }
+function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
 /* ═══ START ═══ */
 initDarkMode();
