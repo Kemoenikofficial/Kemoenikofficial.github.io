@@ -4,137 +4,195 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Admin Dashboard — KEMOENIK</title>
-<link rel="stylesheet" href="style.css"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-/* ── LAYOUT ── */
-.layout { display:flex; min-height:100vh; }
-
-/* ── SIDEBAR ── */
+/* ========== GLOBAL ========== */
+:root {
+  --green: #15803d;
+  --green2: #166534;
+  --green3: #14532d;
+  --greenlit: #16a34a;
+  --gold: #c8a96a;
+  --gold2: #b58b4a;
+  --goldlit: #eab308;
+  --red: #b91c1c;
+  --bg: #f0f4f0;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --text: #111827;
+  --text2: #374151;
+  --text3: #6b7280;
+  --offwhite: #f9fafb;
+  --font-d: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'Courier New', monospace;
+  --tr: 0.15s ease;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --sh-sm: 0 1px 3px rgba(0,0,0,0.05);
+}
+.dark-mode {
+  --bg: #111827;
+  --card: #1f2937;
+  --border: #374151;
+  --text: #f9fafb;
+  --text2: #e5e7eb;
+  --text3: #9ca3af;
+  --offwhite: #1f2937;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+.layout { display: flex; min-height: 100vh; }
 .sidebar {
-  width:230px; flex-shrink:0;
-  background:var(--green3);
-  display:flex; flex-direction:column;
-  position:sticky; top:0; height:100vh;
-  overflow-y:auto;
+  width: 230px; flex-shrink: 0;
+  background: var(--green3);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto;
 }
-.sb-brand {
-  padding:24px 20px 20px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-.sb-logo { font-family:var(--font-d); font-size:20px; font-weight:700; color:#fff; letter-spacing:.5px; }
-.sb-logo span { color:var(--goldlit); }
-.sb-sub { font-size:10px; color:rgba(255,255,255,.4); margin-top:3px; letter-spacing:.08em; text-transform:uppercase; }
-.sb-nav { padding:16px 12px; flex:1; }
-.sb-label { font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.3); padding:10px 8px 5px; }
+.sb-brand { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.sb-logo { font-family: var(--font-d); font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+.sb-logo span { color: var(--goldlit); }
+.sb-sub { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 3px; letter-spacing: 0.08em; text-transform: uppercase; }
+.sb-nav { padding: 16px 12px; flex: 1; }
+.sb-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 8px 5px; }
 .sb-item {
-  display:flex; align-items:center; gap:9px;
-  padding:9px 10px; border-radius:9px;
-  color:rgba(255,255,255,.65); font-size:13px; font-weight:500;
-  cursor:pointer; transition:all var(--tr); margin-bottom:2px;
-  text-decoration:none;
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 10px; border-radius: 9px;
+  color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all var(--tr); margin-bottom: 2px;
+  text-decoration: none;
 }
-.sb-item:hover { background:rgba(255,255,255,.07); color:#fff; }
-.sb-item.active { background:rgba(200,169,106,.18); color:var(--goldlit); }
-.sb-item .si { font-size:16px; flex-shrink:0; }
-.sb-footer { padding:16px; border-top:1px solid rgba(255,255,255,.08); }
-.sb-year-sel { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:9px; padding:8px 10px; color:#fff; font-family:var(--font-b); font-size:12px; width:100%; cursor:pointer; }
-.sb-year-sel:focus { outline:none; }
-
-/* ── TOPBAR ── */
+.sb-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.sb-item.active { background: rgba(200,169,106,0.18); color: var(--goldlit); }
+.sb-item .si { font-size: 16px; flex-shrink: 0; }
+.sb-footer { padding: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+.sb-year-sel { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 9px; padding: 8px 10px; color: #fff; font-family: var(--font-b); font-size: 12px; width: 100%; cursor: pointer; }
+.sb-year-sel:focus { outline: none; }
 .topbar {
-  height:58px; background:var(--card);
-  border-bottom:1px solid var(--border);
-  display:flex; align-items:center;
-  padding:0 22px; gap:12px;
-  position:sticky; top:0; z-index:100;
-  box-shadow:0 1px 4px rgba(0,0,0,.04);
+  height: 58px; background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 22px; gap: 12px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
-.topbar-title { font-family:var(--font-d); font-size:17px; font-weight:600; color:var(--green2); }
-.topbar-actions { display:flex; align-items:center; gap:8px; margin-left:auto; }
-.icon-btn { width:34px; height:34px; border-radius:9px; border:1.5px solid var(--border); background:var(--offwhite); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:15px; transition:all var(--tr); }
-.icon-btn:hover { border-color:var(--green); background:#f0f7f3; }
-.search-wrap { position:relative; }
-.search-wrap .input { padding-left:32px; width:200px; font-size:13px; }
-.search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:13px; pointer-events:none; }
-.live-indicator { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text3); font-weight:500; }
+.topbar-title { font-family: var(--font-d); font-size: 17px; font-weight: 600; color: var(--green2); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 9px; border: 1.5px solid var(--border);
+  background: var(--offwhite); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 15px; transition: all var(--tr);
+}
+.icon-btn:hover { border-color: var(--green); background: #f0f7f3; }
+.search-wrap { position: relative; }
+.search-wrap .input { padding-left: 32px; width: 200px; font-size: 13px; }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 13px; pointer-events: none; }
+.live-indicator { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); font-weight: 500; }
+.main { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.page { flex: 1; overflow-y: auto; padding: 22px; display: none; }
+.page.active { display: block; }
 
-/* ── MAIN ── */
-.main { flex:1; overflow:hidden; display:flex; flex-direction:column; min-width:0; }
-.page { flex:1; overflow-y:auto; padding:22px; display:none; }
-.page.active { display:block; }
-
-/* ── STAT CARDS ── */
-.stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; margin-bottom:22px; }
+/* ========== COMPONENTS ========== */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin-bottom: 22px; }
 .stat-card {
-  background:var(--card); border-radius:var(--r-md);
-  padding:18px 18px 16px;
-  border:1px solid var(--border);
-  box-shadow:var(--sh-sm);
-  position:relative; overflow:hidden;
+  background: var(--card); border-radius: var(--r-md);
+  padding: 18px 18px 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--sh-sm);
+  position: relative; overflow: hidden;
 }
-.stat-card::after { content:''; position:absolute; right:-12px; top:-12px; width:60px; height:60px; border-radius:50%; opacity:.06; }
-.stat-card.green::after  { background:var(--green); }
-.stat-card.gold::after   { background:var(--gold); }
-.stat-card.red::after    { background:var(--red); }
-.stat-card.blue::after   { background:#3B82F6; }
-.stat-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--text3); margin-bottom:8px; }
-.stat-value { font-size:22px; font-weight:800; color:var(--text); letter-spacing:-.02em; }
-.stat-sub { font-size:11px; color:var(--text3); margin-top:5px; }
-.stat-icon { position:absolute; right:14px; top:14px; font-size:22px; opacity:.7; }
+.stat-card::after {
+  content: ''; position: absolute; right: -12px; top: -12px;
+  width: 60px; height: 60px; border-radius: 50%; opacity: 0.06;
+}
+.stat-card.green::after { background: var(--green); }
+.stat-card.gold::after { background: var(--gold); }
+.stat-card.red::after { background: var(--red); }
+.stat-card.blue::after { background: #3B82F6; }
+.stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 8px; }
+.stat-value { font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+.stat-sub { font-size: 11px; color: var(--text3); margin-top: 5px; }
+.stat-icon { position: absolute; right: 14px; top: 14px; font-size: 22px; opacity: 0.7; }
 
-/* ── CHART ROW ── */
-.chart-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px; }
-@media(max-width:900px){ .chart-row{grid-template-columns:1fr;} }
-.chart-card { background:var(--card); border-radius:var(--r-md); padding:20px; border:1px solid var(--border); box-shadow:var(--sh-sm); }
-.chart-container { height:200px; }
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+@media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
+.chart-card { background: var(--card); border-radius: var(--r-md); padding: 20px; border: 1px solid var(--border); box-shadow: var(--sh-sm); }
+.chart-container { height: 200px; }
 
-/* ── TABLE SECTION ── */
-.table-section { background:var(--card); border-radius:var(--r-md); border:1px solid var(--border); box-shadow:var(--sh-sm); overflow:hidden; }
-.table-header { padding:16px 20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; border-bottom:1px solid var(--border); }
-.filter-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-.filter-row .select { width:auto; min-width:130px; font-size:13px; }
-.filter-row .input  { width:auto; font-size:13px; }
-.table-footer { padding:12px 18px; border-top:1px solid var(--border); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.table-section { background: var(--card); border-radius: var(--r-md); border: 1px solid var(--border); box-shadow: var(--sh-sm); overflow: hidden; }
+.table-header { padding: 16px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+.filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.filter-row .select, .filter-row .input { width: auto; min-width: 130px; font-size: 13px; }
+.table-footer { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 14px 16px; background: var(--offwhite); border-bottom: 2px solid var(--border); font-weight: 600; color: var(--text2); }
+td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text); }
+.mono { font-family: var(--font-mono); font-weight: 600; }
+.badge {
+  display: inline-block; padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
+  background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;
+}
+.badge-lunas { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+.badge-belum { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+.badge-return { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
 
-/* ── SELLER TABLE (stats) ── */
-.seller-stat-row td:first-child { font-weight:600; }
-.seller-stat-row:hover { cursor:pointer; }
+.card { background: var(--card); border-radius: var(--r-md); padding: 20px; border: 1px solid var(--border); box-shadow: var(--sh-sm); }
+.sec-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+.sec-title::before { content: ''; display: block; width: 3px; height: 14px; background: var(--green); border-radius: 2px; }
 
-/* ── TANDAI LUNAS PANEL ── */
-.pay-panel { background:var(--card); border-radius:var(--r-md); border:1px solid var(--border); padding:20px; box-shadow:var(--sh-sm); margin-bottom:22px; }
-.pay-grid { display:grid; grid-template-columns:1fr 1fr auto; gap:10px; align-items:end; }
-@media(max-width:700px){ .pay-grid{grid-template-columns:1fr;} }
-.pay-preview { background:var(--offwhite); border-radius:var(--r-sm); padding:11px 14px; font-size:12px; color:var(--text2); margin-top:10px; border:1px solid var(--border); display:none; }
-.overdue-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid var(--border); }
-.overdue-item:first-child { border-top:none; }
-.ov-avatar { width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--green3),var(--greenlit)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; }
-.ov-info { flex:1; min-width:0; }
-.ov-name { font-weight:600; font-size:13px; color:var(--text); }
-.ov-amount { font-size:11px; color:var(--text3); }
-.ov-badge { background:#FEF9C3; color:#854D0E; border-radius:99px; padding:3px 10px; font-size:10px; font-weight:700; }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text3); }
+.empty-state .ei { font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
 
-/* ── LIVE RESI ── */
-.live-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-top:1px solid var(--border); }
-.live-item:first-child { border-top:none; }
-.live-dot-badge { width:8px; height:8px; background:#22C55E; border-radius:50%; flex-shrink:0; }
-.live-resi { font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--text); }
-.live-meta { font-size:11px; color:var(--text3); }
+.btn {
+  padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+  border: none; background: var(--green); color: #fff; transition: all var(--tr);
+}
+.btn:hover { background: var(--green2); }
+.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text2); }
+.btn-outline:hover { border-color: var(--green); color: var(--green); background: #f0f7f3; }
+.btn-sm { padding: 5px 12px; font-size: 11px; }
+.btn-gold { background: var(--gold); color: #000; }
+.btn-gold:hover { background: var(--gold2); }
 
-/* ── TWO-COL LAYOUT ── */
-.two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px; }
-@media(max-width:800px){ .two-col{grid-template-columns:1fr;} }
+.kpi-card { background: var(--card); border-radius: var(--r-sm); padding: 16px; border: 1px solid var(--border); text-align: center; }
+.kpi-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.kpi-val { font-size: 24px; font-weight: 800; color: var(--green); margin: 6px 0 2px; }
+.kpi-sub { font-size: 10px; color: var(--text3); }
 
-/* ── LOADING OVERLAY ── */
-.loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; }
-.loading-overlay .logo { font-family:var(--font-d); font-size:32px; font-weight:700; color:var(--green2); margin-bottom:18px; }
-.loading-overlay p { font-size:12px; color:var(--text3); margin-top:12px; }
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none;
+  align-items: center; justify-content: center; z-index: 1000;
+}
+.modal {
+  background: var(--card); border-radius: 20px; padding: 24px; max-width: 400px; width: 90%;
+  border: 1px solid var(--border); box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+}
+.modal-icon { font-size: 48px; text-align: center; margin-bottom: 16px; }
+.modal h3 { font-size: 18px; margin-bottom: 8px; }
+.modal-detail { font-size: 13px; color: var(--text3); margin: 12px 0; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 
-/* ── YEAR BADGE ── */
-.year-badge { display:inline-flex; align-items:center; gap:5px; background:rgba(200,169,106,.12); border:1px solid var(--gold); border-radius:99px; padding:3px 11px; font-size:11px; font-weight:700; color:var(--gold2); }
+.loading-overlay {
+  position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; z-index: 999;
+}
+.spinner {
+  width: 28px; height: 28px; border: 3px solid rgba(0,0,0,0.1); border-radius: 50%;
+  border-top-color: var(--green); animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── BADGE RETURN ── */
-.badge-return { background:#fef3c7; color:#92400e; border:1px solid #fcd34d; }
+.pagination { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pagination button { min-width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; }
+.pagination button.active { background: var(--green); color: #fff; border-color: var(--green); }
+.pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -142,7 +200,7 @@
 <!-- LOADING -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="logo">KEMO<span style="color:var(--gold)">ENIK</span></div>
-  <div class="spinner" style="width:28px;height:28px;border-width:3px"></div>
+  <div class="spinner"></div>
   <p>Memuat dashboard admin…</p>
 </div>
 
@@ -185,7 +243,7 @@
       </a>
     </nav>
     <div class="sb-footer">
-      <div style="font-size:10px;color:rgba(255,255,255,.35);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;">Tahun Aktif</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;">Tahun Aktif</div>
       <select class="sb-year-sel" id="yearSel" onchange="onYearChange(this.value)">
         <option>2026</option>
       </select>
@@ -211,15 +269,13 @@
 
     <!-- PAGE: DASHBOARD -->
     <div class="page active" id="page-dashboard">
-      <!-- STATS -->
       <div class="stats-grid" id="statsGrid">
-        <div class="stat-card green"><div class="stat-label">Total Resi</div><div class="stat-value skeleton" style="height:28px;width:80px">—</div><div class="stat-icon">📦</div></div>
-        <div class="stat-card gold"><div class="stat-label">Total Penjualan</div><div class="stat-value skeleton" style="height:28px;width:120px">—</div><div class="stat-icon">💰</div></div>
-        <div class="stat-card blue"><div class="stat-label">Sudah Lunas</div><div class="stat-value skeleton" style="height:28px;width:120px">—</div><div class="stat-icon">✅</div></div>
-        <div class="stat-card red"><div class="stat-label">Belum Bayar</div><div class="stat-value skeleton" style="height:28px;width:120px">—</div><div class="stat-icon">⏳</div></div>
+        <div class="stat-card green"><div class="stat-label">Total Resi</div><div class="stat-value skeleton">—</div><div class="stat-icon">📦</div></div>
+        <div class="stat-card gold"><div class="stat-label">Total Penjualan</div><div class="stat-value skeleton">—</div><div class="stat-icon">💰</div></div>
+        <div class="stat-card blue"><div class="stat-label">Sudah Lunas</div><div class="stat-value skeleton">—</div><div class="stat-icon">✅</div></div>
+        <div class="stat-card red"><div class="stat-label">Belum Bayar</div><div class="stat-value skeleton">—</div><div class="stat-icon">⏳</div></div>
       </div>
 
-      <!-- CHARTS -->
       <div class="chart-row">
         <div class="chart-card">
           <div class="sec-title">Penjualan Per Seller</div>
@@ -231,14 +287,11 @@
         </div>
       </div>
 
-      <!-- TWO COL -->
       <div class="two-col">
-        <!-- OVERDUE -->
         <div class="card">
           <div class="sec-title">Belum Bayar</div>
           <div id="overdueList"><div class="empty-state"><div class="ei">⏳</div><p>Memuat…</p></div></div>
         </div>
-        <!-- LIVE -->
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
             <div class="sec-title" style="margin-bottom:0">Resi Terbaru</div>
@@ -266,27 +319,14 @@
               <option value="RETURN">RETURN</option>
             </select>
             <input type="date" class="input" id="tDateFrom" onchange="applyFilters()" style="width:140px"/>
-            <input type="date" class="input" id="tDateTo"   onchange="applyFilters()" style="width:140px"/>
+            <input type="date" class="input" id="tDateTo" onchange="applyFilters()" style="width:140px"/>
             <button class="btn btn-outline btn-sm" onclick="resetFilters()">Reset</button>
           </div>
         </div>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Tanggal</th>
-                <th>Nomor Resi</th>
-                <th>Seller</th>
-                <th>Produk</th>
-                <th>Qty</th>
-                <th>Harga</th>
-                <th>Total</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody">
-              <tr><td colspan="8" class="empty-state">Memuat data…</td></tr>
-            </tbody>
+            <thead><tr><th>Tanggal</th><th>Nomor Resi</th><th>Seller</th><th>Produk</th><th>Qty</th><th>Harga</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody id="tableBody"><tr><td colspan="8" class="empty-state">Memuat data…</td></tr></tbody>
           </table>
         </div>
         <div class="table-footer" id="tableFooter"></div>
@@ -314,7 +354,6 @@
         <div class="pay-preview" id="payPreview"></div>
       </div>
 
-      <!-- OVERDUE DETAIL -->
       <div class="card">
         <div class="sec-title">Status Pembayaran Semua Seller</div>
         <div class="table-wrap">
@@ -334,17 +373,7 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Seller</th>
-                <th>Total Resi</th>
-                <th>Total Penjualan</th>
-                <th>Lunas</th>
-                <th>Belum Bayar</th>
-                <th>Return (Resi)</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Seller</th><th>Total Resi</th><th>Total Penjualan</th><th>Lunas</th><th>Belum Bayar</th><th>Return (Resi)</th><th>Aksi</th></tr></thead>
             <tbody id="sellerTableBody"><tr><td colspan="7" class="empty-state">Memuat…</td></tr></tbody>
           </table>
         </div>
@@ -369,27 +398,15 @@
           <div class="sec-title" style="margin-bottom:0">Stok Produk</div>
           <button class="btn btn-outline btn-sm" onclick="loadAndRenderStok()">🔄 Refresh</button>
         </div>
-        <!-- SUMMARY CARDS STOK -->
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px" id="stokSummary">
           <div class="kpi-card"><div class="kpi-label">Total Masuk</div><div class="kpi-val" id="stokTotalMasuk">—</div><div class="kpi-sub">semua produk</div></div>
           <div class="kpi-card"><div class="kpi-label">Total Keluar</div><div class="kpi-val" id="stokTotalKeluar">—</div><div class="kpi-sub">semua tahun</div></div>
           <div class="kpi-card"><div class="kpi-label">Sisa Stok</div><div class="kpi-val" id="stokTotalSisa">—</div><div class="kpi-sub" id="stokWarningCount"></div></div>
         </div>
-        <!-- TABEL STOK -->
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Produk</th>
-                <th style="text-align:center">Stok Masuk</th>
-                <th style="text-align:center">Keluar</th>
-                <th style="text-align:center">Sisa</th>
-                <th style="text-align:center">Status</th>
-              </tr>
-            </thead>
-            <tbody id="stokTableBody">
-              <tr><td colspan="5"><div class="empty-state"><div class="ei">📦</div><p>Memuat data stok…</p></div></td></tr>
-            </tbody>
+            <thead><tr><th>Produk</th><th style="text-align:center">Stok Masuk</th><th style="text-align:center">Keluar</th><th style="text-align:center">Sisa</th><th style="text-align:center">Status</th></tr></thead>
+            <tbody id="stokTableBody"><tr><td colspan="5"><div class="empty-state"><div class="ei">📦</div><p>Memuat data stok…</p></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -397,7 +414,6 @@
 
     <!-- PAGE: RETURN -->
     <div class="page" id="page-return">
-      <!-- Summary Cards -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
         <div class="kpi-card"><div class="kpi-label">Total Return (Resi)</div><div class="kpi-val" id="returnTotalResi">—</div><div class="kpi-sub">tahun <span id="returnYearLabel">2026</span></div></div>
         <div class="kpi-card"><div class="kpi-label">Total Produk Dikembalikan</div><div class="kpi-val" id="returnTotalQty">—</div><div class="kpi-sub">unit</div></div>
@@ -413,26 +429,14 @@
               <option value="">Semua Seller</option>
             </select>
             <input type="date" class="input" id="returnDateFrom" onchange="applyReturnFilters()" style="width:140px"/>
-            <input type="date" class="input" id="returnDateTo"   onchange="applyReturnFilters()" style="width:140px"/>
+            <input type="date" class="input" id="returnDateTo" onchange="applyReturnFilters()" style="width:140px"/>
             <button class="btn btn-outline btn-sm" onclick="resetReturnFilters()">Reset</button>
           </div>
         </div>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Tanggal Return</th>
-                <th>Nomor Resi</th>
-                <th>Seller</th>
-                <th>Produk</th>
-                <th>Qty</th>
-                <th>Alasan</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="returnTableBody">
-              <tr><td colspan="7" class="empty-state">Memuat data return…</td></tr>
-            </tbody>
+            <thead><tr><th>Tanggal</th><th>Nomor Resi</th><th>Seller</th><th>Produk</th><th>Qty</th><th>Alasan</th><th>Status</th></tr></thead>
+            <tbody id="returnTableBody"><tr><td colspan="7" class="empty-state">Memuat data return…</td></tr></tbody>
           </table>
         </div>
         <div class="table-footer" id="returnTableFooter"></div>
@@ -456,23 +460,81 @@
   </div>
 </div>
 
-<script src="api.js"></script>
-<script src="dashboard.js"></script>
 <script>
-/* ═══ STATE ═══ */
-let allResi       = [];
-let filteredResi  = [];
-let paginator     = null;
-let currentYear   = "2026";
-let stats         = {};
-const PAGE_SIZE   = 10;
+// ========== CONFIG ==========
+const API = "https://script.google.com/macros/s/AKfycbzQPLKPF18H-4Qolyr_4e3cy4Ovdiahhea8LvmL9FJ17vUAD5qEjM14IFD4LyBIoiiD/exec"; // GANTI DENGAN URL ANDA
+
+// ========== STATE ==========
+let allResi = [];
+let filteredResi = [];
+let paginator = null;
+let currentYear = "2026";
+let stats = {};
+const PAGE_SIZE = 10;
 
 let returnData = [];
 let filteredReturn = [];
 let returnPaginator = null;
 const RETURN_PAGE_SIZE = 10;
 
-/* ═══ NAVIGATION ═══ */
+let stokData = [];
+
+// ========== UTILITY ==========
+async function fetchJson(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Network error');
+  return res.json();
+}
+
+function formatRupiah(n) {
+  return "Rp " + (n || 0).toLocaleString('id-ID');
+}
+
+function formatDate(d) {
+  if (!d) return '-';
+  return new Date(d).toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' });
+}
+
+function showToast(msg, type = 'success') {
+  alert(msg); // sederhana, bisa diganti dengan notifikasi kustom
+}
+
+class Paginator {
+  constructor(data, pageSize) {
+    this.data = data;
+    this.pageSize = pageSize;
+    this.currentPage = 1;
+    this.totalPages = Math.ceil(data.length / pageSize) || 1;
+  }
+  get currentData() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.data.slice(start, start + this.pageSize);
+  }
+  setPage(page) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+  }
+  renderControls(containerId, callback) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    let html = '<div class="pagination">';
+    html += `<button onclick="${callback}(1)" ${this.currentPage === 1 ? 'disabled' : ''}>«</button>`;
+    html += `<button onclick="${callback}(this.currentPage-1)" ${this.currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+    for (let i = 1; i <= this.totalPages; i++) {
+      if (i === this.currentPage || (i >= this.currentPage - 2 && i <= this.currentPage + 2)) {
+        html += `<button class="${i === this.currentPage ? 'active' : ''}" onclick="${callback}(${i})">${i}</button>`;
+      } else if (i === this.currentPage - 3 || i === this.currentPage + 3) {
+        html += `<span>...</span>`;
+      }
+    }
+    html += `<button onclick="${callback}(this.currentPage+1)" ${this.currentPage === this.totalPages ? 'disabled' : ''}>›</button>`;
+    html += `<button onclick="${callback}(${this.totalPages})" ${this.currentPage === this.totalPages ? 'disabled' : ''}>»</button>`;
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+}
+
+// ========== NAVIGATION ==========
 const pageTitles = { dashboard:"Dashboard", transaksi:"Transaksi", pembayaran:"Tandai Lunas", seller:"Ringkasan Seller", live:"Live Monitor", stok:"Stok Produk", return:"Data Return" };
 function showPage(id, el) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
@@ -481,66 +543,117 @@ function showPage(id, el) {
   if (el) el.classList.add("active");
   document.getElementById("pageTitle").textContent = pageTitles[id] || id;
   if (id === "stok" && !stokData.length) loadAndRenderStok();
-  if (id === "return" && !returnData.length) loadReturnData(currentYear);
+  if (id === "return") loadReturnData(); // panggil setiap kali halaman return dibuka
 }
 
-/* ═══ INIT ═══ */
-async function initDashboard() {
-  document.getElementById("loadingOverlay").style.display = "flex";
-  try {
-    const [tahunList, sellers] = await Promise.all([loadTahun(), loadSellers()]);
+// ========== API CALLS ==========
+async function loadTahun() {
+  const data = await fetchJson(`${API}?action=tahun`);
+  return data.length ? data : [new Date().getFullYear().toString()];
+}
 
-    // Populate year selector
-    const ySel = document.getElementById("yearSel");
-    ySel.innerHTML = tahunList.map(t => `<option value="${t}" ${t===currentYear?"selected":""}>${t}</option>`).join("");
+async function loadSellers() {
+  const data = await fetchJson(`${API}?action=seller`);
+  return data.map(s => s.nama);
+}
 
-    // Populate seller dropdowns
-    renderSellerDropdowns(sellers);
+async function loadResi({ tahun }) {
+  const data = await fetchJson(`${API}?action=getResi&tahun=${tahun}`);
+  return data;
+}
 
-    // Load data
-    allResi = await loadResi({ tahun: currentYear });
-    stats   = await loadStats({ tahun: currentYear });
-    await loadReturnData(currentYear);
+async function loadStats({ tahun }) {
+  const data = await fetchJson(`${API}?action=getStats&tahun=${tahun}`);
+  return data;
+}
 
-    renderAll();
-  } catch(e) {
-    showToast("Gagal memuat data", "error");
-  } finally {
-    document.getElementById("loadingOverlay").style.display = "none";
-    document.getElementById("lastUpdateText").textContent = "Update " + new Date().toLocaleTimeString("id-ID");
+async function loadStok() {
+  const data = await fetchJson(`${API}?action=getStok`);
+  return data;
+}
+
+async function doTandaiLunas(seller, jumlah, tahun) {
+  const body = { action: 'tandaiLunas', seller, jumlah, tahun };
+  const res = await fetch(API, { method: 'POST', body: JSON.stringify(body) });
+  return res.json();
+}
+
+// ========== RETURN FUNCTIONS (menggunakan data dari allResi) ==========
+function loadReturnData() {
+  returnData = allResi.filter(r => r.status === 'RETURN');
+  
+  const totalResi = returnData.length;
+  const totalQty = returnData.reduce((s, r) => s + (r.qty || 1), 0);
+  const sellers = new Set(returnData.map(r => r.seller));
+  
+  document.getElementById('returnTotalResi').textContent = totalResi.toLocaleString('id-ID');
+  document.getElementById('returnTotalQty').textContent = totalQty.toLocaleString('id-ID');
+  document.getElementById('returnSellerCount').textContent = sellers.size;
+  document.getElementById('returnYearLabel').textContent = currentYear;
+  
+  applyReturnFilters();
+}
+
+function applyReturnFilters() {
+  const search = (document.getElementById('returnSearch')?.value || '').toLowerCase();
+  const seller = document.getElementById('returnSeller')?.value || '';
+  const dateFrom = document.getElementById('returnDateFrom')?.value || '';
+  const dateTo = document.getElementById('returnDateTo')?.value || '';
+
+  filteredReturn = returnData.filter(r => {
+    if (search && !r.nomor_resi.toLowerCase().includes(search) && !r.seller.toLowerCase().includes(search)) return false;
+    if (seller && r.seller !== seller) return false;
+    if (dateFrom && r.tanggal.slice(0,10) < dateFrom) return false;
+    if (dateTo && r.tanggal.slice(0,10) > dateTo) return false;
+    return true;
+  });
+
+  returnPaginator = new Paginator(filteredReturn, RETURN_PAGE_SIZE);
+  renderReturnTablePage();
+}
+
+function renderReturnTablePage() {
+  const data = returnPaginator?.currentData || [];
+  const tbody = document.getElementById('returnTableBody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="ei">📭</div><p>Tidak ada data return</p></div></td></tr>`;
+    document.getElementById('returnTableFooter').innerHTML = '';
+    return;
   }
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td>${formatDate(r.tanggal)}</td>
+      <td class="mono">${r.nomor_resi}</td>
+      <td><b>${r.seller}</b></td>
+      <td>${r.produk}</td>
+      <td style="text-align:center">${r.qty || 1}</td>
+      <td>-</td>
+      <td><span class="badge badge-return">RETURN</span></td>
+    </tr>
+  `).join('');
+  returnPaginator.renderControls('returnTableFooter', 'goToReturnPage');
 }
 
-function renderAll() {
-  renderStats();
-  renderCharts();
-  applyFilters();
-  renderOverdue();
-  renderLive();
-  renderPayTable();
-  renderSellerTable();
+function goToReturnPage(p) {
+  returnPaginator?.setPage(p);
+  renderReturnTablePage();
 }
 
-/* ═══ YEAR CHANGE ═══ */
-async function onYearChange(year) {
-  currentYear = year;
-  document.getElementById("loadingOverlay").style.display = "flex";
-  try {
-    allResi = await loadResi({ tahun: currentYear });
-    stats   = await loadStats({ tahun: currentYear });
-    await loadReturnData(currentYear);
-    renderAll();
-  } catch(e) { showToast("Gagal ganti tahun","error"); }
-  finally { document.getElementById("loadingOverlay").style.display = "none"; }
+function resetReturnFilters() {
+  ['returnSearch', 'returnSeller', 'returnDateFrom', 'returnDateTo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  applyReturnFilters();
 }
 
-/* ═══ RENDER STATS ═══ */
+// ========== RENDER FUNCTIONS ==========
 function renderStats() {
   const s = stats;
-  document.getElementById("statsGrid").innerHTML = `
+  document.getElementById('statsGrid').innerHTML = `
     <div class="stat-card green">
       <div class="stat-label">Total Resi</div>
-      <div class="stat-value">${(s.total_resi||0).toLocaleString("id-ID")}</div>
+      <div class="stat-value">${(s.total_resi || 0).toLocaleString('id-ID')}</div>
       <div class="stat-sub">tahun ${currentYear}</div>
       <div class="stat-icon">📦</div>
     </div>
@@ -565,71 +678,90 @@ function renderStats() {
   `;
 }
 
-/* ═══ RENDER CHARTS ═══ */
 function renderCharts() {
   const perSeller = stats.per_seller || [];
-  makeBarChart("chartSeller",
-    perSeller.map(s => s.seller),
-    [{ label:"Penjualan", data: perSeller.map(s => s.penjualan),
-      backgroundColor:"rgba(31,77,58,.75)", borderRadius:6, borderSkipped:false }]
-  );
-
-  // Harian 7 hari
-  const harian = computeHarian(allResi, 7);
-  const grad = document.getElementById("chartHarian")?.getContext("2d")?.createLinearGradient(0,0,0,200);
-  if (grad) { grad.addColorStop(0,"rgba(200,169,106,.3)"); grad.addColorStop(1,"rgba(200,169,106,0)"); }
-  makeLineChart("chartHarian",
-    harian.map(h => h.label),
-    [{ label:"Penjualan", data: harian.map(h => h.total),
-      borderColor:"#C8A96A", backgroundColor: grad || "rgba(200,169,106,.15)",
-      fill:true, tension:.4,
-      pointBackgroundColor:"#fff", pointBorderColor:"#C8A96A", pointBorderWidth:2, pointRadius:4 }]
-  );
-}
-
-function computeHarian(data, days) {
-  const result = [];
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0,10);
-    const label = d.toLocaleDateString("id-ID",{day:"2-digit",month:"short"});
-    const total = data.filter(r => r.tanggal && r.tanggal.slice(0,10) === key).reduce((s,r) => s + (r.total||0), 0);
-    result.push({ label, total });
+  const ctxSeller = document.getElementById('chartSeller')?.getContext('2d');
+  if (ctxSeller) {
+    new Chart(ctxSeller, {
+      type: 'bar',
+      data: {
+        labels: perSeller.map(s => s.seller),
+        datasets: [{
+          label: 'Penjualan',
+          data: perSeller.map(s => s.penjualan),
+          backgroundColor: 'rgba(31,77,58,.75)',
+          borderRadius: 6
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
   }
-  return result;
+
+  const harian = (() => {
+    const result = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0,10);
+      const label = d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'});
+      const total = allResi.filter(r => r.tanggal && r.tanggal.slice(0,10) === key).reduce((s,r) => s + (r.total||0), 0);
+      result.push({ label, total });
+    }
+    return result;
+  })();
+
+  const ctxHarian = document.getElementById('chartHarian')?.getContext('2d');
+  if (ctxHarian) {
+    const grad = ctxHarian.createLinearGradient(0,0,0,200);
+    grad.addColorStop(0,'rgba(200,169,106,.3)');
+    grad.addColorStop(1,'rgba(200,169,106,0)');
+    new Chart(ctxHarian, {
+      type: 'line',
+      data: {
+        labels: harian.map(h => h.label),
+        datasets: [{
+          label: 'Penjualan',
+          data: harian.map(h => h.total),
+          borderColor: '#C8A96A',
+          backgroundColor: grad,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: '#C8A96A',
+          pointBorderWidth: 2,
+          pointRadius: 4
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+  }
 }
 
-/* ═══ RENDER TABLE ═══ */
 function applyFilters() {
-  const search   = (document.getElementById("tSearch")?.value || document.getElementById("globalSearch")?.value || "").toLowerCase();
-  const seller   = document.getElementById("tSeller")?.value   || "";
-  const status   = document.getElementById("tStatus")?.value   || "";
-  const dateFrom = document.getElementById("tDateFrom")?.value || "";
-  const dateTo   = document.getElementById("tDateTo")?.value   || "";
-  filteredResi   = filterResi(allResi, { search, seller, status, dateFrom, dateTo });
-  paginator      = new Paginator(filteredResi, PAGE_SIZE);
-  renderTablePage();
-}
+  const search = (document.getElementById('tSearch')?.value || document.getElementById('globalSearch')?.value || '').toLowerCase();
+  const seller = document.getElementById('tSeller')?.value || '';
+  const status = document.getElementById('tStatus')?.value || '';
+  const dateFrom = document.getElementById('tDateFrom')?.value || '';
+  const dateTo = document.getElementById('tDateTo')?.value || '';
 
-function onGlobalSearch() {
-  showPage("transaksi", document.querySelector('.sb-item[onclick*="transaksi"]'));
-  applyFilters();
-}
-
-function resetFilters() {
-  ["tSearch","tSeller","tStatus","tDateFrom","tDateTo"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
+  filteredResi = allResi.filter(r => {
+    if (search && !r.nomor_resi.toLowerCase().includes(search) && !r.seller.toLowerCase().includes(search)) return false;
+    if (seller && r.seller !== seller) return false;
+    if (status && r.status !== status) return false;
+    if (dateFrom && r.tanggal.slice(0,10) < dateFrom) return false;
+    if (dateTo && r.tanggal.slice(0,10) > dateTo) return false;
+    return true;
   });
-  applyFilters();
+
+  paginator = new Paginator(filteredResi, PAGE_SIZE);
+  renderTablePage();
 }
 
 function renderTablePage() {
   const data = paginator?.currentData || [];
-  const body = document.getElementById("tableBody");
+  const body = document.getElementById('tableBody');
   if (!data.length) {
     body.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="ei">📭</div><p>Tidak ada data</p></div></td></tr>`;
-    document.getElementById("tableFooter").innerHTML = "";
+    document.getElementById('tableFooter').innerHTML = '';
     return;
   }
   body.innerHTML = data.map(r => {
@@ -644,8 +776,8 @@ function renderTablePage() {
       <td><b>${formatRupiah(r.total)}</b></td>
       <td><span class="badge badge-${badgeClass}">${r.status}</span></td>
     </tr>`;
-  }).join("");
-  paginator.renderControls("tableFooter", "goToPage");
+  }).join('');
+  paginator.renderControls('tableFooter', 'goToPage');
 }
 
 function goToPage(p) {
@@ -653,12 +785,27 @@ function goToPage(p) {
   renderTablePage();
 }
 
-/* ═══ OVERDUE ═══ */
+function resetFilters() {
+  ['tSearch','tSeller','tStatus','tDateFrom','tDateTo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  applyFilters();
+}
+
+function onGlobalSearch() {
+  showPage('transaksi', document.querySelector('.sb-item[onclick*="transaksi"]'));
+  applyFilters();
+}
+
 function renderOverdue() {
   const perSeller = stats.per_seller || [];
-  const overdue   = perSeller.filter(s => s.belum > 0).sort((a,b) => b.belum - a.belum);
-  const el        = document.getElementById("overdueList");
-  if (!overdue.length) { el.innerHTML = `<div class="empty-state"><div class="ei">✅</div><p>Semua seller sudah lunas</p></div>`; return; }
+  const overdue = perSeller.filter(s => s.belum > 0).sort((a,b) => b.belum - a.belum);
+  const el = document.getElementById('overdueList');
+  if (!overdue.length) {
+    el.innerHTML = `<div class="empty-state"><div class="ei">✅</div><p>Semua seller sudah lunas</p></div>`;
+    return;
+  }
   el.innerHTML = overdue.slice(0,8).map(s => `
     <div class="overdue-item">
       <div class="ov-avatar">${s.seller.charAt(0)}</div>
@@ -667,15 +814,14 @@ function renderOverdue() {
         <div class="ov-amount">${s.resi} resi · Lunas ${formatRupiah(s.lunas)}</div>
       </div>
       <div class="ov-badge">${formatRupiah(s.belum)}</div>
-    </div>`).join("");
+    </div>`).join('');
 }
 
-/* ═══ LIVE RESI ═══ */
 function renderLive() {
   const recent = [...allResi].slice(0, 8);
-  const el     = document.getElementById("liveList");
-  const elFull = document.getElementById("liveFullList");
-  const html   = (arr) => arr.map(r => {
+  const el = document.getElementById('liveList');
+  const elFull = document.getElementById('liveFullList');
+  const html = (arr) => arr.map(r => {
     let badgeClass = r.status === 'LUNAS' ? 'lunas' : (r.status === 'RETURN' ? 'return' : 'belum');
     return `<div class="live-item">
       <div class="live-dot-badge"></div>
@@ -685,89 +831,84 @@ function renderLive() {
       </div>
       <span class="badge badge-${badgeClass}">${r.status}</span>
     </div>`;
-  }).join("");
-  if (el)     el.innerHTML     = recent.length ? html(recent)   : `<div class="empty-state"><div class="ei">📦</div><p>Belum ada resi</p></div>`;
+  }).join('');
+  if (el) el.innerHTML = recent.length ? html(recent) : `<div class="empty-state"><div class="ei">📦</div><p>Belum ada resi</p></div>`;
   if (elFull) elFull.innerHTML = allResi.length ? html(allResi.slice(0,50)) : `<div class="empty-state"><div class="ei">📦</div><p>Belum ada resi</p></div>`;
 }
 
-/* ═══ SELLER DROPDOWNS ═══ */
 function renderSellerDropdowns(sellers) {
-  const names   = sellers.map(s => typeof s === "string" ? s : s.nama);
-  const optHtml = '<option value="">— Pilih Seller —</option>' + names.map(n => `<option value="${n}">${n}</option>`).join("");
-  ["tSeller","paySeller","returnSeller"].forEach(id => {
+  const names = sellers.map(s => s);
+  const optHtml = '<option value="">— Pilih Seller —</option>' + names.map(n => `<option value="${n}">${n}</option>`).join('');
+  ['tSeller', 'paySeller', 'returnSeller'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.innerHTML = id === "tSeller"
-      ? '<option value="">Semua Seller</option>' + names.map(n => `<option value="${n}">${n}</option>`).join("")
-      : optHtml;
+    if (el) el.innerHTML = id === 'tSeller' ? '<option value="">Semua Seller</option>' + names.map(n => `<option value="${n}">${n}</option>`).join('') : optHtml;
   });
 }
 
-/* ═══ PAY PREVIEW ═══ */
 function updatePayPreview() {
-  const seller = document.getElementById("paySeller").value;
-  const jumlah = parseInt(document.getElementById("payJumlah").value) || 0;
-  const prev   = document.getElementById("payPreview");
-  if (!seller || !jumlah) { prev.style.display = "none"; return; }
+  const seller = document.getElementById('paySeller').value;
+  const jumlah = parseInt(document.getElementById('payJumlah').value) || 0;
+  const prev = document.getElementById('payPreview');
+  if (!seller || !jumlah) { prev.style.display = 'none'; return; }
 
-  // Hitung berapa resi yang akan terlunasi berdasarkan qty FIFO
   const belumResi = allResi
-    .filter(r => r.seller===seller && r.status==="BELUM")
-    .sort((a,b) => new Date(a.tanggal)-new Date(b.tanggal)); // terlama dulu
+    .filter(r => r.seller === seller && r.status === 'BELUM')
+    .sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal));
 
-  let sisaQty    = jumlah;
-  let resiCount  = 0;
+  let sisaQty = jumlah;
+  let resiCount = 0;
   let totalNilai = 0;
 
   for (const r of belumResi) {
     if (sisaQty <= 0) break;
     const qty = r.qty || 1;
     if (qty <= sisaQty) {
-      sisaQty   -= qty;
+      sisaQty -= qty;
       resiCount++;
       totalNilai += r.total || 0;
     } else {
-      break; // tidak pecah resi
+      break;
     }
   }
 
-  prev.style.display = "block";
-  const kurang = sisaQty > 0 ? ` <span style="color:var(--gold2)">(sisa ${sisaQty} produk belum cukup 1 resi)</span>` : "";
+  prev.style.display = 'block';
+  const kurang = sisaQty > 0 ? ` <span style="color:var(--gold2)">(sisa ${sisaQty} produk belum cukup 1 resi)</span>` : '';
   prev.innerHTML = `Melunasi <b>${jumlah} produk</b> = <b>${resiCount} resi</b> seller <b>${seller}</b> · Nilai: <b>${formatRupiah(totalNilai)}</b>${kurang}`;
 }
 
 function openPayConfirm() {
-  const seller = document.getElementById("paySeller").value;
-  const jumlah = parseInt(document.getElementById("payJumlah").value) || 0;
-  if (!seller) { showToast("Pilih seller dulu","warn"); return; }
-  if (!jumlah) { showToast("Masukkan jumlah produk","warn"); return; }
-  document.getElementById("modalLunasText").textContent = `Tandai lunas ${jumlah} produk untuk ${seller}?`;
-  document.getElementById("modalLunasDetail").textContent = `Sistem akan melunasi resi secara FIFO (terlama dulu) sampai total ${jumlah} produk terpenuhi.`;
-  openModal("modalLunas");
+  const seller = document.getElementById('paySeller').value;
+  const jumlah = parseInt(document.getElementById('payJumlah').value) || 0;
+  if (!seller) { showToast('Pilih seller dulu','warn'); return; }
+  if (!jumlah) { showToast('Masukkan jumlah produk','warn'); return; }
+  document.getElementById('modalLunasText').textContent = `Tandai lunas ${jumlah} produk untuk ${seller}?`;
+  document.getElementById('modalLunasDetail').textContent = `Sistem akan melunasi resi secara FIFO (terlama dulu) sampai total ${jumlah} produk terpenuhi.`;
+  openModal('modalLunas');
 }
 
 async function confirmLunas() {
-  closeModal("modalLunas");
-  const seller = document.getElementById("paySeller").value;
-  const jumlah = parseInt(document.getElementById("payJumlah").value) || 0;
+  closeModal('modalLunas');
+  const seller = document.getElementById('paySeller').value;
+  const jumlah = parseInt(document.getElementById('payJumlah').value) || 0;
   try {
     const res = await doTandaiLunas(seller, jumlah, currentYear);
-    const sisaMsg = res.sisa_kurang > 0 ? ` (sisa ${res.sisa_kurang} produk tidak cukup 1 resi)` : "";
+    const sisaMsg = res.sisa_kurang > 0 ? ` (sisa ${res.sisa_kurang} produk tidak cukup 1 resi)` : '';
     showToast(`✅ ${res.qty_dilunasi||res.updated} produk / ${res.updated} resi berhasil LUNAS${sisaMsg}`);
-    document.getElementById("payJumlah").value = "";
-    document.getElementById("payPreview").style.display = "none";
+    document.getElementById('payJumlah').value = '';
+    document.getElementById('payPreview').style.display = 'none';
+    // Refresh data
     allResi = await loadResi({ tahun: currentYear });
-    stats   = await loadStats({ tahun: currentYear });
-    await loadReturnData(currentYear);
+    stats = await loadStats({ tahun: currentYear });
+    loadReturnData();
     renderAll();
   } catch(e) {
-    showToast("Gagal tandai lunas — cek Apps Script","error");
+    showToast('Gagal tandai lunas — cek Apps Script','error');
   }
 }
 
-/* ═══ PAY TABLE ═══ */
 function renderPayTable() {
   const perSeller = stats.per_seller || [];
-  const body      = document.getElementById("payTableBody");
+  const body = document.getElementById('payTableBody');
   if (!perSeller.length) { body.innerHTML = `<tr><td colspan="6" class="empty-state">Tidak ada data</td></tr>`; return; }
   body.innerHTML = perSeller.map(s => `
     <tr>
@@ -776,30 +917,25 @@ function renderPayTable() {
       <td>${formatRupiah(s.penjualan)}</td>
       <td style="color:#059669;font-weight:600">${formatRupiah(s.lunas)}</td>
       <td style="color:var(--red);font-weight:600">${formatRupiah(s.belum)}</td>
-      <td>
-        <button class="btn btn-sm btn-outline" onclick="prefillPay('${s.seller}')">Tandai Lunas</button>
-      </td>
-    </tr>`).join("");
+      <td><button class="btn btn-sm btn-outline" onclick="prefillPay('${s.seller}')">Tandai Lunas</button></td>
+    </tr>`).join('');
 }
 
 function prefillPay(seller) {
-  showPage("pembayaran", document.querySelector('.sb-item[onclick*="pembayaran"]'));
-  document.getElementById("paySeller").value = seller;
+  showPage('pembayaran', document.querySelector('.sb-item[onclick*="pembayaran"]'));
+  document.getElementById('paySeller').value = seller;
   updatePayPreview();
 }
 
-/* ═══ SELLER TABLE ═══ */
 function renderSellerTable() {
   const perSeller = stats.per_seller || [];
-  const body      = document.getElementById("sellerTableBody");
+  const body = document.getElementById('sellerTableBody');
   if (!perSeller.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">Tidak ada data</td></tr>`; return; }
 
-  // Hitung return per seller dari returnData
   const returnPerSeller = {};
   returnData.forEach(r => {
-    if (!returnPerSeller[r.seller]) returnPerSeller[r.seller] = { return_resi: 0, return_qty: 0 };
+    if (!returnPerSeller[r.seller]) returnPerSeller[r.seller] = { return_resi: 0 };
     returnPerSeller[r.seller].return_resi++;
-    returnPerSeller[r.seller].return_qty += r.qty || 1;
   });
 
   body.innerHTML = perSeller.map(s => `
@@ -811,16 +947,15 @@ function renderSellerTable() {
       <td style="color:var(--red)">${formatRupiah(s.belum)}</td>
       <td style="text-align:center">${returnPerSeller[s.seller]?.return_resi || 0}</td>
       <td><button class="btn btn-sm btn-outline" onclick="event.stopPropagation();viewSeller('${s.seller}')">Lihat Detail</button></td>
-    </tr>`).join("");
+    </tr>`).join('');
 }
 
 function viewSeller(seller) {
-  document.getElementById("tSeller").value = seller;
-  showPage("transaksi", document.querySelector('.sb-item[onclick*="transaksi"]'));
+  document.getElementById('tSeller').value = seller;
+  showPage('transaksi', document.querySelector('.sb-item[onclick*="transaksi"]'));
   applyFilters();
 }
 
-/* ═══ SILENT REFRESH ═══ */
 async function silentRefresh() {
   try {
     const [newResi, newStats] = await Promise.all([
@@ -829,151 +964,124 @@ async function silentRefresh() {
     ]);
     const changed = JSON.stringify(allResi) !== JSON.stringify(newResi);
     allResi = newResi;
-    stats   = newStats;
-    if (changed) renderAll();
-    document.getElementById("lastUpdateText").textContent = "Update " + new Date().toLocaleTimeString("id-ID");
+    stats = newStats;
+    if (changed) {
+      loadReturnData();
+      renderAll();
+    }
+    document.getElementById('lastUpdateText').textContent = 'Update ' + new Date().toLocaleTimeString('id-ID');
   } catch(e) { /* diam */ }
 }
 
-/* ═══ EXPORT ═══ */
 function doExportCSV() {
-  if (!filteredResi.length && !allResi.length) { showToast("Tidak ada data","warn"); return; }
-  exportToCSV(filteredResi.length ? filteredResi : allResi, `resi-${currentYear}.csv`);
-  showToast("Export berhasil");
+  if (!filteredResi.length && !allResi.length) { showToast('Tidak ada data','warn'); return; }
+  const data = filteredResi.length ? filteredResi : allResi;
+  const csv = data.map(r => `${r.tanggal},${r.nomor_resi},${r.seller},${r.produk},${r.qty},${r.harga},${r.total},${r.status}`).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `resi-${currentYear}.csv`;
+  a.click();
+  showToast('Export berhasil');
 }
 
-/* ═══ STOK ═══ */
-let stokData = [];
-
+// ========== STOK ==========
 async function loadAndRenderStok() {
   try {
     stokData = await loadStok();
     renderStok();
   } catch(e) {
-    showToast("Gagal memuat stok","error");
+    showToast('Gagal memuat stok','error');
   }
 }
 
 function renderStok() {
-  const data    = stokData;
-  const body    = document.getElementById("stokTableBody");
+  const data = stokData;
+  const body = document.getElementById('stokTableBody');
   if (!data.length) {
     body.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="ei">📦</div><p>Tidak ada data stok</p></div></td></tr>`;
     return;
   }
 
-  // Summary cards
-  const totalMasuk  = data.reduce((s,r) => s + (r.stok_masuk||0), 0);
+  const totalMasuk = data.reduce((s,r) => s + (r.stok_masuk||0), 0);
   const totalKeluar = data.reduce((s,r) => s + (r.keluar||0), 0);
-  const totalSisa   = data.reduce((s,r) => s + (r.sisa||0), 0);
+  const totalSisa = data.reduce((s,r) => s + (r.sisa||0), 0);
   const warningCount = data.filter(r => r.warning).length;
 
-  document.getElementById("stokTotalMasuk").textContent  = totalMasuk.toLocaleString("id-ID");
-  document.getElementById("stokTotalKeluar").textContent = totalKeluar.toLocaleString("id-ID");
-  document.getElementById("stokTotalSisa").textContent   = totalSisa.toLocaleString("id-ID");
-  document.getElementById("stokWarningCount").textContent = warningCount > 0
-    ? `⚠️ ${warningCount} produk stok menipis`
-    : "✅ Semua stok aman";
-  document.getElementById("stokTotalSisa").style.color = warningCount > 0 ? "#d97706" : "var(--green)";
+  document.getElementById('stokTotalMasuk').textContent = totalMasuk.toLocaleString('id-ID');
+  document.getElementById('stokTotalKeluar').textContent = totalKeluar.toLocaleString('id-ID');
+  document.getElementById('stokTotalSisa').textContent = totalSisa.toLocaleString('id-ID');
+  document.getElementById('stokWarningCount').textContent = warningCount > 0 ? `⚠️ ${warningCount} produk stok menipis` : '✅ Semua stok aman';
+  document.getElementById('stokTotalSisa').style.color = warningCount > 0 ? '#d97706' : 'var(--green)';
 
-  // Tabel
   body.innerHTML = data.map(r => {
     const statusBadge = r.warning
       ? `<span class="badge" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d">⚠️ Menipis</span>`
       : `<span class="badge badge-lunas">✅ Aman</span>`;
-    const sisaColor = r.warning ? "color:#d97706;font-weight:800" : "font-weight:700";
+    const sisaColor = r.warning ? 'color:#d97706;font-weight:800' : 'font-weight:700';
     return `<tr>
       <td><b>${r.produk}</b></td>
-      <td style="text-align:center">${(r.stok_masuk||0).toLocaleString("id-ID")}</td>
-      <td style="text-align:center">${(r.keluar||0).toLocaleString("id-ID")}</td>
-      <td style="text-align:center;${sisaColor}">${(r.sisa||0).toLocaleString("id-ID")}</td>
+      <td style="text-align:center">${(r.stok_masuk||0).toLocaleString('id-ID')}</td>
+      <td style="text-align:center">${(r.keluar||0).toLocaleString('id-ID')}</td>
+      <td style="text-align:center;${sisaColor}">${(r.sisa||0).toLocaleString('id-ID')}</td>
       <td style="text-align:center">${statusBadge}</td>
     </tr>`;
-  }).join("");
+  }).join('');
 }
 
-/* ═══ RETURN FUNCTIONS ═══ */
-async function loadReturnData(year) {
+// ========== INIT ==========
+function renderAll() {
+  renderStats();
+  renderCharts();
+  applyFilters();
+  renderOverdue();
+  renderLive();
+  renderPayTable();
+  renderSellerTable();
+  loadReturnData(); // update return setiap kali ada perubahan data
+}
+
+async function initDashboard() {
+  document.getElementById('loadingOverlay').style.display = 'flex';
   try {
-    const data = await fetchJson(`${API}?action=getReturn&tahun=${year}`);
-    returnData = data || [];
-    // Hitung summary
-    const totalResi = returnData.length;
-    const totalQty = returnData.reduce((s, r) => s + (r.qty || 1), 0);
-    const sellers = new Set(returnData.map(r => r.seller));
-    document.getElementById('returnTotalResi').textContent = totalResi.toLocaleString('id-ID');
-    document.getElementById('returnTotalQty').textContent = totalQty.toLocaleString('id-ID');
-    document.getElementById('returnSellerCount').textContent = sellers.size;
-    document.getElementById('returnYearLabel').textContent = year;
-    applyReturnFilters();
-  } catch (e) {
-    showToast('Gagal memuat data return', 'error');
+    const [tahunList, sellers] = await Promise.all([loadTahun(), loadSellers()]);
+
+    const ySel = document.getElementById('yearSel');
+    ySel.innerHTML = tahunList.map(t => `<option value="${t}" ${t===currentYear?'selected':''}>${t}</option>`).join('');
+
+    renderSellerDropdowns(sellers);
+
+    allResi = await loadResi({ tahun: currentYear });
+    stats = await loadStats({ tahun: currentYear });
+
+    renderAll();
+  } catch(e) {
+    showToast('Gagal memuat data', 'error');
+  } finally {
+    document.getElementById('loadingOverlay').style.display = 'none';
+    document.getElementById('lastUpdateText').textContent = 'Update ' + new Date().toLocaleTimeString('id-ID');
   }
 }
 
-function applyReturnFilters() {
-  const search = (document.getElementById('returnSearch')?.value || '').toLowerCase();
-  const seller = document.getElementById('returnSeller')?.value || '';
-  const dateFrom = document.getElementById('returnDateFrom')?.value || '';
-  const dateTo = document.getElementById('returnDateTo')?.value || '';
-
-  filteredReturn = returnData.filter(r => {
-    if (search && !r.nomor_resi.toLowerCase().includes(search) && !r.seller.toLowerCase().includes(search)) return false;
-    if (seller && r.seller !== seller) return false;
-    if (dateFrom && r.tanggal_return.slice(0,10) < dateFrom) return false;
-    if (dateTo && r.tanggal_return.slice(0,10) > dateTo) return false;
-    return true;
-  });
-
-  returnPaginator = new Paginator(filteredReturn, RETURN_PAGE_SIZE);
-  renderReturnTablePage();
+async function onYearChange(year) {
+  currentYear = year;
+  document.getElementById('loadingOverlay').style.display = 'flex';
+  try {
+    allResi = await loadResi({ tahun: currentYear });
+    stats = await loadStats({ tahun: currentYear });
+    renderAll();
+  } catch(e) { showToast('Gagal ganti tahun','error'); }
+  finally { document.getElementById('loadingOverlay').style.display = 'none'; }
 }
 
-function renderReturnTablePage() {
-  const data = returnPaginator?.currentData || [];
-  const tbody = document.getElementById('returnTableBody');
-  if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="ei">📭</div><p>Tidak ada data return</p></div></td></tr>`;
-    document.getElementById('returnTableFooter').innerHTML = '';
-    return;
-  }
-  tbody.innerHTML = data.map(r => `
-    <tr>
-      <td>${formatDate(r.tanggal_return)}</td>
-      <td class="mono">${r.nomor_resi}</td>
-      <td><b>${r.seller}</b></td>
-      <td>${r.produk}</td>
-      <td style="text-align:center">${r.qty}</td>
-      <td>${r.alasan || '-'}</td>
-      <td><span class="badge badge-return">RETURN</span></td>
-    </tr>
-  `).join('');
-  returnPaginator.renderControls('returnTableFooter', 'goToReturnPage');
-}
-
-function goToReturnPage(p) {
-  returnPaginator?.setPage(p);
-  renderReturnTablePage();
-}
-
-function resetReturnFilters() {
-  ['returnSearch', 'returnSeller', 'returnDateFrom', 'returnDateTo'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  applyReturnFilters();
-}
-
-/* ═══ UTILS ═══ */
-function formatDate(d) {
-  if (!d) return '-';
-  return new Date(d).toLocaleDateString('id-ID', { year:'numeric', month:'2-digit', day:'2-digit' });
-}
-function formatRupiah(n) { return 'Rp ' + (n||0).toLocaleString('id-ID'); }
 function openModal(id) { document.getElementById(id).style.display = 'flex'; }
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-/* ═══ START ═══ */
+// Dark mode dummy
+function initDarkMode() {}
+
+// ========== START ==========
 initDarkMode();
 initDashboard();
 setInterval(silentRefresh, 5000);
