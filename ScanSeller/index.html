@@ -6,11 +6,17 @@
 <title>SCAN RESI — KEMOENIK</title>
 <script src="https://unpkg.com/html5-qrcode"></script>
 <style>
-/* ====== CSS ANDA TETAP SAMA ====== */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f4f0;min-height:100vh;}
-.header{background:linear-gradient(135deg,#15803d,#16a34a);padding:16px 18px 48px;position:relative;overflow:hidden;}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,#15803d,#16a34a);
+  padding:16px 18px 48px;
+  position:relative;overflow:hidden;
+}
 .header::before{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07);}
 .header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.05);}
 .header-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
@@ -21,37 +27,92 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f4f0;min-height:10
 .status-dot{width:7px;height:7px;border-radius:50%;background:#bbf7d0;}
 .status-dot.scanning{background:#fbbf24;animation:blink .8s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* CONTENT */
 .content{margin-top:-32px;padding:0 14px 32px;position:relative;z-index:1;}
+
+/* CARD */
 .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
+
+/* SCANNER BOX */
 .scanner-card{background:#fff;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
 #reader{width:100%;}
 #reader video{border-radius:0 !important;}
-.resi-result{display:flex;align-items:center;gap:10px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:12px 14px;margin-bottom:12px;}
+
+/* RESI RESULT */
+.resi-result{
+  display:flex;align-items:center;gap:10px;
+  background:#f0fdf4;border:1.5px solid #bbf7d0;
+  border-radius:12px;padding:12px 14px;
+  margin-bottom:12px;
+}
 .resi-result.empty{background:#f9fafb;border-color:#e5e7eb;}
 .resi-result.duplikat{background:#fef2f2;border-color:#fecaca;}
 .resi-icon{font-size:20px;flex-shrink:0;}
 .resi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;}
 .resi-no{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#111827;}
+
+/* FORM */
 .form-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:5px;display:block;}
-select,input[type=number]{width:100%;padding:11px 13px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;background:#f9fafb;color:#111827;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none;margin-bottom:10px;}
+select,input[type=number]{
+  width:100%;padding:11px 13px;
+  border:1.5px solid #e5e7eb;border-radius:10px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
+  background:#f9fafb;color:#111827;outline:none;
+  transition:border-color .2s,background .2s;
+  -webkit-appearance:none;appearance:none;
+  margin-bottom:10px;
+}
 select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-shadow:0 0 0 3px rgba(22,163,74,.1);}
+
 .harga-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.harga-opt{border:1.5px solid #e5e7eb;border-radius:10px;padding:11px 12px;cursor:pointer;text-align:center;transition:all .15s;background:#f9fafb;}
+.harga-opt{
+  border:1.5px solid #e5e7eb;border-radius:10px;padding:11px 12px;
+  cursor:pointer;text-align:center;transition:all .15s;background:#f9fafb;
+}
 .harga-opt.active{border-color:#16a34a;background:#f0fdf4;}
 .harga-opt .ho-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:3px;}
 .harga-opt .ho-val{font-size:16px;font-weight:800;color:#111827;}
 .harga-opt.active .ho-val{color:#16a34a;}
-.total-card{background:linear-gradient(135deg,#15803d,#16a34a);border-radius:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+
+/* TOTAL */
+.total-card{
+  background:linear-gradient(135deg,#15803d,#16a34a);
+  border-radius:14px;padding:16px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
 .total-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.7);}
 .total-val{font-size:24px;font-weight:800;color:#fff;}
 .total-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
-.btn-scan{width:100%;padding:15px;background:linear-gradient(135deg,#15803d,#16a34a);color:#fff;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(22,163,74,.3);transition:all .2s;margin-bottom:10px;}
+
+/* BUTTONS */
+.btn-scan{
+  width:100%;padding:15px;
+  background:linear-gradient(135deg,#15803d,#16a34a);
+  color:#fff;border:none;border-radius:12px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:16px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 14px rgba(22,163,74,.3);
+  transition:all .2s;margin-bottom:10px;
+}
 .btn-scan:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.4);}
 .btn-scan:disabled{opacity:.6;cursor:not-allowed;transform:none;}
 .btn-stop{background:linear-gradient(135deg,#b91c1c,#dc2626);}
-.btn-reset{width:100%;padding:11px;background:#f9fafb;color:#6b7280;border:1.5px solid #e5e7eb;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;}
+.btn-reset{
+  width:100%;padding:11px;background:#f9fafb;
+  color:#6b7280;border:1.5px solid #e5e7eb;border-radius:12px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .15s;
+}
 .btn-reset:hover{border-color:#16a34a;color:#16a34a;}
-.history-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f3f4f6;}
+
+/* HISTORY */
+.history-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 0;border-top:1px solid #f3f4f6;
+}
 .history-item:first-of-type{border-top:none;}
 .h-icon{width:34px;height:34px;background:#f0fdf4;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
 .h-info{flex:1;min-width:0;}
@@ -59,13 +120,29 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
 .h-meta{font-size:11px;color:#9ca3af;margin-top:1px;}
 .h-amount{font-size:13px;font-weight:700;color:#16a34a;flex-shrink:0;}
 .h-dup{color:#ef4444;}
-.notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid #e5e7eb;border-left:4px solid #16a34a;border-radius:10px;padding:12px 16px;box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;z-index:9999;min-width:260px;max-width:90vw;animation:slideDown .3s ease;white-space:nowrap;}
+
+/* NOTIFICATION */
+.notif{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  background:#fff;border:1px solid #e5e7eb;
+  border-left:4px solid #16a34a;
+  border-radius:10px;padding:12px 16px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+  font-size:13px;font-weight:600;
+  display:flex;align-items:center;gap:8px;
+  z-index:9999;min-width:260px;max-width:90vw;
+  animation:slideDown .3s ease;
+  white-space:nowrap;
+}
 .notif.error{border-left-color:#ef4444;}
 .notif.warn{border-left-color:#f59e0b;}
 @keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
 @keyframes slideUp{from{opacity:1;}to{opacity:0;transform:translateX(-50%) translateY(-10px);}}
+
+/* SPINNER */
 .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;}
 @keyframes spin{to{transform:rotate(360deg);}}
+
 .section-title{font-size:14px;font-weight:700;color:#111827;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
 .section-title::before{content:'';display:block;width:3px;height:14px;background:#16a34a;border-radius:2px;}
 </style>
@@ -79,7 +156,7 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
     </div>
     <div class="status-chip" id="statusChip">
       <div class="status-dot" id="statusDot"></div>
-      <span id="statusText">Memuat data...</span>
+      <span id="statusText">Siap</span>
     </div>
   </div>
   <div class="header-sub">Scanner Resi Otomatis</div>
@@ -193,7 +270,7 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
 
 <script>
 /* ═══ CONFIG ═══ */
-const API = "https://script.google.com/macros/s/AKfycbxBbG9GiW_fNu3hood8AXwMoMUXyl8iAc9VeaOIWqfO-3E1J4ra13wtsuZWRIddwSJZ/exec";
+const API = "https://script.google.com/macros/s/AKfycbzCrnytlNbqVGYLL-fjhv8tXvXaizZQG2jnGYvvHvj1mT-hKqE4UCLfi1O7yxaux1iK/exec";
 
 /* ═══ STATE ═══ */
 let lastBarcode  = "";
@@ -209,10 +286,8 @@ let isSaving     = false;
 
 /* ═══ INIT ═══ */
 window.addEventListener("load", () => {
-  setStatus("Memuat data...", true);
-  Promise.all([loadSeller(), loadProduk()])
-    .then(() => setStatus("Siap", false))
-    .catch(() => setStatus("Gagal memuat", false));
+  loadSeller();
+  loadProduk();
 });
 
 /* ═══ LOAD SELLER ═══ */
@@ -225,7 +300,6 @@ async function loadSeller() {
       data.map(s => `<option value="${s.nama}">${s.nama}</option>`).join("");
   } catch(e) {
     showNotif("Gagal load seller", "error");
-    throw e;
   }
 }
 
@@ -241,7 +315,6 @@ async function loadProduk() {
     updateHarga();
   } catch(e) {
     showNotif("Gagal load produk", "error");
-    throw e;
   }
 }
 
@@ -275,10 +348,9 @@ function setMode(mode) {
   document.getElementById("returnResult").className    = "resi-result empty";
 }
 
-/* ===== PERBAIKAN: HAPUS addRiwayat ===== */
 async function handleReturn(resiNo) {
   const alasan = document.getElementById("selAlasan").value;
-  setStatus("Memproses return…", true);
+  setStatus("Memproses return…", "loading");
   try {
     const url = `${API}?action=scanReturn&resi=${encodeURIComponent(resiNo)}&alasan=${encodeURIComponent(alasan)}`;
     const res  = await fetch(url);
@@ -286,21 +358,21 @@ async function handleReturn(resiNo) {
     if (data.status === "ok") {
       document.getElementById("returnDisplay").textContent = resiNo;
       document.getElementById("returnResult").className   = "resi-result success";
-      setStatus("Return berhasil!", false);
-      bunyiBeepSukses();
+      setStatus("Return berhasil!", "success");
+      beep("success");
       showNotif(`✅ Return: ${data.produk} x${data.qty} — ${data.seller}`, "success");
-      // (baris addRiwayat TIDAK ADA)
+      // Tambah ke riwayat
+      addRiwayat(resiNo, `RETURN — ${data.produk} x${data.qty}`, "return");
       lastBarcode = resiNo;
     } else {
       document.getElementById("returnResult").className = "resi-result error";
-      setStatus("Gagal: " + data.pesan, false);
-      bunyiBeepError();
+      setStatus("Gagal: " + data.pesan, "error");
+      beep("error");
       showNotif("❌ " + data.pesan, "error");
     }
   } catch(e) {
-    setStatus("Error koneksi", false);
-    bunyiBeepError();
-    showNotif("❌ Gagal koneksi", "error");
+    setStatus("Error koneksi", "error");
+    beep("error");
   }
 }
 
@@ -337,10 +409,6 @@ function startScan() {
   document.getElementById("btnStop").style.display  = "flex";
   setStatus("Scanning…", true);
 
-  // Pastikan tidak ada scanner lama
-  if (scannerObj) {
-    scannerObj.clear().catch(() => {});
-  }
   scannerObj = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
   scannerObj.render(onScanSuccess, onScanError);
   isScanning = true;
@@ -396,6 +464,7 @@ async function onScanSuccess(decodedText) {
       setResiDisplay(decodedText, "ok");
       showNotif("✅ " + decodedText + " tersimpan", "success");
       bunyiBeepSukses();
+      // Reset lastBarcode setelah 2 detik agar bisa scan resi berbeda
       setTimeout(() => { lastBarcode = ""; }, 2000);
     } else if (data.status === "duplikat") {
       sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "duplikat" });
@@ -465,7 +534,6 @@ function resetSesi() {
   document.getElementById("resiDisplay").textContent = "Arahkan kamera ke barcode…";
   document.getElementById("historyCard").style.display = "none";
   document.getElementById("historyList").innerHTML = "";
-  setStatus("Siap", false);
 }
 
 /* ═══ NOTIF ═══ */
