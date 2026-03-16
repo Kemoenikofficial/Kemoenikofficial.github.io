@@ -30,6 +30,8 @@
   --shadow:    0 2px 12px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04);
   --shadow-sm: 0 1px 6px rgba(0,0,0,.04);
   --font-mono: 'Courier New', monospace;
+  --orange-500: #f97316;
+  --orange-600: #ea580c;
 }
 
 [data-theme="dark"] {
@@ -49,6 +51,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg
 .badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:99px; font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
 .badge-lunas { background:#d1fae5; color:#065f46; }
 .badge-belum { background:#fef9c3; color:#854d0e; }
+.badge-return { background:#ffedd5; color:#9a3412; border:1px solid #fdba74; } /* baru */
 
 /* ── BUTTON ── */
 .btn { display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:all .15s; }
@@ -195,6 +198,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg
 .mob-stat-sub { font-size:10px; color:var(--text-muted); margin-top:3px; }
 .mob-stat.lunas .mob-stat-value { color:var(--green-600); }
 .mob-stat.belum .mob-stat-value { color:#d97706; }
+.mob-stat.return .mob-stat-value { color:var(--orange-600); }
 
 /* SECTION */
 .mob-section { background:var(--bg-card); border-radius:var(--radius); padding:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); border:1px solid var(--border-light); }
@@ -310,7 +314,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg
       <div style="font-size:36px">💰</div>
     </div>
 
-    <!-- STAT GRID -->
+    <!-- STAT GRID (2 kolom) -->
     <div class="mob-stats">
       <div class="mob-stat lunas">
         <div class="mob-stat-label">Total Resi</div>
@@ -336,6 +340,16 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg
       </div>
     </div>
 
+    <!-- WIDE STAT UNTUK RETURN (baru) -->
+    <div class="mob-stat-wide" style="background:var(--bg-card); border-left:4px solid var(--orange-500);">
+      <div>
+        <div class="wlabel">Return</div>
+        <div class="wvalue" id="wReturnResi">— <span style="font-size:14px;color:var(--text-muted);font-weight:500">resi</span></div>
+        <div class="wsub" id="wReturnProduk">— produk · <span id="wReturnNominal">Rp —</span></div>
+      </div>
+      <div style="font-size:36px">↩️</div>
+    </div>
+
     <!-- CHART -->
     <div class="mob-section">
       <div class="section-title">Penjualan 7 Hari Terakhir</div>
@@ -353,6 +367,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg
         <div class="tab-pill active" onclick="setTab('semua',this)">Semua</div>
         <div class="tab-pill" onclick="setTab('LUNAS',this)">LUNAS</div>
         <div class="tab-pill" onclick="setTab('BELUM',this)">BELUM</div>
+        <div class="tab-pill" onclick="setTab('RETURN',this)">RETURN</div> <!-- baru -->
       </div>
 
       <div class="mob-filter">
@@ -424,6 +439,8 @@ const MOCK_RESI = [
   { tanggal:"2026-03-10", nomor_resi:"JNE20394857", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
   { tanggal:"2026-03-09", nomor_resi:"PJX11223344", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:1, harga:70000, total:70000, status:"LUNAS" },
   { tanggal:"2026-03-09", nomor_resi:"JTX99887766", seller:"SEHATBARENG",     produk:"KEMONIK SLIM", qty:1, harga:30000, total:30000, status:"BELUM" },
+  // contoh return
+  { tanggal:"2026-03-08", nomor_resi:"RET12345678", seller:"LUNISCA2026-01",  produk:"KEMONIK SLIM", qty:2, harga:70000, total:140000, status:"RETURN" },
 ];
 
 /* ═══ LOGIN ═══ */
@@ -687,11 +704,12 @@ async function manualRefresh() {
   showToast("Data diperbarui");
 }
 
-/* ═══ STATS ═══ */
+/* ═══ STATS (dengan RETURN) ═══ */
 function renderStats() {
   const data    = sellerResi;
   const lunas   = data.filter(r => r.status === "LUNAS");
   const belum   = data.filter(r => r.status === "BELUM");
+  const ret     = data.filter(r => r.status === "RETURN");
   const today   = new Date().toISOString().slice(0,10);
   const hariIni = data.filter(r => r.tanggal?.slice(0,10) === today).length;
   const totalP  = data.reduce((s,r)=>s+(r.total||0),0);
@@ -699,6 +717,8 @@ function renderStats() {
   const totalQty  = data.reduce((s,r)=>s+(r.qty||1),0);
   const lunasQty  = lunas.reduce((s,r)=>s+(r.qty||1),0);
   const belumQty  = belum.reduce((s,r)=>s+(r.qty||1),0);
+  const retQty    = ret.reduce((s,r)=>s+(r.qty||1),0);
+  const retTotal  = ret.reduce((s,r)=>s+(r.total||0),0);
 
   document.getElementById("wTotalPenjualan").textContent  = formatRupiah(totalP);
   document.getElementById("wResiCount").textContent       = data.length + " resi · " + totalQty + " produk";
@@ -711,6 +731,11 @@ function renderStats() {
   document.getElementById("mBelumProduk").textContent     = belumQty + " produk";
   document.getElementById("mBelumNominal").textContent    = formatRupiah(belum.reduce((s,r)=>s+(r.total||0),0));
   document.getElementById("mHariIni").textContent         = hariIni;
+
+  // Return stats
+  document.getElementById("wReturnResi").innerHTML        = ret.length + ' <span style="font-size:14px;color:var(--text-muted);font-weight:500">resi</span>';
+  document.getElementById("wReturnProduk").textContent    = retQty + " produk · ";
+  document.getElementById("wReturnNominal").textContent   = formatRupiah(retTotal);
 }
 
 /* ═══ CHART ═══ */
@@ -727,7 +752,7 @@ function renderChart() {
   );
 }
 
-/* ═══ RESI LIST ═══ */
+/* ═══ RESI LIST (dengan RETURN) ═══ */
 function setTab(tab, el) {
   activeTab = tab;
   document.querySelectorAll(".tab-pill").forEach(t=>t.classList.remove("active"));
@@ -759,6 +784,7 @@ function renderResiPage() {
     const d   = new Date(r.tanggal);
     const day = isNaN(d) ? "" : d.getDate();
     const mon = isNaN(d) ? "" : d.toLocaleDateString("id-ID",{month:"short"});
+    let badgeClass = r.status === "LUNAS" ? "lunas" : (r.status === "RETURN" ? "return" : "belum");
     return `
       <div class="resi-item">
         <div class="resi-date-badge"><div>${day}</div><div>${mon}</div></div>
@@ -766,7 +792,7 @@ function renderResiPage() {
           <div class="resi-number">${r.nomor_resi}</div>
           <div class="resi-meta">${r.produk} · ${formatRupiah(r.total||r.harga)}</div>
         </div>
-        <span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span>
+        <span class="badge badge-${badgeClass}">${r.status}</span>
       </div>`;
   }).join("");
 
