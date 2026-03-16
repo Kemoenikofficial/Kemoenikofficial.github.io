@@ -153,9 +153,12 @@
 .mob-sel-row label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text3); display: block; margin-bottom: 4px; }
 
 /* ═══ STATS GRID ═══ */
-.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 20px; }
-@media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
-@media (max-width: 768px)  { .stats-grid { grid-template-columns: repeat(2,1fr); gap: 10px; } }
+.stats-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+  gap: 14px; 
+  margin-bottom: 20px; 
+}
 .stat-card {
   background: var(--card);
   border-radius: var(--r-md);
@@ -170,6 +173,7 @@
 .stat-card.c-gold::after  { background:var(--gold); }
 .stat-card.c-red::after   { background:#EF4444; }
 .stat-card.c-blue::after  { background:#3B82F6; }
+.stat-card.c-orange::after { background:#f97316; }
 .stat-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:7px; }
 .stat-value { font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.02em; }
 .stat-sub   { font-size:11px;color:var(--text3);margin-top:4px; }
@@ -226,6 +230,13 @@
 .loading-overlay { position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999; }
 .loading-overlay .lo-logo { font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--green2);margin-bottom:16px; }
 .loading-overlay p { font-size:12px;color:var(--text3);margin-top:10px; }
+
+/* ═══ BADGE RETURN ═══ */
+.badge-return {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
 </style>
 </head>
 <body>
@@ -322,9 +333,9 @@
         </div>
       </div>
 
-      <!-- STATS -->
+      <!-- STATS GRID (5 cards) -->
       <div class="stats-grid" id="statsGrid">
-        <!-- ROW 1: Total -->
+        <!-- Total Resi -->
         <div class="stat-card c-green">
           <div class="stat-label">Total Resi</div>
           <div class="stat-value" id="sTotalResi">—</div>
@@ -333,13 +344,14 @@
           </div>
           <div class="stat-icon">📦</div>
         </div>
+        <!-- Total Penjualan -->
         <div class="stat-card c-gold">
           <div class="stat-label">Total Penjualan</div>
           <div class="stat-value" id="sTotalPenjualan">—</div>
           <div class="stat-sub" id="sResiCount">—</div>
           <div class="stat-icon">💰</div>
         </div>
-        <!-- ROW 2: Lunas -->
+        <!-- Sudah Lunas -->
         <div class="stat-card c-blue">
           <div class="stat-label">Sudah Lunas</div>
           <div class="stat-value" id="sLunas">— <span style="font-size:13px;font-weight:500;color:var(--text3)">resi</span></div>
@@ -349,7 +361,7 @@
           </div>
           <div class="stat-icon">✅</div>
         </div>
-        <!-- ROW 3: Belum -->
+        <!-- Belum Bayar -->
         <div class="stat-card c-red">
           <div class="stat-label">Belum Bayar</div>
           <div class="stat-value" id="sBelum">— <span style="font-size:13px;font-weight:500;color:var(--text3)">resi</span></div>
@@ -358,6 +370,16 @@
             <span id="sBelumNominal" style="font-size:11px;color:var(--text3)">—</span>
           </div>
           <div class="stat-icon">⏳</div>
+        </div>
+        <!-- Return -->
+        <div class="stat-card c-orange">
+          <div class="stat-label">Return</div>
+          <div class="stat-value" id="sReturn">— <span style="font-size:13px;font-weight:500;color:var(--text3)">resi</span></div>
+          <div class="stat-sub" style="display:flex;align-items:center;gap:6px;margin-top:4px">
+            <span style="background:#fef3c7;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;color:#92400e" id="sReturnProduk">— produk</span>
+            <span id="sReturnNominal" style="font-size:11px;color:var(--text3)">—</span>
+          </div>
+          <div class="stat-icon">↩️</div>
         </div>
       </div>
 
@@ -383,6 +405,7 @@
               <option value="">Semua Status</option>
               <option value="LUNAS">LUNAS</option>
               <option value="BELUM">BELUM</option>
+              <option value="RETURN">RETURN</option>
             </select>
             <input type="date" class="input" id="tDateFrom" onchange="applyFilters()" style="width:140px"/>
             <input type="date" class="input" id="tDateTo"   onchange="applyFilters()" style="width:140px"/>
@@ -420,6 +443,7 @@
           <div class="tab-pill active" onclick="setTab('semua',this)">Semua</div>
           <div class="tab-pill" onclick="setTab('LUNAS',this)">LUNAS</div>
           <div class="tab-pill" onclick="setTab('BELUM',this)">BELUM</div>
+          <div class="tab-pill" onclick="setTab('RETURN',this)">RETURN</div>
         </div>
         <div style="position:relative;margin-bottom:12px">
           <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:12px">🔍</span>
@@ -526,15 +550,17 @@ function renderAll() {
   renderMobList();
 }
 
-/* ═══ STATS ═══ */
+/* ═══ STATS (dengan RETURN) ═══ */
 function renderStats() {
   const data   = sellerResi;
   const lunas  = data.filter(r=>r.status==="LUNAS");
   const belum  = data.filter(r=>r.status==="BELUM");
+  const ret    = data.filter(r=>r.status==="RETURN");
   const totalP = data.reduce((s,r)=>s+(r.total||0),0);
   const totalQty      = data.reduce((s,r)=>s+(r.qty||1),0);
   const lunasQty      = lunas.reduce((s,r)=>s+(r.qty||1),0);
   const belumQty      = belum.reduce((s,r)=>s+(r.qty||1),0);
+  const retQty        = ret.reduce((s,r)=>s+(r.qty||1),0);
 
   document.getElementById("sTotalResi").textContent      = data.length;
   document.getElementById("sTotalProduk").textContent    = totalQty + " produk";
@@ -546,9 +572,12 @@ function renderStats() {
   document.getElementById("sBelum").innerHTML            = belum.length + ' <span style="font-size:13px;font-weight:500;color:var(--text3)">resi</span>';
   document.getElementById("sBelumProduk").textContent    = belumQty + " produk";
   document.getElementById("sBelumNominal").textContent   = formatRupiah(belum.reduce((s,r)=>s+(r.total||0),0));
+  document.getElementById("sReturn").innerHTML           = ret.length + ' <span style="font-size:13px;font-weight:500;color:var(--text3)">resi</span>';
+  document.getElementById("sReturnProduk").textContent   = retQty + " produk";
+  document.getElementById("sReturnNominal").textContent  = formatRupiah(ret.reduce((s,r)=>s+(r.total||0),0));
 }
 
-/* ═══ CHARTS ═══ */
+/* ═══ CHARTS (dengan RETURN) ═══ */
 function renderCharts() {
   // Line chart harian
   const harian = computeHarian(sellerResi, 7);
@@ -561,16 +590,24 @@ function renderCharts() {
     pointBackgroundColor:"#fff", pointBorderColor:"#C8A96A", pointBorderWidth:2, pointRadius:4
   }]);
 
-  // Doughnut status
+  // Doughnut status (termasuk RETURN)
   const lunas  = sellerResi.filter(r=>r.status==="LUNAS").length;
   const belum  = sellerResi.filter(r=>r.status==="BELUM").length;
+  const ret    = sellerResi.filter(r=>r.status==="RETURN").length;
   const ctx2   = document.getElementById("chartStatus")?.getContext("2d");
   if (ctx2) {
     if (!window._charts) window._charts = {};
     if (window._charts["chartStatus"]) window._charts["chartStatus"].destroy();
     window._charts["chartStatus"] = new Chart(ctx2, {
       type:"doughnut",
-      data:{ labels:["LUNAS","BELUM"], datasets:[{ data:[lunas,belum], backgroundColor:["#1F4D3A","#C8A96A"], borderWidth:0 }] },
+      data:{ 
+        labels:["LUNAS","BELUM","RETURN"], 
+        datasets:[{ 
+          data:[lunas,belum,ret], 
+          backgroundColor:["#1F4D3A","#C8A96A","#f97316"], 
+          borderWidth:0 
+        }] 
+      },
       options:{
         responsive:true, maintainAspectRatio:false,
         plugins:{
@@ -595,7 +632,16 @@ function computeHarian(data, days) {
   return result;
 }
 
-/* ═══ TABLE FILTERS (desktop) ═══ */
+/* ═══ FILTER (desktop) dengan RETURN ═══ */
+function filterResi(data, { search, status, dateFrom, dateTo }) {
+  return data.filter(r => {
+    if (search && !r.nomor_resi?.toLowerCase().includes(search) && !r.produk?.toLowerCase().includes(search)) return false;
+    if (status && r.status !== status) return false;
+    if (dateFrom && r.tanggal?.slice(0,10) < dateFrom) return false;
+    if (dateTo && r.tanggal?.slice(0,10) > dateTo) return false;
+    return true;
+  });
+}
 function applyFilters() {
   const search   = document.getElementById("tSearch")?.value.toLowerCase()||"";
   const status   = document.getElementById("tStatus")?.value||"";
@@ -618,22 +664,24 @@ function renderTablePage() {
     body.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="ei">📭</div><p>Tidak ada data</p></div></td></tr>`;
     document.getElementById("tableFooter").innerHTML=""; return;
   }
-  body.innerHTML = data.map(r=>`
-    <tr>
+  body.innerHTML = data.map(r=>{
+    let badgeClass = r.status==='LUNAS' ? 'lunas' : (r.status==='RETURN' ? 'return' : 'belum');
+    return `<tr>
       <td>${formatDate(r.tanggal)}</td>
       <td class="mono">${r.nomor_resi}</td>
       <td>${r.produk}</td>
       <td style="text-align:center">${r.qty||1}</td>
       <td>${formatRupiah(r.harga)}</td>
       <td><b>${formatRupiah(r.total)}</b></td>
-      <td><span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span></td>
-    </tr>`).join("");
+      <td><span class="badge badge-${badgeClass}">${r.status}</span></td>
+    </tr>`;
+  }).join("");
   paginator.renderControls("tableFooter","goToPage");
 }
 
 function goToPage(p) { paginator?.setPage(p); renderTablePage(); }
 
-/* ═══ MOBILE LIST ═══ */
+/* ═══ MOBILE LIST dengan RETURN ═══ */
 function setTab(tab,el) {
   activeTab=tab;
   document.querySelectorAll(".tab-pill").forEach(t=>t.classList.remove("active"));
@@ -656,17 +704,19 @@ function renderMobList() {
     const d=new Date(r.tanggal);
     const day=isNaN(d)?"":d.getDate();
     const mon=isNaN(d)?"":d.toLocaleDateString("id-ID",{month:"short"});
+    let badgeClass = r.status==='LUNAS' ? 'lunas' : (r.status==='RETURN' ? 'return' : 'belum');
     return `<div class="resi-item">
       <div class="resi-date-badge"><div>${day}</div><div>${mon}</div></div>
       <div class="resi-info">
         <div class="resi-number">${r.nomor_resi}</div>
         <div class="resi-meta">${r.produk} · ${formatRupiah(r.total||r.harga)}</div>
       </div>
-      <span class="badge badge-${r.status==='LUNAS'?'lunas':'belum'}">${r.status}</span>
+      <span class="badge badge-${badgeClass}">${r.status}</span>
     </div>`;
   }).join("");
   const total=mp.totalPages,cur=mp.currentPage,pag=document.getElementById("mobPagination");
   pag.innerHTML = total<=1?"" : `<button class="page-btn" onclick="mobGoPage(${cur-1})" ${cur===1?"disabled":""}>‹</button><span style="font-size:12px;color:var(--text3);padding:0 8px">${cur}/${total}</span><button class="page-btn" onclick="mobGoPage(${cur+1})" ${cur===total?"disabled":""}>›</button>`;
+  _mobPag = mp;
 }
 
 let _mobPag;
