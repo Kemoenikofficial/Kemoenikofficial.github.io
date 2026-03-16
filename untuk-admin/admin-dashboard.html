@@ -1,207 +1,547 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Admin Dashboard — KEMOENIK</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-/* ========== GLOBAL ========== */
-:root {
-  --green: #15803d;
-  --green2: #166534;
-  --green3: #14532d;
-  --greenlit: #16a34a;<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Admin Dashboard — KEMOENIK</title>
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-/* ========== VARIABEL & RESET ========== */
-:root {
-  --green: #15803d;
-  --green2: #166534;
-  --green3: #14532d;
-  --greenlit: #22c55e;
-  --gold: #c8a96a;
-  --gold2: #a8854a;
-  --goldlit: #eab308;
-  --red: #b91c1c;
-  --bg: #f0f4f0;
-  --card: #ffffff;
-  --border: #e5e7eb;
-  --text: #1f2937;
-  --text2: #4b5563;
-  --text3: #9ca3af;
-  --offwhite: #f9fafb;
-  --font-mono: 'Courier New', monospace;
-  --tr: 0.2s;
-  --r-sm: 8px;
-  --r-md: 12px;
-  --sh-sm: 0 1px 3px rgba(0,0,0,0.05);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-}
-.layout { display: flex; min-height: 100vh; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — KEMOENIK</title>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ===== RESET & VARIABEL ===== */
+    :root {
+      --green: #15803d;
+      --green2: #166534;
+      --green3: #14532d;
+      --greenlit: #22c55e;
+      --gold: #c8a96a;
+      --gold2: #b58b4a;
+      --goldlit: #eab308;
+      --red: #b91c1c;
+      --bg: #f0f4f0;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --text2: #374151;
+      --text3: #6b7280;
+      --offwhite: #f9fafb;
+      --font-d: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'Courier New', monospace;
+      --tr: 0.15s ease;
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --sh-sm: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: var(--font-d);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
 
-/* ========== SIDEBAR ========== */
-.sidebar {
-  width: 230px; flex-shrink: 0;
-  background: var(--green3);
-  display: flex; flex-direction: column;
-  position: sticky; top: 0; height: 100vh;
-  overflow-y: auto;
-}
-.sb-brand { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.sb-logo { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
-.sb-logo span { color: var(--goldlit); }
-.sb-sub { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 3px; text-transform: uppercase; }
-.sb-nav { padding: 16px 12px; flex: 1; }
-.sb-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 8px 5px; }
-.sb-item {
-  display: flex; align-items: center; gap: 9px;
-  padding: 9px 10px; border-radius: 9px;
-  color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
-  cursor: pointer; transition: all var(--tr); margin-bottom: 2px;
-  text-decoration: none;
-}
-.sb-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
-.sb-item.active { background: rgba(200,169,106,0.18); color: var(--goldlit); }
-.sb-item .si { font-size: 16px; flex-shrink: 0; }
-.sb-footer { padding: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
-.sb-year-sel {
-  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 9px; padding: 8px 10px; color: #fff; font-size: 12px; width: 100%;
-}
-.sb-year-sel:focus { outline: none; }
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 230px;
+      flex-shrink: 0;
+      background: var(--green3);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sb-brand {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sb-logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    .sb-logo span {
+      color: var(--goldlit);
+    }
+    .sb-sub {
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 3px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .sb-nav {
+      padding: 16px 12px;
+      flex: 1;
+    }
+    .sb-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      padding: 10px 8px 5px;
+    }
+    .sb-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 10px;
+      border-radius: 9px;
+      color: rgba(255,255,255,0.65);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--tr);
+      margin-bottom: 2px;
+      text-decoration: none;
+    }
+    .sb-item:hover {
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+    }
+    .sb-item.active {
+      background: rgba(200,169,106,0.18);
+      color: var(--goldlit);
+    }
+    .sb-item .si {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .sb-footer {
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .sb-year-sel {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 9px;
+      padding: 8px 10px;
+      color: #fff;
+      font-size: 12px;
+      width: 100%;
+      cursor: pointer;
+    }
+    .sb-year-sel:focus {
+      outline: none;
+    }
 
-/* ========== TOPBAR ========== */
-.topbar {
-  height: 58px; background: var(--card);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 22px; gap: 12px;
-  position: sticky; top: 0; z-index: 100;
-}
-.topbar-title { font-size: 17px; font-weight: 600; color: var(--green2); }
-.topbar-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-.icon-btn {
-  width: 34px; height: 34px; border-radius: 9px;
-  border: 1.5px solid var(--border); background: var(--offwhite);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 15px; transition: all var(--tr);
-}
-.icon-btn:hover { border-color: var(--green); background: #f0f7f3; }
-.search-wrap { position: relative; }
-.search-wrap .input { padding-left: 32px; width: 200px; font-size: 13px; }
-.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
-.live-indicator { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
-.live-dot { width: 8px; height: 8px; background: #22C55E; border-radius: 50%; }
+    /* ===== TOPBAR ===== */
+    .topbar {
+      height: 58px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--green2);
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      border: 1.5px solid var(--border);
+      background: var(--offwhite);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      transition: all var(--tr);
+    }
+    .icon-btn:hover {
+      border-color: var(--green);
+      background: #f0f7f3;
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-wrap .input {
+      padding-left: 32px;
+      width: 200px;
+      font-size: 13px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+      pointer-events: none;
+    }
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text3);
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #22C55E;
+      border-radius: 50%;
+    }
 
-/* ========== MAIN ========== */
-.main { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
-.page { flex: 1; overflow-y: auto; padding: 22px; display: none; }
-.page.active { display: block; }
+    /* ===== MAIN CONTENT ===== */
+    .main {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .page {
+      flex: 1;
+      overflow-y: auto;
+      padding: 22px;
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
 
-/* ========== CARD / TABLE ========== */
-.card {
-  background: var(--card); border-radius: var(--r-md);
-  border: 1px solid var(--border); box-shadow: var(--sh-sm);
-  padding: 18px; margin-bottom: 20px;
-}
-.sec-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
-.sec-title::before { content: ''; width: 3px; height: 14px; background: var(--green); border-radius: 2px; }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px; }
-.stat-card {
-  background: var(--card); border-radius: var(--r-md);
-  padding: 18px; border: 1px solid var(--border);
-  box-shadow: var(--sh-sm); position: relative; overflow: hidden;
-}
-.stat-card::after {
-  content: ''; position: absolute; right: -12px; top: -12px;
-  width: 60px; height: 60px; border-radius: 50%; opacity: 0.06;
-}
-.stat-card.green::after { background: var(--green); }
-.stat-card.gold::after { background: var(--gold); }
-.stat-card.red::after { background: var(--red); }
-.stat-card.blue::after { background: #3B82F6; }
-.stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
-.stat-value { font-size: 22px; font-weight: 800; color: var(--text); }
-.stat-sub { font-size: 11px; color: var(--text3); margin-top: 5px; }
-.stat-icon { position: absolute; right: 14px; top: 14px; font-size: 22px; opacity: 0.7; }
+    /* ===== CARD & TABLE ===== */
+    .card {
+      background: var(--card);
+      border-radius: var(--r-md);
+      border: 1px solid var(--border);
+      box-shadow: var(--sh-sm);
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .sec-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sec-title::before {
+      content: '';
+      width: 3px;
+      height: 14px;
+      background: var(--green);
+      border-radius: 2px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--r-md);
+      padding: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--sh-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      right: -12px;
+      top: -12px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      opacity: 0.06;
+    }
+    .stat-card.green::after { background: var(--green); }
+    .stat-card.gold::after  { background: var(--gold); }
+    .stat-card.red::after   { background: var(--red); }
+    .stat-card.blue::after  { background: #3B82F6; }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .stat-sub {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 5px;
+    }
+    .stat-icon {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      font-size: 22px;
+      opacity: 0.7;
+    }
 
-/* Chart row */
-.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
-@media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
-.chart-card { background: var(--card); border-radius: var(--r-md); padding: 20px; border: 1px solid var(--border); }
-.chart-container { height: 200px; }
+    /* Chart row */
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    @media (max-width: 900px) {
+      .chart-row { grid-template-columns: 1fr; }
+    }
+    .chart-card {
+      background: var(--card);
+      border-radius: var(--r-md);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+    .chart-container {
+      height: 200px;
+    }
 
-/* Tabel */
-.table-section { background: var(--card); border-radius: var(--r-md); border: 1px solid var(--border); overflow: hidden; }
-.table-header { padding: 16px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
-.filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.filter-row .select, .filter-row .input { width: auto; min-width: 130px; font-size: 13px; }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: left; padding: 14px 16px; background: var(--offwhite); font-weight: 600; color: var(--text2); border-bottom: 1px solid var(--border); }
-td { padding: 14px 16px; border-bottom: 1px solid var(--border); }
-tr:last-child td { border-bottom: none; }
-.mono { font-family: var(--font-mono); font-weight: 600; }
-.table-footer { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    /* Tabel */
+    .table-section {
+      background: var(--card);
+      border-radius: var(--r-md);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .table-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .filter-row .select,
+    .filter-row .input {
+      width: auto;
+      min-width: 130px;
+      font-size: 13px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th {
+      text-align: left;
+      padding: 14px 16px;
+      background: var(--offwhite);
+      font-weight: 600;
+      color: var(--text2);
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .mono {
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+    .table-footer {
+      padding: 12px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-/* Badge */
-.badge {
-  display: inline-block; padding: 4px 10px; border-radius: 30px;
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-}
-.badge-lunas { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-.badge-belum { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-.badge-return { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-lunas {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+    .badge-belum {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .badge-return {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
 
-/* Empty state */
-.empty-state { text-align: center; padding: 40px 20px; color: var(--text3); }
-.empty-state .ei { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text3);
+    }
+    .empty-state .ei {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
 
-/* Loading overlay */
-.loading-overlay {
-  position: fixed; inset: 0; background: var(--bg);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999;
-}
-.loading-overlay .logo { font-size: 32px; font-weight: 700; color: var(--green2); margin-bottom: 18px; }
-.spinner { width: 28px; height: 28px; border: 3px solid rgba(0,0,0,0.1); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .loading-overlay .logo {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--green2);
+      margin-bottom: 18px;
+    }
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid rgba(0,0,0,0.1);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-/* KPI cards */
-.kpi-card { background: var(--card); border-radius: var(--r-md); padding: 16px; border: 1px solid var(--border); }
-.kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text3); }
-.kpi-val { font-size: 24px; font-weight: 800; color: var(--text); }
-.kpi-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+    /* KPI cards */
+    .kpi-card {
+      background: var(--card);
+      border-radius: var(--r-md);
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+    .kpi-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+    .kpi-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 4px;
+    }
 
-/* Modal */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none;
-  align-items: center; justify-content: center; z-index: 1000;
-}
-.modal { background: white; border-radius: 16px; padding: 24px; max-width: 400px; width: 90%; }
-.modal-icon { font-size: 40px; text-align: center; margin-bottom: 16px; }
-.modal h3 { text-align: center; margin-bottom: 8px; }
-.modal-detail { background: var(--offwhite); padding: 12px; border-radius: 8px; margin: 16px 0; }
-.modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
-.btn { padding: 8px 16px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; }
-.btn-outline { background: transparent; border: 1.5px solid var(--border); }
-.btn-gold { background: var(--gold); color: white; }
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 400px;
+      width: 90%;
+    }
+    .modal-icon {
+      font-size: 40px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .modal h3 {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .modal-detail {
+      background: var(--offwhite);
+      padding: 12px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border);
+    }
+    .btn-gold {
+      background: var(--gold);
+      color: white;
+    }
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
 
-/* Two column */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
-@media (max-width:800px) { .two-col { grid-template-columns: 1fr; } }
-</style>
+    /* Two column */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    @media (max-width:800px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
@@ -894,1082 +1234,6 @@ async function initDashboard() {
 }
 
 // Mulai
-initDashboard();
-setInterval(silentRefresh, 5000);
-</script>
-</body>
-</html>
-  --gold: #c8a96a;
-  --gold2: #b58b4a;
-  --goldlit: #eab308;
-  --red: #b91c1c;
-  --bg: #f0f4f0;
-  --card: #ffffff;
-  --border: #e5e7eb;
-  --text: #111827;
-  --text2: #374151;
-  --text3: #6b7280;
-  --offwhite: #f9fafb;
-  --font-d: 'Plus Jakarta Sans', sans-serif;
-  --font-mono: 'Courier New', monospace;
-  --tr: 0.15s ease;
-  --r-sm: 8px;
-  --r-md: 12px;
-  --r-lg: 16px;
-  --sh-sm: 0 1px 3px rgba(0,0,0,0.05);
-}
-.dark-mode {
-  --bg: #111827;
-  --card: #1f2937;
-  --border: #374151;
-  --text: #f9fafb;
-  --text2: #e5e7eb;
-  --text3: #9ca3af;
-  --offwhite: #1f2937;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
-.layout { display: flex; min-height: 100vh; }
-.sidebar {
-  width: 230px; flex-shrink: 0;
-  background: var(--green3);
-  display: flex; flex-direction: column;
-  position: sticky; top: 0; height: 100vh;
-  overflow-y: auto;
-}
-.sb-brand { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.sb-logo { font-family: var(--font-d); font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
-.sb-logo span { color: var(--goldlit); }
-.sb-sub { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 3px; letter-spacing: 0.08em; text-transform: uppercase; }
-.sb-nav { padding: 16px 12px; flex: 1; }
-.sb-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 10px 8px 5px; }
-.sb-item {
-  display: flex; align-items: center; gap: 9px;
-  padding: 9px 10px; border-radius: 9px;
-  color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500;
-  cursor: pointer; transition: all var(--tr); margin-bottom: 2px;
-  text-decoration: none;
-}
-.sb-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
-.sb-item.active { background: rgba(200,169,106,0.18); color: var(--goldlit); }
-.sb-item .si { font-size: 16px; flex-shrink: 0; }
-.sb-footer { padding: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
-.sb-year-sel { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 9px; padding: 8px 10px; color: #fff; font-family: var(--font-b); font-size: 12px; width: 100%; cursor: pointer; }
-.sb-year-sel:focus { outline: none; }
-.topbar {
-  height: 58px; background: var(--card);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 22px; gap: 12px;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-.topbar-title { font-family: var(--font-d); font-size: 17px; font-weight: 600; color: var(--green2); }
-.topbar-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-.icon-btn {
-  width: 34px; height: 34px; border-radius: 9px; border: 1.5px solid var(--border);
-  background: var(--offwhite); cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 15px; transition: all var(--tr);
-}
-.icon-btn:hover { border-color: var(--green); background: #f0f7f3; }
-.search-wrap { position: relative; }
-.search-wrap .input { padding-left: 32px; width: 200px; font-size: 13px; }
-.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 13px; pointer-events: none; }
-.live-indicator { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); font-weight: 500; }
-.main { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
-.page { flex: 1; overflow-y: auto; padding: 22px; display: none; }
-.page.active { display: block; }
-
-/* ========== COMPONENTS ========== */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin-bottom: 22px; }
-.stat-card {
-  background: var(--card); border-radius: var(--r-md);
-  padding: 18px 18px 16px;
-  border: 1px solid var(--border);
-  box-shadow: var(--sh-sm);
-  position: relative; overflow: hidden;
-}
-.stat-card::after {
-  content: ''; position: absolute; right: -12px; top: -12px;
-  width: 60px; height: 60px; border-radius: 50%; opacity: 0.06;
-}
-.stat-card.green::after { background: var(--green); }
-.stat-card.gold::after { background: var(--gold); }
-.stat-card.red::after { background: var(--red); }
-.stat-card.blue::after { background: #3B82F6; }
-.stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 8px; }
-.stat-value { font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
-.stat-sub { font-size: 11px; color: var(--text3); margin-top: 5px; }
-.stat-icon { position: absolute; right: 14px; top: 14px; font-size: 22px; opacity: 0.7; }
-
-.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
-@media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
-.chart-card { background: var(--card); border-radius: var(--r-md); padding: 20px; border: 1px solid var(--border); box-shadow: var(--sh-sm); }
-.chart-container { height: 200px; }
-
-.table-section { background: var(--card); border-radius: var(--r-md); border: 1px solid var(--border); box-shadow: var(--sh-sm); overflow: hidden; }
-.table-header { padding: 16px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
-.filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.filter-row .select, .filter-row .input { width: auto; min-width: 130px; font-size: 13px; }
-.table-footer { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: left; padding: 14px 16px; background: var(--offwhite); border-bottom: 2px solid var(--border); font-weight: 600; color: var(--text2); }
-td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text); }
-.mono { font-family: var(--font-mono); font-weight: 600; }
-.badge {
-  display: inline-block; padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
-  background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;
-}
-.badge-lunas { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
-.badge-belum { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
-.badge-return { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
-
-.card { background: var(--card); border-radius: var(--r-md); padding: 20px; border: 1px solid var(--border); box-shadow: var(--sh-sm); }
-.sec-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
-.sec-title::before { content: ''; display: block; width: 3px; height: 14px; background: var(--green); border-radius: 2px; }
-
-.empty-state { text-align: center; padding: 40px 20px; color: var(--text3); }
-.empty-state .ei { font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
-
-.btn {
-  padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
-  border: none; background: var(--green); color: #fff; transition: all var(--tr);
-}
-.btn:hover { background: var(--green2); }
-.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text2); }
-.btn-outline:hover { border-color: var(--green); color: var(--green); background: #f0f7f3; }
-.btn-sm { padding: 5px 12px; font-size: 11px; }
-.btn-gold { background: var(--gold); color: #000; }
-.btn-gold:hover { background: var(--gold2); }
-
-.kpi-card { background: var(--card); border-radius: var(--r-sm); padding: 16px; border: 1px solid var(--border); text-align: center; }
-.kpi-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
-.kpi-val { font-size: 24px; font-weight: 800; color: var(--green); margin: 6px 0 2px; }
-.kpi-sub { font-size: 10px; color: var(--text3); }
-
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none;
-  align-items: center; justify-content: center; z-index: 1000;
-}
-.modal {
-  background: var(--card); border-radius: 20px; padding: 24px; max-width: 400px; width: 90%;
-  border: 1px solid var(--border); box-shadow: 0 20px 30px rgba(0,0,0,0.2);
-}
-.modal-icon { font-size: 48px; text-align: center; margin-bottom: 16px; }
-.modal h3 { font-size: 18px; margin-bottom: 8px; }
-.modal-detail { font-size: 13px; color: var(--text3); margin: 12px 0; }
-.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-
-.loading-overlay {
-  position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column;
-  align-items: center; justify-content: center; z-index: 999;
-}
-.spinner {
-  width: 28px; height: 28px; border: 3px solid rgba(0,0,0,0.1); border-radius: 50%;
-  border-top-color: var(--green); animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.pagination { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.pagination button { min-width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; }
-.pagination button.active { background: var(--green); color: #fff; border-color: var(--green); }
-.pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
-</style>
-</head>
-<body>
-
-<!-- LOADING -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="logo">KEMO<span style="color:var(--gold)">ENIK</span></div>
-  <div class="spinner"></div>
-  <p>Memuat dashboard admin…</p>
-</div>
-
-<div class="layout">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sb-brand">
-      <div class="sb-logo">KEMO<span>ENIK</span></div>
-      <div class="sb-sub">Admin Dashboard</div>
-    </div>
-    <nav class="sb-nav">
-      <div class="sb-label">Utama</div>
-      <a class="sb-item active" onclick="showPage('dashboard',this)">
-        <span class="si">📊</span> Dashboard
-      </a>
-      <a class="sb-item" onclick="showPage('transaksi',this)">
-        <span class="si">📋</span> Transaksi
-      </a>
-      <div class="sb-label">Manajemen</div>
-      <a class="sb-item" onclick="showPage('pembayaran',this)">
-        <span class="si">✅</span> Tandai Lunas
-      </a>
-      <a class="sb-item" onclick="showPage('seller',this)">
-        <span class="si">👥</span> Ringkasan Seller
-      </a>
-      <div class="sb-label">Inventori</div>
-      <a class="sb-item" onclick="showPage('stok',this)">
-        <span class="si">📦</span> Stok Produk
-      </a>
-      <div class="sb-label">Monitoring</div>
-      <a class="sb-item" onclick="showPage('return',this)">
-        <span class="si">↩️</span> Data Return
-      </a>
-      <a class="sb-item" onclick="showPage('live',this)">
-        <span class="si">📦</span> Live Resi
-      </a>
-      <a class="sb-item" href="seller-dashboard.html">
-        <span class="si">📱</span> Seller View
-      </a>
-    </nav>
-    <div class="sb-footer">
-      <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;">Tahun Aktif</div>
-      <select class="sb-year-sel" id="yearSel" onchange="onYearChange(this.value)">
-        <option>2026</option>
-      </select>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <div class="main">
-
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="topbar-title" id="pageTitle">Dashboard</div>
-      <div class="topbar-actions">
-        <div class="live-indicator"><div class="live-dot"></div><span id="lastUpdateText">—</span></div>
-        <div class="search-wrap">
-          <span class="search-icon">🔍</span>
-          <input type="text" class="input" id="globalSearch" placeholder="Cari resi, seller…" oninput="onGlobalSearch()"/>
-        </div>
-        <button class="icon-btn" onclick="silentRefresh();showToast('Data diperbarui')" title="Refresh">🔄</button>
-        <button class="icon-btn" onclick="doExportCSV()" title="Export CSV">📥</button>
-      </div>
-    </div>
-
-    <!-- PAGE: DASHBOARD -->
-    <div class="page active" id="page-dashboard">
-      <div class="stats-grid" id="statsGrid">
-        <div class="stat-card green"><div class="stat-label">Total Resi</div><div class="stat-value skeleton">—</div><div class="stat-icon">📦</div></div>
-        <div class="stat-card gold"><div class="stat-label">Total Penjualan</div><div class="stat-value skeleton">—</div><div class="stat-icon">💰</div></div>
-        <div class="stat-card blue"><div class="stat-label">Sudah Lunas</div><div class="stat-value skeleton">—</div><div class="stat-icon">✅</div></div>
-        <div class="stat-card red"><div class="stat-label">Belum Bayar</div><div class="stat-value skeleton">—</div><div class="stat-icon">⏳</div></div>
-      </div>
-
-      <div class="chart-row">
-        <div class="chart-card">
-          <div class="sec-title">Penjualan Per Seller</div>
-          <div class="chart-container"><canvas id="chartSeller"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="sec-title">Penjualan 7 Hari Terakhir</div>
-          <div class="chart-container"><canvas id="chartHarian"></canvas></div>
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div class="card">
-          <div class="sec-title">Belum Bayar</div>
-          <div id="overdueList"><div class="empty-state"><div class="ei">⏳</div><p>Memuat…</p></div></div>
-        </div>
-        <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <div class="sec-title" style="margin-bottom:0">Resi Terbaru</div>
-            <div class="live-indicator"><div class="live-dot"></div>Live</div>
-          </div>
-          <div id="liveList"><div class="empty-state"><div class="ei">📦</div><p>Memuat…</p></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE: TRANSAKSI -->
-    <div class="page" id="page-transaksi">
-      <div class="table-section">
-        <div class="table-header">
-          <div class="sec-title" style="margin-bottom:0;flex:1">Semua Transaksi</div>
-          <div class="filter-row">
-            <input type="text" class="input" id="tSearch" placeholder="🔍 Cari resi, seller…" oninput="applyFilters()" style="width:180px"/>
-            <select class="select" id="tSeller" onchange="applyFilters()">
-              <option value="">Semua Seller</option>
-            </select>
-            <select class="select" id="tStatus" onchange="applyFilters()">
-              <option value="">Semua Status</option>
-              <option value="BELUM">BELUM</option>
-              <option value="LUNAS">LUNAS</option>
-              <option value="RETURN">RETURN</option>
-            </select>
-            <input type="date" class="input" id="tDateFrom" onchange="applyFilters()" style="width:140px"/>
-            <input type="date" class="input" id="tDateTo" onchange="applyFilters()" style="width:140px"/>
-            <button class="btn btn-outline btn-sm" onclick="resetFilters()">Reset</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Tanggal</th><th>Nomor Resi</th><th>Seller</th><th>Produk</th><th>Qty</th><th>Harga</th><th>Total</th><th>Status</th></tr></thead>
-            <tbody id="tableBody"><tr><td colspan="8" class="empty-state">Memuat data…</td></tr></tbody>
-          </table>
-        </div>
-        <div class="table-footer" id="tableFooter"></div>
-      </div>
-    </div>
-
-    <!-- PAGE: PEMBAYARAN -->
-    <div class="page" id="page-pembayaran">
-      <div class="pay-panel">
-        <div class="sec-title">Tandai Lunas</div>
-        <p class="text-muted text-sm" style="margin-bottom:14px">Pilih seller dan masukkan jumlah resi yang sudah dibayar. Sistem akan mengubah status BELUM → LUNAS secara FIFO (transaksi terlama diproses duluan).</p>
-        <div class="pay-grid">
-          <div>
-            <label class="text-sm" style="display:block;font-weight:600;margin-bottom:5px;color:var(--text2)">Seller</label>
-            <select class="select" id="paySeller" onchange="updatePayPreview()">
-              <option value="">— Pilih Seller —</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-sm" style="display:block;font-weight:600;margin-bottom:5px;color:var(--text2)">Jumlah Produk Lunas</label>
-            <input type="number" class="input" id="payJumlah" min="1" placeholder="Contoh: 20" oninput="updatePayPreview()"/>
-          </div>
-          <button class="btn btn-gold" onclick="openPayConfirm()" style="padding:10px 20px">Tandai Lunas</button>
-        </div>
-        <div class="pay-preview" id="payPreview"></div>
-      </div>
-
-      <div class="card">
-        <div class="sec-title">Status Pembayaran Semua Seller</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Seller</th><th>Total Resi</th><th>Total Penjualan</th><th>Lunas</th><th>Belum Bayar</th><th>Aksi</th></tr></thead>
-            <tbody id="payTableBody"><tr><td colspan="6" class="empty-state">Memuat…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE: SELLER -->
-    <div class="page" id="page-seller">
-      <div class="table-section">
-        <div class="table-header">
-          <div class="sec-title" style="margin-bottom:0">Ringkasan Per Seller</div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Seller</th><th>Total Resi</th><th>Total Penjualan</th><th>Lunas</th><th>Belum Bayar</th><th>Return (Resi)</th><th>Aksi</th></tr></thead>
-            <tbody id="sellerTableBody"><tr><td colspan="7" class="empty-state">Memuat…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE: LIVE -->
-    <div class="page" id="page-live">
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-          <div class="sec-title" style="margin-bottom:0">Live Monitor Resi</div>
-          <div class="live-indicator"><div class="live-dot"></div>Auto-refresh 5 detik</div>
-        </div>
-        <div id="liveFullList"><div class="empty-state"><div class="ei">📦</div><p>Memuat…</p></div></div>
-      </div>
-    </div>
-
-    <!-- PAGE STOK -->
-    <div class="page" id="page-stok">
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-          <div class="sec-title" style="margin-bottom:0">Stok Produk</div>
-          <button class="btn btn-outline btn-sm" onclick="loadAndRenderStok()">🔄 Refresh</button>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px" id="stokSummary">
-          <div class="kpi-card"><div class="kpi-label">Total Masuk</div><div class="kpi-val" id="stokTotalMasuk">—</div><div class="kpi-sub">semua produk</div></div>
-          <div class="kpi-card"><div class="kpi-label">Total Keluar</div><div class="kpi-val" id="stokTotalKeluar">—</div><div class="kpi-sub">semua tahun</div></div>
-          <div class="kpi-card"><div class="kpi-label">Sisa Stok</div><div class="kpi-val" id="stokTotalSisa">—</div><div class="kpi-sub" id="stokWarningCount"></div></div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Produk</th><th style="text-align:center">Stok Masuk</th><th style="text-align:center">Keluar</th><th style="text-align:center">Sisa</th><th style="text-align:center">Status</th></tr></thead>
-            <tbody id="stokTableBody"><tr><td colspan="5"><div class="empty-state"><div class="ei">📦</div><p>Memuat data stok…</p></div></td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE: RETURN -->
-    <div class="page" id="page-return">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
-        <div class="kpi-card"><div class="kpi-label">Total Return (Resi)</div><div class="kpi-val" id="returnTotalResi">—</div><div class="kpi-sub">tahun <span id="returnYearLabel">2026</span></div></div>
-        <div class="kpi-card"><div class="kpi-label">Total Produk Dikembalikan</div><div class="kpi-val" id="returnTotalQty">—</div><div class="kpi-sub">unit</div></div>
-        <div class="kpi-card"><div class="kpi-label">Seller dengan Return</div><div class="kpi-val" id="returnSellerCount">—</div><div class="kpi-sub">aktif</div></div>
-      </div>
-
-      <div class="table-section">
-        <div class="table-header">
-          <div class="sec-title" style="margin-bottom:0;flex:1">Data Return</div>
-          <div class="filter-row">
-            <input type="text" class="input" id="returnSearch" placeholder="🔍 Cari resi, seller…" oninput="applyReturnFilters()" style="width:180px"/>
-            <select class="select" id="returnSeller" onchange="applyReturnFilters()">
-              <option value="">Semua Seller</option>
-            </select>
-            <input type="date" class="input" id="returnDateFrom" onchange="applyReturnFilters()" style="width:140px"/>
-            <input type="date" class="input" id="returnDateTo" onchange="applyReturnFilters()" style="width:140px"/>
-            <button class="btn btn-outline btn-sm" onclick="resetReturnFilters()">Reset</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Tanggal</th><th>Nomor Resi</th><th>Seller</th><th>Produk</th><th>Qty</th><th>Alasan</th><th>Status</th></tr></thead>
-            <tbody id="returnTableBody"><tr><td colspan="7" class="empty-state">Memuat data return…</td></tr></tbody>
-          </table>
-        </div>
-        <div class="table-footer" id="returnTableFooter"></div>
-      </div>
-    </div>
-
-  </div><!-- /main -->
-</div><!-- /layout -->
-
-<!-- MODAL KONFIRMASI LUNAS -->
-<div class="modal-overlay" id="modalLunas">
-  <div class="modal">
-    <div class="modal-icon">✅</div>
-    <h3>Tandai Lunas</h3>
-    <p id="modalLunasText">—</p>
-    <div class="modal-detail" id="modalLunasDetail">—</div>
-    <div class="modal-actions">
-      <button class="btn btn-outline" onclick="closeModal('modalLunas')">Batal</button>
-      <button class="btn btn-gold" id="modalLunasConfirm" onclick="confirmLunas()">Tandai Lunas</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ========== CONFIG ==========
-const API = "https://script.google.com/macros/s/AKfycbzQPLKPF18H-4Qolyr_4e3cy4Ovdiahhea8LvmL9FJ17vUAD5qEjM14IFD4LyBIoiiD/exec"; // GANTI DENGAN URL ANDA
-
-// ========== STATE ==========
-let allResi = [];
-let filteredResi = [];
-let paginator = null;
-let currentYear = "2026";
-let stats = {};
-const PAGE_SIZE = 10;
-
-let returnData = [];
-let filteredReturn = [];
-let returnPaginator = null;
-const RETURN_PAGE_SIZE = 10;
-
-let stokData = [];
-
-// ========== UTILITY ==========
-async function fetchJson(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('Network error');
-  return res.json();
-}
-
-function formatRupiah(n) {
-  return "Rp " + (n || 0).toLocaleString('id-ID');
-}
-
-function formatDate(d) {
-  if (!d) return '-';
-  return new Date(d).toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' });
-}
-
-function showToast(msg, type = 'success') {
-  alert(msg); // sederhana, bisa diganti dengan notifikasi kustom
-}
-
-class Paginator {
-  constructor(data, pageSize) {
-    this.data = data;
-    this.pageSize = pageSize;
-    this.currentPage = 1;
-    this.totalPages = Math.ceil(data.length / pageSize) || 1;
-  }
-  get currentData() {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.data.slice(start, start + this.pageSize);
-  }
-  setPage(page) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-  }
-  renderControls(containerId, callback) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    let html = '<div class="pagination">';
-    html += `<button onclick="${callback}(1)" ${this.currentPage === 1 ? 'disabled' : ''}>«</button>`;
-    html += `<button onclick="${callback}(this.currentPage-1)" ${this.currentPage === 1 ? 'disabled' : ''}>‹</button>`;
-    for (let i = 1; i <= this.totalPages; i++) {
-      if (i === this.currentPage || (i >= this.currentPage - 2 && i <= this.currentPage + 2)) {
-        html += `<button class="${i === this.currentPage ? 'active' : ''}" onclick="${callback}(${i})">${i}</button>`;
-      } else if (i === this.currentPage - 3 || i === this.currentPage + 3) {
-        html += `<span>...</span>`;
-      }
-    }
-    html += `<button onclick="${callback}(this.currentPage+1)" ${this.currentPage === this.totalPages ? 'disabled' : ''}>›</button>`;
-    html += `<button onclick="${callback}(${this.totalPages})" ${this.currentPage === this.totalPages ? 'disabled' : ''}>»</button>`;
-    html += `</div>`;
-    container.innerHTML = html;
-  }
-}
-
-// ========== NAVIGATION ==========
-const pageTitles = { dashboard:"Dashboard", transaksi:"Transaksi", pembayaran:"Tandai Lunas", seller:"Ringkasan Seller", live:"Live Monitor", stok:"Stok Produk", return:"Data Return" };
-function showPage(id, el) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".sb-item").forEach(i => i.classList.remove("active"));
-  document.getElementById("page-" + id)?.classList.add("active");
-  if (el) el.classList.add("active");
-  document.getElementById("pageTitle").textContent = pageTitles[id] || id;
-  if (id === "stok" && !stokData.length) loadAndRenderStok();
-  if (id === "return") loadReturnData(); // panggil setiap kali halaman return dibuka
-}
-
-// ========== API CALLS ==========
-async function loadTahun() {
-  const data = await fetchJson(`${API}?action=tahun`);
-  return data.length ? data : [new Date().getFullYear().toString()];
-}
-
-async function loadSellers() {
-  const data = await fetchJson(`${API}?action=seller`);
-  return data.map(s => s.nama);
-}
-
-async function loadResi({ tahun }) {
-  const data = await fetchJson(`${API}?action=getResi&tahun=${tahun}`);
-  return data;
-}
-
-async function loadStats({ tahun }) {
-  const data = await fetchJson(`${API}?action=getStats&tahun=${tahun}`);
-  return data;
-}
-
-async function loadStok() {
-  const data = await fetchJson(`${API}?action=getStok`);
-  return data;
-}
-
-async function doTandaiLunas(seller, jumlah, tahun) {
-  const body = { action: 'tandaiLunas', seller, jumlah, tahun };
-  const res = await fetch(API, { method: 'POST', body: JSON.stringify(body) });
-  return res.json();
-}
-
-// ========== RETURN FUNCTIONS (menggunakan data dari allResi) ==========
-function loadReturnData() {
-  returnData = allResi.filter(r => r.status === 'RETURN');
-  
-  const totalResi = returnData.length;
-  const totalQty = returnData.reduce((s, r) => s + (r.qty || 1), 0);
-  const sellers = new Set(returnData.map(r => r.seller));
-  
-  document.getElementById('returnTotalResi').textContent = totalResi.toLocaleString('id-ID');
-  document.getElementById('returnTotalQty').textContent = totalQty.toLocaleString('id-ID');
-  document.getElementById('returnSellerCount').textContent = sellers.size;
-  document.getElementById('returnYearLabel').textContent = currentYear;
-  
-  applyReturnFilters();
-}
-
-function applyReturnFilters() {
-  const search = (document.getElementById('returnSearch')?.value || '').toLowerCase();
-  const seller = document.getElementById('returnSeller')?.value || '';
-  const dateFrom = document.getElementById('returnDateFrom')?.value || '';
-  const dateTo = document.getElementById('returnDateTo')?.value || '';
-
-  filteredReturn = returnData.filter(r => {
-    if (search && !r.nomor_resi.toLowerCase().includes(search) && !r.seller.toLowerCase().includes(search)) return false;
-    if (seller && r.seller !== seller) return false;
-    if (dateFrom && r.tanggal.slice(0,10) < dateFrom) return false;
-    if (dateTo && r.tanggal.slice(0,10) > dateTo) return false;
-    return true;
-  });
-
-  returnPaginator = new Paginator(filteredReturn, RETURN_PAGE_SIZE);
-  renderReturnTablePage();
-}
-
-function renderReturnTablePage() {
-  const data = returnPaginator?.currentData || [];
-  const tbody = document.getElementById('returnTableBody');
-  if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="ei">📭</div><p>Tidak ada data return</p></div></td></tr>`;
-    document.getElementById('returnTableFooter').innerHTML = '';
-    return;
-  }
-  tbody.innerHTML = data.map(r => `
-    <tr>
-      <td>${formatDate(r.tanggal)}</td>
-      <td class="mono">${r.nomor_resi}</td>
-      <td><b>${r.seller}</b></td>
-      <td>${r.produk}</td>
-      <td style="text-align:center">${r.qty || 1}</td>
-      <td>-</td>
-      <td><span class="badge badge-return">RETURN</span></td>
-    </tr>
-  `).join('');
-  returnPaginator.renderControls('returnTableFooter', 'goToReturnPage');
-}
-
-function goToReturnPage(p) {
-  returnPaginator?.setPage(p);
-  renderReturnTablePage();
-}
-
-function resetReturnFilters() {
-  ['returnSearch', 'returnSeller', 'returnDateFrom', 'returnDateTo'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  applyReturnFilters();
-}
-
-// ========== RENDER FUNCTIONS ==========
-function renderStats() {
-  const s = stats;
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="stat-card green">
-      <div class="stat-label">Total Resi</div>
-      <div class="stat-value">${(s.total_resi || 0).toLocaleString('id-ID')}</div>
-      <div class="stat-sub">tahun ${currentYear}</div>
-      <div class="stat-icon">📦</div>
-    </div>
-    <div class="stat-card gold">
-      <div class="stat-label">Total Penjualan</div>
-      <div class="stat-value" style="font-size:18px">${formatRupiah(s.total_penjualan)}</div>
-      <div class="stat-sub">semua seller</div>
-      <div class="stat-icon">💰</div>
-    </div>
-    <div class="stat-card blue">
-      <div class="stat-label">Sudah Lunas</div>
-      <div class="stat-value" style="font-size:18px;color:#059669">${formatRupiah(s.total_lunas)}</div>
-      <div class="stat-sub">sudah dibayar</div>
-      <div class="stat-icon">✅</div>
-    </div>
-    <div class="stat-card red">
-      <div class="stat-label">Belum Bayar</div>
-      <div class="stat-value" style="font-size:18px;color:var(--red)">${formatRupiah(s.total_belum)}</div>
-      <div class="stat-sub">perlu ditagih</div>
-      <div class="stat-icon">⏳</div>
-    </div>
-  `;
-}
-
-function renderCharts() {
-  const perSeller = stats.per_seller || [];
-  const ctxSeller = document.getElementById('chartSeller')?.getContext('2d');
-  if (ctxSeller) {
-    new Chart(ctxSeller, {
-      type: 'bar',
-      data: {
-        labels: perSeller.map(s => s.seller),
-        datasets: [{
-          label: 'Penjualan',
-          data: perSeller.map(s => s.penjualan),
-          backgroundColor: 'rgba(31,77,58,.75)',
-          borderRadius: 6
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
-  }
-
-  const harian = (() => {
-    const result = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(); d.setDate(d.getDate() - i);
-      const key = d.toISOString().slice(0,10);
-      const label = d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'});
-      const total = allResi.filter(r => r.tanggal && r.tanggal.slice(0,10) === key).reduce((s,r) => s + (r.total||0), 0);
-      result.push({ label, total });
-    }
-    return result;
-  })();
-
-  const ctxHarian = document.getElementById('chartHarian')?.getContext('2d');
-  if (ctxHarian) {
-    const grad = ctxHarian.createLinearGradient(0,0,0,200);
-    grad.addColorStop(0,'rgba(200,169,106,.3)');
-    grad.addColorStop(1,'rgba(200,169,106,0)');
-    new Chart(ctxHarian, {
-      type: 'line',
-      data: {
-        labels: harian.map(h => h.label),
-        datasets: [{
-          label: 'Penjualan',
-          data: harian.map(h => h.total),
-          borderColor: '#C8A96A',
-          backgroundColor: grad,
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#fff',
-          pointBorderColor: '#C8A96A',
-          pointBorderWidth: 2,
-          pointRadius: 4
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
-  }
-}
-
-function applyFilters() {
-  const search = (document.getElementById('tSearch')?.value || document.getElementById('globalSearch')?.value || '').toLowerCase();
-  const seller = document.getElementById('tSeller')?.value || '';
-  const status = document.getElementById('tStatus')?.value || '';
-  const dateFrom = document.getElementById('tDateFrom')?.value || '';
-  const dateTo = document.getElementById('tDateTo')?.value || '';
-
-  filteredResi = allResi.filter(r => {
-    if (search && !r.nomor_resi.toLowerCase().includes(search) && !r.seller.toLowerCase().includes(search)) return false;
-    if (seller && r.seller !== seller) return false;
-    if (status && r.status !== status) return false;
-    if (dateFrom && r.tanggal.slice(0,10) < dateFrom) return false;
-    if (dateTo && r.tanggal.slice(0,10) > dateTo) return false;
-    return true;
-  });
-
-  paginator = new Paginator(filteredResi, PAGE_SIZE);
-  renderTablePage();
-}
-
-function renderTablePage() {
-  const data = paginator?.currentData || [];
-  const body = document.getElementById('tableBody');
-  if (!data.length) {
-    body.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="ei">📭</div><p>Tidak ada data</p></div></td></tr>`;
-    document.getElementById('tableFooter').innerHTML = '';
-    return;
-  }
-  body.innerHTML = data.map(r => {
-    let badgeClass = r.status === 'LUNAS' ? 'lunas' : (r.status === 'RETURN' ? 'return' : 'belum');
-    return `<tr>
-      <td>${formatDate(r.tanggal)}</td>
-      <td class="mono">${r.nomor_resi}</td>
-      <td><b>${r.seller}</b></td>
-      <td>${r.produk}</td>
-      <td style="text-align:center">${r.qty||1}</td>
-      <td>${formatRupiah(r.harga)}</td>
-      <td><b>${formatRupiah(r.total)}</b></td>
-      <td><span class="badge badge-${badgeClass}">${r.status}</span></td>
-    </tr>`;
-  }).join('');
-  paginator.renderControls('tableFooter', 'goToPage');
-}
-
-function goToPage(p) {
-  paginator?.setPage(p);
-  renderTablePage();
-}
-
-function resetFilters() {
-  ['tSearch','tSeller','tStatus','tDateFrom','tDateTo'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  applyFilters();
-}
-
-function onGlobalSearch() {
-  showPage('transaksi', document.querySelector('.sb-item[onclick*="transaksi"]'));
-  applyFilters();
-}
-
-function renderOverdue() {
-  const perSeller = stats.per_seller || [];
-  const overdue = perSeller.filter(s => s.belum > 0).sort((a,b) => b.belum - a.belum);
-  const el = document.getElementById('overdueList');
-  if (!overdue.length) {
-    el.innerHTML = `<div class="empty-state"><div class="ei">✅</div><p>Semua seller sudah lunas</p></div>`;
-    return;
-  }
-  el.innerHTML = overdue.slice(0,8).map(s => `
-    <div class="overdue-item">
-      <div class="ov-avatar">${s.seller.charAt(0)}</div>
-      <div class="ov-info">
-        <div class="ov-name">${s.seller}</div>
-        <div class="ov-amount">${s.resi} resi · Lunas ${formatRupiah(s.lunas)}</div>
-      </div>
-      <div class="ov-badge">${formatRupiah(s.belum)}</div>
-    </div>`).join('');
-}
-
-function renderLive() {
-  const recent = [...allResi].slice(0, 8);
-  const el = document.getElementById('liveList');
-  const elFull = document.getElementById('liveFullList');
-  const html = (arr) => arr.map(r => {
-    let badgeClass = r.status === 'LUNAS' ? 'lunas' : (r.status === 'RETURN' ? 'return' : 'belum');
-    return `<div class="live-item">
-      <div class="live-dot-badge"></div>
-      <div style="flex:1;min-width:0">
-        <div class="live-resi">${r.nomor_resi}</div>
-        <div class="live-meta">${r.seller} · ${r.produk} · ${formatDate(r.tanggal)}</div>
-      </div>
-      <span class="badge badge-${badgeClass}">${r.status}</span>
-    </div>`;
-  }).join('');
-  if (el) el.innerHTML = recent.length ? html(recent) : `<div class="empty-state"><div class="ei">📦</div><p>Belum ada resi</p></div>`;
-  if (elFull) elFull.innerHTML = allResi.length ? html(allResi.slice(0,50)) : `<div class="empty-state"><div class="ei">📦</div><p>Belum ada resi</p></div>`;
-}
-
-function renderSellerDropdowns(sellers) {
-  const names = sellers.map(s => s);
-  const optHtml = '<option value="">— Pilih Seller —</option>' + names.map(n => `<option value="${n}">${n}</option>`).join('');
-  ['tSeller', 'paySeller', 'returnSeller'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = id === 'tSeller' ? '<option value="">Semua Seller</option>' + names.map(n => `<option value="${n}">${n}</option>`).join('') : optHtml;
-  });
-}
-
-function updatePayPreview() {
-  const seller = document.getElementById('paySeller').value;
-  const jumlah = parseInt(document.getElementById('payJumlah').value) || 0;
-  const prev = document.getElementById('payPreview');
-  if (!seller || !jumlah) { prev.style.display = 'none'; return; }
-
-  const belumResi = allResi
-    .filter(r => r.seller === seller && r.status === 'BELUM')
-    .sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal));
-
-  let sisaQty = jumlah;
-  let resiCount = 0;
-  let totalNilai = 0;
-
-  for (const r of belumResi) {
-    if (sisaQty <= 0) break;
-    const qty = r.qty || 1;
-    if (qty <= sisaQty) {
-      sisaQty -= qty;
-      resiCount++;
-      totalNilai += r.total || 0;
-    } else {
-      break;
-    }
-  }
-
-  prev.style.display = 'block';
-  const kurang = sisaQty > 0 ? ` <span style="color:var(--gold2)">(sisa ${sisaQty} produk belum cukup 1 resi)</span>` : '';
-  prev.innerHTML = `Melunasi <b>${jumlah} produk</b> = <b>${resiCount} resi</b> seller <b>${seller}</b> · Nilai: <b>${formatRupiah(totalNilai)}</b>${kurang}`;
-}
-
-function openPayConfirm() {
-  const seller = document.getElementById('paySeller').value;
-  const jumlah = parseInt(document.getElementById('payJumlah').value) || 0;
-  if (!seller) { showToast('Pilih seller dulu','warn'); return; }
-  if (!jumlah) { showToast('Masukkan jumlah produk','warn'); return; }
-  document.getElementById('modalLunasText').textContent = `Tandai lunas ${jumlah} produk untuk ${seller}?`;
-  document.getElementById('modalLunasDetail').textContent = `Sistem akan melunasi resi secara FIFO (terlama dulu) sampai total ${jumlah} produk terpenuhi.`;
-  openModal('modalLunas');
-}
-
-async function confirmLunas() {
-  closeModal('modalLunas');
-  const seller = document.getElementById('paySeller').value;
-  const jumlah = parseInt(document.getElementById('payJumlah').value) || 0;
-  try {
-    const res = await doTandaiLunas(seller, jumlah, currentYear);
-    const sisaMsg = res.sisa_kurang > 0 ? ` (sisa ${res.sisa_kurang} produk tidak cukup 1 resi)` : '';
-    showToast(`✅ ${res.qty_dilunasi||res.updated} produk / ${res.updated} resi berhasil LUNAS${sisaMsg}`);
-    document.getElementById('payJumlah').value = '';
-    document.getElementById('payPreview').style.display = 'none';
-    // Refresh data
-    allResi = await loadResi({ tahun: currentYear });
-    stats = await loadStats({ tahun: currentYear });
-    loadReturnData();
-    renderAll();
-  } catch(e) {
-    showToast('Gagal tandai lunas — cek Apps Script','error');
-  }
-}
-
-function renderPayTable() {
-  const perSeller = stats.per_seller || [];
-  const body = document.getElementById('payTableBody');
-  if (!perSeller.length) { body.innerHTML = `<tr><td colspan="6" class="empty-state">Tidak ada data</td></tr>`; return; }
-  body.innerHTML = perSeller.map(s => `
-    <tr>
-      <td><b>${s.seller}</b></td>
-      <td>${s.resi}</td>
-      <td>${formatRupiah(s.penjualan)}</td>
-      <td style="color:#059669;font-weight:600">${formatRupiah(s.lunas)}</td>
-      <td style="color:var(--red);font-weight:600">${formatRupiah(s.belum)}</td>
-      <td><button class="btn btn-sm btn-outline" onclick="prefillPay('${s.seller}')">Tandai Lunas</button></td>
-    </tr>`).join('');
-}
-
-function prefillPay(seller) {
-  showPage('pembayaran', document.querySelector('.sb-item[onclick*="pembayaran"]'));
-  document.getElementById('paySeller').value = seller;
-  updatePayPreview();
-}
-
-function renderSellerTable() {
-  const perSeller = stats.per_seller || [];
-  const body = document.getElementById('sellerTableBody');
-  if (!perSeller.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">Tidak ada data</td></tr>`; return; }
-
-  const returnPerSeller = {};
-  returnData.forEach(r => {
-    if (!returnPerSeller[r.seller]) returnPerSeller[r.seller] = { return_resi: 0 };
-    returnPerSeller[r.seller].return_resi++;
-  });
-
-  body.innerHTML = perSeller.map(s => `
-    <tr class="seller-stat-row" onclick="viewSeller('${s.seller}')">
-      <td><b>${s.seller}</b></td>
-      <td>${s.resi}</td>
-      <td><b>${formatRupiah(s.penjualan)}</b></td>
-      <td style="color:#059669">${formatRupiah(s.lunas)}</td>
-      <td style="color:var(--red)">${formatRupiah(s.belum)}</td>
-      <td style="text-align:center">${returnPerSeller[s.seller]?.return_resi || 0}</td>
-      <td><button class="btn btn-sm btn-outline" onclick="event.stopPropagation();viewSeller('${s.seller}')">Lihat Detail</button></td>
-    </tr>`).join('');
-}
-
-function viewSeller(seller) {
-  document.getElementById('tSeller').value = seller;
-  showPage('transaksi', document.querySelector('.sb-item[onclick*="transaksi"]'));
-  applyFilters();
-}
-
-async function silentRefresh() {
-  try {
-    const [newResi, newStats] = await Promise.all([
-      loadResi({ tahun: currentYear }),
-      loadStats({ tahun: currentYear })
-    ]);
-    const changed = JSON.stringify(allResi) !== JSON.stringify(newResi);
-    allResi = newResi;
-    stats = newStats;
-    if (changed) {
-      loadReturnData();
-      renderAll();
-    }
-    document.getElementById('lastUpdateText').textContent = 'Update ' + new Date().toLocaleTimeString('id-ID');
-  } catch(e) { /* diam */ }
-}
-
-function doExportCSV() {
-  if (!filteredResi.length && !allResi.length) { showToast('Tidak ada data','warn'); return; }
-  const data = filteredResi.length ? filteredResi : allResi;
-  const csv = data.map(r => `${r.tanggal},${r.nomor_resi},${r.seller},${r.produk},${r.qty},${r.harga},${r.total},${r.status}`).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `resi-${currentYear}.csv`;
-  a.click();
-  showToast('Export berhasil');
-}
-
-// ========== STOK ==========
-async function loadAndRenderStok() {
-  try {
-    stokData = await loadStok();
-    renderStok();
-  } catch(e) {
-    showToast('Gagal memuat stok','error');
-  }
-}
-
-function renderStok() {
-  const data = stokData;
-  const body = document.getElementById('stokTableBody');
-  if (!data.length) {
-    body.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="ei">📦</div><p>Tidak ada data stok</p></div></td></tr>`;
-    return;
-  }
-
-  const totalMasuk = data.reduce((s,r) => s + (r.stok_masuk||0), 0);
-  const totalKeluar = data.reduce((s,r) => s + (r.keluar||0), 0);
-  const totalSisa = data.reduce((s,r) => s + (r.sisa||0), 0);
-  const warningCount = data.filter(r => r.warning).length;
-
-  document.getElementById('stokTotalMasuk').textContent = totalMasuk.toLocaleString('id-ID');
-  document.getElementById('stokTotalKeluar').textContent = totalKeluar.toLocaleString('id-ID');
-  document.getElementById('stokTotalSisa').textContent = totalSisa.toLocaleString('id-ID');
-  document.getElementById('stokWarningCount').textContent = warningCount > 0 ? `⚠️ ${warningCount} produk stok menipis` : '✅ Semua stok aman';
-  document.getElementById('stokTotalSisa').style.color = warningCount > 0 ? '#d97706' : 'var(--green)';
-
-  body.innerHTML = data.map(r => {
-    const statusBadge = r.warning
-      ? `<span class="badge" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d">⚠️ Menipis</span>`
-      : `<span class="badge badge-lunas">✅ Aman</span>`;
-    const sisaColor = r.warning ? 'color:#d97706;font-weight:800' : 'font-weight:700';
-    return `<tr>
-      <td><b>${r.produk}</b></td>
-      <td style="text-align:center">${(r.stok_masuk||0).toLocaleString('id-ID')}</td>
-      <td style="text-align:center">${(r.keluar||0).toLocaleString('id-ID')}</td>
-      <td style="text-align:center;${sisaColor}">${(r.sisa||0).toLocaleString('id-ID')}</td>
-      <td style="text-align:center">${statusBadge}</td>
-    </tr>`;
-  }).join('');
-}
-
-// ========== INIT ==========
-function renderAll() {
-  renderStats();
-  renderCharts();
-  applyFilters();
-  renderOverdue();
-  renderLive();
-  renderPayTable();
-  renderSellerTable();
-  loadReturnData(); // update return setiap kali ada perubahan data
-}
-
-async function initDashboard() {
-  document.getElementById('loadingOverlay').style.display = 'flex';
-  try {
-    const [tahunList, sellers] = await Promise.all([loadTahun(), loadSellers()]);
-
-    const ySel = document.getElementById('yearSel');
-    ySel.innerHTML = tahunList.map(t => `<option value="${t}" ${t===currentYear?'selected':''}>${t}</option>`).join('');
-
-    renderSellerDropdowns(sellers);
-
-    allResi = await loadResi({ tahun: currentYear });
-    stats = await loadStats({ tahun: currentYear });
-
-    renderAll();
-  } catch(e) {
-    showToast('Gagal memuat data', 'error');
-  } finally {
-    document.getElementById('loadingOverlay').style.display = 'none';
-    document.getElementById('lastUpdateText').textContent = 'Update ' + new Date().toLocaleTimeString('id-ID');
-  }
-}
-
-async function onYearChange(year) {
-  currentYear = year;
-  document.getElementById('loadingOverlay').style.display = 'flex';
-  try {
-    allResi = await loadResi({ tahun: currentYear });
-    stats = await loadStats({ tahun: currentYear });
-    renderAll();
-  } catch(e) { showToast('Gagal ganti tahun','error'); }
-  finally { document.getElementById('loadingOverlay').style.display = 'none'; }
-}
-
-function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-// Dark mode dummy
-function initDarkMode() {}
-
-// ========== START ==========
-initDarkMode();
 initDashboard();
 setInterval(silentRefresh, 5000);
 </script>
