@@ -1,423 +1,512 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KEMOENIK SCAN</title>
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: sans-serif; background: #f0f4f0; padding: 16px; }
-        .header { background: #16a34a; color: white; padding: 16px; border-radius: 16px; margin-bottom: 16px; }
-        .mode { display: flex; gap: 8px; margin-bottom: 16px; }
-        .mode button { flex: 1; padding: 12px; border: none; border-radius: 30px; font-weight: bold; background: white; border: 2px solid #16a34a; color: #16a34a; }
-        .mode button.active { background: #16a34a; color: white; }
-        .card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .resi-box { background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
-        .resi-box.empty { background: #f9fafb; border-color: #e5e7eb; }
-        .resi-icon { font-size: 24px; }
-        .resi-label { font-size: 11px; color: #9ca3af; }
-        .resi-number { font-weight: bold; font-size: 16px; word-break: break-all; }
-        select, input { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; font-size: 16px; }
-        .harga-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .harga-opt { border: 2px solid #e5e7eb; border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; }
-        .harga-opt.active { border-color: #16a34a; background: #f0fdf4; }
-        .qty-control { display: flex; gap: 8px; align-items: center; }
-        .qty-control button { width: 48px; height: 48px; border-radius: 12px; border: 2px solid #e5e7eb; background: white; font-size: 24px; }
-        .qty-control input { flex: 1; text-align: center; margin-bottom: 0; }
-        .total { background: linear-gradient(135deg, #15803d, #16a34a); color: white; border-radius: 16px; padding: 16px; margin-bottom: 16px; display: flex; justify-content: space-between; }
-        .total-value { font-size: 32px; font-weight: bold; }
-        .btn-primary { width: 100%; padding: 16px; background: #16a34a; color: white; border: none; border-radius: 30px; font-weight: bold; font-size: 18px; margin-bottom: 8px; }
-        .btn-secondary { width: 100%; padding: 16px; background: white; border: 2px solid #e5e7eb; border-radius: 30px; font-weight: bold; }
-        #reader { width: 100%; min-height: 300px; background: black; border-radius: 16px; overflow: hidden; margin-bottom: 16px; display: none; }
-        .history-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid #eee; }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>SCAN RESI — KEMOENIK</title>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<style>
+/* ====== CSS ANDA TETAP SAMA ====== */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f4f0;min-height:100vh;}
+.header{background:linear-gradient(135deg,#15803d,#16a34a);padding:16px 18px 48px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07);}
+.header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.05);}
+.header-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
+.header-brand{color:#fff;font-size:18px;font-weight:800;letter-spacing:.5px;}
+.header-brand span{color:#bbf7d0;}
+.header-sub{color:rgba(255,255,255,.7);font-size:11px;margin-top:6px;position:relative;z-index:1;}
+.status-chip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border-radius:99px;padding:4px 10px;font-size:11px;color:#fff;font-weight:600;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#bbf7d0;}
+.status-dot.scanning{background:#fbbf24;animation:blink .8s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.content{margin-top:-32px;padding:0 14px 32px;position:relative;z-index:1;}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
+.scanner-card{background:#fff;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
+#reader{width:100%;}
+#reader video{border-radius:0 !important;}
+.resi-result{display:flex;align-items:center;gap:10px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:12px 14px;margin-bottom:12px;}
+.resi-result.empty{background:#f9fafb;border-color:#e5e7eb;}
+.resi-result.duplikat{background:#fef2f2;border-color:#fecaca;}
+.resi-icon{font-size:20px;flex-shrink:0;}
+.resi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;}
+.resi-no{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#111827;}
+.form-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:5px;display:block;}
+select,input[type=number]{width:100%;padding:11px 13px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;background:#f9fafb;color:#111827;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none;margin-bottom:10px;}
+select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-shadow:0 0 0 3px rgba(22,163,74,.1);}
+.harga-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.harga-opt{border:1.5px solid #e5e7eb;border-radius:10px;padding:11px 12px;cursor:pointer;text-align:center;transition:all .15s;background:#f9fafb;}
+.harga-opt.active{border-color:#16a34a;background:#f0fdf4;}
+.harga-opt .ho-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:3px;}
+.harga-opt .ho-val{font-size:16px;font-weight:800;color:#111827;}
+.harga-opt.active .ho-val{color:#16a34a;}
+.total-card{background:linear-gradient(135deg,#15803d,#16a34a);border-radius:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.total-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.7);}
+.total-val{font-size:24px;font-weight:800;color:#fff;}
+.total-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
+.btn-scan{width:100%;padding:15px;background:linear-gradient(135deg,#15803d,#16a34a);color:#fff;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(22,163,74,.3);transition:all .2s;margin-bottom:10px;}
+.btn-scan:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.4);}
+.btn-scan:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-stop{background:linear-gradient(135deg,#b91c1c,#dc2626);}
+.btn-reset{width:100%;padding:11px;background:#f9fafb;color:#6b7280;border:1.5px solid #e5e7eb;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;}
+.btn-reset:hover{border-color:#16a34a;color:#16a34a;}
+.history-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f3f4f6;}
+.history-item:first-of-type{border-top:none;}
+.h-icon{width:34px;height:34px;background:#f0fdf4;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.h-info{flex:1;min-width:0;}
+.h-resi{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.h-meta{font-size:11px;color:#9ca3af;margin-top:1px;}
+.h-amount{font-size:13px;font-weight:700;color:#16a34a;flex-shrink:0;}
+.h-dup{color:#ef4444;}
+.notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid #e5e7eb;border-left:4px solid #16a34a;border-radius:10px;padding:12px 16px;box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;z-index:9999;min-width:260px;max-width:90vw;animation:slideDown .3s ease;white-space:nowrap;}
+.notif.error{border-left-color:#ef4444;}
+.notif.warn{border-left-color:#f59e0b;}
+@keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
+@keyframes slideUp{from{opacity:1;}to{opacity:0;transform:translateX(-50%) translateY(-10px);}}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.section-title{font-size:14px;font-weight:700;color:#111827;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:#16a34a;border-radius:2px;}
+</style>
 </head>
 <body>
 
 <div class="header">
-    <h2>KEMOENIK</h2>
-    <p>Scanner Resi</p>
-</div>
-
-<div class="mode">
-    <button id="btnNormal" class="active" onclick="setMode('normal')">📦 SCAN RESI</button>
-    <button id="btnReturn" onclick="setMode('return')">🔄 SCAN RETURN</button>
-</div>
-
-<!-- Area scanner -->
-<div id="reader"></div>
-
-<!-- Hasil scan -->
-<div class="resi-box empty" id="resiBox">
-    <span class="resi-icon" id="resiIcon">📷</span>
+  <div class="header-top">
     <div>
-        <div class="resi-label">NOMOR RESI</div>
-        <div class="resi-number" id="resiNumber">Arahkan kamera...</div>
+      <div class="header-brand">KEMO<span>ENIK</span></div>
     </div>
+    <div class="status-chip" id="statusChip">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Memuat data...</span>
+    </div>
+  </div>
+  <div class="header-sub">Scanner Resi Otomatis</div>
 </div>
 
-<!-- Form Normal -->
-<div id="formNormal">
-    <div class="card">
-        <select id="sellerSelect">
-            <option>Memuat seller...</option>
-        </select>
-        <select id="produkSelect">
-            <option>Memuat produk...</option>
-        </select>
-        <div class="harga-row">
-            <div class="harga-opt active" id="hargaSeller" onclick="pilihHarga('seller')">
-                <div>HARGA SELLER</div>
-                <div id="sellerPrice">—</div>
-            </div>
-            <div class="harga-opt" id="hargaAdmin" onclick="pilihHarga('admin')">
-                <div>HARGA ADMIN</div>
-                <div id="adminPrice">—</div>
-            </div>
-        </div>
-        <div class="qty-control">
-            <button onclick="ubahQty(-1)">−</button>
-            <input type="number" id="qtyInput" value="1" min="1">
-            <button onclick="ubahQty(1)">+</button>
-        </div>
-    </div>
+<!-- MODE TOGGLE -->
+<div style="display:flex;gap:0;margin:12px 16px 0;border-radius:12px;overflow:hidden;border:2px solid #16a34a">
+  <button id="btnModeNormal" onclick="setMode('normal')" style="flex:1;padding:10px;border:none;background:#16a34a;color:#fff;font-weight:700;font-size:13px;cursor:pointer">📦 SCAN RESI</button>
+  <button id="btnModeReturn" onclick="setMode('return')" style="flex:1;padding:10px;border:none;background:#fff;color:#16a34a;font-weight:700;font-size:13px;cursor:pointer">🔄 SCAN RETURN</button>
 </div>
 
-<!-- Form Return -->
-<div id="formReturn" style="display:none;">
-    <div class="card">
-        <select id="alasanSelect">
-            <option>Tidak ada penerima</option>
-            <option>Alamat tidak ditemukan</option>
-            <option>Ditolak penerima</option>
-            <option>Rusak</option>
-            <option>Lainnya</option>
-        </select>
-        <div class="resi-box empty" id="returnBox">
-            <span class="resi-icon">🔄</span>
-            <div>
-                <div class="resi-label">RESI RETURN</div>
-                <div class="resi-number" id="returnNumber">Scan resi...</div>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="content">
 
-<!-- Total -->
-<div class="total">
+  <!-- RESI RESULT -->
+  <div class="resi-result empty" id="resiResult">
+    <span class="resi-icon">📷</span>
     <div>
-        <div>TOTAL SESI</div>
-        <div class="total-value" id="totalValue">Rp 0</div>
-        <div id="totalSub">0 resi</div>
+      <div class="resi-label">Nomor Resi</div>
+      <div class="resi-no" id="resiDisplay">Arahkan kamera ke barcode…</div>
     </div>
-    <div style="font-size:40px;">📦</div>
-</div>
+  </div>
 
-<!-- Tombol -->
-<button class="btn-primary" id="startBtn" onclick="startScan()">📷 MULAI SCAN</button>
-<button class="btn-primary" id="stopBtn" style="display:none; background:#dc2626;" onclick="stopScan()">⏹ STOP</button>
-<button class="btn-secondary" onclick="resetSesi()">🔄 RESET</button>
+  <!-- SCANNER -->
+  <div class="scanner-card" id="scannerCard" style="display:none">
+    <div id="reader"></div>
+  </div>
 
-<!-- History -->
-<div class="card" id="historyCard" style="display:none; margin-top:16px;">
-    <h4>Riwayat</h4>
+  <!-- FORM -->
+  <div class="card">
+    <div class="section-title">Detail Transaksi</div>
+
+    <label class="form-label">Seller</label>
+    <select id="selSeller">
+      <option value="">Memuat seller…</option>
+    </select>
+
+    <label class="form-label">Produk</label>
+    <select id="selProduk">
+      <option value="">Memuat produk…</option>
+    </select>
+
+    <label class="form-label">Pilih Harga</label>
+    <div class="harga-row" id="hargaRow">
+      <div class="harga-opt active" id="optSeller" onclick="pilihHarga('seller')">
+        <div class="ho-label">Harga Seller</div>
+        <div class="ho-val" id="valSeller">—</div>
+      </div>
+      <div class="harga-opt" id="optAdmin" onclick="pilihHarga('admin')">
+        <div class="ho-label">Harga Admin</div>
+        <div class="ho-val" id="valAdmin">—</div>
+      </div>
+    </div>
+
+    <label class="form-label">Qty per Resi</label>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button onclick="ubahQty(-1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">−</button>
+      <input type="number" id="inputQty" value="1" min="1" max="100" style="flex:1;text-align:center;font-size:20px;font-weight:800;color:#111827"/>
+      <button onclick="ubahQty(1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">+</button>
+    </div>
+  </div>
+
+  <!-- FORM RETURN -->
+  <div class="card" id="formReturn" style="display:none">
+    <div class="section-title" style="color:#d97706">🔄 Scan Return</div>
+    <p style="font-size:12px;color:#6b7280;margin-bottom:12px">Scan nomor resi yang dikembalikan. Resi harus berstatus <b>LUNAS</b>.</p>
+
+    <label class="form-label">Alasan Return</label>
+    <select id="selAlasan" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #d1d5db;font-size:14px;margin-bottom:12px">
+      <option value="Tidak ada penerima">Tidak ada penerima</option>
+      <option value="Alamat tidak ditemukan">Alamat tidak ditemukan</option>
+      <option value="Ditolak penerima">Ditolak penerima</option>
+      <option value="Rusak di pengiriman">Rusak di pengiriman</option>
+      <option value="Lainnya">Lainnya</option>
+    </select>
+
+    <div class="resi-result empty" id="returnResult" style="margin-bottom:12px">
+      <span class="resi-icon">🔄</span>
+      <div>
+        <div class="resi-label">Resi Return</div>
+        <div class="resi-no" id="returnDisplay">Scan resi yang dikembalikan…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL -->
+  <div class="total-card">
+    <div>
+      <div class="total-label">Total Sesi Ini</div>
+      <div class="total-val" id="totalVal">Rp 0</div>
+      <div class="total-sub" id="totalSub">0 resi berhasil</div>
+    </div>
+    <div style="font-size:36px">📦</div>
+  </div>
+
+  <!-- BUTTONS -->
+  <button class="btn-scan" id="btnScan" onclick="startScan()">
+    📷 Mulai Scan
+  </button>
+  <button class="btn-scan btn-stop" id="btnStop" style="display:none" onclick="stopScan()">
+    ⏹ Stop Scan
+  </button>
+  <button class="btn-reset" onclick="resetSesi()">🔄 Reset Sesi</button>
+
+  <!-- HISTORY -->
+  <div class="card" style="margin-top:12px" id="historyCard" style="display:none">
+    <div class="section-title">Riwayat Sesi</div>
     <div id="historyList"></div>
+  </div>
+
 </div>
 
 <script>
-// ===== CONFIG =====
+/* ═══ CONFIG ═══ */
 const API = "https://script.google.com/macros/s/AKfycbxBbG9GiW_fNu3hood8AXwMoMUXyl8iAc9VeaOIWqfO-3E1J4ra13wtsuZWRIddwSJZ/exec";
 
-// ===== STATE =====
-let lastBarcode = "";
-let scanMode = "normal";
-let html5QrCode = null;
-let isScanning = false;
-let totalSesi = 0;
-let countSesi = 0;
-let sejarahSesi = [];
-let produkData = [];
-let hargaMode = "seller";
+/* ═══ STATE ═══ */
+let lastBarcode  = "";
+let scanMode     = "normal"; // normal | return
+let scannerObj   = null;
+let isScanning   = false;
+let totalSesi    = 0;
+let countSesi    = 0;
+let sejarahSesi  = [];
+let produkData   = [];
+let hargaMode    = "seller"; // seller | admin
+let isSaving     = false;
 
-// ===== INIT =====
-window.onload = function() {
-    loadSeller();
-    loadProduk();
-    setMode('normal');
-};
+/* ═══ INIT ═══ */
+window.addEventListener("load", () => {
+  setStatus("Memuat data...", true);
+  Promise.all([loadSeller(), loadProduk()])
+    .then(() => setStatus("Siap", false))
+    .catch(() => setStatus("Gagal memuat", false));
+});
 
-// ===== LOAD SELLER =====
+/* ═══ LOAD SELLER ═══ */
 async function loadSeller() {
-    try {
-        const res = await fetch(API + "?action=seller");
-        const data = await res.json();
-        let html = '<option value="">Pilih Seller</option>';
-        data.forEach(s => html += `<option value="${s.nama}">${s.nama}</option>`);
-        document.getElementById('sellerSelect').innerHTML = html;
-    } catch (e) {
-        alert("Gagal load seller");
-    }
+  try {
+    const res  = await fetch(API + "?action=seller");
+    const data = await res.json();
+    const sel  = document.getElementById("selSeller");
+    sel.innerHTML = '<option value="">— Pilih Seller —</option>' +
+      data.map(s => `<option value="${s.nama}">${s.nama}</option>`).join("");
+  } catch(e) {
+    showNotif("Gagal load seller", "error");
+    throw e;
+  }
 }
 
-// ===== LOAD PRODUK =====
+/* ═══ LOAD PRODUK ═══ */
 async function loadProduk() {
-    try {
-        const res = await fetch(API + "?action=produk");
-        produkData = await res.json();
-        let html = '<option value="">Pilih Produk</option>';
-        produkData.forEach(p => html += `<option value="${p.nama}">${p.nama}</option>`);
-        document.getElementById('produkSelect').innerHTML = html;
-        document.getElementById('produkSelect').addEventListener('change', updateHarga);
-        updateHarga();
-    } catch (e) {
-        alert("Gagal load produk");
-    }
+  try {
+    const res  = await fetch(API + "?action=produk");
+    produkData = await res.json();
+    const sel  = document.getElementById("selProduk");
+    sel.innerHTML = '<option value="">— Pilih Produk —</option>' +
+      produkData.map(p => `<option value="${p.nama}">${p.nama}</option>`).join("");
+    sel.addEventListener("change", updateHarga);
+    updateHarga();
+  } catch(e) {
+    showNotif("Gagal load produk", "error");
+    throw e;
+  }
 }
 
+/* ═══ UPDATE HARGA ═══ */
 function updateHarga() {
-    const nama = document.getElementById('produkSelect').value;
-    const produk = produkData.find(p => p.nama === nama);
-    if (produk) {
-        document.getElementById('sellerPrice').innerText = formatRp(produk.harga_seller);
-        document.getElementById('adminPrice').innerText = formatRp(produk.harga_admin);
-    } else {
-        document.getElementById('sellerPrice').innerText = '—';
-        document.getElementById('adminPrice').innerText = '—';
-    }
+  const nama   = document.getElementById("selProduk").value;
+  const produk = produkData.find(p => p.nama === nama);
+  if (produk) {
+    document.getElementById("valSeller").textContent = fRp(produk.harga_seller);
+    document.getElementById("valAdmin").textContent  = fRp(produk.harga_admin);
+  } else {
+    document.getElementById("valSeller").textContent = "—";
+    document.getElementById("valAdmin").textContent  = "—";
+  }
 }
 
-// ===== SET MODE =====
 function setMode(mode) {
-    scanMode = mode;
-    document.getElementById('btnNormal').className = mode === 'normal' ? 'active' : '';
-    document.getElementById('btnReturn').className = mode === 'return' ? 'active' : '';
-    document.getElementById('formNormal').style.display = mode === 'normal' ? 'block' : 'none';
-    document.getElementById('formReturn').style.display = mode === 'return' ? 'block' : 'none';
-    
-    // Reset tampilan resi
-    if (mode === 'normal') {
-        document.getElementById('resiNumber').innerText = "Arahkan kamera...";
-        document.getElementById('resiBox').className = "resi-box empty";
-        document.getElementById('resiIcon').innerText = "📷";
+  scanMode = mode;
+  const isReturn = mode === "return";
+  document.getElementById("btnModeNormal").style.background = isReturn ? "#fff" : "#16a34a";
+  document.getElementById("btnModeNormal").style.color      = isReturn ? "#16a34a" : "#fff";
+  document.getElementById("btnModeReturn").style.background = isReturn ? "#16a34a" : "#fff";
+  document.getElementById("btnModeReturn").style.color      = isReturn ? "#fff" : "#16a34a";
+  document.getElementById("formReturn").style.display       = isReturn ? "block" : "none";
+  document.querySelector(".card").style.display             = isReturn ? "none" : "block";
+  // Reset
+  lastBarcode = "";
+  document.getElementById("resiDisplay").textContent   = "Arahkan kamera ke barcode…";
+  document.getElementById("returnDisplay").textContent = "Scan resi yang dikembalikan…";
+  document.getElementById("resiResult").className      = "resi-result empty";
+  document.getElementById("returnResult").className    = "resi-result empty";
+}
+
+/* ===== PERBAIKAN: HAPUS addRiwayat ===== */
+async function handleReturn(resiNo) {
+  const alasan = document.getElementById("selAlasan").value;
+  setStatus("Memproses return…", true);
+  try {
+    const url = `${API}?action=scanReturn&resi=${encodeURIComponent(resiNo)}&alasan=${encodeURIComponent(alasan)}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+    if (data.status === "ok") {
+      document.getElementById("returnDisplay").textContent = resiNo;
+      document.getElementById("returnResult").className   = "resi-result success";
+      setStatus("Return berhasil!", false);
+      bunyiBeepSukses();
+      showNotif(`✅ Return: ${data.produk} x${data.qty} — ${data.seller}`, "success");
+      // (baris addRiwayat TIDAK ADA)
+      lastBarcode = resiNo;
     } else {
-        document.getElementById('returnNumber').innerText = "Scan resi...";
-        document.getElementById('returnBox').className = "resi-box empty";
+      document.getElementById("returnResult").className = "resi-result error";
+      setStatus("Gagal: " + data.pesan, false);
+      bunyiBeepError();
+      showNotif("❌ " + data.pesan, "error");
     }
-    lastBarcode = "";
-    if (isScanning) stopScan();
+  } catch(e) {
+    setStatus("Error koneksi", false);
+    bunyiBeepError();
+    showNotif("❌ Gagal koneksi", "error");
+  }
 }
 
-// ===== START SCAN =====
-async function startScan() {
-    // Validasi
-    if (scanMode === 'normal') {
-        if (!document.getElementById('sellerSelect').value) { alert("Pilih seller"); return; }
-        if (!document.getElementById('produkSelect').value) { alert("Pilih produk"); return; }
-    }
-
-    // Sembunyikan tombol start, tampilkan stop
-    document.getElementById('startBtn').style.display = 'none';
-    document.getElementById('stopBtn').style.display = 'block';
-    document.getElementById('reader').style.display = 'block';
-
-    // Inisialisasi scanner
-    html5QrCode = new Html5Qrcode("reader");
-    try {
-        await html5QrCode.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: 250 },
-            onScanSuccess,
-            onScanError
-        );
-        isScanning = true;
-    } catch (err) {
-        alert("Gagal akses kamera: " + err);
-        stopScan();
-    }
-}
-
-// ===== STOP SCAN =====
-function stopScan() {
-    if (html5QrCode && isScanning) {
-        html5QrCode.stop().then(() => {
-            html5QrCode = null;
-        }).catch(() => {});
-    }
-    document.getElementById('reader').style.display = 'none';
-    document.getElementById('startBtn').style.display = 'block';
-    document.getElementById('stopBtn').style.display = 'none';
-    isScanning = false;
-}
-
-// ===== ON SCAN SUCCESS =====
-async function onScanSuccess(decodedText) {
-    if (decodedText === lastBarcode) return;
-    lastBarcode = decodedText;
-
-    if (scanMode === 'return') {
-        // Mode return
-        const alasan = document.getElementById('alasanSelect').value;
-        document.getElementById('returnNumber').innerText = decodedText;
-        document.getElementById('returnBox').className = "resi-box";
-        
-        try {
-            const res = await fetch(`${API}?action=scanReturn&resi=${encodeURIComponent(decodedText)}&alasan=${encodeURIComponent(alasan)}`);
-            const data = await res.json();
-            if (data.status === 'ok') {
-                alert(`Return sukses: ${data.produk} x${data.qty}`);
-                beepSukses();
-            } else {
-                alert("Gagal: " + data.pesan);
-                document.getElementById('returnBox').className = "resi-box empty";
-                beepError();
-            }
-        } catch (e) {
-            alert("Koneksi error");
-            document.getElementById('returnBox').className = "resi-box empty";
-        }
-        setTimeout(() => { lastBarcode = ""; }, 2000);
-        return;
-    }
-
-    // Mode normal
-    document.getElementById('resiNumber').innerText = decodedText;
-    document.getElementById('resiBox').className = "resi-box";
-    document.getElementById('resiIcon').innerText = "✅";
-
-    const seller = document.getElementById('sellerSelect').value;
-    const produk = document.getElementById('produkSelect').value;
-    const harga = getHargaTerpilih();
-    const qty = parseInt(document.getElementById('qtyInput').value) || 1;
-
-    try {
-        const res = await fetch(`${API}?action=scan&resi=${encodeURIComponent(decodedText)}&seller=${encodeURIComponent(seller)}&produk=${encodeURIComponent(produk)}&harga=${harga}&qty=${qty}`);
-        const data = await res.json();
-        if (data.status === 'ok') {
-            totalSesi += harga;
-            countSesi++;
-            sejarahSesi.unshift({ resi: decodedText, produk, harga, status: 'ok' });
-            updateTotal();
-            renderHistory();
-            beepSukses();
-        } else if (data.status === 'duplikat') {
-            alert("Resi sudah ada");
-            document.getElementById('resiBox').className = "resi-box empty";
-            document.getElementById('resiIcon').innerText = "⚠️";
-            sejarahSesi.unshift({ resi: decodedText, produk, harga, status: 'duplikat' });
-            renderHistory();
-            beepError();
-        } else {
-            alert("Gagal: " + data.pesan);
-            document.getElementById('resiBox').className = "resi-box empty";
-            document.getElementById('resiIcon').innerText = "📷";
-            beepError();
-        }
-    } catch (e) {
-        alert("Koneksi error");
-        document.getElementById('resiBox').className = "resi-box empty";
-        document.getElementById('resiIcon').innerText = "📷";
-    }
-    setTimeout(() => { lastBarcode = ""; }, 2000);
-}
-
-function onScanError(err) {
-    // ignore
-}
-
-// ===== UI =====
 function ubahQty(delta) {
-    const inp = document.getElementById('qtyInput');
-    let v = parseInt(inp.value) || 1;
-    v = Math.min(100, Math.max(1, v + delta));
-    inp.value = v;
+  const el  = document.getElementById('inputQty');
+  let val   = parseInt(el.value) || 1;
+  val       = Math.min(100, Math.max(1, val + delta));
+  el.value  = val;
 }
 
 function pilihHarga(mode) {
-    hargaMode = mode;
-    document.getElementById('hargaSeller').classList.toggle('active', mode === 'seller');
-    document.getElementById('hargaAdmin').classList.toggle('active', mode === 'admin');
+  hargaMode = mode;
+  document.getElementById("optSeller").classList.toggle("active", mode === "seller");
+  document.getElementById("optAdmin").classList.toggle("active",  mode === "admin");
 }
 
 function getHargaTerpilih() {
-    const nama = document.getElementById('produkSelect').value;
-    const produk = produkData.find(p => p.nama === nama);
-    if (!produk) return 0;
-    return hargaMode === 'seller' ? produk.harga_seller : produk.harga_admin;
+  const nama   = document.getElementById("selProduk").value;
+  const produk = produkData.find(p => p.nama === nama);
+  if (!produk) return 0;
+  return hargaMode === "seller" ? produk.harga_seller : produk.harga_admin;
+}
+
+/* ═══ SCANNER ═══ */
+function startScan() {
+  const seller = document.getElementById("selSeller").value;
+  const produk = document.getElementById("selProduk").value;
+  if (!seller) { showNotif("Pilih seller dulu!", "warn"); return; }
+  if (!produk) { showNotif("Pilih produk dulu!", "warn"); return; }
+  if (getHargaTerpilih() === 0) { showNotif("Harga produk 0, cek data produk", "warn"); return; }
+
+  document.getElementById("scannerCard").style.display = "block";
+  document.getElementById("btnScan").style.display  = "none";
+  document.getElementById("btnStop").style.display  = "flex";
+  setStatus("Scanning…", true);
+
+  // Pastikan tidak ada scanner lama
+  if (scannerObj) {
+    scannerObj.clear().catch(() => {});
+  }
+  scannerObj = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+  scannerObj.render(onScanSuccess, onScanError);
+  isScanning = true;
+}
+
+function stopScan() {
+  if (scannerObj) {
+    scannerObj.clear().catch(() => {});
+    scannerObj = null;
+  }
+  document.getElementById("scannerCard").style.display = "none";
+  document.getElementById("btnScan").style.display  = "flex";
+  document.getElementById("btnStop").style.display  = "none";
+  setStatus("Siap", false);
+  isScanning = false;
+}
+
+function onScanError() { /* diam */ }
+
+async function onScanSuccess(decodedText) {
+  if (isSaving) return;
+  if (decodedText === lastBarcode) return;
+
+  // Mode return
+  if (scanMode === "return") {
+    lastBarcode = decodedText;
+    await handleReturn(decodedText);
+    return;
+  }
+
+  lastBarcode = decodedText;
+  isSaving    = true;
+
+  bunyiBeep();
+  setResiDisplay(decodedText, "");
+
+  const seller = document.getElementById("selSeller").value;
+  const produk = document.getElementById("selProduk").value;
+  const harga  = getHargaTerpilih();
+
+  try {
+    const qty  = Math.min(100, Math.max(1, parseInt(document.getElementById('inputQty')?.value) || 1));
+    const url = `${API}?action=scan&resi=${encodeURIComponent(decodedText)}&seller=${encodeURIComponent(seller)}&produk=${encodeURIComponent(produk)}&harga=${harga}&qty=${qty}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      totalSesi += harga;
+      countSesi++;
+      sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "ok" });
+      updateTotal();
+      renderHistory();
+      setResiDisplay(decodedText, "ok");
+      showNotif("✅ " + decodedText + " tersimpan", "success");
+      bunyiBeepSukses();
+      setTimeout(() => { lastBarcode = ""; }, 2000);
+    } else if (data.status === "duplikat") {
+      sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "duplikat" });
+      renderHistory();
+      setResiDisplay(decodedText, "duplikat");
+      showNotif("⚠️ Resi sudah ada!", "warn");
+      bunyiBeepError();
+      setTimeout(() => { lastBarcode = ""; }, 2000);
+    } else {
+      showNotif("❌ " + (data.pesan || "Gagal simpan"), "error");
+      bunyiBeepError();
+      lastBarcode = "";
+    }
+  } catch(e) {
+    showNotif("❌ Gagal koneksi", "error");
+    lastBarcode = "";
+  } finally {
+    isSaving = false;
+  }
+}
+
+/* ═══ UI ═══ */
+function setStatus(text, scanning) {
+  document.getElementById("statusText").textContent = text;
+  document.getElementById("statusDot").className = "status-dot" + (scanning ? " scanning" : "");
+}
+
+function setResiDisplay(resi, status) {
+  const el   = document.getElementById("resiResult");
+  const disp = document.getElementById("resiDisplay");
+  disp.textContent = resi;
+  el.className = "resi-result" + (status === "duplikat" ? " duplikat" : status === "ok" ? "" : " empty");
+  document.getElementById("resiDisplay").parentElement.previousElementSibling.textContent =
+    status === "ok" ? "✅" : status === "duplikat" ? "⚠️" : "📷";
 }
 
 function updateTotal() {
-    document.getElementById('totalValue').innerText = formatRp(totalSesi);
-    document.getElementById('totalSub').innerText = countSesi + " resi";
+  document.getElementById("totalVal").textContent = fRp(totalSesi);
+  document.getElementById("totalSub").textContent = countSesi + " resi berhasil";
 }
 
 function renderHistory() {
-    const card = document.getElementById('historyCard');
-    card.style.display = 'block';
-    let html = '';
-    sejarahSesi.slice(0, 20).forEach(h => {
-        html += `<div class="history-item">
-            <div>${h.status === 'duplikat' ? '⚠️' : '✅'}</div>
-            <div style="flex:1"><b>${h.resi}</b><br><small>${h.produk}</small></div>
-            <div>${h.status === 'duplikat' ? 'DUPLIKAT' : formatRp(h.harga)}</div>
-        </div>`;
-    });
-    document.getElementById('historyList').innerHTML = html;
+  const card = document.getElementById("historyCard");
+  card.style.display = "block";
+  const list = document.getElementById("historyList");
+  list.innerHTML = sejarahSesi.slice(0, 20).map(h => `
+    <div class="history-item">
+      <div class="h-icon">${h.status === "duplikat" ? "⚠️" : "✅"}</div>
+      <div class="h-info">
+        <div class="h-resi">${h.resi}</div>
+        <div class="h-meta">${h.produk}</div>
+      </div>
+      <div class="h-amount ${h.status === "duplikat" ? "h-dup" : ""}">
+        ${h.status === "duplikat" ? "DUPLIKAT" : fRp(h.harga)}
+      </div>
+    </div>`).join("");
 }
 
 function resetSesi() {
-    if (isScanning) stopScan();
-    totalSesi = 0;
-    countSesi = 0;
-    sejarahSesi = [];
-    updateTotal();
-    document.getElementById('historyCard').style.display = 'none';
-    document.getElementById('historyList').innerHTML = '';
-    document.getElementById('resiNumber').innerText = "Arahkan kamera...";
-    document.getElementById('resiBox').className = "resi-box empty";
-    document.getElementById('resiIcon').innerText = "📷";
+  if (isScanning) stopScan();
+  totalSesi   = 0;
+  countSesi   = 0;
+  sejarahSesi = [];
+  lastBarcode = "";
+  updateTotal();
+  document.getElementById("resiResult").className = "resi-result empty";
+  document.getElementById("resiDisplay").textContent = "Arahkan kamera ke barcode…";
+  document.getElementById("historyCard").style.display = "none";
+  document.getElementById("historyList").innerHTML = "";
+  setStatus("Siap", false);
 }
 
-// ===== BEEP =====
-function beepSukses() {
-    try {
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 900;
-        gain.gain.value = 0.2;
-        osc.start();
-        setTimeout(() => { osc.stop(); ctx.close(); }, 80);
-        setTimeout(() => {
-            const osc2 = ctx.createOscillator();
-            osc2.connect(gain);
-            osc2.frequency.value = 1200;
-            osc2.start();
-            setTimeout(() => { osc2.stop(); }, 100);
-        }, 90);
-    } catch (e) {}
+/* ═══ NOTIF ═══ */
+function showNotif(msg, type = "success") {
+  const existing = document.querySelector(".notif");
+  if (existing) existing.remove();
+  const el = document.createElement("div");
+  el.className = `notif ${type !== "success" ? type : ""}`;
+  el.innerHTML = `<span>${msg}</span>`;
+  document.body.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = "slideUp .3s ease forwards";
+    setTimeout(() => el.remove(), 300);
+  }, 2500);
 }
 
-function beepError() {
-    try {
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 300;
-        gain.gain.value = 0.2;
-        osc.start();
-        setTimeout(() => { osc.stop(); ctx.close(); }, 200);
-    } catch (e) {}
+/* ═══ BUNYI ═══ */
+function bunyiBeep(freq = 900, dur = 120, type = "square") {
+  try {
+    const ctx  = new AudioContext();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    setTimeout(() => { osc.stop(); ctx.close(); }, dur);
+  } catch(e) {}
+}
+function bunyiBeepSukses() {
+  bunyiBeep(900, 80, "sine");
+  setTimeout(() => bunyiBeep(1200, 100, "sine"), 90);
+}
+function bunyiBeepError() {
+  bunyiBeep(300, 200, "sawtooth");
 }
 
-function formatRp(n) {
-    return "Rp " + (n || 0).toLocaleString('id-ID');
-}
+/* ═══ FORMAT ═══ */
+function fRp(n) { return "Rp " + Number(n || 0).toLocaleString("id-ID"); }
 </script>
-
 </body>
 </html>
