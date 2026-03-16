@@ -156,7 +156,7 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
     </div>
     <div class="status-chip" id="statusChip">
       <div class="status-dot" id="statusDot"></div>
-      <span id="statusText">Siap</span>
+      <span id="statusText">Memuat data...</span>
     </div>
   </div>
   <div class="header-sub">Scanner Resi Otomatis</div>
@@ -221,7 +221,7 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
   <!-- FORM RETURN -->
   <div class="card" id="formReturn" style="display:none">
     <div class="section-title" style="color:#d97706">🔄 Scan Return</div>
-    <p style="font-size:12px;color:#6b7280;margin-bottom:12px">Scan nomor resi yang dikembalikan. Resi harus berstatus <b>LUNAS</b>.</p>
+    <p style="font-size:12px;color:#6b7280;margin-bottom:12px">Scan nomor resi yang dikembalikan. Resi bisa dalam status apapun.</p>
 
     <label class="form-label">Alasan Return</label>
     <select id="selAlasan" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #d1d5db;font-size:14px;margin-bottom:12px">
@@ -270,7 +270,7 @@ select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-s
 
 <script>
 /* ═══ CONFIG ═══ */
-const API = "https://script.google.com/macros/s/AKfycbxr65sftdkPXlpOGTQ-XK964Y7XeYH7pMmhVTW2IPyJc6ZpBG3V1NbUFjX8n7si4f9a/exec";
+const API = "https://script.google.com/macros/s/AKfycbzEOW0qGAptEfSon-wrWDBd48bzs0X3TFal8WvBjqrB16RrRYgyWgk72fbqZMNigyAO/exec"; // GANTI DENGAN URL DEPLOY ANDA
 
 /* ═══ STATE ═══ */
 let lastBarcode  = "";
@@ -286,8 +286,10 @@ let isSaving     = false;
 
 /* ═══ INIT ═══ */
 window.addEventListener("load", () => {
-  loadSeller();
-  loadProduk();
+  setStatus("Memuat data...", true);
+  Promise.all([loadSeller(), loadProduk()])
+    .then(() => setStatus("Siap", false))
+    .catch(() => setStatus("Gagal memuat", false));
 });
 
 /* ═══ LOAD SELLER ═══ */
@@ -300,6 +302,7 @@ async function loadSeller() {
       data.map(s => `<option value="${s.nama}">${s.nama}</option>`).join("");
   } catch(e) {
     showNotif("Gagal load seller", "error");
+    throw e;
   }
 }
 
@@ -315,6 +318,7 @@ async function loadProduk() {
     updateHarga();
   } catch(e) {
     showNotif("Gagal load produk", "error");
+    throw e;
   }
 }
 
@@ -332,22 +336,6 @@ function updateHarga() {
 }
 
 function setMode(mode) {
-  // Stop scanner dulu kalau sedang berjalan
-  if (scannerObj) {
-    scannerObj.clear().catch(() => {});
-    scannerObj = null;
-    isScanning = false;
-    document.getElementById("btnScan").style.display = "block";
-    document.getElementById("btnStop").style.display = "none";
-    document.getElementById("scannerCard").style.display = "none";
-    // Beri jeda agar DOM bersih sebelum ganti mode
-    setTimeout(() => _applyMode(mode), 300);
-    return;
-  }
-  _applyMode(mode);
-}
-
-function _applyMode(mode) {
   scanMode = mode;
   const isReturn = mode === "return";
   document.getElementById("btnModeNormal").style.background = isReturn ? "#fff" : "#16a34a";
@@ -366,7 +354,7 @@ function _applyMode(mode) {
 
 async function handleReturn(resiNo) {
   const alasan = document.getElementById("selAlasan").value;
-  setStatus("Memproses return…", "loading");
+  setStatus("Memproses return…", true);
   try {
     const url = `${API}?action=scanReturn&resi=${encodeURIComponent(resiNo)}&alasan=${encodeURIComponent(alasan)}`;
     const res  = await fetch(url);
@@ -374,21 +362,21 @@ async function handleReturn(resiNo) {
     if (data.status === "ok") {
       document.getElementById("returnDisplay").textContent = resiNo;
       document.getElementById("returnResult").className   = "resi-result success";
-      setStatus("Return berhasil!", "success");
-      beep("success");
+      setStatus("Return berhasil!", false);
+      bunyiBeepSukses();
       showNotif(`✅ Return: ${data.produk} x${data.qty} — ${data.seller}`, "success");
-      // Tambah ke riwayat
-      addRiwayat(resiNo, `RETURN — ${data.produk} x${data.qty}`, "return");
+      // (TIDAK ADA addRiwayat)
       lastBarcode = resiNo;
     } else {
       document.getElementById("returnResult").className = "resi-result error";
-      setStatus("Gagal: " + data.pesan, "error");
-      beep("error");
+      setStatus("Gagal: " + data.pesan, false);
+      bunyiBeepError();
       showNotif("❌ " + data.pesan, "error");
     }
   } catch(e) {
-    setStatus("Error koneksi", "error");
-    beep("error");
+    setStatus("Error koneksi", false);
+    bunyiBeepError();
+    showNotif("❌ Gagal koneksi", "error");
   }
 }
 
@@ -416,14 +404,22 @@ function getHargaTerpilih() {
 function startScan() {
   const seller = document.getElementById("selSeller").value;
   const produk = document.getElementById("selProduk").value;
-  if (!seller) { showNotif("Pilih seller dulu!", "warn"); return; }
-  if (!produk) { showNotif("Pilih produk dulu!", "warn"); return; }
-  if (getHargaTerpilih() === 0) { showNotif("Harga produk 0, cek data produk", "warn"); return; }
+  if (scanMode === 'normal') {
+    if (!seller) { showNotif("Pilih seller dulu!", "warn"); return; }
+    if (!produk) { showNotif("Pilih produk dulu!", "warn"); return; }
+    if (getHargaTerpilih() === 0) { showNotif("Harga produk 0, cek data produk", "warn"); return; }
+  }
 
   document.getElementById("scannerCard").style.display = "block";
   document.getElementById("btnScan").style.display  = "none";
   document.getElementById("btnStop").style.display  = "flex";
   setStatus("Scanning…", true);
+
+  // Bersihkan scanner lama jika ada
+  if (scannerObj) {
+    scannerObj.clear().catch(() => {});
+    scannerObj = null;
+  }
 
   scannerObj = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
   scannerObj.render(onScanSuccess, onScanError);
@@ -480,7 +476,6 @@ async function onScanSuccess(decodedText) {
       setResiDisplay(decodedText, "ok");
       showNotif("✅ " + decodedText + " tersimpan", "success");
       bunyiBeepSukses();
-      // Reset lastBarcode setelah 2 detik agar bisa scan resi berbeda
       setTimeout(() => { lastBarcode = ""; }, 2000);
     } else if (data.status === "duplikat") {
       sejarahSesi.unshift({ resi: decodedText, produk, harga, status: "duplikat" });
@@ -550,6 +545,7 @@ function resetSesi() {
   document.getElementById("resiDisplay").textContent = "Arahkan kamera ke barcode…";
   document.getElementById("historyCard").style.display = "none";
   document.getElementById("historyList").innerHTML = "";
+  setStatus("Siap", false);
 }
 
 /* ═══ NOTIF ═══ */
