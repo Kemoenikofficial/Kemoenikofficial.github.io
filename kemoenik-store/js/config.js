@@ -63,15 +63,15 @@ const CONFIG = {
             discount: 50, 
             flashSale: true,
             images: [
-                "images/products/calc-1.jpg",
-                "images/products/calc-2.jpg",
-                "images/products/calc-3.jpg",
-                "images/products/calc-4.jpg",
-                "images/products/calc-5.jpg"
+                "images/products/calc-1.png",
+                "images/products/calc-2.png",
+                "images/products/calc-3.png",
+                "images/products/calc-4.png",
+                "images/products/calc-5.png"
             ], 
             sold: 2547, 
             rating: 4.9, 
-            desc: `...` // isi deskripsi
+            desc: `🔥 CALFATLOSS – Laporan Diet & Kalori Personal (PDF)...`
         },
         { 
             id: 2, 
