@@ -22,34 +22,34 @@ const CONFIG = {
     ],
 
     sliders: [
-        "images/banners/banner-1.png",
-        "images/banners/banner-2.png",
-        "images/banners/banner-3.png",
-        "images/banners/banner-4.png",
-        "images/banners/banner-5.png"
+        "/kemoenik-store/images/banners/banner-1.png",
+        "/kemoenik-store/images/banners/banner-2.png",
+        "/kemoenik-store/images/banners/banner-3.png",
+        "/kemoenik-store/images/banners/banner-4.png",
+        "/kemoenik-store/images/banners/banner-5.png"
     ],
 
     testimoniSliders: [
-        "images/testimonials/1.png",
-        "images/testimonials/2.png",
-        "images/testimonials/3.png",
-        "images/testimonials/4.png",
-        "images/testimonials/5.png",
-        "images/testimonials/6.png",
-        "images/testimonials/7.png",
-        "images/testimonials/8.png",
-        "images/testimonials/9.png",
-        "images/testimonials/10.png",
-        "images/testimonials/11.png",
-        "images/testimonials/12.png",
-        "images/testimonials/13.png",
-        "images/testimonials/14.png",
-        "images/testimonials/15.png",
-        "images/testimonials/16.png",
-        "images/testimonials/17.png",
-        "images/testimonials/18.png",
-        "images/testimonials/19.png",
-        "images/testimonials/20.png"
+        "/kemoenik-store/images/testimonials/1.png",
+        "/kemoenik-store/images/testimonials/2.png",
+        "/kemoenik-store/images/testimonials/3.png",
+        "/kemoenik-store/images/testimonials/4.png",
+        "/kemoenik-store/images/testimonials/5.png",
+        "/kemoenik-store/images/testimonials/6.png",
+        "/kemoenik-store/images/testimonials/7.png",
+        "/kemoenik-store/images/testimonials/8.png",
+        "/kemoenik-store/images/testimonials/9.png",
+        "/kemoenik-store/images/testimonials/10.png",
+        "/kemoenik-store/images/testimonials/11.png",
+        "/kemoenik-store/images/testimonials/12.png",
+        "/kemoenik-store/images/testimonials/13.png",
+        "/kemoenik-store/images/testimonials/14.png",
+        "/kemoenik-store/images/testimonials/15.png",
+        "/kemoenik-store/images/testimonials/16.png",
+        "/kemoenik-store/images/testimonials/17.png",
+        "/kemoenik-store/images/testimonials/18.png",
+        "/kemoenik-store/images/testimonials/19.png",
+        "/kemoenik-store/images/testimonials/20.png"
     ],
 
     products: [
@@ -63,11 +63,11 @@ const CONFIG = {
             discount: 50, 
             flashSale: true,
             images: [
-                "images/products/calc-1.png",
-                "images/products/calc-2.png",
-                "images/products/calc-3.png",
-                "images/products/calc-4.png",
-                "images/products/calc-5.png"
+                "/kemoenik-store/images/products/calc-1.png",
+                "/kemoenik-store/images/products/calc-2.png",
+                "/kemoenik-store/images/products/calc-3.png",
+                "/kemoenik-store/images/products/calc-4.png",
+                "/kemoenik-store/images/products/calc-5.png"
             ], 
             sold: 2547, 
             rating: 4.9, 
@@ -83,11 +83,11 @@ const CONFIG = {
             discount: 33, 
             flashSale: true,
             images: [
-                "images/products/slim1-1.jpg",
-                "images/products/slim1-2.jpg",
-                "images/products/slim1-3.jpg",
-                "images/products/slim1-4.jpg",
-                "images/products/slim1-5.jpg"
+                "/kemoenik-store/images/products/slim1-1.jpg",
+                "/kemoenik-store/images/products/slim1-2.jpg",
+                "/kemoenik-store/images/products/slim1-3.jpg",
+                "/kemoenik-store/images/products/slim1-4.jpg",
+                "/kemoenik-store/images/products/slim1-5.jpg"
             ], 
             sold: 1892, 
             rating: 4.8, 
@@ -103,11 +103,11 @@ const CONFIG = {
             discount: 33, 
             flashSale: true,
             images: [
-                "images/products/slim2-1.jpg",
-                "images/products/slim2-2.jpg",
-                "images/products/slim2-3.jpg",
-                "images/products/slim2-4.jpg",
-                "images/products/slim2-5.jpg"
+                "/kemoenik-store/images/products/slim2-1.jpg",
+                "/kemoenik-store/images/products/slim2-2.jpg",
+                "/kemoenik-store/images/products/slim2-3.jpg",
+                "/kemoenik-store/images/products/slim2-4.jpg",
+                "/kemoenik-store/images/products/slim2-5.jpg"
             ], 
             sold: 1543, 
             rating: 4.7, 
@@ -123,11 +123,11 @@ const CONFIG = {
             discount: 25, 
             flashSale: true,
             images: [
-                "images/products/teh1-1.jpg",
-                "images/products/teh1-2.jpg",
-                "images/products/teh1-3.jpg",
-                "images/products/teh1-4.jpg",
-                "images/products/teh1-5.jpg"
+                "/kemoenik-store/images/products/teh1-1.jpg",
+                "/kemoenik-store/images/products/teh1-2.jpg",
+                "/kemoenik-store/images/products/teh1-3.jpg",
+                "/kemoenik-store/images/products/teh1-4.jpg",
+                "/kemoenik-store/images/products/teh1-5.jpg"
             ], 
             sold: 2156, 
             rating: 4.8, 
@@ -143,11 +143,11 @@ const CONFIG = {
             discount: 25, 
             flashSale: true,
             images: [
-                "images/products/teh2-1.jpg",
-                "images/products/teh2-2.jpg",
-                "images/products/teh2-3.jpg",
-                "images/products/teh2-4.jpg",
-                "images/products/teh2-5.jpg"
+                "/kemoenik-store/images/products/teh2-1.jpg",
+                "/kemoenik-store/images/products/teh2-2.jpg",
+                "/kemoenik-store/images/products/teh2-3.jpg",
+                "/kemoenik-store/images/products/teh2-4.jpg",
+                "/kemoenik-store/images/products/teh2-5.jpg"
             ], 
             sold: 1876, 
             rating: 4.8, 
@@ -163,11 +163,11 @@ const CONFIG = {
             discount: 27, 
             flashSale: false,
             images: [
-                "images/products/buku-1.jpg",
-                "images/products/buku-2.jpg",
-                "images/products/buku-3.jpg",
-                "images/products/buku-4.jpg",
-                "images/products/buku-5.jpg"
+                "/kemoenik-store/images/products/buku-1.jpg",
+                "/kemoenik-store/images/products/buku-2.jpg",
+                "/kemoenik-store/images/products/buku-3.jpg",
+                "/kemoenik-store/images/products/buku-4.jpg",
+                "/kemoenik-store/images/products/buku-5.jpg"
             ], 
             sold: 987, 
             rating: 4.9, 
