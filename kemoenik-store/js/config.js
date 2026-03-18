@@ -71,7 +71,7 @@ const CONFIG = {
             ], 
             sold: 2547, 
             rating: 4.9, 
-            desc: `🔥 CALFATLOSS – Laporan Diet & Kalori Personal (PDF)...`
+            desc: `...` // isi deskripsi
         },
         { 
             id: 2, 
@@ -91,7 +91,7 @@ const CONFIG = {
             ], 
             sold: 1892, 
             rating: 4.8, 
-            desc: `KEMOENIK SLIM 1 - Kapsul Herbal untuk membantu program diet Anda.`,
+            desc: `KEMOENIK SLIM 1 - Kapsul Herbal...`,
         },
         { 
             id: 3, 
@@ -111,7 +111,7 @@ const CONFIG = {
             ], 
             sold: 1543, 
             rating: 4.7, 
-            desc: `KEMOENIK SLIM 2 - Formula lanjutan untuk hasil maksimal.`,
+            desc: `KEMOENIK SLIM 2 - Formula lanjutan...`,
         },
         { 
             id: 4, 
@@ -131,7 +131,7 @@ const CONFIG = {
             ], 
             sold: 2156, 
             rating: 4.8, 
-            desc: `TEH KEMOENIK DETOX - Minuman sehat untuk membantu detoksifikasi tubuh.`,
+            desc: `TEH KEMOENIK DETOX - Minuman sehat...`,
         },
         { 
             id: 5, 
@@ -151,7 +151,7 @@ const CONFIG = {
             ], 
             sold: 1876, 
             rating: 4.8, 
-            desc: `TEH KEMOENIK DETOX - Varian kedua dengan rasa yang lebih segar.`,
+            desc: `TEH KEMOENIK DETOX - Varian kedua...`,
         },
         { 
             id: 6, 
@@ -171,7 +171,7 @@ const CONFIG = {
             ], 
             sold: 987, 
             rating: 4.9, 
-            desc: `Buku panduan diet sehat lengkap dengan menu dan tips.`,
+            desc: `Buku panduan diet sehat...`,
         }
     ]
 };
