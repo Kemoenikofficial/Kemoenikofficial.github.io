@@ -58,56 +58,46 @@ const faqData = [
 // ============================================================
 const targetOlahragaData = {
   ringan: [
-    {hari:'Sen', aktivitas:'Jalan kaki Santai Minimal 30 - 45 menit'},
-    {hari:'Sel', aktivitas:'Lymphatic Exercise Minimal 15 -20 menit (fokus pada gerakan tangan & pernapasan'},
-    {hari:'Rab', aktivitas:'Istirahat aktif — jalan santai (perengangan/streching sekitar 10 menit)'},
-    {hari:'Kam', aktivitas:'Jalan kaki Santai Minimal 30 - 45 menit'},
-    {hari:'Jum', aktivitas:'Jumping jack 3 set (masing-masing 1 menit + jalan kaki santai 15 menit'},
-    {hari:'Sab', aktivitas:'Jalan kaki santai 45 menit (durasi lebih panjang di akhir pekan)'},
-    {hari:'Min', aktivitas:'Istirahat total'}
+    { hari: 'Sen', aktivitas: 'Lymphatic Exercise 15-20 menit (Fokus pada gerakan tangan & pernapasan)' },
+    { hari: 'Sel', aktivitas: 'Istirahat aktif - Jalan santai (Peregangan/stretching sekitar 10 menit)' },
+    { hari: 'Rab', aktivitas: 'Jalan kaki santai minimal 30 - 45 menit' },
+    { hari: 'Kam', aktivitas: 'Jumping jack 3 set (Masing-masing 1 menit) + Jalan kaki santai 15 menit' },
+    { hari: 'Jum', aktivitas: 'Jalan kaki santai 45 menit (Durasi lebih panjang di akhir pekan)' },
+    { hari: 'Sab', aktivitas: 'Istirahat total (Pemulihan otot)' },
+    { hari: 'Min', aktivitas: 'Lymphatic Exercise 15 menit sebelum tidur' }
   ],
   standar: [
-    {hari:'Sen', aktivitas:'Jalan kaki santai 40 - 60 menit + Jumping jack 3 set (masing-masing 1 menit)'},
-    {hari:'Sel', aktivitas:'Lompat tali 10 menit + Lymphatic exercise 10 menit (sebagai pendingin)'},
-    {hari:'Rab', aktivitas:'Jalan kaki minimal 30 - 45 menit'},
-    {hari:'Kam', aktivitas:'Jumping jack 4 set (masing-masing 1 menit) + Lompat tali 10 menit'},
-    {hari:'Jum', aktivitas:'Jalan kaki 45 menit + Lymphatic 15 menit'},
-    {hari:'Sab', aktivitas:'Lompat tali 15 menit + Jumping jack 3 set'},
-    {hari:'Min', aktivitas:'Istirahat — Lymphatic sebelum tidur'}
+    { hari: 'Sen', aktivitas: 'Jalan kaki santai 40 - 60 menit + Jumping jack 3 set (Masing-masing 1 menit)' },
+    { hari: 'Sel', aktivitas: 'Lompat tali 10 menit + Lymphatic exercise 10 menit (Sebagai pendingin)' },
+    { hari: 'Rab', aktivitas: 'Jalan kaki minimal 30 - 45 menit' },
+    { hari: 'Kam', aktivitas: 'Jumping jack 4 set (Masing-masing 1 menit) + Lompat tali 10 menit' },
+    { hari: 'Jum', aktivitas: 'Jalan kaki 45 menit + Lymphatic 15 menit' },
+    { hari: 'Sab', aktivitas: 'Lompat tali 15 menit + Jumping jack 3 set' },
+    { hari: 'Min', aktivitas: 'Istirahat + Lymphatic sebelum tidur' }
   ],
   agresif: [
-    {hari:'Sen', aktivitas:'Lompat tali 15 menit + Jalan kaki 30 menit'},
-    {hari:'Sel', aktivitas:'Jumping jack 5 set + Lymphatic 15 menit'},
-    {hari:'Rab', aktivitas:'Jalan kaki 45 menit + Lompat tali 10 menit'},
-    {hari:'Kam', aktivitas:'Lompat tali 20 menit + Jumping jack 4 set'},
-    {hari:'Jum', aktivitas:'Jalan kaki 60 menit'},
-    {hari:'Sab', aktivitas:'Lompat tali 15 menit + Jumping jack 5 set + Lymphatic'},
-    {hari:'Min', aktivitas:'Jalan kaki santai 30 menit — recovery'}
+    { hari: 'Sen', aktivitas: 'Lompat tali 15 menit + Jalan kaki 30 menit' },
+    { hari: 'Sel', aktivitas: 'Jumping jack 5 set + Lymphatic 15 menit' },
+    { hari: 'Rab', aktivitas: 'Jalan kaki 45 menit + Lompat tali 10 menit' },
+    { hari: 'Kam', aktivitas: 'Lompat tali 20 menit + Jumping jack 4 set' },
+    { hari: 'Jum', aktivitas: 'Jalan kaki 60 menit' },
+    { hari: 'Sab', aktivitas: 'Lompat tali 15 menit + Jumping jack 5 set + Lymphatic' },
+    { hari: 'Min', aktivitas: 'Jalan kaki santai 30 menit (Active Recovery)' }
   ],
-  // BARU: Jadwal khusus untuk Program IF 16:8
-  if: [
-    {hari:'Sen', aktivitas:'Jalan kaki 30 menit (dalam jendela makan)'},
-    {hari:'Sel', aktivitas:'Lymphatic Drainage 15 menit + Jumping Jack 2 set'},
-    {hari:'Rab', aktivitas:'Istirahat — Jalan santai 20 menit'},
-    {hari:'Kam', aktivitas:'Lompat Tali 10 menit + Jalan kaki 20 menit'},
-    {hari:'Jum', aktivitas:'Jumping Jack 4 set + Lymphatic 10 menit'},
-    {hari:'Sab', aktivitas:'Jalan kaki 45 menit'},
-    {hari:'Min', aktivitas:'Istirahat — Lymphatic sebelum tidur'}
+  programIF: [ // Menggunakan 'programIF' agar tidak konflik dengan keyword 'if' di JS
+    { hari: 'Sen', aktivitas: 'Jalan kaki minimal 30 menit (Dilakukan dalam jendela makan)' },
+    { hari: 'Sel', aktivitas: 'Lymphatic Drainage 15 menit + Jumping Jack 3 set (1 menit/set, total 3 menit)' },
+    { hari: 'Rab', aktivitas: 'Istirahat - Jalan santai 20 menit' },
+    { hari: 'Kam', aktivitas: 'Lompat tali 15 menit + Jalan kaki 20 menit' },
+    { hari: 'Jum', aktivitas: 'Jumping jack 4 set (1 menit/set) + Lymphatic 15 menit' },
+    { hari: 'Sab', aktivitas: 'Jalan kaki 45 menit' },
+    { hari: 'Min', aktivitas: 'Istirahat + Lymphatic sebelum tidur' }
   ]
 };
-
 // ============================================================
 // Data Menu Harian — DIPERBAIKI: Kalori akurat + jadwal KEMOENIK
 // ============================================================
 const menuHarianData = [
-  {
-    time: '06:30',
-    label: 'Sebelum Sarapan',
-    menu: 'Minum KEMOENIK 3 kapsul + 1 gelas air putih hangat',
-    cal: 0,
-    icon: '💊',
-    note: 'Minum kapsul sesudah bangun tidur sebelum makan'
-  },
   {
     time: '07:00',
     label: 'Sarapan',
@@ -115,6 +105,14 @@ const menuHarianData = [
     cal: 280,
     icon: '🍳',
     note: 'Protein + karbohidrat kompleks untuk energi pagi'
+  },
+  {
+    time: '07:30', // 30 menit setelah sarapan
+    label: 'Konsumsi Kemoenik',
+    menu: 'Minum KEMOENIK 3 kapsul + 1 gelas air putih hangat',
+    cal: 0,
+    icon: '💊',
+    note: 'Minum kapsul 30 menit sesudah makan pagi'
   },
   {
     time: '10:00',
@@ -141,28 +139,20 @@ const menuHarianData = [
     note: 'Pilih salah satu sesuai selera'
   },
   {
-    time: '17:30',
-    label: 'Sebelum Makan Malam',
-    menu: 'Minum KEMOENIK 3 kapsul + 2 gelas air putih',
-    cal: 0,
-    icon: '💊',
-    note: 'Minum setelah snack sore / sebelum makan malam'
-  },
-  {
     time: '18:00',
     label: 'Makan Malam',
     menu: 'Ikan Kembung/Ayam Bakar + Tumis Bayam/Kangkung + Sedikit Nasi Merah (50g) atau tanpa nasi',
     cal: 380,
     icon: '🍽️',
-    note: 'Hindari karbohidrat berlebih di malam hari'
+    note: 'Hindari karbohidrat berlebih di malam hari, Jangan makan berat setelah jam 7 malam'
   },
   {
-    time: '20:00',
-    label: 'Malam (Opsional)',
-    menu: 'Air putih / Teh Herbal tanpa gula',
+    time: '18:30',
+    label: 'Konsumsi Kemoenik',
+    menu: 'Minum KEMOENIK 3 kapsul + 2 gelas air putih',
     cal: 0,
-    icon: '🍵',
-    note: 'Jangan makan berat setelah jam 7 malam'
+    icon: '💊',
+    note: 'Minum kapsul 30 menit sesudah makan malam, Jangan makan berat setelah jam 7 malam'
   }
 ];
 // Total kalori makan: ~1400 kkal/hari (sesuai target diet defisit)
