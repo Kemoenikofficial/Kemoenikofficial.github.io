@@ -225,6 +225,7 @@ function renderAll() {
   renderProfilPage();
   renderTipsNotif();
   renderTipsKonten();
+  renderHerbalKemoenik();
   renderJadwalOlahraga();
   renderMenuHarian();
   renderDrawer();
@@ -2075,4 +2076,117 @@ function renderMakroShortcut() {
         html += '<div style="font-size:10px;font-weight:700;color:' + m.c + ';margin-bottom:2px;line-height:1.4;">' + m.l + ' <span style="font-size:12px;font-weight:800;">' + m.v + 'g</span></div>';
     });
     container.innerHTML = html;
+}
+// ============================================================
+// RENDER HERBAL KEMOENIK — accordion di atas Tips page
+// ============================================================
+function renderHerbalKemoenik() {
+  if (typeof herbalKemoenikData === 'undefined') return;
+
+  var tipsBanner = document.getElementById('tipsNotifBanner');
+  if (!tipsBanner) return;
+
+  // Buat wrapper accordion herbal
+  var wrapper = document.createElement('div');
+  wrapper.id = 'acc-herbal-kemoenik';
+  wrapper.className = 'acc';
+  wrapper.style.marginBottom = '8px';
+
+  wrapper.innerHTML =
+    '<div class="acc-hd" onclick="tog(\'acc-herbal-kemoenik\')">' +
+      '<div class="acc-icon" style="background:linear-gradient(135deg,#DCFCE7,#A7F3D0);font-size:17px;display:flex;align-items:center;justify-content:center;">🌿</div>' +
+      '<div class="acc-info">' +
+        '<div class="acc-title">5 Bahan Herbal KEMOENIK</div>' +
+        '<div class="acc-sub">Teh Hijau · Jati Belanda · Kemuning · Temulawak · Tempuyung</div>' +
+      '</div>' +
+      '<div class="acc-toggle">+</div>' +
+    '</div>' +
+    '<div class="acc-body" id="herbalKemoenikBody"></div>';
+
+  // Insert sebelum tipsNotifBanner (paling atas Tips page)
+  var tipsPage = document.getElementById('page-tips');
+  if (!tipsPage) return;
+  tipsPage.insertBefore(wrapper, tipsBanner);
+
+  // Render isi accordion body
+  var body = document.getElementById('herbalKemoenikBody');
+  if (!body) return;
+
+  var html = '<div style="padding:4px 0 8px;">';
+
+  // Intro singkat
+  html += '<div style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1px solid #A7F3D0;border-radius:12px;padding:14px;margin-bottom:14px;">' +
+    '<div style="font-size:12px;font-weight:700;color:#065F46;margin-bottom:6px;">🔬 Formula Sinergis 5 Herbal</div>' +
+    '<div style="font-size:12px;color:#047857;line-height:1.7;">KEMOENIK menggabungkan 5 herbal alami yang bekerja secara sinergis — masing-masing punya mekanisme berbeda, saling melengkapi untuk hasil penurunan berat badan yang optimal & aman.</div>' +
+  '</div>';
+
+  // Card per bahan
+  herbalKemoenikData.forEach(function(h, idx) {
+    var accId = 'herbal-item-' + h.id;
+    html += '<div style="border:1.5px solid ' + h.warna + '20;border-radius:14px;overflow:hidden;margin-bottom:10px;">';
+
+    // Header card — bisa di-tap untuk expand
+    html += '<div onclick="toggleHerbalItem(\'' + accId + '\')" style="display:flex;align-items:center;gap:12px;padding:13px 14px;background:' + h.bg + ';cursor:pointer;">';
+    html += '<div style="width:42px;height:42px;border-radius:12px;background:' + h.badgeColor + ';display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">' + h.emoji + '</div>';
+    html += '<div style="flex:1;">';
+    html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">';
+    html += '<div style="font-size:14px;font-weight:800;color:' + h.warna + ';">' + h.nama + '</div>';
+    html += '<div style="font-size:9px;font-weight:600;color:' + h.badgeText + ';background:' + h.badgeColor + ';padding:2px 7px;border-radius:20px;">' + (idx + 1) + '/5</div>';
+    html += '</div>';
+    html += '<div style="font-size:10px;font-style:italic;color:#9CA3AF;margin-bottom:3px;">' + h.latin + '</div>';
+    html += '<div style="font-size:11px;font-weight:600;color:' + h.warna + ';background:' + h.badgeColor + ';padding:3px 8px;border-radius:6px;display:inline-block;">' + h.peran + '</div>';
+    html += '</div>';
+    html += '<div style="font-size:18px;color:' + h.warna + ';transition:transform 0.2s;" id="arr-' + accId + '">›</div>';
+    html += '</div>'; // end header
+
+    // Body detail (hidden by default)
+    html += '<div id="' + accId + '" style="display:none;padding:14px;background:#FFFFFF;border-top:1px solid ' + h.warna + '20;">';
+
+    // Mekanisme
+    html += '<div style="margin-bottom:12px;">';
+    html += '<div style="font-size:11px;font-weight:700;color:' + h.warna + ';text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px;">⚙️ Cara Kerja</div>';
+    html += '<div style="font-size:12px;color:#374151;line-height:1.7;background:#F9FAFB;border-radius:8px;padding:10px 12px;">' + h.mekanisme + '</div>';
+    html += '</div>';
+
+    // Fakta riset
+    html += '<div style="background:linear-gradient(135deg,' + h.bg + ',' + h.badgeColor + ');border-left:3px solid ' + h.warna + ';border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:12px;">';
+    html += '<div style="font-size:11px;font-weight:700;color:' + h.warna + ';margin-bottom:4px;">📖 Fakta Penelitian</div>';
+    html += '<div style="font-size:12px;color:' + h.badgeText + ';line-height:1.6;">' + h.faktaRiset + '</div>';
+    html += '</div>';
+
+    // Poin manfaat
+    html += '<div style="margin-bottom:' + (h.efekWajar ? '12px' : '4px') + ';">';
+    html += '<div style="font-size:11px;font-weight:700;color:' + h.warna + ';text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;">✅ Manfaat Utama</div>';
+    h.poin.forEach(function(p) {
+      html += '<div style="display:flex;gap:8px;padding:5px 0;font-size:12px;color:#374151;line-height:1.5;">';
+      html += '<span style="color:' + h.warna + ';font-weight:700;flex-shrink:0;">•</span><span>' + p + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    // Efek wajar (jika ada)
+    if (h.efekWajar) {
+      html += '<div style="background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:10px 12px;">';
+      html += '<div style="font-size:11px;font-weight:700;color:#B45309;margin-bottom:3px;">💡 Efek yang Wajar</div>';
+      html += '<div style="font-size:12px;color:#92400E;line-height:1.6;">' + h.efekWajar + '</div>';
+      html += '</div>';
+    }
+
+    html += '</div>'; // end body detail
+    html += '</div>'; // end card
+  });
+
+  html += '</div>'; // end padding wrapper
+  setSafeHTML(body, html);
+}
+
+function toggleHerbalItem(id) {
+  var el = document.getElementById(id);
+  var arr = document.getElementById('arr-' + id);
+  if (!el) return;
+  var isOpen = el.style.display !== 'none';
+  el.style.display = isOpen ? 'none' : 'block';
+  if (arr) {
+    arr.style.transform = isOpen ? '' : 'rotate(90deg)';
+  }
 }
