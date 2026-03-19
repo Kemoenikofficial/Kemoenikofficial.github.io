@@ -1768,7 +1768,154 @@ window.resetAndEditQuiz = resetAndEditQuiz;
 function renderTipsKonten() {
   if (typeof tipsKontenData === 'undefined') return;
 
-  // Mapping tips id ke accordion HTML yang sudah ada
+  // ── Konfigurasi dekorasi per topik ──────────────────────────
+  var dekorasi = {
+    'defisit': {
+      layout: 'highlight-dont',
+      highlight: { icon: '🔥', label: 'Ingat selalu', teks: 'Defisit kalori adalah SATU-SATUNYA cara ilmiah untuk turun berat badan. Tidak ada jalan pintas.' },
+      dos:   ['Ikuti target kalori dari kalkulator setiap hari', 'Defisit 300–500 kkal/hari = turun 0.3–0.5 kg/minggu (aman)', 'Catat makanan di aplikasi kalori jika perlu'],
+      donts: ['Potong kalori di bawah 1200 kkal/hari — berbahaya!', 'Skip makan demi defisit — justru bikin binge eating', 'Defisit terlalu agresif tanpa olahraga — hilang otot, bukan lemak'],
+      protip: { icon: '💡', teks: 'KEMOENIK membantu menghambat penyerapan lemak — kombinasikan dengan defisit kalori untuk hasil optimal.' }
+    },
+    'pola-makan': {
+      layout: 'highlight-dont',
+      highlight: { icon: '🍽️', label: 'Aturan emas', teks: 'Protein dulu → Sayuran → Karbohidrat. Urutan makan ini terbukti turunkan lonjakan gula darah hingga 40%.' },
+      dos:   ['Makan 3x sehari + 2x snack sehat, jangan skip sarapan', 'Perbanyak protein: telur, ayam, tempe, tahu, ikan di tiap makan', 'Sayuran hijau: makan sepuasnya, kalorinya sangat rendah', 'Ganti nasi putih → nasi merah, ubi, kentang rebus, oatmeal'],
+      donts: ['Gorengan, makanan olahan, dan minuman manis setiap hari', 'Makan sambil scroll HP — bikin tidak sadar sudah kelebihan porsi', 'Skip sarapan — bikin lapar berlebihan di siang & malam hari'],
+      protip: { icon: '⚖️', teks: 'Tidak harus makan "makanan diet" mahal. Yang penting: total kalori terjaga + protein cukup + sayuran banyak.' }
+    },
+    'olahraga-tips': {
+      layout: 'highlight-dont',
+      highlight: { icon: '💪', label: 'Minimal efektif', teks: 'Jalan kaki 30 menit/hari sudah cukup untuk pemula. Konsistensi > intensitas — lakukan setiap hari meski ringan.' },
+      dos:   ['Jalan kaki 30 menit/hari — titik awal yang sempurna', 'Jumping Jack: kardio rumahan tanpa alat, bakar 100–150 kkal/15 mnt', 'Lompat Tali: bakar ~200 kkal dalam 15 menit', 'Lymphatic Drainage: pijat malam 10–15 mnt untuk detoks & sirkulasi'],
+      donts: ['Langsung olahraga ekstrem di awal — risiko cedera tinggi', 'Olahraga lalu makan gorengan sebagai "reward"', 'Lewatkan pemanasan — risiko otot kram atau cedera'],
+      protip: { icon: '🌿', teks: 'Minum KEMOENIK sebelum olahraga membantu mobilisasi lemak dari sel — lemak lebih mudah dibakar jadi energi.' }
+    },
+    'air-putih': {
+      layout: 'highlight-dont',
+      highlight: { icon: '💧', label: 'Target harian', teks: 'Minimal 2 liter (8 gelas) per hari. Minum 1–2 gelas segera setelah bangun tidur untuk kickstart metabolisme.' },
+      dos:   ['Minum 1 gelas 20–30 menit sebelum makan — kurangi porsi secara alami', 'Cek warna urin: kuning muda = cukup terhidrasi ✓', 'Bawa tumbler ke mana-mana agar tidak lupa minum', 'Tambah irisan lemon/mentimun jika bosan dengan air biasa'],
+      donts: ['Minuman manis, soda, jus kemasan, kopi bergula', 'Menunggu haus baru minum — sudah terlambat, tubuh dehidrasi', 'Minum banyak sekaligus — lebih baik sedikit-sedikit tapi rutin'],
+      protip: { icon: '🌿', teks: 'KEMOENIK mengandung Tempuyung yang bersifat diuretik — pastikan minum 2–3 liter/hari agar detoks optimal dan tidak dehidrasi.' }
+    },
+    'if-puasa': {
+      layout: 'highlight-dont',
+      highlight: { icon: '🌙', label: 'IF 16:8', teks: 'Puasa 16 jam · Makan dalam jendela 8 jam. Contoh: makan jam 10:00–18:00, puasa 18:00–10:00 esok hari.' },
+      dos:   ['Boleh: air putih, teh herbal tanpa gula, kopi hitam tanpa gula saat puasa', 'Minum KEMOENIK saat buka puasa jam 10:00 untuk efek maksimal', 'Olahraga ringan pagi saat masih puasa — bakar lemak lebih optimal', 'Cocok untuk Tipe Lemak Fighter (Tipe 2) dan Tipe Hemat Energi (Tipe 4)'],
+      donts: ['Ibu hamil & busui — jangan IF', 'Penderita maag aktif — konsultasi dokter dulu', 'Tipe Perut Sensitif (Tipe 6) — tidak dianjurkan', 'Langsung IF agresif tanpa adaptasi — mulai bertahap'],
+      protip: { icon: '⚡', teks: 'IF bukan wajib — defisit kalori biasa sudah efektif. IF hanya sebagai boost tambahan jika tubuhmu cocok.' }
+    }
+  };
+
+  // Konfigurasi dekorasi untuk accordion timeline (waktu-makan, lymphatic, tidur)
+  var dekorasiTimeline = {
+    'waktu-makan': {
+      highlight: { icon: '⏰', label: 'Aturan kunci', teks: 'Jangan makan berat setelah jam 19:00 — metabolisme melambat di malam hari dan kalori lebih mudah disimpan sebagai lemak.' },
+      steps: [
+        { waktu: '06:00–08:00', label: 'Sarapan', desc: 'Jangan pernah skip! Aktifkan metabolisme pagi hari dengan protein + karbohidrat kompleks.', warn: false },
+        { waktu: '10:00–11:00', label: 'Snack Pagi', desc: 'Buah segar, kacang-kacangan, atau yogurt plain. Cegah lapar berlebihan saat makan siang.', warn: false },
+        { waktu: '11:30–13:00', label: 'Makan Siang', desc: 'Makanan terbesar kedua. Protein + sayuran + karbohidrat secukupnya.', warn: false },
+        { waktu: '15:00–16:00', label: 'Snack Sore', desc: 'Ringan saja — buah, edamame, atau segenggam kacang. Hindari gorengan.', warn: false },
+        { waktu: '18:00–19:00', label: 'Makan Malam', desc: 'Protein + sayuran. Kurangi atau skip nasi malam hari.', warn: false },
+        { waktu: '07:30 & 18:30', label: '🌿 Minum KEMOENIK', desc: '3 kapsul sesudah sarapan pagi + 3 kapsul sesudah makan malam.', warn: false, highlight: true }
+      ],
+      protip: { icon: '🕐', teks: 'Konsistensi waktu makan melatih tubuh untuk metabolisme yang lebih stabil dan terprediksi.' }
+    },
+    'lymphatic': {
+      highlight: { icon: '🌿', label: 'Kapan dilakukan', teks: 'Setiap malam sebelum tidur, durasi 10–15 menit. Gunakan minyak kelapa atau lotion agar lebih nyaman.' },
+      steps: [
+        { no: '1', label: 'Leher', desc: 'Pijat dari belakang telinga turun ke arah tulang selangka. 10x kiri & kanan perlahan.', warn: false },
+        { no: '2', label: 'Ketiak', desc: 'Tekan ringan area ketiak dengan gerakan melingkar. 15x kiri & kanan.', warn: false },
+        { no: '3', label: 'Perut', desc: 'Pijat searah jarum jam dimulai dari pusar melebar ke luar. 15–20x.', warn: false },
+        { no: '4', label: 'Paha', desc: 'Tekan dari lutut ke arah atas paha. 10–15x per sisi. Bukan memijat keras!', warn: false },
+        { no: '5', label: 'Betis', desc: 'Tekan dari pergelangan kaki ke arah lutut. 10x per sisi.', warn: false }
+      ],
+      protip: { icon: '✨', teks: 'Cari video tutorial "Lymphatic Drainage Diet" di YouTube/TikTok untuk panduan visual gerakan yang benar.' }
+    },
+    'tidur': {
+      highlight: { icon: '😴', label: 'Target tidur', teks: '7–8 jam per malam, tidur sebelum jam 23:00. Kurang tidur = hormon lapar naik + metabolisme melambat.' },
+      steps: [
+        { no: '💡', label: 'Matikan layar HP 1 jam sebelum tidur', desc: 'Blue light dari layar menghambat produksi melatonin — hormon tidur.', warn: false },
+        { no: '🌡️', label: 'Kamar gelap dan sejuk (18–22°C)', desc: 'Suhu sejuk membantu tidur lebih nyenyak dan proses pemulihan sel lebih optimal.', warn: false },
+        { no: '🚫', label: 'Hindari kafein setelah jam 14:00', desc: 'Efek kafein bertahan 6–8 jam di tubuh — bisa ganggu kualitas tidur malam.', warn: true },
+        { no: '🍽️', label: 'Jangan makan berat 2–3 jam sebelum tidur', desc: 'Tubuh sibuk mencerna = kualitas tidur buruk + kalori mudah tersimpan jadi lemak.', warn: true },
+        { no: '🧘', label: 'Stretching ringan sebelum tidur', desc: '5–10 menit peregangan santai membantu tubuh relaks dan tidur lebih cepat.', warn: false }
+      ],
+      protip: { icon: '🔥', teks: 'Tidur cukup = Growth Hormone naik saat malam = pembakaran lemak & pemulihan otot lebih efektif.' }
+    }
+  };
+
+  // ── Helper: render highlight box ────────────────────────────
+  function renderHighlight(h, warna, bg) {
+    return '<div style="background:linear-gradient(135deg,' + bg + ',' + bg + 'cc);border-left:3px solid ' + warna + ';border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;">' +
+      '<div style="font-size:20px;flex-shrink:0;">' + h.icon + '</div>' +
+      '<div><div style="font-size:10px;font-weight:700;color:' + warna + ';text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">' + h.label + '</div>' +
+      '<div style="font-size:12px;color:#1F2937;line-height:1.6;font-weight:500;">' + h.teks + '</div></div>' +
+    '</div>';
+  }
+
+  // ── Helper: render pro tip ───────────────────────────────────
+  function renderProtip(p, warna) {
+    return '<div style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FCD34D;border-radius:10px;padding:10px 13px;margin-top:12px;display:flex;gap:8px;align-items:flex-start;">' +
+      '<div style="font-size:16px;flex-shrink:0;">' + p.icon + '</div>' +
+      '<div style="font-size:12px;color:#78350F;line-height:1.6;"><strong>Pro Tip:</strong> ' + p.teks + '</div>' +
+    '</div>';
+  }
+
+  // ── Helper: render do's & don'ts ────────────────────────────
+  function renderDoDont(dos, donts, warna) {
+    var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;">';
+    // DO column
+    html += '<div style="background:#F0FDF4;border:1px solid #A7F3D0;border-radius:10px;padding:10px 11px;">';
+    html += '<div style="font-size:10px;font-weight:800;color:#065F46;margin-bottom:7px;display:flex;align-items:center;gap:4px;"><span style="background:#22C55E;color:#fff;border-radius:4px;padding:1px 6px;">✓ DO</span></div>';
+    dos.forEach(function(d) {
+      html += '<div style="display:flex;gap:6px;margin-bottom:5px;font-size:11px;color:#064E3B;line-height:1.4;">';
+      html += '<span style="color:#22C55E;font-weight:800;flex-shrink:0;margin-top:1px;">✓</span><span>' + d + '</span></div>';
+    });
+    html += '</div>';
+    // DON'T column
+    html += '<div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:10px 11px;">';
+    html += '<div style="font-size:10px;font-weight:800;color:#991B1B;margin-bottom:7px;display:flex;align-items:center;gap:4px;"><span style="background:#EF4444;color:#fff;border-radius:4px;padding:1px 6px;">✗ DON\'T</span></div>';
+    donts.forEach(function(d) {
+      html += '<div style="display:flex;gap:6px;margin-bottom:5px;font-size:11px;color:#7F1D1D;line-height:1.4;">';
+      html += '<span style="color:#EF4444;font-weight:800;flex-shrink:0;margin-top:1px;">✗</span><span>' + d + '</span></div>';
+    });
+    html += '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  // ── Helper: render timeline steps ───────────────────────────
+  function renderTimeline(steps, warna) {
+    var html = '<div style="position:relative;padding-left:36px;margin-bottom:4px;">';
+    html += '<div style="position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(' + warna + '33,' + warna + '11);border-radius:2px;"></div>';
+    steps.forEach(function(s, i) {
+      var isLast = i === steps.length - 1;
+      var dotBg = s.highlight ? 'background:' + warna + ';color:#fff;' :
+                  s.warn ? 'background:#FEE2E2;color:#DC2626;border:2px solid #FCA5A5;' :
+                  'background:#fff;color:' + warna + ';border:2px solid ' + warna + ';';
+      html += '<div style="position:relative;margin-bottom:' + (isLast ? '0' : '12px') + ';">';
+      // Dot
+      html += '<div style="position:absolute;left:-30px;top:2px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;' + dotBg + '">';
+      html += s.no !== undefined ? s.no : (i + 1);
+      html += '</div>';
+      // Content
+      var cardBg = s.highlight ? 'background:linear-gradient(135deg,' + warna + '15,' + warna + '08);border:1px solid ' + warna + '40;' :
+                   s.warn ? 'background:#FFF5F5;border:1px solid #FECACA;' :
+                   'background:var(--offwhite);border:1px solid var(--border);';
+      html += '<div style="border-radius:10px;padding:9px 12px;' + cardBg + '">';
+      var waktuHtml = s.waktu ? '<div style="font-size:10px;font-weight:700;color:' + warna + ';margin-bottom:2px;">' + s.waktu + '</div>' : '';
+      html += waktuHtml;
+      html += '<div style="font-size:12px;font-weight:700;color:' + (s.warn ? '#991B1B' : '#111827') + ';margin-bottom:2px;">' + s.label + '</div>';
+      html += '<div style="font-size:11px;color:' + (s.warn ? '#7F1D1D' : 'var(--text3)') + ';line-height:1.5;">' + s.desc + '</div>';
+      html += '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  // ── Mapping accordion yang sudah ada di HTML ─────────────────
   var accMap = {
     'defisit':      'acc-defisit',
     'pola-makan':   'acc-gula',
@@ -1783,50 +1930,94 @@ function renderTipsKonten() {
     var acc = document.getElementById(accId);
     if (!acc) return;
 
-    // Update judul & sub di header accordion
     var titleEl = acc.querySelector('.acc-title');
     var subEl   = acc.querySelector('.acc-sub');
     if (titleEl) titleEl.textContent = tips.judul;
-    if (subEl)   subEl.textContent   = tips.konten[0] ? tips.konten[0].substring(0, 55) + '...' : '';
 
-    // Isi body accordion
     var bodyEl = acc.querySelector('.acc-body');
     if (!bodyEl) return;
-    var html = '<div style="padding:4px 0 8px;">';
-    tips.konten.forEach(function(poin) {
-      html += '<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;color:var(--text);">';
-      html += '<span style="color:' + tips.warna + ';flex-shrink:0;font-weight:700;">•</span>';
-      html += '<span>' + poin + '</span>';
-      html += '</div>';
-    });
+
+    var d = dekorasi[tips.id];
+    var html = '<div style="padding:6px 0 8px;">';
+
+    if (d) {
+      // Highlight box
+      if (d.highlight) html += renderHighlight(d.highlight, tips.warna, tips.bgWarna);
+      // Do & Don't
+      if (d.dos && d.donts) html += renderDoDont(d.dos, d.donts, tips.warna);
+      // Pro Tip
+      if (d.protip) html += renderProtip(d.protip, tips.warna);
+    } else {
+      // Fallback: bullet biasa
+      tips.konten.forEach(function(poin) {
+        html += '<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;color:var(--text);">';
+        html += '<span style="color:' + tips.warna + ';flex-shrink:0;font-weight:700;">•</span><span>' + poin + '</span></div>';
+      });
+    }
+
     html += '</div>';
     setSafeHTML(bodyEl, html);
+
+    // Update sub label
+    if (subEl) {
+      var subLabels = {
+        'defisit':       '500 kkal defisit · Do\'s & Don\'ts',
+        'pola-makan':    'Protein dulu → Sayuran → Karbo',
+        'olahraga-tips': '30 menit/hari sudah cukup untuk mulai',
+        'air-putih':     '2 liter/hari · Kickstart metabolisme',
+        'if-puasa':      'Puasa 16 jam · Makan 10:00–18:00'
+      };
+      subEl.textContent = subLabels[tips.id] || tips.judul;
+    }
   });
 
-  // Accordion tambahan (waktu-makan, lymphatic, tidur) — buat dinamis dan inject ke page-tips
+  // ── Accordion tambahan — Timeline layout ────────────────────
   var extraContainer = document.getElementById('tipsExtraContainer');
   if (!extraContainer) return;
+
   var extraIds = ['waktu-makan', 'lymphatic', 'tidur'];
   var html = '';
+
   tipsKontenData.forEach(function(tips) {
     if (extraIds.indexOf(tips.id) === -1) return;
     var uid = 'acc-extra-' + tips.id;
+    var dt  = dekorasiTimeline[tips.id];
+
     html += '<div class="acc" id="' + uid + '" style="margin-bottom:8px;">';
-    html += '<div class="acc-hd" onclick="tog(\''  + uid + '\')">' ;
+    html += '<div class="acc-hd" onclick="tog(\'' + uid + '\')">';
     html += '<div class="acc-icon" style="background:' + tips.bgWarna + ';font-size:16px;display:flex;align-items:center;justify-content:center;">' + tips.icon + '</div>';
     html += '<div class="acc-info"><div class="acc-title">' + tips.judul + '</div>';
-    html += '<div class="acc-sub">' + (tips.konten[0] ? tips.konten[0].substring(0, 55) + '...' : '') + '</div></div>';
+
+    var subTexts = {
+      'waktu-makan': 'Makan terakhir max jam 19:00',
+      'lymphatic':   '5 langkah · 10–15 mnt/malam',
+      'tidur':       '7–8 jam · Sebelum jam 23:00'
+    };
+    html += '<div class="acc-sub">' + (subTexts[tips.id] || '') + '</div></div>';
     html += '<div class="acc-toggle">+</div></div>';
-    html += '<div class="acc-body"><div style="padding:4px 0 8px;">';
-    tips.konten.forEach(function(poin) {
-      html += '<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;">';
-      html += '<span style="color:' + tips.warna + ';flex-shrink:0;font-weight:700;">•</span><span>' + poin + '</span></div>';
-    });
+
+    // Body dengan timeline layout
+    html += '<div class="acc-body"><div style="padding:6px 0 8px;">';
+    if (dt) {
+      if (dt.highlight) {
+        html += '<div style="background:linear-gradient(135deg,' + tips.bgWarna + ',' + tips.bgWarna + 'cc);border-left:3px solid ' + tips.warna + ';border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;">';
+        html += '<div style="font-size:20px;flex-shrink:0;">' + dt.highlight.icon + '</div>';
+        html += '<div><div style="font-size:10px;font-weight:700;color:' + tips.warna + ';text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">' + dt.highlight.label + '</div>';
+        html += '<div style="font-size:12px;color:#1F2937;line-height:1.6;font-weight:500;">' + dt.highlight.teks + '</div></div></div>';
+      }
+      if (dt.steps) html += renderTimeline(dt.steps, tips.warna);
+      if (dt.protip) {
+        html += '<div style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FCD34D;border-radius:10px;padding:10px 13px;margin-top:12px;display:flex;gap:8px;align-items:flex-start;">';
+        html += '<div style="font-size:16px;flex-shrink:0;">' + dt.protip.icon + '</div>';
+        html += '<div style="font-size:12px;color:#78350F;line-height:1.6;"><strong>Pro Tip:</strong> ' + dt.protip.teks + '</div></div>';
+      }
+    }
     html += '</div></div></div>';
   });
+
   setSafeHTML(extraContainer, html);
 
-  // Sembunyikan tipsKontenContainer lama (panduan lengkap di bawah — dihapus tampilannya)
+  // Sembunyikan container lama
   var oldContainer = document.getElementById('tipsKontenContainer');
   if (oldContainer) {
     oldContainer.style.display = 'none';
