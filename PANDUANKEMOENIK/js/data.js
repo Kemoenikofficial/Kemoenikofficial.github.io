@@ -435,3 +435,108 @@ const motivasiChallenge = [
   'Challenge selesai! Kamu bukan cuma diet, kamu membangun kebiasaan sehat! 🌟',
   'Wow, full challenge! Tidur nyenyak malam ini, besok lebih semangat lagi! 😴✨'
 ];
+// ============================================================
+// HERBAL KEMOENIK — DATA BAHAN & MANFAAT DIET
+// ============================================================
+const herbalKemoenikData = [
+  {
+    id: 'teh-hijau',
+    nama: 'Teh Hijau',
+    latin: 'Camellia sinensis',
+    emoji: '🍵',
+    warna: '#059669',
+    bg: '#ECFDF5',
+    badgeColor: '#D1FAE5',
+    badgeText: '#065F46',
+    peran: 'Pembakar Lemak & Booster Metabolisme',
+    mekanisme: 'Kandungan EGCG (Epigallocatechin gallate) menghambat enzim pemecah norepinefrin — hormon utama pembakar lemak. Hasilnya, hormon ini bertahan lebih lama di tubuh dan memicu sel lemak untuk melepas energi.',
+    faktaRiset: 'Penelitian menunjukkan EGCG + kafein dalam teh hijau meningkatkan metabolisme basal 3–4%. Orang yang konsumsi ekstrak teh hijau sebelum olahraga terbukti membakar lemak 17% lebih banyak.',
+    poin: [
+      'Meningkatkan laju metabolisme bahkan saat istirahat',
+      'EGCG + kafein bekerja sinergis memecah sel lemak ke aliran darah',
+      'Bantu oksidasi lemak saat olahraga hingga 17% lebih efektif',
+      'Mengandung antioksidan kuat yang melindungi sel dari kerusakan akibat diet'
+    ],
+    efekWajar: null
+  },
+  {
+    id: 'jati-belanda',
+    nama: 'Jati Belanda',
+    latin: 'Guazuma ulmifolia',
+    emoji: '🌿',
+    warna: '#2E8B35',
+    bg: '#F0FDF4',
+    badgeColor: '#DCFCE7',
+    badgeText: '#14532D',
+    peran: 'Penghambat Penyerapan Lemak',
+    mekanisme: 'Kandungan musilago (lendir alami) dan tanin melapisi dinding usus halus, menghambat enzim lipase pankreas — enzim yang memecah lemak dari makanan. Lemak yang tidak dipecah tidak bisa diserap dan langsung dibuang.',
+    faktaRiset: 'Penelitian Astuti et al. (2010) membuktikan ekstrak Jati Belanda secara signifikan menghambat aktivitas lipase dan meningkatkan termogenesis (produksi panas tubuh untuk bakar kalori).',
+    poin: [
+      'Musilago melapisi usus → lemak dari makanan tidak terserap maksimal',
+      'Alkaloid menekan nafsu makan secara alami tanpa stimulan kimia',
+      'Tanin mengikat protein di permukaan usus → penyerapan kalori lebih lambat',
+      'Kombinasi terbaik dengan Temulawak untuk lindungi lambung'
+    ],
+    efekWajar: 'BAB lebih lunak adalah tanda lemak sedang dikeluarkan tubuh — ini NORMAL dan artinya herbal bekerja!'
+  },
+  {
+    id: 'kemuning',
+    nama: 'Daun Kemuning',
+    latin: 'Murraya paniculata',
+    emoji: '🌸',
+    warna: '#D97706',
+    bg: '#FFFBEB',
+    badgeColor: '#FEF3C7',
+    badgeText: '#78350F',
+    peran: 'Anti-Obesitas & Penghambat Enzim Lipase',
+    mekanisme: 'Senyawa aktif kemuning (alkaloid, flavonoid, osthol) menghambat enzim lipase pankreas — sama dengan mekanisme obat diet Orlistat, namun secara alami. Lemak dari makanan tidak bisa dicerna dan diserap, lalu dibuang bersama feses.',
+    faktaRiset: 'Jurnal Sains dan Kesehatan (2023) membuktikan ekstrak etanol daun kemuning dosis 200mg/kgBB memiliki aktivitas antiobesitas dengan menghambat kenaikan bobot badan sebesar 109,28%. Penelitian Universitas Lampung juga membuktikan penurunan BMI dan rasio lingkar pinggang secara signifikan (p<0,05).',
+    poin: [
+      'Hambat enzim lipase pankreas → lemak tidak dicerna, tidak diserap',
+      'Meningkatkan metabolisme lemak dan pembakaran kalori',
+      'Sifat anti-inflamasi membantu atasi inflamasi kronis akibat obesitas',
+      'Melancarkan peredaran darah sehingga nutrisi tersebar merata ke sel'
+    ],
+    efekWajar: null
+  },
+  {
+    id: 'temulawak',
+    nama: 'Temulawak',
+    latin: 'Curcuma xanthorrhiza',
+    emoji: '🟡',
+    warna: '#B45309',
+    bg: '#FEF9C3',
+    badgeColor: '#FEF08A',
+    badgeText: '#713F12',
+    peran: 'Penjaga Hati & Metabolisme Lemak',
+    mekanisme: 'Kurkuminoid dan xanthorrhizol merangsang produksi cairan empedu dari hati. Cairan empedu inilah yang memecah lemak di usus kecil menjadi molekul kecil untuk diproses. Makin banyak empedu = pencernaan lemak makin efisien.',
+    faktaRiset: 'Penelitian membuktikan temulawak berpengaruh langsung pada metabolisme lipid (pemrosesan lemak) dan dapat mengurangi peradangan yang dikaitkan dengan obesitas. Sifat hepatoprotektif-nya melindungi hati dari kerusakan selama proses detoks intensif.',
+    poin: [
+      'Stimulasi cairan empedu → pencernaan dan pemrosesan lemak lebih efisien',
+      'Hepatoprotektif: melindungi hati yang bekerja keras saat detoks',
+      'Xanthorrhizol menurunkan kadar trigliserida dan kolesterol dalam darah',
+      'Mengurangi peradangan kronis — musuh tersembunyi yang hambat penurunan BB'
+    ],
+    efekWajar: 'Urin berwarna lebih kuning — efek normal dari Temulawak + Teh Hijau yang sedang mendetoksifikasi tubuh. Perbanyak minum air putih!'
+  },
+  {
+    id: 'tempuyung',
+    nama: 'Tempuyung',
+    latin: 'Sonchus arvensis',
+    emoji: '💧',
+    warna: '#0369A1',
+    bg: '#EFF6FF',
+    badgeColor: '#DBEAFE',
+    badgeText: '#1E3A5F',
+    peran: 'Detoksifikasi & Buang Retensi Air',
+    mekanisme: 'Kandungan flavonoid dan kalium tinggi memiliki efek diuretik alami — merangsang ginjal membuang kelebihan cairan, toksin, dan sisa metabolisme melalui urin. Ini yang menyebabkan penurunan BB terasa cepat di awal program.',
+    faktaRiset: 'Penelitian IPB mengkonfirmasi kandungan kalium dan flavonoid Tempuyung berperan penting dalam efek diuretik dan anti-inflamasi. Ginjal yang bersih adalah organ kunci saat tubuh aktif membakar lemak — detoks ginjal = metabolisme lancar.',
+    poin: [
+      'Diuretik alami: buang kelebihan cairan & retensi air dari tubuh',
+      'Detoks ginjal: bersihkan sisa metabolisme yang hambat pembakaran lemak',
+      'Kalium tinggi: jaga keseimbangan elektrolit selama proses detoks',
+      'Anti-inflamasi: kurangi pembengkakan akibat penumpukan cairan berlebih'
+    ],
+    efekWajar: 'Lebih sering buang air kecil (pipis) = tanda detoks berjalan dengan baik! Ini NORMAL. Pastikan minum air putih 2–3 liter per hari.'
+  }
+];
