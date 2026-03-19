@@ -342,7 +342,7 @@ function renderHomeGreeting() {
   var firstName = nama ? nama.split(' ')[0] : '—';
   document.getElementById('userName').textContent = firstName;
 
-  var desc = 'Selamat datang di panduan diet<br><strong>KEMOENIK</strong> — hari ini kita jaga komitmenmu 💪';
+  var desc = 'Selamat datang di panduan diet KEMOENIK<br><strong>KEMOENIK</strong> — hari ini kita jaga komitmenmu 💪';
   if (q) {
     desc = 'Tipe: <strong>' + escHtml(q.tipeName) + '</strong> | Metode: <strong>' + escHtml(q.metodeName) + '</strong><br>Tetap konsisten dengan program KEMOENIK kamu! 💪';
   }
@@ -351,7 +351,7 @@ function renderHomeGreeting() {
 
   var tips = [
     'Minum KEMOENIK sesudah makan untuk penyerapan optimal. Jangan skip meski tidak lapar!',
-    'Ganti nasi putih dengan nasi merah atau ubi untuk kalori lebih rendah & serat lebih tinggi.',
+    'Ganti nasi putih dengan nasi merah atau ubi untuk kalori lebih rendah & serat lebih tinggi (kenyang lebih lama).',
     'Minum 2 gelas air putih sebelum makan — terbukti kurangi porsi makan secara alami.',
     'Olahraga 30 menit pagi hari meningkatkan metabolisme sepanjang hari. Mulai dari jalan kaki!',
     'Hindari makan setelah jam 7 malam. Beri tubuh waktu istirahat untuk proses pembakaran lemak.',
@@ -1247,16 +1247,16 @@ function renderJadwalOlahraga() {
 
 // ========== ARRAY MOTIVASI OLAHRAGA ==========
 var pesanMotivasiOlahraga = [
-  'Mantap! Pembakaran lemak makin optimal! \uD83D\uDD25',
-  'Bagus! Jaga konsistensi ya! \uD83D\uDCAA',
-  'Setiap gerakan mendekatkan kamu ke target! \uD83C\uDFAF',
-  'Keren! Metabolisme kamu makin aktif hari ini! \u26A1',
-  'Istirahat juga bagian dari progress. Good job! \uD83D\uDE4C',
-  'Tubuh kamu berterima kasih atas gerakan hari ini! \u2764\uFE0F',
-  'Konsisten adalah kunci. Kamu luar biasa! \uD83C\uDF1F',
-  'Progress bukan tentang cepat, tapi tentang tidak berhenti! \uD83D\uDE80',
-  'Olahraga hari ini = investasi tubuh ideal esok hari! \uD83D\uDCC8',
-  'Kamu sudah selangkah lebih dekat ke goal! Keep it up! \uD83C\uDFC6'
+  'Mantap! Pembakaran lemak makin optimal hari ini! 🔥',
+  'Bagus! Konsistensi adalah kunci keberhasilanmu. Semangat! 💪',
+  'Setiap gerakan kecil membawamu lebih dekat ke target ideal! 🎯',
+  'Keren! Metabolisme tubuhmu sedang bekerja maksimal sekarang. ⚡',
+  'Istirahat itu penting! Tubuhmu sedang memulihkan energi untuk esok. 💤',
+  'Tubuhmu berterima kasih atas keringat dan usaha hari ini! ❤️',
+  'Konsisten adalah kunci. Kamu luar biasa, teruskan perjuanganmu! ✨',
+  'Progress tidak selalu instan, yang penting kamu tidak berhenti. 🐢➡️🏃',
+  'Olahraga hari ini adalah investasi kesehatan untuk masa tuamu. 🏦',
+  'Satu langkah lebih dekat! Bangga dengan pencapaianmu hari ini. 🎖️'
 ];
 
 function getRandomMotivasi() {
