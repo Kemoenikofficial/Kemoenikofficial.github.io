@@ -132,7 +132,7 @@
         <!-- DRAWER -->
         <div id="drawer">
             <div class="d-top">
-                <div class="d-avatar" style="background:transparent;border:none;padding:0;overflow:hidden;"><img src="https://i.postimg.cc/MGXPGCff/Logo-Kemoenik-jpg.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" alt="KEMOENIK Logo"></div>
+                <div class="d-avatar" style="background:transparent;border:none;padding:0;overflow:hidden;"><img src="https://i.postimg.cc/MGXPGCff/Logo-Kemoenik-jpg.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" alt="Logo"></div>
                 <div class="d-name" id="dName">—</div>
                 <div class="d-sub" id="dSub">Program Diet KEMOENIK</div>
             </div>
@@ -616,6 +616,7 @@
                     </div>
                 </div>
                 <div id="quizResult" style="display:none;">
+                    <div id="quizResultDisclaimer"></div>
                     <div class="quiz-result-hero">
                         <div class="qr-badge">PROFIL METABOLISME</div>
                         <div class="qr-type" id="qrTypeName">Tipe <em>—</em></div>
@@ -746,6 +747,7 @@
                                 <option value="standar" selected>Standar (500 kkal defisit)</option>
                                 <option value="agresif">Agresif (700 kkal defisit)</option>
                             </select>
+                            <div id="metodeInfoWrap"></div>
                         </div>
                     </div>
                     <div style="display:flex;gap:8px;margin-top:0;">
@@ -791,6 +793,7 @@
                             </div>
                         </div>
                     </div>
+                    <div id="bmrWarningBox" style="display:none;"></div>
                     <button class="btn-primary" id="btnSimpanKal" onclick="simpanKalkulator(this)"><i class="fas fa-save"></i> Simpan & Mulai Program</button>
                     <button class="btn-outline" style="margin-top:8px;" onclick="document.getElementById('hasilKalkulator').style.display='none';document.getElementById('kalkulatorForm').style.display='block'">Edit Data</button>
                 </div>
