@@ -753,9 +753,56 @@ function hitungKalkulator() {
   document.getElementById('hasilMinggu').textContent = targetMinggu + ' minggu';
   document.getElementById('hasilTanggal').textContent = estTanggal;
   document.getElementById('hasilLingkar').textContent = estLingkar + ' cm';
-  document.getElementById('hasilBMR').textContent = Math.round(bmr).toLocaleString('id');
-  document.getElementById('hasilTDEE').textContent = tdee.toLocaleString('id');
+  document.getElementById('hasilBMR').textContent    = Math.round(bmr).toLocaleString('id');
+  document.getElementById('hasilTDEE').textContent   = tdee.toLocaleString('id');
   document.getElementById('hasilDefisit').textContent = defisit;
+
+  // ── Peringatan BMR vs Kalori Diet ──────────────────────────
+  var bmrWarningEl = document.getElementById('bmrWarningBox');
+  if (bmrWarningEl) {
+    if (dietCal < 1200) {
+      // Bahaya: terlalu rendah
+      bmrWarningEl.style.display = 'block';
+      bmrWarningEl.innerHTML =
+        '<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;">' +
+          '<div style="font-size:22px;flex-shrink:0;">🚨</div>' +
+          '<div>' +
+            '<div style="font-size:13px;font-weight:800;color:#991B1B;margin-bottom:3px;">Kalori Diet Terlalu Rendah!</div>' +
+            '<div style="font-size:12px;color:#7F1D1D;line-height:1.5;">' +
+              'Target kalori <strong>' + dietCal.toLocaleString('id') + ' kkal</strong> berada di bawah batas aman (1.200 kkal). ' +
+              'Ini bisa menyebabkan kehilangan massa otot, lemas, dan efek yo-yo.' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:6px;">' +
+          '<button onclick="_setMetodeAndRecalc(\'standar\')" style="flex:1;padding:8px;background:var(--green2);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Ganti ke Standar</button>' +
+          '<button onclick="_setMetodeAndRecalc(\'ringan\')" style="flex:1;padding:8px;background:#fff;color:var(--green2);border:1.5px solid var(--green2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Ganti ke Ringan</button>' +
+        '</div>';
+      bmrWarningEl.style.cssText += 'background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:14px;margin-bottom:14px;';
+    } else if (dietCal < Math.round(bmr)) {
+      // Peringatan: di bawah BMR
+      bmrWarningEl.style.display = 'block';
+      bmrWarningEl.innerHTML =
+        '<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;">' +
+          '<div style="font-size:22px;flex-shrink:0;">⚠️</div>' +
+          '<div>' +
+            '<div style="font-size:13px;font-weight:800;color:#92400E;margin-bottom:3px;">Kalori Diet di Bawah BMR</div>' +
+            '<div style="font-size:12px;color:#78350F;line-height:1.5;">' +
+              'Target kalori <strong>' + dietCal.toLocaleString('id') + ' kkal</strong> lebih rendah dari BMR kamu (<strong>' + Math.round(bmr).toLocaleString('id') + ' kkal</strong>). ' +
+              'BMR adalah kebutuhan minimal organ vital — disarankan menambah olahraga atau mengurangi defisit.' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:6px;">' +
+          '<button onclick="_setMetodeAndRecalc(\'ringan\')" style="flex:1;padding:8px;background:var(--green2);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Kurangi Defisit → Ringan</button>' +
+          '<button onclick="closePanel(\'panelKalkulator\');openPanel(\'panelJadwalOlahraga\')" style="flex:1;padding:8px;background:#fff;color:#92400E;border:1.5px solid #FCD34D;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Tambah Olahraga</button>' +
+        '</div>';
+      bmrWarningEl.style.cssText += 'background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid #FCD34D;border-radius:12px;padding:14px;margin-bottom:14px;';
+    } else {
+      bmrWarningEl.style.display = 'none';
+      bmrWarningEl.innerHTML = '';
+    }
+  }
 
   document.getElementById('kalkulatorForm').style.display = 'none';
   document.getElementById('hasilKalkulator').style.display = 'block';
@@ -788,7 +835,17 @@ function hitungKalkulator() {
   if (mkKarboEl) mkKarboEl.textContent = macroKarbo + 'g';
 }
 
-async function simpanKalkulator(btnEl) {
+// Quick-fix: ganti metode dari warning box lalu hitung ulang
+function _setMetodeAndRecalc(metode) {
+  var el = document.getElementById('inputMetode');
+  if (el) el.value = metode;
+  // Kembali ke form, hitung ulang
+  document.getElementById('hasilKalkulator').style.display = 'none';
+  document.getElementById('kalkulatorForm').style.display  = 'block';
+  hitungKalkulator();
+}
+
+
   var data = window._tempKalData;
   if (!data) {
     showToast('Klik "Generate Program" terlebih dahulu ya kak!');
@@ -870,25 +927,79 @@ async function resetKalkulator() {
 function loadKalkulatorForm() {
   var k = appState.kalkulator;
   var q = appState.quiz;
+
   if (k) {
-    document.getElementById('inputNama').value = k.nama || '';
-    document.getElementById('inputGender').value = k.gender || 'perempuan';
-    document.getElementById('inputUsia').value = k.usia || '';
-    document.getElementById('inputBerat').value = k.berat || '';
-    document.getElementById('inputTinggi').value = k.tinggi || '';
+    document.getElementById('inputNama').value      = k.nama || '';
+    document.getElementById('inputGender').value    = k.gender || 'perempuan';
+    document.getElementById('inputUsia').value      = k.usia || '';
+    document.getElementById('inputBerat').value     = k.berat || '';
+    document.getElementById('inputTinggi').value    = k.tinggi || '';
     document.getElementById('inputAktivitas').value = k.aktivitas || 1.375;
-    document.getElementById('inputTarget').value = k.target || '';
-    document.getElementById('inputMetode').value = k.metode || 'standar';
+    document.getElementById('inputTarget').value    = k.target || '';
+    document.getElementById('inputMetode').value    = k.metode || 'standar';
+
+    // Jika ada kuis dan metodenya BEDA dari kalkulator tersimpan — tanya user
+    if (q && q.metode && q.metode !== k.metode) {
+      _showMetodeSuggestion(q.metode, q.tipeName, q.metodeName, k.metode);
+    } else {
+      _removeMetodeSuggestion();
+    }
   } else if (q) {
     document.getElementById('inputMetode').value = q.metode || 'standar';
-    var metodeEl = document.getElementById('inputMetode');
-    if (metodeEl) {
-      metodeEl.style.borderColor = 'var(--green)';
-      metodeEl.title = 'Otomatis dari hasil kuis: ' + q.metodeName;
-    }
+    _showMetodeBadge(q.metode, q.tipeName, q.metodeName);
   }
+
+  // Selalu tampilkan badge info dari kuis kalau ada
+  if (q && !k) _showMetodeBadge(q.metode, q.tipeName, q.metodeName);
   updateResetButtonVisibility();
   updateQuizResetButtonVisibility();
+}
+
+// Badge hijau: metode sudah sesuai kuis
+function _showMetodeBadge(metode, tipeName, metodeName) {
+  _removeMetodeSuggestion();
+  var wrap = document.getElementById('metodeInfoWrap');
+  if (!wrap) return;
+  wrap.innerHTML =
+    '<div style="margin-top:6px;display:flex;align-items:center;gap:6px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:8px;padding:7px 10px;">' +
+      '<span style="font-size:14px;">🎯</span>' +
+      '<span style="font-size:11px;color:#065F46;line-height:1.4;"><strong>Dari hasil kuis:</strong> ' + escHtml(tipeName || '') + ' → <strong>' + escHtml(metodeName || metode) + '</strong></span>' +
+    '</div>';
+}
+
+// Banner kuning: kuis rekomendasikan metode berbeda, tanya user
+function _showMetodeSuggestion(quizMetode, tipeName, metodeName, currentMetode) {
+  var wrap = document.getElementById('metodeInfoWrap');
+  if (!wrap) return;
+  var metodeLabel = { ringan: 'Ringan', standar: 'Standar', agresif: 'Agresif' };
+  wrap.innerHTML =
+    '<div id="metodeSuggestionBox" style="margin-top:6px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid #FCD34D;border-radius:10px;padding:10px 12px;">' +
+      '<div style="font-size:12px;font-weight:700;color:#78350F;margin-bottom:5px;">💡 Kuis merekomendasikan metode berbeda</div>' +
+      '<div style="font-size:11px;color:#92400E;margin-bottom:8px;line-height:1.5;">' +
+        'Tipe <strong>' + escHtml(tipeName || '') + '</strong> → <strong>' + escHtml(metodeName || quizMetode) + '</strong><br>' +
+        'Saat ini tersimpan: <strong>' + (metodeLabel[currentMetode] || currentMetode) + '</strong>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;">' +
+        '<button onclick="_applyMetodeKuis(\'' + quizMetode + '\',\'' + escHtml(tipeName||'') + '\',\'' + escHtml(metodeName||quizMetode) + '\')" ' +
+          'style="flex:1;padding:7px;background:var(--green2);color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">✓ Pakai dari kuis</button>' +
+        '<button onclick="_keepMetodeLama()" ' +
+          'style="flex:1;padding:7px;background:#fff;color:#92400E;border:1px solid #FCD34D;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">Tetap ' + (metodeLabel[currentMetode]||currentMetode) + '</button>' +
+      '</div>' +
+    '</div>';
+}
+
+function _applyMetodeKuis(metode, tipeName, metodeName) {
+  document.getElementById('inputMetode').value = metode;
+  _showMetodeBadge(metode, tipeName, metodeName);
+}
+
+function _keepMetodeLama() {
+  _removeMetodeSuggestion();
+}
+
+function _removeMetodeSuggestion() {
+  var wrap = document.getElementById('metodeInfoWrap');
+  if (wrap) wrap.innerHTML = '';
 }
 
 // ========== EVALUASI ==========
@@ -1024,9 +1135,29 @@ function startQuiz() {
   currentQ = 0;
   selectedAnswers = new Array(15).fill(null);
   finalResult = null;
-  document.getElementById('quizIntro').style.display = 'none';
+  document.getElementById('quizIntro').style.display   = 'none';
   document.getElementById('quizRunning').style.display = 'block';
-  document.getElementById('quizResult').style.display = 'none';
+  document.getElementById('quizResult').style.display  = 'none';
+
+  // Inject disclaimer pendekatan di atas pertanyaan pertama (sekali saja)
+  if (!document.getElementById('quizApproachDisclaimer')) {
+    var running = document.getElementById('quizRunning');
+    var disc = document.createElement('div');
+    disc.id = 'quizApproachDisclaimer';
+    disc.style.cssText = 'margin-bottom:12px;';
+    disc.innerHTML =
+      '<div style="background:linear-gradient(135deg,#EEF1EE,#E4EBE1);border:1px solid var(--border2);border-radius:12px;padding:11px 14px;display:flex;gap:10px;align-items:flex-start;">' +
+        '<div style="font-size:16px;flex-shrink:0;">🧪</div>' +
+        '<div>' +
+          '<div style="font-size:11px;font-weight:700;color:var(--green2);margin-bottom:3px;">Pendekatan: Self-Assessment Perilaku</div>' +
+          '<div style="font-size:11px;color:var(--green2);opacity:0.8;line-height:1.5;">' +
+            'Kuis ini <strong>bukan diagnosis medis</strong>. Hasil berdasarkan pola respons tubuh terhadap karbohidrat, lemak, olahraga, pencernaan, tidur & stres. Jawab sejujur mungkin.' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    running.insertBefore(disc, running.firstChild);
+  }
+
   renderQuestion();
 }
 
@@ -1084,7 +1215,24 @@ async function showResult() {
   try {
     finalResult = calculateResult();
     document.getElementById('quizRunning').style.display = 'none';
-    document.getElementById('quizResult').style.display = 'block';
+    document.getElementById('quizResult').style.display  = 'block';
+
+    // ── Disclaimer pendekatan di atas hasil ──────────────────
+    var discEl = document.getElementById('quizResultDisclaimer');
+    if (discEl) {
+      discEl.innerHTML =
+        '<div style="background:linear-gradient(135deg,#EEF1EE,#E4EBE1);border:1px solid var(--border2);border-radius:12px;padding:11px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;">' +
+          '<div style="font-size:16px;flex-shrink:0;">ℹ️</div>' +
+          '<div>' +
+            '<div style="font-size:11px;font-weight:700;color:var(--green2);margin-bottom:3px;">Tentang Hasil Kuis Ini</div>' +
+            '<div style="font-size:11px;color:var(--green2);opacity:0.8;line-height:1.5;">' +
+              'Menggunakan <strong>pendekatan self-assessment perilaku & gejala tubuh</strong> — bukan diagnosis medis. ' +
+              'Analisis berdasarkan: respons karbohidrat, distribusi lemak, respons olahraga, kondisi pencernaan, pola tidur & stres. ' +
+              'Gunakan sebagai panduan program, bukan pengganti saran dokter.' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }
 
     document.getElementById('qrTypeName').innerHTML = 'Tipe <em>' + escHtml(finalResult.name.replace('Tipe ','')) + '</em>';
     document.getElementById('qrTagline').textContent = finalResult.tagline;
@@ -1768,154 +1916,159 @@ window.resetAndEditQuiz = resetAndEditQuiz;
 function renderTipsKonten() {
   if (typeof tipsKontenData === 'undefined') return;
 
+  // ── Palet brand KEMOENIK ────────────────────────────────────
+  var C = {
+    green:    '#1F4D3A',
+    green2:   '#163628',
+    greenlit: '#2E6B53',
+    gold:     '#C8A96A',
+    gold2:    '#A8843F',
+    bgGreen:  '#EEF1EE',
+    bgGold:   '#F8F3EA',
+    border:   '#DDE4DA',
+    border2:  '#C5D1C1',
+    danger:   '#991B1B',
+    dangerBg: '#FEF2F2',
+    warn:     '#92400E',
+    warnBg:   '#FFFBEB',
+    warnBorder:'#FCD34D'
+  };
+
   // ── Konfigurasi dekorasi per topik ──────────────────────────
   var dekorasi = {
     'defisit': {
-      layout: 'highlight-dont',
       highlight: { icon: '🔥', label: 'Ingat selalu', teks: 'Defisit kalori adalah SATU-SATUNYA cara ilmiah untuk turun berat badan. Tidak ada jalan pintas.' },
       dos:   ['Ikuti target kalori dari kalkulator setiap hari', 'Defisit 300–500 kkal/hari = turun 0.3–0.5 kg/minggu (aman)', 'Catat makanan di aplikasi kalori jika perlu'],
-      donts: ['Potong kalori di bawah 1200 kkal/hari — berbahaya!', 'Skip makan demi defisit — justru bikin binge eating', 'Defisit terlalu agresif tanpa olahraga — hilang otot, bukan lemak'],
-      protip: { icon: '💡', teks: 'KEMOENIK membantu menghambat penyerapan lemak — kombinasikan dengan defisit kalori untuk hasil optimal.' }
+      donts: ['Potong kalori di bawah 1.200 kkal/hari — berbahaya!', 'Skip makan demi defisit — justru bikin binge eating', 'Defisit agresif tanpa olahraga — hilang otot, bukan lemak'],
+      protip: { icon: '🌿', teks: 'KEMOENIK membantu menghambat penyerapan lemak — kombinasikan dengan defisit kalori untuk hasil optimal.' }
     },
     'pola-makan': {
-      layout: 'highlight-dont',
       highlight: { icon: '🍽️', label: 'Aturan emas', teks: 'Protein dulu → Sayuran → Karbohidrat. Urutan makan ini terbukti turunkan lonjakan gula darah hingga 40%.' },
       dos:   ['Makan 3x sehari + 2x snack sehat, jangan skip sarapan', 'Perbanyak protein: telur, ayam, tempe, tahu, ikan di tiap makan', 'Sayuran hijau: makan sepuasnya, kalorinya sangat rendah', 'Ganti nasi putih → nasi merah, ubi, kentang rebus, oatmeal'],
-      donts: ['Gorengan, makanan olahan, dan minuman manis setiap hari', 'Makan sambil scroll HP — bikin tidak sadar sudah kelebihan porsi', 'Skip sarapan — bikin lapar berlebihan di siang & malam hari'],
+      donts: ['Gorengan, makanan olahan, dan minuman manis setiap hari', 'Makan sambil scroll HP — tidak sadar sudah kelebihan porsi', 'Skip sarapan — bikin lapar berlebihan di siang & malam'],
       protip: { icon: '⚖️', teks: 'Tidak harus makan "makanan diet" mahal. Yang penting: total kalori terjaga + protein cukup + sayuran banyak.' }
     },
     'olahraga-tips': {
-      layout: 'highlight-dont',
       highlight: { icon: '💪', label: 'Minimal efektif', teks: 'Jalan kaki 30 menit/hari sudah cukup untuk pemula. Konsistensi > intensitas — lakukan setiap hari meski ringan.' },
       dos:   ['Jalan kaki 30 menit/hari — titik awal yang sempurna', 'Jumping Jack: kardio rumahan tanpa alat, bakar 100–150 kkal/15 mnt', 'Lompat Tali: bakar ~200 kkal dalam 15 menit', 'Lymphatic Drainage: pijat malam 10–15 mnt untuk detoks & sirkulasi'],
       donts: ['Langsung olahraga ekstrem di awal — risiko cedera tinggi', 'Olahraga lalu makan gorengan sebagai "reward"', 'Lewatkan pemanasan — risiko otot kram atau cedera'],
       protip: { icon: '🌿', teks: 'Minum KEMOENIK sebelum olahraga membantu mobilisasi lemak dari sel — lemak lebih mudah dibakar jadi energi.' }
     },
     'air-putih': {
-      layout: 'highlight-dont',
       highlight: { icon: '💧', label: 'Target harian', teks: 'Minimal 2 liter (8 gelas) per hari. Minum 1–2 gelas segera setelah bangun tidur untuk kickstart metabolisme.' },
-      dos:   ['Minum 1 gelas 20–30 menit sebelum makan — kurangi porsi secara alami', 'Cek warna urin: kuning muda = cukup terhidrasi ✓', 'Bawa tumbler ke mana-mana agar tidak lupa minum', 'Tambah irisan lemon/mentimun jika bosan dengan air biasa'],
+      dos:   ['Minum 1 gelas 20–30 mnt sebelum makan — kurangi porsi secara alami', 'Cek warna urin: kuning muda = cukup terhidrasi ✓', 'Bawa tumbler ke mana-mana agar tidak lupa minum', 'Tambah irisan lemon/mentimun jika bosan air biasa'],
       donts: ['Minuman manis, soda, jus kemasan, kopi bergula', 'Menunggu haus baru minum — sudah terlambat, tubuh dehidrasi', 'Minum banyak sekaligus — lebih baik sedikit-sedikit tapi rutin'],
-      protip: { icon: '🌿', teks: 'KEMOENIK mengandung Tempuyung yang bersifat diuretik — pastikan minum 2–3 liter/hari agar detoks optimal dan tidak dehidrasi.' }
+      protip: { icon: '🌿', teks: 'KEMOENIK mengandung Tempuyung yang bersifat diuretik — pastikan minum 2–3 liter/hari agar detoks optimal.' }
     },
     'if-puasa': {
-      layout: 'highlight-dont',
       highlight: { icon: '🌙', label: 'IF 16:8', teks: 'Puasa 16 jam · Makan dalam jendela 8 jam. Contoh: makan jam 10:00–18:00, puasa 18:00–10:00 esok hari.' },
-      dos:   ['Boleh: air putih, teh herbal tanpa gula, kopi hitam tanpa gula saat puasa', 'Minum KEMOENIK saat buka puasa jam 10:00 untuk efek maksimal', 'Olahraga ringan pagi saat masih puasa — bakar lemak lebih optimal', 'Cocok untuk Tipe Lemak Fighter (Tipe 2) dan Tipe Hemat Energi (Tipe 4)'],
+      dos:   ['Boleh: air putih, teh herbal tanpa gula, kopi hitam tanpa gula', 'Minum KEMOENIK saat buka puasa jam 10:00 untuk efek maksimal', 'Olahraga ringan pagi saat masih puasa — bakar lemak lebih optimal', 'Cocok: Tipe Lemak Fighter & Tipe Hemat Energi'],
       donts: ['Ibu hamil & busui — jangan IF', 'Penderita maag aktif — konsultasi dokter dulu', 'Tipe Perut Sensitif (Tipe 6) — tidak dianjurkan', 'Langsung IF agresif tanpa adaptasi — mulai bertahap'],
-      protip: { icon: '⚡', teks: 'IF bukan wajib — defisit kalori biasa sudah efektif. IF hanya sebagai boost tambahan jika tubuhmu cocok.' }
+      protip: { icon: '⚡', teks: 'IF bukan wajib — defisit kalori biasa sudah efektif. IF hanya boost tambahan jika tubuhmu cocok.' }
     }
   };
 
-  // Konfigurasi dekorasi untuk accordion timeline (waktu-makan, lymphatic, tidur)
+  // ── Konfigurasi timeline ────────────────────────────────────
   var dekorasiTimeline = {
     'waktu-makan': {
-      highlight: { icon: '⏰', label: 'Aturan kunci', teks: 'Jangan makan berat setelah jam 19:00 — metabolisme melambat di malam hari dan kalori lebih mudah disimpan sebagai lemak.' },
+      highlight: { icon: '⏰', label: 'Aturan kunci', teks: 'Jangan makan berat setelah jam 19:00 — metabolisme melambat di malam hari.' },
       steps: [
-        { waktu: '06:00–08:00', label: 'Sarapan', desc: 'Jangan pernah skip! Aktifkan metabolisme pagi hari dengan protein + karbohidrat kompleks.', warn: false },
-        { waktu: '10:00–11:00', label: 'Snack Pagi', desc: 'Buah segar, kacang-kacangan, atau yogurt plain. Cegah lapar berlebihan saat makan siang.', warn: false },
-        { waktu: '11:30–13:00', label: 'Makan Siang', desc: 'Makanan terbesar kedua. Protein + sayuran + karbohidrat secukupnya.', warn: false },
+        { waktu: '06:00–08:00', label: 'Sarapan', desc: 'Jangan pernah skip! Aktifkan metabolisme pagi dengan protein + karbohidrat kompleks.', warn: false },
+        { waktu: '10:00–11:00', label: 'Snack Pagi', desc: 'Buah segar, kacang-kacangan, atau yogurt plain. Cegah lapar berlebihan.', warn: false },
+        { waktu: '11:30–13:00', label: 'Makan Siang', desc: 'Protein + sayuran + karbohidrat secukupnya.', warn: false },
         { waktu: '15:00–16:00', label: 'Snack Sore', desc: 'Ringan saja — buah, edamame, atau segenggam kacang. Hindari gorengan.', warn: false },
-        { waktu: '18:00–19:00', label: 'Makan Malam', desc: 'Protein + sayuran. Kurangi atau skip nasi malam hari.', warn: false },
-        { waktu: '07:30 & 18:30', label: '🌿 Minum KEMOENIK', desc: '3 kapsul sesudah sarapan pagi + 3 kapsul sesudah makan malam.', warn: false, highlight: true }
+        { waktu: '18:00–19:00', label: 'Makan Malam', desc: 'Protein + sayuran. Kurangi atau skip nasi malam.', warn: false },
+        { waktu: '07:30 & 18:30', label: '🌿 Minum KEMOENIK', desc: '3 kapsul sesudah sarapan + 3 kapsul sesudah makan malam.', warn: false, highlight: true }
       ],
       protip: { icon: '🕐', teks: 'Konsistensi waktu makan melatih tubuh untuk metabolisme yang lebih stabil dan terprediksi.' }
     },
     'lymphatic': {
-      highlight: { icon: '🌿', label: 'Kapan dilakukan', teks: 'Setiap malam sebelum tidur, durasi 10–15 menit. Gunakan minyak kelapa atau lotion agar lebih nyaman.' },
+      highlight: { icon: '🌿', label: 'Kapan dilakukan', teks: 'Setiap malam sebelum tidur, 10–15 menit. Gunakan minyak kelapa atau lotion.' },
       steps: [
-        { no: '1', label: 'Leher', desc: 'Pijat dari belakang telinga turun ke arah tulang selangka. 10x kiri & kanan perlahan.', warn: false },
+        { no: '1', label: 'Leher', desc: 'Pijat dari belakang telinga turun ke arah tulang selangka. 10x kiri & kanan.', warn: false },
         { no: '2', label: 'Ketiak', desc: 'Tekan ringan area ketiak dengan gerakan melingkar. 15x kiri & kanan.', warn: false },
-        { no: '3', label: 'Perut', desc: 'Pijat searah jarum jam dimulai dari pusar melebar ke luar. 15–20x.', warn: false },
-        { no: '4', label: 'Paha', desc: 'Tekan dari lutut ke arah atas paha. 10–15x per sisi. Bukan memijat keras!', warn: false },
+        { no: '3', label: 'Perut', desc: 'Pijat searah jarum jam dari pusar melebar ke luar. 15–20x.', warn: false },
+        { no: '4', label: 'Paha', desc: 'Tekan dari lutut ke arah atas paha. 10–15x per sisi.', warn: false },
         { no: '5', label: 'Betis', desc: 'Tekan dari pergelangan kaki ke arah lutut. 10x per sisi.', warn: false }
       ],
-      protip: { icon: '✨', teks: 'Cari video tutorial "Lymphatic Drainage Diet" di YouTube/TikTok untuk panduan visual gerakan yang benar.' }
+      protip: { icon: '✨', teks: 'Cari video "Lymphatic Drainage Diet" di YouTube/TikTok untuk panduan visual gerakan yang benar.' }
     },
     'tidur': {
-      highlight: { icon: '😴', label: 'Target tidur', teks: '7–8 jam per malam, tidur sebelum jam 23:00. Kurang tidur = hormon lapar naik + metabolisme melambat.' },
+      highlight: { icon: '😴', label: 'Target tidur', teks: '7–8 jam per malam, sebelum jam 23:00. Kurang tidur = hormon lapar naik + metabolisme melambat.' },
       steps: [
-        { no: '💡', label: 'Matikan layar HP 1 jam sebelum tidur', desc: 'Blue light dari layar menghambat produksi melatonin — hormon tidur.', warn: false },
-        { no: '🌡️', label: 'Kamar gelap dan sejuk (18–22°C)', desc: 'Suhu sejuk membantu tidur lebih nyenyak dan proses pemulihan sel lebih optimal.', warn: false },
-        { no: '🚫', label: 'Hindari kafein setelah jam 14:00', desc: 'Efek kafein bertahan 6–8 jam di tubuh — bisa ganggu kualitas tidur malam.', warn: true },
-        { no: '🍽️', label: 'Jangan makan berat 2–3 jam sebelum tidur', desc: 'Tubuh sibuk mencerna = kualitas tidur buruk + kalori mudah tersimpan jadi lemak.', warn: true },
-        { no: '🧘', label: 'Stretching ringan sebelum tidur', desc: '5–10 menit peregangan santai membantu tubuh relaks dan tidur lebih cepat.', warn: false }
+        { no: '💡', label: 'Matikan layar HP 1 jam sebelum tidur', desc: 'Blue light menghambat produksi melatonin — hormon tidur.', warn: false },
+        { no: '🌡️', label: 'Kamar gelap dan sejuk (18–22°C)', desc: 'Suhu sejuk membantu tidur nyenyak dan pemulihan sel lebih optimal.', warn: false },
+        { no: '🚫', label: 'Hindari kafein setelah jam 14:00', desc: 'Efek kafein bertahan 6–8 jam — bisa ganggu kualitas tidur malam.', warn: true },
+        { no: '🍽️', label: 'Jangan makan berat 2–3 jam sebelum tidur', desc: 'Tubuh sibuk mencerna = tidur buruk + kalori mudah jadi lemak.', warn: true },
+        { no: '🧘', label: 'Stretching ringan sebelum tidur', desc: '5–10 menit peregangan santai membantu tubuh relaks.', warn: false }
       ],
       protip: { icon: '🔥', teks: 'Tidur cukup = Growth Hormone naik saat malam = pembakaran lemak & pemulihan otot lebih efektif.' }
     }
   };
 
-  // ── Helper: render highlight box ────────────────────────────
-  function renderHighlight(h, warna, bg) {
-    return '<div style="background:linear-gradient(135deg,' + bg + ',' + bg + 'cc);border-left:3px solid ' + warna + ';border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;">' +
+  // ── Helpers ─────────────────────────────────────────────────
+  function renderHighlight(h) {
+    return '<div style="background:' + C.bgGreen + ';border-left:3px solid ' + C.green + ';border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;">' +
       '<div style="font-size:20px;flex-shrink:0;">' + h.icon + '</div>' +
-      '<div><div style="font-size:10px;font-weight:700;color:' + warna + ';text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">' + h.label + '</div>' +
-      '<div style="font-size:12px;color:#1F2937;line-height:1.6;font-weight:500;">' + h.teks + '</div></div>' +
+      '<div><div style="font-size:10px;font-weight:700;color:' + C.gold2 + ';text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">' + h.label + '</div>' +
+      '<div style="font-size:12px;color:' + C.green + ';line-height:1.6;font-weight:500;">' + h.teks + '</div></div>' +
     '</div>';
   }
 
-  // ── Helper: render pro tip ───────────────────────────────────
-  function renderProtip(p, warna) {
-    return '<div style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FCD34D;border-radius:10px;padding:10px 13px;margin-top:12px;display:flex;gap:8px;align-items:flex-start;">' +
+  function renderProtip(p) {
+    return '<div style="background:' + C.bgGold + ';border:1px solid ' + C.gold + ';border-radius:10px;padding:10px 13px;margin-top:12px;display:flex;gap:8px;align-items:flex-start;">' +
       '<div style="font-size:16px;flex-shrink:0;">' + p.icon + '</div>' +
-      '<div style="font-size:12px;color:#78350F;line-height:1.6;"><strong>Pro Tip:</strong> ' + p.teks + '</div>' +
+      '<div style="font-size:12px;color:' + C.gold2 + ';line-height:1.6;"><strong>Pro Tip:</strong> ' + p.teks + '</div>' +
     '</div>';
   }
 
-  // ── Helper: render do's & don'ts ────────────────────────────
-  function renderDoDont(dos, donts, warna) {
+  function renderDoDont(dos, donts) {
     var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;">';
-    // DO column
-    html += '<div style="background:#F0FDF4;border:1px solid #A7F3D0;border-radius:10px;padding:10px 11px;">';
-    html += '<div style="font-size:10px;font-weight:800;color:#065F46;margin-bottom:7px;display:flex;align-items:center;gap:4px;"><span style="background:#22C55E;color:#fff;border-radius:4px;padding:1px 6px;">✓ DO</span></div>';
+    html += '<div style="background:' + C.bgGreen + ';border:1px solid ' + C.border2 + ';border-radius:10px;padding:10px 11px;">';
+    html += '<div style="font-size:10px;font-weight:800;color:' + C.green + ';margin-bottom:7px;"><span style="background:' + C.green + ';color:#fff;border-radius:4px;padding:1px 7px;">✓ DO</span></div>';
     dos.forEach(function(d) {
-      html += '<div style="display:flex;gap:6px;margin-bottom:5px;font-size:11px;color:#064E3B;line-height:1.4;">';
-      html += '<span style="color:#22C55E;font-weight:800;flex-shrink:0;margin-top:1px;">✓</span><span>' + d + '</span></div>';
+      html += '<div style="display:flex;gap:6px;margin-bottom:5px;font-size:11px;color:' + C.green + ';line-height:1.4;"><span style="font-weight:800;flex-shrink:0;margin-top:1px;">✓</span><span>' + d + '</span></div>';
     });
     html += '</div>';
-    // DON'T column
-    html += '<div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:10px 11px;">';
-    html += '<div style="font-size:10px;font-weight:800;color:#991B1B;margin-bottom:7px;display:flex;align-items:center;gap:4px;"><span style="background:#EF4444;color:#fff;border-radius:4px;padding:1px 6px;">✗ DON\'T</span></div>';
+    html += '<div style="background:' + C.dangerBg + ';border:1px solid #FECACA;border-radius:10px;padding:10px 11px;">';
+    html += '<div style="font-size:10px;font-weight:800;color:' + C.danger + ';margin-bottom:7px;"><span style="background:#EF4444;color:#fff;border-radius:4px;padding:1px 7px;">✗ DON\'T</span></div>';
     donts.forEach(function(d) {
-      html += '<div style="display:flex;gap:6px;margin-bottom:5px;font-size:11px;color:#7F1D1D;line-height:1.4;">';
-      html += '<span style="color:#EF4444;font-weight:800;flex-shrink:0;margin-top:1px;">✗</span><span>' + d + '</span></div>';
+      html += '<div style="display:flex;gap:6px;margin-bottom:5px;font-size:11px;color:' + C.danger + ';line-height:1.4;"><span style="font-weight:800;flex-shrink:0;margin-top:1px;">✗</span><span>' + d + '</span></div>';
     });
-    html += '</div>';
-    html += '</div>';
+    html += '</div></div>';
     return html;
   }
 
-  // ── Helper: render timeline steps ───────────────────────────
-  function renderTimeline(steps, warna) {
+  function renderTimeline(steps) {
     var html = '<div style="position:relative;padding-left:36px;margin-bottom:4px;">';
-    html += '<div style="position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(' + warna + '33,' + warna + '11);border-radius:2px;"></div>';
+    html += '<div style="position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(' + C.green + '44,' + C.green + '11);border-radius:2px;"></div>';
     steps.forEach(function(s, i) {
       var isLast = i === steps.length - 1;
-      var dotBg = s.highlight ? 'background:' + warna + ';color:#fff;' :
-                  s.warn ? 'background:#FEE2E2;color:#DC2626;border:2px solid #FCA5A5;' :
-                  'background:#fff;color:' + warna + ';border:2px solid ' + warna + ';';
+      var dotStyle = s.highlight
+        ? 'background:' + C.gold2 + ';color:#fff;border:none;'
+        : s.warn
+          ? 'background:' + C.dangerBg + ';color:' + C.danger + ';border:2px solid #FECACA;'
+          : 'background:#fff;color:' + C.green + ';border:2px solid ' + C.green + ';';
       html += '<div style="position:relative;margin-bottom:' + (isLast ? '0' : '12px') + ';">';
-      // Dot
-      html += '<div style="position:absolute;left:-30px;top:2px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;' + dotBg + '">';
-      html += s.no !== undefined ? s.no : (i + 1);
+      html += '<div style="position:absolute;left:-30px;top:2px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;' + dotStyle + '">';
+      html += (s.no !== undefined ? s.no : (i + 1));
       html += '</div>';
-      // Content
-      var cardBg = s.highlight ? 'background:linear-gradient(135deg,' + warna + '15,' + warna + '08);border:1px solid ' + warna + '40;' :
-                   s.warn ? 'background:#FFF5F5;border:1px solid #FECACA;' :
-                   'background:var(--offwhite);border:1px solid var(--border);';
-      html += '<div style="border-radius:10px;padding:9px 12px;' + cardBg + '">';
-      var waktuHtml = s.waktu ? '<div style="font-size:10px;font-weight:700;color:' + warna + ';margin-bottom:2px;">' + s.waktu + '</div>' : '';
-      html += waktuHtml;
-      html += '<div style="font-size:12px;font-weight:700;color:' + (s.warn ? '#991B1B' : '#111827') + ';margin-bottom:2px;">' + s.label + '</div>';
-      html += '<div style="font-size:11px;color:' + (s.warn ? '#7F1D1D' : 'var(--text3)') + ';line-height:1.5;">' + s.desc + '</div>';
-      html += '</div>';
-      html += '</div>';
+      var cardStyle = s.highlight
+        ? 'background:' + C.bgGold + ';border:1px solid ' + C.gold + ';'
+        : s.warn
+          ? 'background:' + C.dangerBg + ';border:1px solid #FECACA;'
+          : 'background:' + C.bgGreen + ';border:1px solid ' + C.border + ';';
+      html += '<div style="border-radius:10px;padding:9px 12px;' + cardStyle + '">';
+      if (s.waktu) html += '<div style="font-size:10px;font-weight:700;color:' + C.gold2 + ';margin-bottom:2px;">' + s.waktu + '</div>';
+      html += '<div style="font-size:12px;font-weight:700;color:' + (s.warn ? C.danger : C.green) + ';margin-bottom:2px;">' + s.label + '</div>';
+      html += '<div style="font-size:11px;color:' + (s.warn ? C.danger : C.greenlit) + ';line-height:1.5;">' + s.desc + '</div>';
+      html += '</div></div>';
     });
     html += '</div>';
     return html;
   }
 
-  // ── Mapping accordion yang sudah ada di HTML ─────────────────
+  // ── Mapping accordion ────────────────────────────────────────
   var accMap = {
     'defisit':      'acc-defisit',
     'pola-makan':   'acc-gula',
@@ -1939,44 +2092,105 @@ function renderTipsKonten() {
 
     var d = dekorasi[tips.id];
     var html = '<div style="padding:6px 0 8px;">';
-
     if (d) {
-      // Highlight box
-      if (d.highlight) html += renderHighlight(d.highlight, tips.warna, tips.bgWarna);
-      // Do & Don't
-      if (d.dos && d.donts) html += renderDoDont(d.dos, d.donts, tips.warna);
-      // Pro Tip
-      if (d.protip) html += renderProtip(d.protip, tips.warna);
+      if (d.highlight) html += renderHighlight(d.highlight);
+      if (d.dos && d.donts) html += renderDoDont(d.dos, d.donts);
+      if (d.protip) html += renderProtip(d.protip);
     } else {
-      // Fallback: bullet biasa
       tips.konten.forEach(function(poin) {
-        html += '<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6;color:var(--text);">';
-        html += '<span style="color:' + tips.warna + ';flex-shrink:0;font-weight:700;">•</span><span>' + poin + '</span></div>';
+        html += '<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid ' + C.border + ';font-size:12px;line-height:1.6;color:' + C.green + ';">' +
+          '<span style="color:' + C.gold2 + ';flex-shrink:0;font-weight:700;">•</span><span>' + poin + '</span></div>';
       });
     }
-
     html += '</div>';
     setSafeHTML(bodyEl, html);
 
-    // Update sub label
-    if (subEl) {
-      var subLabels = {
-        'defisit':       '500 kkal defisit · Do\'s & Don\'ts',
-        'pola-makan':    'Protein dulu → Sayuran → Karbo',
-        'olahraga-tips': '30 menit/hari sudah cukup untuk mulai',
-        'air-putih':     '2 liter/hari · Kickstart metabolisme',
-        'if-puasa':      'Puasa 16 jam · Makan 10:00–18:00'
-      };
-      subEl.textContent = subLabels[tips.id] || tips.judul;
-    }
+    var subLabels = {
+      'defisit':       "500 kkal defisit · Do's & Don'ts",
+      'pola-makan':    'Protein dulu → Sayuran → Karbo',
+      'olahraga-tips': '30 menit/hari sudah cukup untuk mulai',
+      'air-putih':     '2 liter/hari · Kickstart metabolisme',
+      'if-puasa':      'Puasa 16 jam · Makan 10:00–18:00'
+    };
+    if (subEl) subEl.textContent = subLabels[tips.id] || tips.judul;
   });
 
-  // ── Accordion tambahan — Timeline layout ────────────────────
+  // ── Extra container ──────────────────────────────────────────
   var extraContainer = document.getElementById('tipsExtraContainer');
   if (!extraContainer) return;
 
-  var extraIds = ['waktu-makan', 'lymphatic', 'tidur'];
   var html = '';
+
+  // ── Accordion Cara Minum Kapsul ─────────────────────────────
+  html += '<div class="acc" id="acc-extra-caraminum" style="margin-bottom:8px;">';
+  html += '<div class="acc-hd" onclick="tog(\'acc-extra-caraminum\')">';
+  html += '<div class="acc-icon" style="background:' + C.bgGold + ';font-size:16px;display:flex;align-items:center;justify-content:center;">🌿</div>';
+  html += '<div class="acc-info"><div class="acc-title">Cara Minum Kapsul KEMOENIK</div>';
+  html += '<div class="acc-sub">2×3 atau 3×2 kapsul/hari · Sesudah makan</div></div>';
+  html += '<div class="acc-toggle">+</div></div>';
+  html += '<div class="acc-body"><div style="padding:6px 0 10px;">';
+
+  // Banner jadwal utama
+  html += '<div style="background:linear-gradient(135deg,' + C.green + ',' + C.green2 + ');border-radius:14px;padding:16px;margin-bottom:14px;">';
+  html += '<div style="font-size:11px;font-weight:700;color:' + C.gold + ';text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">⏰ Jadwal Konsumsi Harian</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">';
+  html += '<div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:12px;text-align:center;">';
+  html += '<div style="font-size:24px;margin-bottom:4px;">🌅</div>';
+  html += '<div style="font-size:16px;font-weight:800;color:#fff;">07.30</div>';
+  html += '<div style="font-size:10px;color:rgba(255,255,255,0.75);margin-top:2px;">Sesudah sarapan</div>';
+  html += '<div style="margin-top:6px;background:' + C.gold + ';color:#fff;border-radius:6px;padding:4px 0;font-size:11px;font-weight:700;">3 Kapsul</div>';
+  html += '</div>';
+  html += '<div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:12px;text-align:center;">';
+  html += '<div style="font-size:24px;margin-bottom:4px;">🌙</div>';
+  html += '<div style="font-size:16px;font-weight:800;color:#fff;">18.30</div>';
+  html += '<div style="font-size:10px;color:rgba(255,255,255,0.75);margin-top:2px;">Sesudah makan malam</div>';
+  html += '<div style="margin-top:6px;background:' + C.gold + ';color:#fff;border-radius:6px;padding:4px 0;font-size:11px;font-weight:700;">3 Kapsul</div>';
+  html += '</div></div></div>';
+
+  // Dua pilihan dosis
+  html += '<div style="font-size:11px;font-weight:700;color:' + C.gold2 + ';text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">📋 Dua Pilihan Dosis — Sama Efektifnya</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">';
+  html += '<div style="background:' + C.bgGreen + ';border:1.5px solid ' + C.green + ';border-radius:12px;padding:12px;text-align:center;">';
+  html += '<div style="font-size:22px;font-weight:800;color:' + C.green + ';margin-bottom:4px;">2 × 3</div>';
+  html += '<div style="font-size:11px;font-weight:700;color:' + C.green + ';margin-bottom:6px;">2 Kali · 3 Kapsul</div>';
+  html += '<div style="font-size:10px;color:' + C.greenlit + ';line-height:1.5;">Pagi sesudah sarapan + Malam sesudah makan. <strong>Paling direkomendasikan.</strong></div>';
+  html += '</div>';
+  html += '<div style="background:' + C.bgGold + ';border:1.5px solid ' + C.gold + ';border-radius:12px;padding:12px;text-align:center;">';
+  html += '<div style="font-size:22px;font-weight:800;color:' + C.gold2 + ';margin-bottom:4px;">3 × 2</div>';
+  html += '<div style="font-size:11px;font-weight:700;color:' + C.gold2 + ';margin-bottom:6px;">3 Kali · 2 Kapsul</div>';
+  html += '<div style="font-size:10px;color:' + C.gold2 + ';line-height:1.5;">Pagi + Siang + Malam sesudah makan. Cocok jika lambung sensitif.</div>';
+  html += '</div></div>';
+
+  // Fase maintenance
+  html += '<div style="background:' + C.bgGold + ';border:1px solid ' + C.gold + ';border-radius:11px;padding:12px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;">';
+  html += '<div style="font-size:18px;flex-shrink:0;">🏆</div>';
+  html += '<div><div style="font-size:11px;font-weight:700;color:' + C.gold2 + ';margin-bottom:3px;">Fase Maintenance — Setelah Target Tercapai</div>';
+  html += '<div style="font-size:11px;color:' + C.gold2 + ';line-height:1.5;">Turunkan dosis menjadi <strong>2×2 kapsul/hari</strong> untuk mempertahankan BB ideal dan mencegah yo-yo.</div></div></div>';
+
+  // Aturan penting (urgent = merah)
+  html += '<div style="background:' + C.dangerBg + ';border:1px solid #FECACA;border-radius:11px;padding:12px 14px;">';
+  html += '<div style="font-size:11px;font-weight:700;color:' + C.danger + ';margin-bottom:7px;">⚠️ Perlu Diperhatikan</div>';
+  var aturan = [
+    ['❌', 'Jangan minum saat perut kosong — selalu sesudah makan', true],
+    ['⏸️', 'Jeda saat haid H1–H3', true],
+    ['🤱', 'Busui: tidak dianjurkan karena bersifat peluntur lemak', true],
+    ['💊', 'Bersama obat dokter: beri jeda 30 menit', true],
+    ['✅', '100% herbal, tanpa BKO — aman untuk konsumsi jangka panjang', false]
+  ];
+  aturan.forEach(function(a) {
+    html += '<div style="display:flex;gap:6px;margin-bottom:4px;font-size:11px;color:' + (a[2] ? C.danger : C.green) + ';line-height:1.4;">' +
+      '<span style="flex-shrink:0;">' + a[0] + '</span><span>' + a[1] + '</span></div>';
+  });
+  html += '</div>';
+  html += '</div></div></div>';
+
+  // ── Accordion timeline lainnya ───────────────────────────────
+  var extraIds = ['waktu-makan', 'lymphatic', 'tidur'];
+  var subTexts = {
+    'waktu-makan': 'Makan terakhir max jam 19:00',
+    'lymphatic':   '5 langkah · 10–15 mnt/malam',
+    'tidur':       '7–8 jam · Sebelum jam 23:00'
+  };
 
   tipsKontenData.forEach(function(tips) {
     if (extraIds.indexOf(tips.id) === -1) return;
@@ -1985,31 +2199,24 @@ function renderTipsKonten() {
 
     html += '<div class="acc" id="' + uid + '" style="margin-bottom:8px;">';
     html += '<div class="acc-hd" onclick="tog(\'' + uid + '\')">';
-    html += '<div class="acc-icon" style="background:' + tips.bgWarna + ';font-size:16px;display:flex;align-items:center;justify-content:center;">' + tips.icon + '</div>';
+    html += '<div class="acc-icon" style="background:' + C.bgGreen + ';font-size:16px;display:flex;align-items:center;justify-content:center;">' + tips.icon + '</div>';
     html += '<div class="acc-info"><div class="acc-title">' + tips.judul + '</div>';
-
-    var subTexts = {
-      'waktu-makan': 'Makan terakhir max jam 19:00',
-      'lymphatic':   '5 langkah · 10–15 mnt/malam',
-      'tidur':       '7–8 jam · Sebelum jam 23:00'
-    };
     html += '<div class="acc-sub">' + (subTexts[tips.id] || '') + '</div></div>';
     html += '<div class="acc-toggle">+</div></div>';
-
-    // Body dengan timeline layout
     html += '<div class="acc-body"><div style="padding:6px 0 8px;">';
+
     if (dt) {
       if (dt.highlight) {
-        html += '<div style="background:linear-gradient(135deg,' + tips.bgWarna + ',' + tips.bgWarna + 'cc);border-left:3px solid ' + tips.warna + ';border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;">';
+        html += '<div style="background:' + C.bgGreen + ';border-left:3px solid ' + C.green + ';border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;">';
         html += '<div style="font-size:20px;flex-shrink:0;">' + dt.highlight.icon + '</div>';
-        html += '<div><div style="font-size:10px;font-weight:700;color:' + tips.warna + ';text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">' + dt.highlight.label + '</div>';
-        html += '<div style="font-size:12px;color:#1F2937;line-height:1.6;font-weight:500;">' + dt.highlight.teks + '</div></div></div>';
+        html += '<div><div style="font-size:10px;font-weight:700;color:' + C.gold2 + ';text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">' + dt.highlight.label + '</div>';
+        html += '<div style="font-size:12px;color:' + C.green + ';line-height:1.6;font-weight:500;">' + dt.highlight.teks + '</div></div></div>';
       }
-      if (dt.steps) html += renderTimeline(dt.steps, tips.warna);
+      if (dt.steps) html += renderTimeline(dt.steps);
       if (dt.protip) {
-        html += '<div style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FCD34D;border-radius:10px;padding:10px 13px;margin-top:12px;display:flex;gap:8px;align-items:flex-start;">';
+        html += '<div style="background:' + C.bgGold + ';border:1px solid ' + C.gold + ';border-radius:10px;padding:10px 13px;margin-top:12px;display:flex;gap:8px;align-items:flex-start;">';
         html += '<div style="font-size:16px;flex-shrink:0;">' + dt.protip.icon + '</div>';
-        html += '<div style="font-size:12px;color:#78350F;line-height:1.6;"><strong>Pro Tip:</strong> ' + dt.protip.teks + '</div></div>';
+        html += '<div style="font-size:12px;color:' + C.gold2 + ';line-height:1.6;"><strong>Pro Tip:</strong> ' + dt.protip.teks + '</div></div>';
       }
     }
     html += '</div></div></div>';
@@ -2017,7 +2224,6 @@ function renderTipsKonten() {
 
   setSafeHTML(extraContainer, html);
 
-  // Sembunyikan container lama
   var oldContainer = document.getElementById('tipsKontenContainer');
   if (oldContainer) {
     oldContainer.style.display = 'none';
@@ -2027,6 +2233,7 @@ function renderTipsKonten() {
     }
   }
 }
+
 
 
 // ============================================================
