@@ -2615,7 +2615,7 @@ function toggleHerbalItem(id) {
 function renderPanduanWebApp() {
   if (typeof panduanWebAppData === 'undefined') return;
   var container = document.getElementById('panduanWebAppBody');
-  if (!container) return;
+  if (!container) return; // panel belum terbuka, tidak apa-apa
 
   var C = {
     green:   '#1F4D3A',
