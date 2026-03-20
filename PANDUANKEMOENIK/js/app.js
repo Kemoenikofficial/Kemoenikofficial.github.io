@@ -795,7 +795,7 @@ function hitungKalkulator() {
         '</div>' +
         '<div style="display:flex;gap:6px;">' +
           '<button onclick="_setMetodeAndRecalc(\'ringan\')" style="flex:1;padding:8px;background:var(--green2);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Kurangi Defisit → Ringan</button>' +
-          '<button onclick="closePanel(\'panelKalkulator\');openPanel(\'panelJadwalOlahraga\')" style="flex:1;padding:8px;background:#fff;color:#92400E;border:1.5px solid #FCD34D;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Tambah Olahraga</button>' +
+          '<button onclick="_naikkanAktivitas()" style="flex:1;padding:8px;background:#fff;color:#92400E;border:1.5px solid #FCD34D;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">⬆️ Naikkan Aktivitas</button>' +
         '</div>';
       bmrWarningEl.style.cssText += 'background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1.5px solid #FCD34D;border-radius:12px;padding:14px;margin-bottom:14px;';
     } else {
@@ -840,6 +840,25 @@ function _setMetodeAndRecalc(metode) {
   var el = document.getElementById('inputMetode');
   if (el) el.value = metode;
   // Kembali ke form, hitung ulang
+  document.getElementById('hasilKalkulator').style.display = 'none';
+  document.getElementById('kalkulatorForm').style.display  = 'block';
+  hitungKalkulator();
+}
+
+// Naikkan level aktivitas satu tingkat lalu hitung ulang
+function _naikkanAktivitas() {
+  var el = document.getElementById('inputAktivitas');
+  if (!el) return;
+  var levels = ['1.2', '1.375', '1.55', '1.725', '1.9'];
+  var current = el.value;
+  var idx = levels.indexOf(current);
+  if (idx < levels.length - 1) {
+    el.value = levels[idx + 1];
+    showToast('✅ Level aktivitas dinaikkan satu tingkat!');
+  } else {
+    showToast('⚠️ Sudah di level aktivitas tertinggi!');
+    return;
+  }
   document.getElementById('hasilKalkulator').style.display = 'none';
   document.getElementById('kalkulatorForm').style.display  = 'block';
   hitungKalkulator();
