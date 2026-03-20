@@ -845,7 +845,7 @@ function _setMetodeAndRecalc(metode) {
   hitungKalkulator();
 }
 
-
+async function simpanKalkulator(btnEl) {
   var data = window._tempKalData;
   if (!data) {
     showToast('Klik "Generate Program" terlebih dahulu ya kak!');
