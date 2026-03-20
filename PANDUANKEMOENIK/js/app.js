@@ -226,6 +226,7 @@ function renderAll() {
   renderTipsNotif();
   renderTipsKonten();
   renderHerbalKemoenik();
+  renderPanduanWebApp();
   renderJadwalOlahraga();
   renderMenuHarian();
   renderDrawer();
@@ -2606,4 +2607,88 @@ function toggleHerbalItem(id) {
   if (arr) {
     arr.style.transform = isOpen ? '' : 'rotate(90deg)';
   }
+}
+
+// ============================================================
+// RENDER PANDUAN WEB APP
+// ============================================================
+function renderPanduanWebApp() {
+  if (typeof panduanWebAppData === 'undefined') return;
+  var container = document.getElementById('panduanWebAppBody');
+  if (!container) return;
+
+  var C = {
+    green:   '#1F4D3A',
+    green2:  '#163628',
+    gold:    '#C8A96A',
+    gold2:   '#A8843F',
+    bgGreen: '#EEF1EE',
+    bgGold:  '#F8F3EA',
+    border:  '#C5D1C1',
+    border2: '#C8A96A44'
+  };
+
+  var html = '';
+
+  // ── ALUR ──────────────────────────────────────────────────
+  html += '<div style="font-size:11px;font-weight:800;color:' + C.gold2 + ';text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">🚀 Alur Memulai Program</div>';
+  html += '<div style="background:' + C.bgGreen + ';border-radius:12px;padding:12px;margin-bottom:16px;display:flex;align-items:center;overflow-x:auto;gap:0;">';
+  panduanWebAppData.alur.forEach(function(a, i) {
+    var isLast = i === panduanWebAppData.alur.length - 1;
+    var numBg = a.gold
+      ? 'background:linear-gradient(135deg,' + C.gold + ',' + C.gold2 + ');'
+      : 'background:linear-gradient(135deg,' + C.green + ',' + C.green2 + ');';
+    html += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;min-width:52px;">';
+    html += '<div style="width:26px;height:26px;border-radius:50%;' + numBg + 'color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">' + a.no + '</div>';
+    html += '<div style="font-size:17px;">' + a.icon + '</div>';
+    html += '<div style="font-size:8.5px;font-weight:800;color:' + (a.gold ? C.gold2 : C.green) + ';line-height:1.2;">' + a.nama + '</div>';
+    html += '<div style="font-size:7.5px;color:#4A7A60;line-height:1.3;padding:0 2px;">' + a.desc + '</div>';
+    html += '</div>';
+    if (!isLast) {
+      html += '<div style="font-size:16px;color:' + C.gold + ';font-weight:900;flex-shrink:0;padding:0 1px;margin-bottom:20px;">›</div>';
+    }
+  });
+  html += '</div>';
+
+  // ── SCREENSHOTS ───────────────────────────────────────────
+  html += '<div style="font-size:11px;font-weight:800;color:' + C.gold2 + ';text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">📱 Tampilan Web App</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:16px;">';
+  panduanWebAppData.screenshots.forEach(function(s) {
+    html += '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">';
+    html += '<div style="width:100%;aspect-ratio:9/16;border-radius:8px;overflow:hidden;border:1.5px solid ' + C.border + ';box-shadow:0 2px 8px rgba(31,77,58,0.10);">';
+    html += '<img src="data:image/jpeg;base64,' + s.b64 + '" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="' + s.key + '">';
+    html += '</div>';
+    html += '<div style="background:' + C.green + ';color:#fff;font-size:7.5px;font-weight:800;padding:2px 7px;border-radius:4px;white-space:nowrap;">' + s.badge + '</div>';
+    html += '<div style="font-size:7.5px;color:#4A7A60;text-align:center;line-height:1.3;">' + s.caption + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // ── FITUR ─────────────────────────────────────────────────
+  html += '<div style="font-size:11px;font-weight:800;color:' + C.gold2 + ';text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">🗂️ Fitur-Fitur di Dalam Web</div>';
+  html += '<div style="display:flex;flex-direction:column;gap:6px;">';
+  panduanWebAppData.fitur.forEach(function(f) {
+    var cardBg  = f.dark  ? 'background:linear-gradient(135deg,' + C.green + ',' + C.green2 + ');border:none;'
+                : f.gold  ? 'background:' + C.bgGold + ';border:1px solid ' + C.border2 + ';'
+                :            'background:' + C.bgGreen + ';border:1px solid ' + C.border + ';';
+    var tabBg   = f.dark  ? 'background:rgba(200,169,106,0.3);color:' + C.gold + ';'
+                : f.gold  ? 'background:' + C.gold2 + ';color:#fff;'
+                :            'background:' + C.green + ';color:#fff;';
+    var nameCl  = f.dark  ? 'color:' + C.gold + ';' : 'color:' + C.green + ';';
+    var descCl  = f.dark  ? 'color:rgba(255,255,255,0.75);' : 'color:#4A7A60;';
+    var icoBg   = f.dark  ? 'background:rgba(200,169,106,0.25);' : 'background:rgba(255,255,255,0.8);';
+
+    html += '<div style="' + cardBg + 'border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start;">';
+    html += '<div style="width:32px;height:32px;border-radius:8px;' + icoBg + 'display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">' + f.icon + '</div>';
+    html += '<div style="flex:1;">';
+    html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">';
+    html += '<div style="' + tabBg + 'font-size:8px;font-weight:800;padding:1.5px 6px;border-radius:3px;">' + f.tab + '</div>';
+    html += '<div style="font-size:12px;font-weight:700;' + nameCl + '">' + f.nama + '</div>';
+    html += '</div>';
+    html += '<div style="font-size:11px;' + descCl + 'line-height:1.6;">' + f.poin.join(' · ') + '</div>';
+    html += '</div></div>';
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
 }
