@@ -1,0 +1,62 @@
+@media (max-width:992px){
+  body{padding-top:65px;}
+  .hero_area{min-height:calc(100vh - 65px);}
+  .custom_nav-container .navbar-nav{padding-top:15px;padding-left:0;align-items:center;background:rgba(22,54,40,0.98);border-top:1px solid rgba(255,255,255,0.1);margin-top:10px;padding-bottom:10px;}
+  .user_option{justify-content:center;margin:10px 0 5px;}
+  .custom_nav-container .navbar-nav .nav-item .nav-link{padding:8px 25px;margin:3px 0;}
+  .offer_section .box{flex-direction:column;align-items:center;text-align:center;}
+  .offer_section .box .img-box{margin-right:0;margin-bottom:15px;}
+  .book_section .map_container{height:260px;}
+}
+
+@media (max-width:767px){
+  .navbar-brand .brand-kemo,.navbar-brand .brand-enik{font-size:22px !important;}
+  .hero_area{min-height:100svh;}
+  .slider_section{padding:40px 0 60px;}
+  .slider_section .detail-box h1{font-size:2.2rem;}
+  .slider_section .detail-box p{font-size:13px;}
+  .slider_section .detail-box a{padding:10px 24px;font-size:13px;}
+
+  .offer_section .box{flex-direction:row;text-align:left;padding:16px 14px;}
+  .offer_section .box .img-box{width:100px !important;min-width:100px !important;height:100px !important;margin-right:14px;margin-bottom:0;}
+  .offer_section .box .detail-box h5{font-size:15px;}
+  .offer_section .box .detail-box h6 span{font-size:1.5rem !important;}
+  .offer_section .box .detail-box a{padding:7px 16px;font-size:12px;}
+
+  .food_section .filters-content .row.grid{margin-left:-6px;margin-right:-6px;}
+  .food_section .col-sm-6{width:50% !important;padding-left:6px;padding-right:6px;}
+  .food_section .box .img-box{height:140px;padding:10px;}
+  .food_section .box .img-box img{max-height:110px;}
+  .food_section .box .detail-box{padding:10px;}
+  .food_section .box .detail-box h5{font-size:12px;}
+  .food_section .box .detail-box p{font-size:10px;}
+  .food_section .box .harga-diskon{font-size:14px;}
+  .food_section .box .btn-wa{font-size:11px;padding:8px 6px;}
+
+  .about_section .row{flex-direction:column-reverse;}
+  .about_section .detail-box{margin-top:25px;}
+
+  .book_section .contact-card{padding:24px 18px;}
+  .book_section .form_container{margin-bottom:30px;}
+  .book_section .map_container{height:240px;}
+
+  .client_section .testimoni-grid{grid-template-columns:1fr;}
+  .footer_section{padding:50px 0 25px;}
+}
+
+@media (max-width:480px){
+  body{padding-top:60px;}
+  .navbar-brand .brand-kemo,.navbar-brand .brand-enik{font-size:20px !important;}
+  .slider_section .detail-box h1{font-size:1.8rem;}
+  .food_section .col-sm-6{width:50% !important;padding-left:5px;padding-right:5px;}
+  .food_section .box .img-box{height:120px;}
+  .food_section .box .btn-wa{font-size:10px;}
+  .offer_section .box .detail-box h5{font-size:13px;}
+}
+
+@media (max-width:376px){
+  .navbar-brand .brand-kemo,.navbar-brand .brand-enik{font-size:18px !important;}
+  .slider_section .detail-box h1{font-size:1.6rem;}
+}
+
+@media (min-width:1200px){.container{max-width:1170px;}}
