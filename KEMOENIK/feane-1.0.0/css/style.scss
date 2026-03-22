@@ -1,446 +1,166 @@
-/* ─────────────────────────────────────────────
-   KEMOENIK Official Store — style.css
-   Font  : Inter (body) + Playfair Display (heading)
-   Warna : 1:1 dari web app KEMOENIK
-───────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
+<!DOCTYPE html>
+<html>
 
-:root {
-  --green:   #1F4D3A;
-  --green2:  #163628;
-  --green3:  #2E6B53;
-  --gold:    #C8A96A;
-  --gold2:   #A8843F;
-  --bg:      #F6F4EF;
-  --white:   #ffffff;
-  --border:  #DDE4DA;
-  --text:    #1E2B26;
-  --text2:   #2A3D34;
-  --text3:   #8A9A92;
-  --shadow:  0 4px 16px rgba(15,40,25,0.08);
-  --radius:  10px;
-}
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- EDIT: isi keywords dan description -->
+  <meta name="keywords" content="kemoenik, tentang kami, herbal, brand" />
+  <meta name="description" content="Tentang Kemoenik Official Store" />
+  <meta name="author" content="Kemoenik" />
+  <link rel="shortcut icon" href="images/favicon.png" type="">
 
-/* ── BASE ── */
-*, *::before, *::after { box-sizing: border-box; }
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  color: var(--text);
-  background: var(--bg);
-  overflow-x: hidden;
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-}
-h1, h2, h3, h4, h5 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; line-height: 1.25; }
-a, a:hover, a:focus { text-decoration: none; }
-.btn, .btn:focus { outline: none !important; box-shadow: none; }
-img { max-width: 100%; display: block; }
+  <!-- EDIT: ganti judul tab -->
+  <title>Tentang Kami - Kemoenik Official Store</title>
 
-/* ── LAYOUT ── */
-.layout_padding        { padding: 80px 0; }
-.layout_padding2       { padding: 60px 0; }
-.layout_padding2-top   { padding-top: 60px; }
-.layout_padding2-bottom{ padding-bottom: 60px; }
-.layout_padding-top    { padding-top: 80px; }
-.layout_padding-bottom { padding-bottom: 80px; }
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/responsive.css" rel="stylesheet" />
+</head>
 
-/* ── HEADING ── */
-.heading_container {
-  display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 24px;
-}
-.heading_container h2 { font-size: 2rem; margin: 0; }
-.heading_container h2 span { color: var(--gold); }
-.heading_container p { color: var(--text3); font-size: 14px; margin: 6px 0 0; }
-.heading_container.heading_center { align-items: center; text-align: center; }
+<body class="sub_page">
 
-/* ══════════════════════════════════════
-   NAVBAR
-══════════════════════════════════════ */
-.hero_area {
-  background: linear-gradient(160deg, var(--green) 0%, var(--green2) 100%);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-.hero_area.full-hero { min-height: 100vh; }
-.sub_page .hero_area  { min-height: auto; }
+  <div class="hero_area">
+    <div class="bg-box">
+      <!-- EDIT: ganti foto background hero -->
+      <img src="images/hero-bg.jpg" alt="">
+    </div>
 
-.bg-box { position: absolute; inset: 0; pointer-events: none; }
-.bg-box img { width: 100%; height: 100%; object-fit: cover; opacity: .06; }
+    <!-- ========== HEADER / NAVBAR ========== -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="index.html">
+            <!-- EDIT: nama brand di navbar -->
+            <span>Kemoenik</span>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="menu.html">Produk</a></li>
+              <li class="nav-item active"><a class="nav-link" href="about.html">Tentang Kami <span class="sr-only">(current)</span></a></li>
+              <li class="nav-item"><a class="nav-link" href="book.html">Hubungi Kami</a></li>
+            </ul>
+            <div class="user_option">
+              <a href="" class="user_link"><i class="fa fa-user" aria-hidden="true"></i></a>
+              <a class="cart_link" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" xml:space="preserve">
+                  <g><g><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/></g></g>
+                  <g><g><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/></g></g>
+                  <g><g><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></g></g>
+                </svg>
+              </a>
+              <form class="form-inline">
+                <button class="btn my-2 my-sm-0 nav_search-btn" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+              </form>
+              <!-- EDIT: link order online -->
+              <a href="#" class="order_online">Order Sekarang</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- ========== END HEADER ========== -->
+  </div>
 
-.header_section { padding: 12px 0; position: relative; z-index: 100; }
+  <!-- ========== ABOUT SECTION ========== -->
+  <section class="about_section layout_padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="img-box">
+            <!-- EDIT: ganti images/about-img.png dengan foto brand/produk kamu -->
+            <img src="images/about-img.png" alt="Kemoenik">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="heading_container">
+              <!-- EDIT: judul about -->
+              <h2>Kami Adalah Kemoenik</h2>
+            </div>
+            <!-- EDIT: isi deskripsi brand kamu di sini -->
+            <p>
+              Kemoenik adalah brand herbal terpercaya yang hadir untuk membantu kamu mencapai tubuh ideal secara alami.
+              Produk kami diformulasikan dari bahan-bahan herbal pilihan, aman, dan telah terbukti efektif digunakan
+              oleh ribuan pelanggan di seluruh Indonesia.
+            </p>
+            <p>
+              Kami percaya bahwa kesehatan adalah investasi terbaik. Dengan Kemoenik, kamu bisa mendapatkan
+              tubuh yang lebih sehat dan ideal tanpa harus khawatir tentang efek samping.
+            </p>
+            <!-- EDIT: ganti href ke halaman atau link yang relevan -->
+            <a href="menu.html">Lihat Produk Kami</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ========== END ABOUT SECTION ========== -->
 
-.navbar-brand { padding: 0; }
-.navbar-brand span {
-  font-family: 'Inter', sans-serif;
-  font-size: 22px; font-weight: 800;
-  color: #fff; letter-spacing: 3px;
-}
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer_section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 footer-col">
+          <div class="footer_contact">
+            <h4>Hubungi Kami</h4>
+            <div class="contact_link_box">
+              <!-- EDIT: ganti dengan alamat kamu -->
+              <a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span>Jakarta, Indonesia</span></a>
+              <!-- EDIT: ganti dengan nomor WA kamu -->
+              <a href="https://wa.me/6281234567890"><i class="fa fa-phone" aria-hidden="true"></i><span>+62 812-3456-7890</span></a>
+              <!-- EDIT: ganti dengan email kamu -->
+              <a href="mailto:kemoenik@gmail.com"><i class="fa fa-envelope" aria-hidden="true"></i><span>kemoenik@gmail.com</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <div class="footer_detail">
+            <!-- EDIT: nama brand di footer -->
+            <a href="index.html" class="footer-logo">Kemoenik</a>
+            <!-- EDIT: tagline brand -->
+            <p>Produk herbal alami untuk tubuh lebih ideal. Terpercaya, aman, dan sudah terbukti.</p>
+            <div class="footer_social">
+              <!-- EDIT: ganti href dengan link sosmed kamu -->
+              <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <!-- EDIT: jam operasional -->
+          <h4>Jam Layanan</h4>
+          <p>Senin - Sabtu</p>
+          <p>08.00 - 21.00 WIB</p>
+        </div>
+      </div>
+      <div class="footer-info">
+        <p>&copy; <span id="displayYear"></span> Kemoenik Official Store. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+  <!-- ========== END FOOTER ========== -->
 
-.custom_nav-container { padding: 0; }
-.custom_nav-container .navbar-nav { padding-left: 8%; }
-.custom_nav-container .navbar-nav .nav-item .nav-link {
-  font-family: 'Inter', sans-serif;
-  color: rgba(255,255,255,.80);
-  font-size: 13px; font-weight: 600;
-  letter-spacing: .8px; text-transform: uppercase;
-  padding: 6px 16px; transition: color .2s;
-}
-.custom_nav-container .navbar-nav .nav-item:hover .nav-link,
-.custom_nav-container .navbar-nav .nav-item.active .nav-link { color: var(--gold); }
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <script src="js/custom.js"></script>
+  <!-- EDIT: ganti API key Google Maps -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap"></script>
 
-.custom_nav-container .nav_search-btn { width:auto; height:auto; padding:0; border:none; color:#fff; background:none; margin:0 8px; }
-.custom_nav-container .nav_search-btn:hover { color: var(--gold); }
-
-.user_option { display: flex; align-items: center; gap: 4px; }
-.user_option .user_link { color: #fff; padding: 6px; font-size: 16px; transition: color .2s; }
-.user_option .user_link:hover { color: var(--gold); }
-
-.cart_link { position: relative; display: flex; align-items: center; padding: 6px 8px; color: #fff; }
-.cart_link svg { width: 18px; fill: #fff; transition: fill .2s; }
-.cart_link:hover svg { fill: var(--gold); }
-
-.cart_badge {
-  position: absolute; top: 0; right: 0;
-  background: var(--gold); color: #fff;
-  font-size: 9px; font-weight: 800;
-  min-width: 16px; height: 16px;
-  border-radius: 8px; padding: 0 4px;
-  display: none; align-items: center; justify-content: center;
-}
-.cart_badge.show { display: flex; }
-
-.order_online {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 9px 18px; background: var(--gold); color: #fff;
-  border-radius: 50px; font-family: 'Inter', sans-serif;
-  font-weight: 700; font-size: 13px;
-  transition: background .2s; white-space: nowrap; margin-left: 6px;
-}
-.order_online:hover { background: var(--gold2); color: #fff; }
-
-/* Hamburger */
-.custom_nav-container .navbar-toggler { outline:none; padding:0; width:36px; height:40px; border:none; background:none; }
-.custom_nav-container .navbar-toggler span { display:block; width:22px; height:2px; background:#fff; margin:5px auto; border-radius:2px; transition:all .3s; position:relative; }
-.custom_nav-container .navbar-toggler span::before,
-.custom_nav-container .navbar-toggler span::after { content:''; position:absolute; left:0; width:100%; height:100%; background:#fff; border-radius:2px; transition:all .3s; }
-.custom_nav-container .navbar-toggler span::before { top:-7px; }
-.custom_nav-container .navbar-toggler span::after  { top:7px;  }
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span { transform:rotate(45deg); }
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span::before,
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span::after { transform:rotate(90deg); top:0; }
-
-/* ══════════════════════════════════════
-   HERO SLIDER
-══════════════════════════════════════ */
-.slider_section {
-  flex: 1; display: flex; align-items: center;
-  position: relative; z-index: 1;
-  padding: 60px 0 80px;
-}
-.slider_section .row { align-items: center; }
-.slider_section #customCarousel1 { width: 100%; position: unset; }
-.slider_section .detail-box { color: #fff; }
-.slider_section .detail-box h1 {
-  font-size: 2.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 14px;
-}
-.slider_section .detail-box h1 span { color: var(--gold); }
-.slider_section .detail-box p { font-size: 14px; color: rgba(255,255,255,.75); line-height: 1.7; margin-bottom: 22px; }
-.slider_section .detail-box a {
-  display: inline-block; padding: 12px 36px;
-  background: var(--gold); color: #fff;
-  border-radius: 50px; font-family: 'Inter', sans-serif;
-  font-weight: 700; font-size: 14px; transition: background .2s;
-}
-.slider_section .detail-box a:hover { background: var(--gold2); }
-.slider_section .img-box img { width: 100%; border-radius: 16px; }
-.slider_section .carousel-indicators { position: unset; margin: 20px 0 0; justify-content: flex-start; align-items: center; }
-.slider_section .carousel-indicators li { background: rgba(255,255,255,.35); width: 8px; height: 8px; border-radius: 50%; opacity: 1; border: none; transition: all .3s; }
-.slider_section .carousel-indicators li.active { background: var(--gold); width: 24px; border-radius: 4px; }
-
-/* ══════════════════════════════════════
-   PRODUK UNGGULAN (offer)
-══════════════════════════════════════ */
-.offer_section { background: var(--white); }
-.offer_section .box {
-  display: flex; align-items: center; gap: 18px;
-  padding: 20px; border-radius: var(--radius);
-  background: var(--green); color: #fff;
-  margin-top: 24px;
-  transition: transform .25s, box-shadow .25s;
-}
-.offer_section .box:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
-.offer_section .box .img-box {
-  width: 130px; min-width: 130px; height: 130px;
-  border-radius: 50%; border: 3px solid var(--gold);
-  overflow: hidden; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--green2);
-}
-.offer_section .box .img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
-.offer_section .box:hover .img-box img { transform: scale(1.07); }
-.offer_section .box .detail-box h5 { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 700; margin: 0 0 4px; }
-.offer_section .box .detail-box h6 { font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(255,255,255,.65); margin: 4px 0 8px; }
-.offer_section .box .detail-box h6 span { font-size: 1.6rem; font-weight: 800; color: var(--gold); }
-.offer_section .box .detail-box p { font-size: 12px; color: rgba(255,255,255,.65); margin: 0 0 12px; }
-.offer_section .box .detail-box a {
-  display: inline-block; padding: 8px 22px;
-  background: var(--gold); color: #fff;
-  border-radius: 50px; font-family: 'Inter', sans-serif;
-  font-weight: 700; font-size: 13px; transition: background .2s;
-}
-.offer_section .box .detail-box a:hover { background: var(--gold2); }
-
-/* ══════════════════════════════════════
-   KATALOG PRODUK — Shopee Style
-══════════════════════════════════════ */
-.food_section { background: var(--bg); }
-
-/* Filter pills */
-.food_section .filters_menu {
-  display: flex; flex-wrap: wrap; justify-content: center;
-  gap: 8px; list-style: none; padding: 0; margin: 0 0 20px;
-}
-.food_section .filters_menu li {
-  padding: 7px 18px; cursor: pointer; border-radius: 50px;
-  font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
-  border: 1.5px solid var(--border); color: var(--text3);
-  background: var(--white); transition: all .2s;
-}
-.food_section .filters_menu li:hover { border-color: var(--green); color: var(--green); }
-.food_section .filters_menu li.active { background: var(--green); color: #fff; border-color: var(--green); }
-
-/* Grid: 2 col mobile → 4 col desktop */
-.product-col {
-  width: 50%;
-  padding: 0 6px 12px;
-  float: left;
-}
-
-/* Product card */
-.product-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  display: flex; flex-direction: column;
-  height: 100%;
-  transition: transform .2s, box-shadow .2s;
-}
-.product-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
-
-/* Card image area */
-.product-card .pc-img {
-  position: relative;
-  background: #F0EDE6;
-  display: flex; align-items: center; justify-content: center;
-  aspect-ratio: 1 / 1;
-  overflow: hidden; padding: 12px;
-}
-.product-card .pc-img img {
-  width: 100%; height: 100%;
-  object-fit: contain;
-  transition: transform .3s;
-}
-.product-card:hover .pc-img img { transform: scale(1.05); }
-
-/* Badges */
-.badge-flash {
-  position: absolute; top: 0; left: 0;
-  background: #e53; color: #fff;
-  font-size: 9px; font-weight: 800; font-family: 'Inter', sans-serif;
-  padding: 3px 8px; border-radius: 0 0 8px 0; letter-spacing: .3px;
-}
-.badge-disc {
-  position: absolute; top: 6px; right: 6px;
-  background: var(--gold); color: #fff;
-  font-size: 10px; font-weight: 700; font-family: 'Inter', sans-serif;
-  padding: 2px 7px; border-radius: 20px;
-}
-
-/* Card body */
-.product-card .pc-body {
-  padding: 10px 10px 12px;
-  flex: 1; display: flex; flex-direction: column; gap: 3px;
-}
-.product-card .pc-name {
-  font-family: 'Inter', sans-serif;
-  font-size: 12px; font-weight: 600; color: var(--text);
-  line-height: 1.35;
-  display: -webkit-box; -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical; overflow: hidden;
-}
-.product-card .pc-desc {
-  font-size: 11px; color: var(--text3); line-height: 1.35;
-  display: -webkit-box; -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical; overflow: hidden;
-}
-.product-card .pc-rating {
-  font-size: 11px; color: var(--text3); font-family: 'Inter', sans-serif;
-}
-.product-card .pc-price {
-  font-family: 'Inter', sans-serif;
-  font-size: 16px; font-weight: 800; color: var(--green); margin-top: 2px;
-}
-.product-card .pc-price-ori {
-  font-size: 11px; color: var(--text3);
-  text-decoration: line-through; font-family: 'Inter', sans-serif;
-}
-.product-card .btn-keranjang {
-  display: flex; align-items: center; justify-content: center;
-  width: 100%; padding: 9px;
-  background: var(--green); color: #fff;
-  border: none; border-radius: 8px;
-  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700;
-  cursor: pointer; margin-top: 8px; transition: background .2s;
-}
-.product-card .btn-keranjang:hover { background: var(--green2); }
-
-.food_section .btn-box { display: flex; justify-content: center; margin-top: 28px; clear: both; }
-.food_section .btn-box a {
-  display: inline-block; padding: 11px 44px;
-  background: var(--green); color: #fff;
-  border-radius: 50px; font-family: 'Inter', sans-serif;
-  font-weight: 700; font-size: 14px; transition: background .2s;
-}
-.food_section .btn-box a:hover { background: var(--green2); }
-
-/* ══════════════════════════════════════
-   ABOUT
-══════════════════════════════════════ */
-.about_section { background: var(--green); color: #fff; }
-.about_section .row { align-items: center; }
-.about_section .img-box { display: flex; justify-content: center; }
-.about_section .img-box img { width: 100%; max-width: 380px; border-radius: 14px; }
-.about_section .detail-box h2 { color: #fff !important; }
-.about_section .detail-box p { color: rgba(255,255,255,.75); margin-top: 12px; line-height: 1.75; }
-.about_section .detail-box a {
-  display: inline-block; padding: 11px 36px;
-  background: var(--gold); color: #fff;
-  border-radius: 50px; font-family: 'Inter', sans-serif;
-  font-weight: 700; margin-top: 20px; transition: background .2s;
-}
-.about_section .detail-box a:hover { background: var(--gold2); }
-
-/* ══════════════════════════════════════
-   BOOK / KONSULTASI
-══════════════════════════════════════ */
-.book_section .heading_container { margin-bottom: 24px; }
-.book_section .form_container .form-control {
-  height: 46px; margin-bottom: 16px; padding: 0 14px;
-  border: 1.5px solid var(--border); border-radius: 8px;
-  font-size: 14px; font-family: 'Inter', sans-serif;
-  outline: none; box-shadow: none; width: 100%;
-  transition: border-color .2s;
-}
-.book_section .form_container .form-control:focus { border-color: var(--green); }
-.book_section .form_container .form-control::placeholder { color: var(--text3); }
-.book_section .form_container .nice-select .current { font-size: 14px; font-family: 'Inter', sans-serif; }
-.book_section .form_container button {
-  padding: 12px 44px; border: none;
-  background: var(--green); color: #fff;
-  border-radius: 50px; font-family: 'Inter', sans-serif;
-  font-weight: 700; font-size: 14px;
-  cursor: pointer; transition: background .2s; margin-top: 8px;
-}
-.book_section .form_container button:hover { background: var(--green2); }
-.book_section .map_container { width: 100%; height: 300px; border-radius: 12px; overflow: hidden; }
-.book_section .map_container #googleMap { height: 100%; width: 100%; }
-
-/* ══════════════════════════════════════
-   TESTIMONI
-══════════════════════════════════════ */
-.client_section .heading_container { margin-bottom: 30px; }
-.client_section .box { display: flex; flex-direction: column; margin: 12px; }
-.client_section .box .img-box {
-  position: relative; display: flex; justify-content: center; align-items: center;
-  width: 72px; height: 72px; margin-top: 20px;
-}
-.client_section .box .img-box img { width: 72px; height: 72px; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold); }
-.client_section .box .img-box::before { content:''; position:absolute; left:50%; top:-8px; width:12px; height:12px; background:var(--gold); transform:rotate(45deg) translateX(-50%); }
-.client_section .box .detail-box { background: var(--white); padding: 16px; border-radius: 10px; border: 1px solid var(--border); }
-.client_section .box .detail-box p { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 8px; }
-.client_section .box .detail-box h6 { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; color: var(--green); margin: 0; }
-.client_section .owl-carousel .owl-nav { display: flex; justify-content: center; margin-top: 24px; }
-.client_section .owl-carousel .owl-nav .owl-prev,
-.client_section .owl-carousel .owl-nav .owl-next { width: 38px; height: 38px; background: var(--green); color: #fff; outline: none; font-size: 17px; margin: 0 4px; border-radius: 50%; }
-
-/* ══════════════════════════════════════
-   FOOTER
-══════════════════════════════════════ */
-.footer_section { background: var(--green2); color: #fff; padding: 56px 0 28px; text-align: center; }
-.footer_section h4 { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 14px; }
-.footer_section p { color: rgba(255,255,255,.60); font-size: 13px; }
-.footer_section .footer-col { margin-bottom: 28px; }
-.footer_section .footer_contact .contact_link_box { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
-.footer_section .footer_contact .contact_link_box a { color: rgba(255,255,255,.70); display: flex; align-items: center; gap: 8px; font-size: 13px; transition: color .2s; }
-.footer_section .footer_contact .contact_link_box a:hover { color: var(--gold); }
-.footer-logo { display: block; font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 800; color: #fff; letter-spacing: 3px; margin-bottom: 10px; }
-.footer_section .footer_social { display: flex; justify-content: center; gap: 8px; margin: 14px 0; }
-.footer_section .footer_social a { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.10); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: background .2s; }
-.footer_section .footer_social a:hover { background: var(--gold); }
-.footer-info { margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.10); }
-.footer-info p { color: rgba(255,255,255,.40) !important; font-size: 12px; }
-
-/* ══════════════════════════════════════
-   CART SIDEBAR
-══════════════════════════════════════ */
-#cartOverlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.45);
-  z-index: 9998; opacity: 0; visibility: hidden;
-  transition: opacity .3s, visibility .3s;
-}
-#cartOverlay.open { opacity: 1; visibility: visible; }
-
-#cartSidebar {
-  position: fixed; top: 0; right: -420px;
-  width: 380px; max-width: 100vw;
-  height: 100vh; background: #fff;
-  z-index: 9999; display: flex; flex-direction: column;
-  box-shadow: -4px 0 32px rgba(0,0,0,.12);
-  transition: right .32s cubic-bezier(.4,0,.2,1);
-}
-#cartSidebar.open { right: 0; }
-
-.cart-hdr {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 18px; background: var(--green); flex-shrink: 0;
-}
-.cart-hdr h3 { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #fff; margin: 0; }
-.cart-hdr button { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 15px; cursor: pointer; transition: background .2s; }
-.cart-hdr button:hover { background: rgba(255,255,255,.28); }
-
-.cart-items-wrap { flex: 1; overflow-y: auto; padding: 10px 14px; }
-.cart-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 10px; color: #bbb; padding: 40px 0; }
-.cart-empty-state i { font-size: 40px; }
-.cart-empty-state p { font-family: 'Inter', sans-serif; font-size: 14px; }
-
-.cart-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
-.cart-item-img { width: 56px; height: 56px; border-radius: 8px; background: #F0EDE6; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.cart-item-img img { width: 100%; height: 100%; object-fit: contain; }
-.cart-item-info { flex: 1; min-width: 0; }
-.cart-item-name { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 2px; }
-.cart-item-price { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: var(--green); }
-.cart-item-qty { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-.qty-btn { width: 24px; height: 24px; border-radius: 50%; background: #EEF1EE; border: 1px solid var(--border); color: var(--green); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; }
-.qty-btn:hover { background: var(--green); color: #fff; }
-.qty-val { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; min-width: 20px; text-align: center; }
-.cart-item-remove { background: none; border: none; color: #ccc; font-size: 15px; padding: 4px; cursor: pointer; transition: color .2s; flex-shrink: 0; }
-.cart-item-remove:hover { color: #e53; }
-
-.cart-ftr { padding: 14px 18px; border-top: 1px solid var(--border); flex-shrink: 0; }
-.cart-subtotal { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--text3); margin-bottom: 6px; }
-.cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-top: 8px; border-top: 1px solid var(--border); }
-.cart-total-row span:first-child { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; }
-.cart-total-price { font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 800; color: var(--green); }
-.btn-wa-checkout { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: var(--gold); color: #fff; border: none; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .2s; }
-.btn-wa-checkout:hover { background: var(--gold2); color: #fff; }
-.btn-clear { display: block; width: 100%; padding: 9px; background: none; color: var(--text3); border: 1px solid var(--border); border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 7px; transition: all .2s; }
-.btn-clear:hover { border-color: #e53; color: #e53; }
-
-/* ── TOAST ── */
-.kemo-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--green); color: #fff; padding: 10px 20px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; z-index: 99999; opacity: 0; pointer-events: none; transition: all .3s; white-space: nowrap; box-shadow: 0 6px 20px rgba(0,0,0,.18); }
-.kemo-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</body>
+</html>
