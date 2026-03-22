@@ -1,311 +1,554 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
+
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-  <title>KEMOENIK — Herbal Pelangsing Premium</title>
-  <link rel="stylesheet" href="css/bootstrap.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
-  <link rel="stylesheet" href="css/font-awesome.min.css"/>
-  <link rel="stylesheet" href="css/style.css"/>
-  <link rel="stylesheet" href="css/responsive.css"/>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- EDIT: isi keywords, description, author sesuai brand -->
+  <meta name="keywords" content="kemoenik, herbal, supplement, slim, diet" />
+  <meta name="description" content="Kemoenik Official Store - Produk Herbal Terpercaya" />
+  <meta name="author" content="Kemoenik" />
+  <link rel="shortcut icon" href="images/favicon.png" type="">
+
+  <!-- EDIT: ganti judul tab browser -->
+  <title>Kemoenik Official Store</title>
+
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/responsive.css" rel="stylesheet" />
 </head>
+
 <body>
 
-  <!-- CART SIDEBAR -->
-  <div id="cartOverlay" onclick="closeCart()"></div>
-  <div id="cartSidebar">
-    <div class="cart-hdr">
-      <h3>🛒 Keranjang Belanja</h3>
-      <button onclick="closeCart()">✕</button>
-    </div>
-    <div id="cartItems" class="cart-items-wrap">
-      <div class="cart-empty-state"><i class="fa fa-shopping-cart"></i><p>Keranjang masih kosong</p></div>
-    </div>
-    <div class="cart-ftr">
-      <div id="cartSubtotal" class="cart-subtotal">0 produk</div>
-      <div class="cart-total-row">
-        <span>Total Belanja</span>
-        <span id="cartTotalPrice" class="cart-total-price">Rp 0</span>
-      </div>
-      <button onclick="checkoutWA()" class="btn-wa-checkout"><i class="fa fa-whatsapp"></i> Pesan via WhatsApp</button>
-      <button onclick="clearCart()" class="btn-clear">Kosongkan Keranjang</button>
-    </div>
-  </div>
-  <div id="kemoToast" class="kemo-toast"></div>
   <div class="hero_area">
-    <div class="bg-box"><img src="images/hero-bg.jpg" alt=""/></div>
+    <div class="bg-box">
+      <!-- EDIT: ganti hero-bg.jpg dengan foto background hero kamu -->
+      <img src="images/hero-bg.jpg" alt="">
+    </div>
+
+    <!-- ========== HEADER / NAVBAR ========== -->
     <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container">
-          <a class="navbar-brand" href="index.html"><span>KEMO<em style="color:#C8A96A;font-style:normal;">ENIK</em></span></a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMain" aria-expanded="false"><span></span></button>
-          <div class="collapse navbar-collapse" id="navMain">
+          <a class="navbar-brand" href="index.html">
+            <!-- EDIT: ganti nama brand di navbar -->
+            <span>Kemoenik</span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mx-auto">
-              <li class="nav-item  active"><a class="nav-link" href="index.html">Beranda</a></li>
-              <li class="nav-item"><a class="nav-link" href="menu.html">Produk</a></li>
-              <li class="nav-item"><a class="nav-link" href="about.html">Tentang Kami</a></li>
-              <li class="nav-item"><a class="nav-link" href="book.html">Konsultasi</a></li>
+              <li class="nav-item active">
+                <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="menu.html">Produk</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about.html">Tentang Kami</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="book.html">Hubungi Kami</a>
+              </li>
             </ul>
             <div class="user_option">
-              <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" class="user_link" target="_blank"><i class="fa fa-user"></i></a>
-              <a class="cart_link" href="#" onclick="openCart();return false;" style="position:relative;">
-                <svg width="18" height="18" viewBox="0 0 456.029 456.029" style="fill:#fff;"><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></svg>
-                <span id="cartBadge" class="cart_badge"></span>
+              <a href="" class="user_link">
+                <i class="fa fa-user" aria-hidden="true"></i>
               </a>
-              <a href="#" onclick="checkoutWA();return false;" class="order_online"><i class="fa fa-whatsapp"></i> Pesan Sekarang</a>
+              <a class="cart_link" href="#">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                  <g><g><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/></g></g>
+                  <g><g><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/></g></g>
+                  <g><g><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></g></g>
+                </svg>
+              </a>
+              <form class="form-inline">
+                <button class="btn my-2 my-sm-0 nav_search-btn" type="submit">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+              </form>
+              <!-- EDIT: ganti href ke link toko/order kamu -->
+              <a href="#" class="order_online">Order Sekarang</a>
             </div>
           </div>
         </nav>
       </div>
     </header>
+    <!-- ========== END HEADER ========== -->
+
+    <!-- ========== HERO / SLIDER SECTION ========== -->
+    <section class="slider_section">
+      <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+
+          <!-- SLIDE 1 - EDIT: ubah judul, deskripsi, dan link tombol -->
+          <div class="carousel-item active">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-7 col-lg-6">
+                  <div class="detail-box">
+                    <!-- EDIT: judul slide 1 -->
+                    <h1>Kemoenik Slim 1</h1>
+                    <!-- EDIT: deskripsi slide 1 -->
+                    <p>Solusi herbal alami untuk tubuh lebih ideal. Perut buncit hilang di hari ke-3. Formula herbal terpercaya, sudah 1.9rb+ terjual.</p>
+                    <div class="btn-box">
+                      <!-- EDIT: ganti href ke link produk Evermos Slim 1 -->
+                      <a href="#" class="btn1">Beli Sekarang</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLIDE 2 - EDIT: ubah judul, deskripsi, dan link tombol -->
+          <div class="carousel-item">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-7 col-lg-6">
+                  <div class="detail-box">
+                    <!-- EDIT: judul slide 2 -->
+                    <h1>Kemoenik Slim 2</h1>
+                    <!-- EDIT: deskripsi slide 2 -->
+                    <p>Formula lanjutan untuk hasil lebih maksimal. Herbal, aman, dan sudah terbukti. Gratis ongkir untuk pembelian pertama.</p>
+                    <div class="btn-box">
+                      <!-- EDIT: ganti href ke link produk Evermos Slim 2 -->
+                      <a href="#" class="btn1">Beli Sekarang</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLIDE 3 - EDIT: ubah judul, deskripsi, dan link tombol -->
+          <div class="carousel-item">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-7 col-lg-6">
+                  <div class="detail-box">
+                    <!-- EDIT: judul slide 3 -->
+                    <h1>Calculator Fat Loss</h1>
+                    <!-- EDIT: deskripsi slide 3 -->
+                    <p>Hitung kalori otomatis, estimasi target realistis, breakdown protein, lemak & karbo. Tanpa ribet hitung manual.</p>
+                    <div class="btn-box">
+                      <!-- EDIT: ganti href ke link produk Evermos Calculator -->
+                      <a href="#" class="btn1">Dapatkan Sekarang</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="container">
+          <ol class="carousel-indicators">
+            <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
+            <li data-target="#customCarousel1" data-slide-to="1"></li>
+            <li data-target="#customCarousel1" data-slide-to="2"></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+    <!-- ========== END HERO / SLIDER ========== -->
+
   </div>
 
-  <!-- HERO SLIDER -->
-  <section class="slider_section full-hero" style="flex:1;display:flex;align-items:center;position:relative;z-index:1;padding:60px 0 80px;">
-    <div id="customCarousel1" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="container">
-            <div class="row" style="align-items:center;">
-              <div class="col-md-6">
-                <div class="detail-box">
-                  <h1>Turun Berat Badan<br>Bersama <span>KEMOENIK</span></h1>
-                  <p>Formula 5 bahan herbal alami — Teh Hijau, Jati Belanda, Kemuning, Temulawak & Tempuyung. Program diet personal sesuai tipe metabolismemu.</p>
-                  <a href="menu.html">Lihat Produk</a>
-                </div>
-              </div>
-              <div class="col-md-6"><div class="img-box"><img src="images/slider-img.png" alt="KEMOENIK"></div></div>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="container">
-            <div class="row" style="align-items:center;">
-              <div class="col-md-6">
-                <div class="detail-box">
-                  <h1>Program Diet<br><span>100% Personal</span></h1>
-                  <p>Isi kuis metabolisme, generate kalkulator kalori, dan ikuti misi harian sesuai tipe tubuhmu.</p>
-                  <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" target="_blank">Mulai Gratis</a>
-                </div>
-              </div>
-              <div class="col-md-6"><div class="img-box"><img src="images/slider-img.png" alt="Program"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="carousel-indicators">
-        <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
-        <li data-target="#customCarousel1" data-slide-to="1"></li>
-      </div>
-    </div>
-  </section>
+  <!-- ========== OFFER / PROMO SECTION ========== -->
+  <section class="offer_section layout_padding-bottom">
+    <div class="offer_container">
+      <div class="container">
+        <div class="row">
 
-  <!-- PRODUK UNGGULAN -->
-  <section class="offer_section layout_padding-bottom" style="background:#fff;">
-    <div class="container">
-      <div class="heading_container"><h2>Produk <span>Unggulan</span></h2><p>Pilihan terbaik untuk memulai program dietmu</p></div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="box">
-            <div class="img-box"><img src="images/o1.png" alt="30 Kapsul"></div>
-            <div class="detail-box">
-              <h5>KEMOENIK 30 Kapsul</h5><h6>Harga: <span>Rp 85.000</span></h6>
-              <p>Program 15 hari. Cocok untuk pemula.</p>
-              <a href="#" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/o1.png'});return false;">+ Keranjang</a>
+          <!-- PROMO BOX 1 - EDIT: ubah gambar, nama promo, diskon, dan link -->
+          <div class="col-md-6">
+            <div class="box">
+              <div class="img-box">
+                <!-- EDIT: ganti images/o1.jpg dengan foto produk promo 1 -->
+                <img src="images/o1.jpg" alt="">
+              </div>
+              <div class="detail-box">
+                <!-- EDIT: nama promo 1 -->
+                <h5>Kemoenik Slim 1</h5>
+                <h6>
+                  <!-- EDIT: persentase diskon promo 1 -->
+                  <span>55%</span> Off
+                </h6>
+                <!-- EDIT: ganti href ke link Evermos produk promo 1 -->
+                <a href="#">
+                  Beli Sekarang
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" xml:space="preserve">
+                    <g><g><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/></g></g>
+                    <g><g><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/></g></g>
+                    <g><g><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></g></g>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-6">
-          <div class="box">
-            <div class="img-box"><img src="images/o2.png" alt="60 Kapsul"></div>
-            <div class="detail-box">
-              <h5>KEMOENIK 60 Kapsul</h5><h6>Harga: <span>Rp 155.000</span></h6>
-              <p>Program 30 hari. Paling direkomendasikan.</p>
-              <a href="#" onclick="addToCart({id:'reg-60',name:'KEMOENIK 60 Kapsul',price:155000,img:'images/o2.png'});return false;">+ Keranjang</a>
+
+          <!-- PROMO BOX 2 - EDIT: ubah gambar, nama promo, diskon, dan link -->
+          <div class="col-md-6">
+            <div class="box">
+              <div class="img-box">
+                <!-- EDIT: ganti images/o2.jpg dengan foto produk promo 2 -->
+                <img src="images/o2.jpg" alt="">
+              </div>
+              <div class="detail-box">
+                <!-- EDIT: nama promo 2 -->
+                <h5>Kemoenik Slim 2</h5>
+                <h6>
+                  <!-- EDIT: persentase diskon promo 2 -->
+                  <span>55%</span> Off
+                </h6>
+                <!-- EDIT: ganti href ke link Evermos produk promo 2 -->
+                <a href="#">
+                  Beli Sekarang
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" xml:space="preserve">
+                    <g><g><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/></g></g>
+                    <g><g><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/></g></g>
+                    <g><g><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></g></g>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
   </section>
+  <!-- ========== END OFFER SECTION ========== -->
 
-  <!-- KATALOG -->
+  <!-- ========== PRODUK / FOOD SECTION ========== -->
   <section class="food_section layout_padding-bottom">
     <div class="container">
-      <div class="heading_container heading_center"><h2>Katalog <span>Produk</span></h2><p>Pilih paket yang sesuai kebutuhan dan budgetmu</p></div>
+      <div class="heading_container heading_center">
+        <!-- EDIT: judul section produk -->
+        <h2>Produk Kami</h2>
+      </div>
+
+      <!-- EDIT: ubah kategori filter sesuai kategori produkmu -->
       <ul class="filters_menu">
         <li class="active" data-filter="*">Semua</li>
-        <li data-filter=".paket">Paket</li>
-        <li data-filter=".satuan">Satuan</li>
-        <li data-filter=".bundling">Bundling</li>
+        <li data-filter=".slim">Slim</li>
+        <li data-filter=".tools">Tools</li>
+        <li data-filter=".promo">Promo</li>
       </ul>
-      <div style="display:flex;flex-wrap:wrap;margin:0 -6px;" id="productGrid">
-        <div class="product-col all satuan">
-          <div class="product-card">
-            <div class="pc-img">
-              
-              <img src="images/f1.png" alt="KEMOENIK 30 Kapsul">
-            </div>
-            <div class="pc-body">
-              <div class="pc-name">KEMOENIK 30 Kapsul</div>
-              <div class="pc-desc">15 hari program. Dosis 2×3 kapsul/hari.</div>
-              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 240 terjual</div>
-              <div class="pc-price">Rp 85.000</div>
-              
-              <button class="btn-keranjang" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'})">+ Keranjang</button>
-            </div>
-          </div>
-        </div>
-        <div class="product-col all paket">
-          <div class="product-card">
-            <div class="pc-img">
-              <span class="badge-flash">TERLARIS</span><span class="badge-disc">Hemat 10%</span>
-              <img src="images/f2.png" alt="Paket 30 Hari">
-            </div>
-            <div class="pc-body">
-              <div class="pc-name">Paket 30 Hari</div>
-              <div class="pc-desc">60 kapsul untuk 30 hari. Paling direkomendasikan.</div>
-              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 580 terjual</div>
-              <div class="pc-price">Rp 155.000</div>
-              <div class="pc-price-ori">Rp 172.000</div>
-              <button class="btn-keranjang" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'})">+ Keranjang</button>
-            </div>
-          </div>
-        </div>
-        <div class="product-col all paket">
-          <div class="product-card">
-            <div class="pc-img">
-              <span class="badge-disc">Hemat 10%</span>
-              <img src="images/f3.png" alt="Paket 2 Bulan">
-            </div>
-            <div class="pc-body">
-              <div class="pc-name">Paket 2 Bulan</div>
-              <div class="pc-desc">120 kapsul untuk 60 hari transformasi.</div>
-              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 312 terjual</div>
-              <div class="pc-price">Rp 279.000</div>
-              <div class="pc-price-ori">Rp 310.000</div>
-              <button class="btn-keranjang" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'})">+ Keranjang</button>
+
+      <div class="filters-content">
+        <div class="row grid">
+
+          <!-- ===== PRODUK 1 ===== EDIT: ubah semua isi produk 1 -->
+          <div class="col-sm-6 col-lg-4 all slim">
+            <div class="box">
+              <div>
+                <div class="img-box">
+                  <!-- EDIT: ganti images/f1.png dengan foto produk 1 -->
+                  <img src="images/f1.png" alt="Kemoenik Slim 1">
+                </div>
+                <div class="detail-box">
+                  <!-- EDIT: nama produk 1 -->
+                  <h5>Kemoenik Slim 1</h5>
+                  <!-- EDIT: deskripsi produk 1 -->
+                  <p>Perut buncit hilang di hari ke-3. Formula herbal alami, sudah 1.9rb+ terjual.</p>
+                  <div class="options">
+                    <!-- EDIT: harga produk 1 (format: Rp 67.000) -->
+                    <h6>Rp 67.000 <small style="text-decoration:line-through;font-size:12px;color:#aaa;">Rp 150.000</small></h6>
+                    <!-- EDIT: ganti href ke link Evermos produk 1 -->
+                    <a href="#" target="_blank">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" xml:space="preserve">
+                        <g><g><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/></g></g>
+                        <g><g><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/></g></g>
+                        <g><g><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></g></g>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="product-col all bundling">
-          <div class="product-card">
-            <div class="pc-img">
-              <span class="badge-disc">Hemat 15%</span>
-              <img src="images/f4.png" alt="Bundling Keluarga">
-            </div>
-            <div class="pc-body">
-              <div class="pc-name">Bundling Keluarga</div>
-              <div class="pc-desc">3 botol @30 kapsul untuk 3 anggota.</div>
-              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 145 terjual</div>
-              <div class="pc-price">Rp 216.000</div>
-              <div class="pc-price-ori">Rp 255.000</div>
-              <button class="btn-keranjang" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'})">+ Keranjang</button>
-            </div>
-          </div>
-        </div>
-        <div class="product-col all bundling">
-          <div class="product-card">
-            <div class="pc-img">
-              
-              <img src="images/f5.png" alt="Paket Reseller">
-            </div>
-            <div class="pc-body">
-              <div class="pc-name">Paket Reseller</div>
-              <div class="pc-desc">6 botol @30 kapsul. Harga grosir.</div>
-              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 89 terjual</div>
-              <div class="pc-price">Rp 390.000</div>
-              
-              <button class="btn-keranjang" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'})">+ Keranjang</button>
+
+          <!-- ===== PRODUK 2 ===== EDIT: ubah semua isi produk 2 -->
+          <div class="col-sm-6 col-lg-4 all slim">
+            <div class="box">
+              <div>
+                <div class="img-box">
+                  <!-- EDIT: ganti images/f2.png dengan foto produk 2 -->
+                  <img src="images/f2.png" alt="Kemoenik Slim 2">
+                </div>
+                <div class="detail-box">
+                  <!-- EDIT: nama produk 2 -->
+                  <h5>Kemoenik Slim 2</h5>
+                  <!-- EDIT: deskripsi produk 2 -->
+                  <p>Formula lanjutan lebih maksimal. Herbal, aman & sudah terbukti. Gratis ongkir.</p>
+                  <div class="options">
+                    <!-- EDIT: harga produk 2 -->
+                    <h6>Rp 67.000 <small style="text-decoration:line-through;font-size:12px;color:#aaa;">Rp 150.000</small></h6>
+                    <!-- EDIT: ganti href ke link Evermos produk 2 -->
+                    <a href="#" target="_blank">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" xml:space="preserve">
+                        <g><g><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/></g></g>
+                        <g><g><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/></g></g>
+                        <g><g><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></g></g>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="product-col all satuan">
-          <div class="product-card">
-            <div class="pc-img">
-              
-              <img src="images/f6.png" alt="Paket Maintenance">
-            </div>
-            <div class="pc-body">
-              <div class="pc-name">Paket Maintenance</div>
-              <div class="pc-desc">Dosis 2×2/hari. Jaga BB setelah target.</div>
-              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 203 terjual</div>
-              <div class="pc-price">Rp 85.000</div>
-              
-              <button class="btn-keranjang" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'})">+ Keranjang</button>
+
+          <!-- ===== PRODUK 3 ===== EDIT: ubah semua isi produk 3 -->
+          <div class="col-sm-6 col-lg-4 all tools promo">
+            <div class="box">
+              <div>
+                <div class="img-box">
+                  <!-- EDIT: ganti images/f3.png dengan foto produk 3 -->
+                  <img src="images/f3.png" alt="Calculator Fat Loss">
+                </div>
+                <div class="detail-box">
+                  <!-- EDIT: nama produk 3 -->
+                  <h5>Calculator Fat Loss</h5>
+                  <!-- EDIT: deskripsi produk 3 -->
+                  <p>Hitung kalori otomatis. Gratis ongkir. Estimasi target realistis & breakdown nutrisi.</p>
+                  <div class="options">
+                    <!-- EDIT: harga produk 3 -->
+                    <h6>Rp 20.000 <small style="text-decoration:line-through;font-size:12px;color:#aaa;">Rp 40.000</small></h6>
+                    <!-- EDIT: ganti href ke link Evermos produk 3 -->
+                    <a href="#" target="_blank">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456.029 456.029" xml:space="preserve">
+                        <g><g><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/></g></g>
+                        <g><g><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/></g></g>
+                        <g><g><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></g></g>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
-      <div class="btn-box"><a href="menu.html">Lihat Semua Produk</a></div>
+
+      <div class="btn-box">
+        <!-- EDIT: ganti href ke halaman menu.html atau link toko -->
+        <a href="menu.html">Lihat Semua Produk</a>
+      </div>
     </div>
   </section>
+  <!-- ========== END PRODUK SECTION ========== -->
 
-  <!-- ABOUT SINGKAT -->
+  <!-- ========== ABOUT SECTION ========== -->
   <section class="about_section layout_padding">
     <div class="container">
       <div class="row">
-        <div class="col-md-6"><div class="img-box"><img src="images/about-img.png" alt="KEMOENIK"></div></div>
+        <div class="col-md-6">
+          <div class="img-box">
+            <!-- EDIT: ganti images/about-img.png dengan foto brand/produk kamu -->
+            <img src="images/about-img.png" alt="">
+          </div>
+        </div>
         <div class="col-md-6">
           <div class="detail-box">
-            <div class="heading_container"><h2>Kami adalah <span>KEMOENIK</span></h2></div>
-            <p>KEMOENIK adalah suplemen herbal pelangsing premium dari 5 bahan herbal alami — Teh Hijau, Jati Belanda, Kemuning, Temulawak, dan Tempuyung. Diproduksi oleh CV. Barokah Mardhiyya, Sumedang, Jawa Barat.</p>
-            <a href="about.html">Pelajari Lebih Lanjut</a>
+            <div class="heading_container">
+              <!-- EDIT: judul about section -->
+              <h2>Kami Adalah Kemoenik</h2>
+            </div>
+            <!-- EDIT: deskripsi tentang brand kamu -->
+            <p>
+              Kemoenik adalah brand herbal terpercaya yang hadir untuk membantu kamu mencapai tubuh ideal secara alami.
+              Produk kami diformulasikan dari bahan-bahan herbal pilihan, aman, dan telah terbukti efektif.
+              Bergabunglah dengan ribuan pelanggan yang sudah merasakan manfaatnya.
+            </p>
+            <!-- EDIT: ganti href ke halaman about.html atau link lain -->
+            <a href="about.html">Selengkapnya</a>
           </div>
         </div>
       </div>
     </div>
   </section>
+  <!-- ========== END ABOUT SECTION ========== -->
 
-  <!-- TESTIMONI -->
-  <section class="client_section layout_padding-bottom" style="background:#fff;">
+  <!-- ========== BOOK / CONTACT SECTION ========== -->
+  <section class="book_section layout_padding">
     <div class="container">
-      <div class="heading_container heading_center"><h2>Kata <span>Pengguna Kami</span></h2><p>Ribuan pelanggan sudah merasakan manfaat KEMOENIK</p></div>
-      <div class="client_owl-carousel owl-carousel">
-        <div class="box"><div class="detail-box"><p>"Dalam 1 bulan turun 5 kg! Dengan panduan web app KEMOENIK jadi lebih terarah."</p><h6>Siti Rahayu</h6><small style="color:#C8A96A;font-size:11px;">⭐⭐⭐⭐⭐ Verified</small></div><div class="img-box"><img src="images/client.jpg" alt="Siti"></div></div>
-        <div class="box"><div class="detail-box"><p>"Perut berkurang 8 cm dalam 2 bulan! Energi stabil, tidak lapar berlebihan."</p><h6>Dian Permata</h6><small style="color:#C8A96A;font-size:11px;">⭐⭐⭐⭐⭐ Verified</small></div><div class="img-box"><img src="images/client2.jpg" alt="Dian"></div></div>
-        <div class="box"><div class="detail-box"><p>"Program dietnya personal banget, hasilnya lebih cepat dari yang dibayangkan!"</p><h6>Andi Wijaya</h6><small style="color:#C8A96A;font-size:11px;">⭐⭐⭐⭐⭐ Verified</small></div><div class="img-box"><img src="images/client3.jpg" alt="Andi"></div></div>
+      <div class="heading_container">
+        <!-- EDIT: judul section kontak -->
+        <h2>Hubungi Kami</h2>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form_container">
+            <form action="">
+              <!-- EDIT: sesuaikan field form jika perlu -->
+              <div><input type="text" class="form-control" placeholder="Nama Kamu" /></div>
+              <div><input type="text" class="form-control" placeholder="Nomor Telepon" /></div>
+              <div><input type="email" class="form-control" placeholder="Email Kamu" /></div>
+              <div>
+                <select class="form-control nice-select wide">
+                  <option value="" disabled selected>Keperluan?</option>
+                  <option value="">Order Produk</option>
+                  <option value="">Konsultasi</option>
+                  <option value="">Kerjasama</option>
+                  <option value="">Lainnya</option>
+                </select>
+              </div>
+              <div><input type="date" class="form-control"></div>
+              <div class="btn_box">
+                <button>Kirim Pesan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="map_container">
+            <div id="googleMap"></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+  <!-- ========== END BOOK SECTION ========== -->
 
+  <!-- ========== TESTIMONI / CLIENT SECTION ========== -->
+  <section class="client_section layout_padding-bottom">
+    <div class="container">
+      <div class="heading_container heading_center psudo_white_primary mb_45">
+        <!-- EDIT: judul section testimoni -->
+        <h2>Kata Pelanggan Kami</h2>
+      </div>
+      <div class="carousel-wrap row">
+        <div class="owl-carousel client_owl-carousel">
+
+          <!-- TESTIMONI 1 - EDIT: ubah isi testimoni -->
+          <div class="item">
+            <div class="box">
+              <div class="detail-box">
+                <!-- EDIT: isi testimoni 1 -->
+                <p>"Sudah 2 minggu pakai Kemoenik Slim 1, berat badan turun 3 kg! Produknya aman, tanpa efek samping."</p>
+                <!-- EDIT: nama pelanggan 1 -->
+                <h6>Sari Dewi</h6>
+                <!-- EDIT: kota/keterangan pelanggan 1 -->
+                <p>Jakarta</p>
+              </div>
+              <div class="img-box">
+                <!-- EDIT: ganti images/client1.jpg dengan foto pelanggan 1 -->
+                <img src="images/client1.jpg" alt="" class="box-img">
+              </div>
+            </div>
+          </div>
+
+          <!-- TESTIMONI 2 - EDIT: ubah isi testimoni -->
+          <div class="item">
+            <div class="box">
+              <div class="detail-box">
+                <!-- EDIT: isi testimoni 2 -->
+                <p>"Calculator Fat Loss-nya sangat membantu saya mengatur pola makan. Recommended banget!"</p>
+                <!-- EDIT: nama pelanggan 2 -->
+                <h6>Budi Santoso</h6>
+                <!-- EDIT: kota/keterangan pelanggan 2 -->
+                <p>Surabaya</p>
+              </div>
+              <div class="img-box">
+                <!-- EDIT: ganti images/client2.jpg dengan foto pelanggan 2 -->
+                <img src="images/client2.jpg" alt="" class="box-img">
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ========== END TESTIMONI SECTION ========== -->
+
+  <!-- ========== FOOTER ========== -->
   <footer class="footer_section">
     <div class="container">
       <div class="row">
+
+        <!-- KOLOM 1: KONTAK -->
         <div class="col-md-4 footer-col">
-          <div class="footer_contact"><h4>Hubungi Kami</h4>
+          <div class="footer_contact">
+            <h4>Hubungi Kami</h4>
             <div class="contact_link_box">
-              <a href="#"><i class="fa fa-map-marker"></i><span>Sumedang, Jawa Barat</span></a>
-              <a href="tel:+6281546450547"><i class="fa fa-phone"></i><span>0815-4645-0547</span></a>
-              <a href="https://wa.me/6281546450547" target="_blank"><i class="fa fa-whatsapp"></i><span>Chat WhatsApp</span></a>
+              <!-- EDIT: ganti href ke link Google Maps lokasi kamu -->
+              <a href="#">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <!-- EDIT: ganti dengan alamat kamu -->
+                <span>Jakarta, Indonesia</span>
+              </a>
+              <!-- EDIT: ganti dengan nomor WA/telepon kamu -->
+              <a href="https://wa.me/6281234567890">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span>+62 812-3456-7890</span>
+              </a>
+              <!-- EDIT: ganti dengan email kamu -->
+              <a href="mailto:kemoenik@gmail.com">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span>kemoenik@gmail.com</span>
+              </a>
             </div>
           </div>
         </div>
+
+        <!-- KOLOM 2: BRAND -->
         <div class="col-md-4 footer-col">
           <div class="footer_detail">
-            <a href="index.html" class="footer-logo">KEMO<em style="color:#C8A96A;font-style:normal;">ENIK</em></a>
-            <p>Herbal Pelangsing Premium — Formula 5 Bahan Herbal Alami.</p>
+            <!-- EDIT: nama brand di footer -->
+            <a href="index.html" class="footer-logo">Kemoenik</a>
+            <!-- EDIT: tagline/deskripsi singkat brand -->
+            <p>Produk herbal alami untuk tubuh lebih ideal. Terpercaya, aman, dan sudah terbukti.</p>
             <div class="footer_social">
-              <a href="#"><i class="fa fa-instagram"></i></a>
-              <a href="#"><i class="fa fa-facebook"></i></a>
-              <a href="https://wa.me/6281546450547" target="_blank"><i class="fa fa-whatsapp"></i></a>
+              <!-- EDIT: ganti semua href dengan link sosial media kamu -->
+              <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+              <!-- EDIT: ganti dengan link Instagram kamu -->
+              <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+              <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
             </div>
           </div>
         </div>
+
+        <!-- KOLOM 3: JAM OPERASIONAL -->
         <div class="col-md-4 footer-col">
-          <h4>Jam Layanan</h4><p>Senin — Sabtu</p><p>08.00 — 21.00 WIB</p>
-          <div style="margin-top:14px;"><a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" target="_blank" style="display:inline-block;padding:9px 18px;background:#C8A96A;color:#fff;border-radius:50px;font-weight:700;font-size:13px;">🌿 Web App Diet</a></div>
+          <h4>Jam Layanan</h4>
+          <!-- EDIT: hari operasional -->
+          <p>Senin - Sabtu</p>
+          <!-- EDIT: jam operasional -->
+          <p>08.00 - 21.00 WIB</p>
         </div>
+
       </div>
-      <div class="footer-info"><p>&copy; <span id="displayYear"></span> KEMOENIK — CV. Barokah Mardhiyya. All Rights Reserved.</p></div>
+      <div class="footer-info">
+        <p>
+          &copy; <span id="displayYear"></span> Kemoenik Official Store. All Rights Reserved.
+        </p>
+      </div>
     </div>
   </footer>
+  <!-- ========== END FOOTER ========== -->
+
   <script src="js/jquery-3.4.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="js/bootstrap.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
   <script src="js/custom.js"></script>
+  <!-- EDIT: ganti API key Google Maps dengan key kamu sendiri -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap"></script>
+
 </body>
 </html>
