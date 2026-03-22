@@ -1,29 +1,59 @@
-@media (max-width: 1300px) {}
+/* ─────────────────────────────────────────────
+   KEMOENIK — responsive.css
+   Mobile-first responsive untuk semua halaman
+───────────────────────────────────────────── */
 
-@media (max-width: 1120px) {}
+/* ── DESKTOP LEBAR (1200px+) ── */
+@media (min-width: 1200px) {
+  .container { max-width: 1170px; }
+  .product-col { width: 25%; }
+}
 
-@media (max-width: 992px) {
-  .hero_area {
-    min-height: auto;
-  }
+/* ── TABLET BESAR (992px - 1199px) ── */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .product-col { width: 25%; }
+}
+
+/* ── TABLET (576px - 991px) ── */
+@media (min-width: 576px) and (max-width: 991px) {
+  .product-col { width: 33.333%; }
+}
+
+/* ── NAVBAR COLLAPSE (max 991px) ── */
+@media (max-width: 991px) {
+  .hero_area { min-height: auto; }
 
   .custom_nav-container .navbar-nav {
-    padding-top: 15px;
-padding-left: 0;
+    padding-top: 12px;
+    padding-left: 0;
     align-items: center;
   }
 
-  .user_option{
+  .user_option {
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 10px;
+    padding-bottom: 12px;
   }
+
   .custom_nav-container .navbar-nav .nav-item .nav-link {
-    padding: 5px 25px;
-    margin: 5px 0;
+    padding: 6px 20px;
+    margin: 2px 0;
+  }
+
+  .slider_section {
+    padding: 40px 0 56px;
+  }
+
+  .slider_section .detail-box h1 {
+    font-size: 2rem;
+  }
+
+  .slider_section .img-box {
+    margin-top: 28px;
   }
 
   .slider_section .carousel-indicators {
-    margin-top: 45px;
+    margin-top: 20px;
   }
 
   .offer_section .box {
@@ -34,64 +64,93 @@ padding-left: 0;
 
   .offer_section .box .img-box {
     margin-right: 0;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
+  }
+
+  /* Cart sidebar full width di tablet kecil */
+  #cartSidebar {
+    width: 100vw;
+    right: -100vw;
   }
 }
 
+/* ── MOBILE (max 767px) ── */
 @media (max-width: 767px) {
-
-  .about_section .detail-box,
-  .book_section .form_container {
-    margin-bottom: 45px;
-  }
-
+  /* About - balik urutan gambar & teks */
   .about_section .row {
     flex-direction: column-reverse;
   }
-
-  .offer_section .box {
-    flex-direction: row;
-    text-align: left;
+  .about_section .img-box {
+    margin-bottom: 24px;
   }
-
-  .offer_section .box .img-box {
-    margin-right: 15px;
+  .about_section .detail-box {
     margin-bottom: 0;
   }
-}
 
-@media (max-width: 576px) {}
+  /* Book - form di atas peta */
+  .book_section .form_container {
+    margin-bottom: 32px;
+  }
 
-@media (max-width: 480px) {}
-
-@media (max-width: 430px) {
+  /* Produk unggulan - stack vertikal */
   .offer_section .box {
     flex-direction: column;
     text-align: center;
   }
-
   .offer_section .box .img-box {
     margin-right: 0;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
   }
-}
 
-@media (max-width: 376px) {
+  /* Slider text lebih kecil */
   .slider_section .detail-box h1 {
-    font-size: 3rem;
+    font-size: 1.7rem;
+  }
+
+  /* Heading lebih kecil */
+  .heading_container h2 {
+    font-size: 1.7rem;
+  }
+
+  /* Cart penuh di mobile */
+  #cartSidebar {
+    width: 100vw;
+    right: -100vw;
   }
 }
 
-@media (min-width: 1200px) {
-  .container {
-    max-width: 1170px;
+/* ── MOBILE KECIL (max 480px) ── */
+@media (max-width: 480px) {
+  /* Katalog tetap 2 kolom */
+  .product-col { width: 50%; }
+
+  /* Font lebih kecil */
+  .heading_container h2 { font-size: 1.5rem; }
+  .slider_section .detail-box h1 { font-size: 1.5rem; }
+
+  /* Navbar button lebih kecil */
+  .order_online {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  /* Filter pills lebih kecil */
+  .food_section .filters_menu li {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* Product card price */
+  .product-card .pc-price { font-size: 14px; }
+
+  /* Footer center semua */
+  .footer_section .footer_contact .contact_link_box {
+    align-items: center;
   }
 }
 
-
-@media (min-width:576px) and (max-width:991px) {
-  .rent_solution_container .col-md-4.col-sm-6 {
-    float: left;
-    width: 50%;
-  }
+/* ── HP SANGAT KECIL (max 376px) ── */
+@media (max-width: 376px) {
+  .slider_section .detail-box h1 { font-size: 1.3rem; }
+  .navbar-brand span { font-size: 18px; letter-spacing: 2px; }
 }
