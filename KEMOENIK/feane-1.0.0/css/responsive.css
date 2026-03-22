@@ -1,0 +1,141 @@
+/* =============================================
+   RESPONSIVE — Mobile First
+   ============================================= */
+
+/* Desktop — tetap bisa dibuka tapi layout mobile */
+@media (min-width: 993px) {
+  .custom_nav-container .navbar-nav { padding-left: 16%; }
+  .food_section .filters-content .row.grid { margin: 0 -6px; }
+  .food_section .col-sm-6 { padding: 0 6px; }
+  /* Desktop: 3 kolom katalog */
+  .food_section .col-lg-4 { width: 33.333%; }
+}
+
+@media (max-width: 992px) {
+  :root { --navbar-h: 60px; }
+  body { padding-top: 60px; }
+  .hero_area { min-height: calc(100svh - 60px); }
+
+  .custom_nav-container .navbar-nav {
+    padding: 12px 0 10px;
+    align-items: center;
+    background: rgba(22,54,40,0.98);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .user_option { justify-content: center; margin: 8px 0 4px; }
+  .custom_nav-container .navbar-nav .nav-item .nav-link { padding: 8px 20px; margin: 2px 0; }
+
+  /* Offer */
+  .offer_section .box { flex-direction: row; }
+
+  /* Maps */
+  .book_section .map_container { height: 240px; }
+
+  /* Grid katalog — 2 kolom di tablet */
+  .food_section .col-sm-6 { width: 50% !important; padding: 0 6px; }
+  .food_section .filters-content .row.grid { margin: 0 -6px; }
+}
+
+@media (max-width: 767px) {
+  :root { --navbar-h: 58px; }
+  body { padding-top: 58px; }
+
+  /* Brand kecilkan */
+  .navbar-brand .brand-kemo,
+  .navbar-brand .brand-enik { font-size: 22px !important; }
+
+  /* Hero */
+  .hero_area { min-height: 100svh; }
+  .slider_section { padding: 30px 0 50px; }
+  .slider_section .detail-box h1 { font-size: 1.7rem; }
+  .slider_section .detail-box p { font-size: 12px; }
+  .slider_section .detail-box .slide-card { padding: 18px 16px; }
+
+  /* Offer */
+  .offer_section { padding: 30px 0; }
+  .offer_section .box { padding: 14px 12px; }
+  .offer_section .box .img-box {
+    width: 75px !important; min-width: 75px !important; height: 75px !important;
+    margin-right: 12px;
+  }
+  .offer_section .box .detail-box h5 { font-size: 14px; }
+  .offer_section .box .detail-box h6 span { font-size: 1.2rem !important; }
+  .offer_section .box .detail-box a { padding: 6px 14px; font-size: 11px; }
+
+  /* Grid katalog — 2 kolom di HP */
+  .food_section { padding: 30px 0; }
+  .food_section .filters-content .row.grid { margin: 0 -5px; }
+  .food_section .col-sm-6 { width: 50% !important; padding: 0 5px; }
+  .food_section .box { margin-top: 10px; border-radius: 10px; }
+  .food_section .box .detail-box { padding: 8px 8px 10px; }
+  .food_section .box .detail-box h5 { font-size: 11px; }
+  .food_section .box .detail-box p { font-size: 10px; }
+  .food_section .box .harga-diskon { font-size: 13px; }
+  .food_section .box .btn-wa { font-size: 10px; padding: 7px 5px; gap: 4px; }
+  .food_section .box .btn-wa i { font-size: 12px; }
+  .food_section .box .btn-hati { width: 28px; height: 28px; font-size: 12px; }
+  .food_section .box .badge-diskon,
+  .food_section .box .badge-favorit,
+  .food_section .box .badge-promo { font-size: 8px; padding: 1px 5px; }
+
+  /* About */
+  .about_section .row { flex-direction: column-reverse; }
+  .about_section .detail-box { margin-top: 20px; }
+
+  /* Kontak */
+  .book_section .contact-card { padding: 20px 16px; }
+  .book_section .form_container { margin-bottom: 24px; }
+  .book_section .map_container { height: 220px; }
+
+  /* Testimoni */
+  .client_section .testimoni-grid { grid-template-columns: 1fr; }
+
+  /* Footer */
+  .footer_section { padding: 40px 0 20px; }
+}
+
+@media (max-width: 480px) {
+  :root { --navbar-h: 55px; }
+  body { padding-top: 55px; }
+
+  .navbar-brand .brand-kemo,
+  .navbar-brand .brand-enik { font-size: 20px !important; }
+
+  .slider_section .detail-box h1 { font-size: 1.5rem; }
+
+  /* Katalog tetap 2 kolom, lebih rapat */
+  .food_section .filters-content .row.grid { margin: 0 -4px; }
+  .food_section .col-sm-6 { width: 50% !important; padding: 0 4px; }
+  .food_section .box { margin-top: 8px; border-radius: 8px; }
+  .food_section .box .detail-box { padding: 7px 7px 9px; }
+  .food_section .box .detail-box h5 { font-size: 10px; }
+  .food_section .box .harga-diskon { font-size: 12px; }
+  .food_section .box .btn-wa { padding: 6px 4px; font-size: 9px; }
+}
+
+@media (max-width: 375px) {
+  .navbar-brand .brand-kemo,
+  .navbar-brand .brand-enik { font-size: 18px !important; }
+  .slider_section .detail-box h1 { font-size: 1.35rem; }
+}
+
+/* =============================================
+   ANTI ZOOM — iOS & Android
+   ============================================= */
+/* Cegah zoom saat klik input */
+@media screen and (max-width: 767px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    border-radius: 10px;
+  }
+  /* Cegah double-tap zoom */
+  a, button {
+    touch-action: manipulation;
+  }
+}
