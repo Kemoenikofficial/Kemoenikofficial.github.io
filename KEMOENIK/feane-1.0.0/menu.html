@@ -1,71 +1,60 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>Produk — KEMOENIK Herbal Pelangsing Premium</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" crossorigin="anonymous" />
-  <link href="css/font-awesome.min.css" rel="stylesheet" />
-  <link href="css/style.css" rel="stylesheet" />
-  <link href="css/responsive.css" rel="stylesheet" />
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <title>Produk — KEMOENIK Herbal Pelangsing</title>
+  <link rel="stylesheet" href="css/bootstrap.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
+  <link rel="stylesheet" href="css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
 </head>
-
 <body class="sub_page">
 
-  <!-- CART -->
-  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
-  <div class="cart-sidebar" id="cartSidebar">
-    <div class="cart-header">
+  <!-- CART SIDEBAR -->
+  <div id="cartOverlay" onclick="closeCart()"></div>
+  <div id="cartSidebar">
+    <div class="cart-hdr">
       <h3>🛒 Keranjang Belanja</h3>
-      <button class="cart-close" onclick="closeCart()">✕</button>
+      <button onclick="closeCart()">✕</button>
     </div>
-    <div class="cart-items" id="cartItems">
-      <div class="cart-empty"><i class="fa fa-shopping-cart"></i><p>Keranjang masih kosong</p></div>
+    <div id="cartItems" class="cart-items-wrap">
+      <div class="cart-empty-state"><i class="fa fa-shopping-cart"></i><p>Keranjang masih kosong</p></div>
     </div>
-    <div class="cart-footer">
-      <div class="cart-total">
+    <div class="cart-ftr">
+      <div id="cartSubtotal" class="cart-subtotal">0 produk</div>
+      <div class="cart-total-row">
         <span>Total Belanja</span>
-        <span class="cart-total-price" id="cartTotalPrice">Rp 0</span>
+        <span id="cartTotalPrice" class="cart-total-price">Rp 0</span>
       </div>
-      <a href="https://LINK_EVERPRO_KAMU_DI_SINI" class="btn-checkout" target="_blank">Pesan Sekarang &nbsp;→</a>
-      <button class="btn-clear-cart" onclick="clearCart()">Kosongkan Keranjang</button>
+      <button onclick="checkoutWA()" class="btn-wa-checkout"><i class="fa fa-whatsapp"></i> Pesan via WhatsApp</button>
+      <button onclick="clearCart()" class="btn-clear">Kosongkan Keranjang</button>
     </div>
   </div>
-  <div class="kemoenik-toast" id="kemoToast"></div>
-
+  <div id="kemoToast" class="kemo-toast"></div>
   <div class="hero_area">
-    <div class="bg-box"><img src="images/hero-bg.jpg" alt=""></div>
+    <div class="bg-box"><img src="images/hero-bg.jpg" alt=""/></div>
     <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container">
-          <a class="navbar-brand" href="index.html"><span>KEMO<em>ENIK</em></span></a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <a class="navbar-brand" href="index.html"><span>KEMO<em style="color:#C8A96A;font-style:normal;">ENIK</em></span></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMain" aria-expanded="false"><span></span></button>
+          <div class="collapse navbar-collapse" id="navMain">
             <ul class="navbar-nav mx-auto">
               <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
-              <li class="nav-item active"><a class="nav-link" href="menu.html">Produk <span class="sr-only">(current)</span></a></li>
+              <li class="nav-item  active"><a class="nav-link" href="menu.html">Produk</a></li>
               <li class="nav-item"><a class="nav-link" href="about.html">Tentang Kami</a></li>
               <li class="nav-item"><a class="nav-link" href="book.html">Konsultasi</a></li>
             </ul>
             <div class="user_option">
-              <a href="kemoenikofficial.github.io/PANDUANKEMOENIK" class="user_link" title="Web App Diet">
-                <i class="fa fa-user" aria-hidden="true"></i>
+              <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" class="user_link" target="_blank"><i class="fa fa-user"></i></a>
+              <a class="cart_link" href="#" onclick="openCart();return false;" style="position:relative;">
+                <svg width="18" height="18" viewBox="0 0 456.029 456.029" style="fill:#fff;"><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></svg>
+                <span id="cartBadge" class="cart_badge"></span>
               </a>
-              <a class="cart_link" href="#" onclick="openCart(); return false;">
-                <svg viewBox="0 0 456.029 456.029" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/>
-                  <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/>
-                  <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/>
-                </svg>
-                <span class="cart_badge" id="cartBadge">0</span>
-              </a>
-              <a href="https://LINK_EVERPRO_KAMU_DI_SINI" class="order_online" target="_blank">Pesan Sekarang</a>
+              <a href="#" onclick="checkoutWA();return false;" class="order_online"><i class="fa fa-whatsapp"></i> Pesan Sekarang</a>
             </div>
           </div>
         </nav>
@@ -78,7 +67,7 @@
     <div class="container">
       <div class="heading_container heading_center">
         <h2>Semua <span>Produk KEMOENIK</span></h2>
-        <p>Pilih paket yang sesuai dengan kebutuhan dan budget kamu</p>
+        <p>Pilih paket yang sesuai kebutuhan dan budgetmu</p>
       </div>
       <ul class="filters_menu">
         <li class="active" data-filter="*">Semua</li>
@@ -86,121 +75,112 @@
         <li data-filter=".satuan">Satuan</li>
         <li data-filter=".bundling">Bundling</li>
       </ul>
-      <div class="row grid">
-
-        <div class="col-sm-6 col-lg-4 all satuan">
-          <div class="box">
-            <div class="img-box"><img src="images/f1.png" alt="KEMOENIK 30 Kapsul"></div>
-            <div class="detail-box">
-              <h5>KEMOENIK 30 Kapsul</h5>
-              <p>15 hari program. Dosis 2×3 kapsul/hari sesudah makan. Termasuk akses web app diet personal.</p>
-              <h6>Rp 85.000</h6>
-              <div class="options">
-                <button class="btn-cart" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'})">
-                  <i class="fa fa-shopping-cart"></i> Keranjang
-                </button>
-                <a class="btn-order" href="https://LINK_EVERPRO_KAMU_DI_SINI" target="_blank">Pesan →</a>
-              </div>
+      <div style="display:flex;flex-wrap:wrap;margin:0 -6px;" id="productGrid">
+        <div class="product-col all satuan">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f1.png" alt="KEMOENIK 30 Kapsul">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">KEMOENIK 30 Kapsul</div>
+              <div class="pc-desc">15 hari program. Dosis 2×3 kapsul/hari.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 240 terjual</div>
+              <div class="pc-price">Rp 85.000</div>
+              
+              <button class="btn-keranjang" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'})">+ Keranjang</button>
             </div>
           </div>
         </div>
-
-        <div class="col-sm-6 col-lg-4 all paket">
-          <div class="box">
-            <div class="img-box"><img src="images/f2.png" alt="Paket 30 Hari"></div>
-            <div class="detail-box">
-              <h5>Paket 30 Hari</h5>
-              <p>60 kapsul untuk 30 hari program penuh. Hasil lebih optimal, paling direkomendasikan.</p>
-              <h6>Rp 155.000</h6>
-              <div class="options">
-                <button class="btn-cart" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'})">
-                  <i class="fa fa-shopping-cart"></i> Keranjang
-                </button>
-                <a class="btn-order" href="https://LINK_EVERPRO_KAMU_DI_SINI" target="_blank">Pesan →</a>
-              </div>
+        <div class="product-col all paket">
+          <div class="product-card">
+            <div class="pc-img">
+              <span class="badge-flash">TERLARIS</span><span class="badge-disc">Hemat 10%</span>
+              <img src="images/f2.png" alt="Paket 30 Hari">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket 30 Hari</div>
+              <div class="pc-desc">60 kapsul untuk 30 hari. Paling direkomendasikan.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 580 terjual</div>
+              <div class="pc-price">Rp 155.000</div>
+              <div class="pc-price-ori">Rp 172.000</div>
+              <button class="btn-keranjang" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'})">+ Keranjang</button>
             </div>
           </div>
         </div>
-
-        <div class="col-sm-6 col-lg-4 all paket">
-          <div class="box">
-            <div class="img-box"><img src="images/f3.png" alt="Paket 2 Bulan"></div>
-            <div class="detail-box">
-              <h5>Paket 2 Bulan</h5>
-              <p>120 kapsul untuk 60 hari. Hemat 10% dari harga satuan. Hasil transformasi maksimal.</p>
-              <h6>Rp 279.000</h6>
-              <div class="options">
-                <button class="btn-cart" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'})">
-                  <i class="fa fa-shopping-cart"></i> Keranjang
-                </button>
-                <a class="btn-order" href="https://LINK_EVERPRO_KAMU_DI_SINI" target="_blank">Pesan →</a>
-              </div>
+        <div class="product-col all paket">
+          <div class="product-card">
+            <div class="pc-img">
+              <span class="badge-disc">Hemat 10%</span>
+              <img src="images/f3.png" alt="Paket 2 Bulan">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket 2 Bulan</div>
+              <div class="pc-desc">120 kapsul untuk 60 hari transformasi.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 312 terjual</div>
+              <div class="pc-price">Rp 279.000</div>
+              <div class="pc-price-ori">Rp 310.000</div>
+              <button class="btn-keranjang" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'})">+ Keranjang</button>
             </div>
           </div>
         </div>
-
-        <div class="col-sm-6 col-lg-4 all bundling">
-          <div class="box">
-            <div class="img-box"><img src="images/f4.png" alt="Bundling Keluarga"></div>
-            <div class="detail-box">
-              <h5>Bundling Keluarga</h5>
-              <p>3 botol @30 kapsul untuk 3 anggota keluarga. Hemat 15% vs beli satuan.</p>
-              <h6>Rp 216.000</h6>
-              <div class="options">
-                <button class="btn-cart" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'})">
-                  <i class="fa fa-shopping-cart"></i> Keranjang
-                </button>
-                <a class="btn-order" href="https://LINK_EVERPRO_KAMU_DI_SINI" target="_blank">Pesan →</a>
-              </div>
+        <div class="product-col all bundling">
+          <div class="product-card">
+            <div class="pc-img">
+              <span class="badge-disc">Hemat 15%</span>
+              <img src="images/f4.png" alt="Bundling Keluarga">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Bundling Keluarga</div>
+              <div class="pc-desc">3 botol @30 kapsul untuk 3 anggota.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 145 terjual</div>
+              <div class="pc-price">Rp 216.000</div>
+              <div class="pc-price-ori">Rp 255.000</div>
+              <button class="btn-keranjang" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'})">+ Keranjang</button>
             </div>
           </div>
         </div>
-
-        <div class="col-sm-6 col-lg-4 all bundling">
-          <div class="box">
-            <div class="img-box"><img src="images/f5.png" alt="Paket Reseller"></div>
-            <div class="detail-box">
-              <h5>Paket Reseller</h5>
-              <p>6 botol @30 kapsul. Harga grosir untuk reseller. Margin keuntungan hingga 30%.</p>
-              <h6>Rp 390.000</h6>
-              <div class="options">
-                <button class="btn-cart" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'})">
-                  <i class="fa fa-shopping-cart"></i> Keranjang
-                </button>
-                <a class="btn-order" href="https://LINK_EVERPRO_KAMU_DI_SINI" target="_blank">Pesan →</a>
-              </div>
+        <div class="product-col all bundling">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f5.png" alt="Paket Reseller">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket Reseller</div>
+              <div class="pc-desc">6 botol @30 kapsul. Harga grosir.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 89 terjual</div>
+              <div class="pc-price">Rp 390.000</div>
+              
+              <button class="btn-keranjang" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'})">+ Keranjang</button>
             </div>
           </div>
         </div>
-
-        <div class="col-sm-6 col-lg-4 all satuan">
-          <div class="box">
-            <div class="img-box"><img src="images/f6.png" alt="Paket Maintenance"></div>
-            <div class="detail-box">
-              <h5>Paket Maintenance</h5>
-              <p>30 kapsul dosis maintenance 2×2/hari. Untuk menjaga BB setelah target tercapai.</p>
-              <h6>Rp 85.000</h6>
-              <div class="options">
-                <button class="btn-cart" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'})">
-                  <i class="fa fa-shopping-cart"></i> Keranjang
-                </button>
-                <a class="btn-order" href="https://LINK_EVERPRO_KAMU_DI_SINI" target="_blank">Pesan →</a>
-              </div>
+        <div class="product-col all satuan">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f6.png" alt="Paket Maintenance">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket Maintenance</div>
+              <div class="pc-desc">Dosis 2×2/hari. Jaga BB setelah target.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 203 terjual</div>
+              <div class="pc-price">Rp 85.000</div>
+              
+              <button class="btn-keranjang" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'})">+ Keranjang</button>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="footer_section">
     <div class="container">
       <div class="row">
         <div class="col-md-4 footer-col">
-          <div class="footer_contact">
-            <h4>Hubungi Kami</h4>
+          <div class="footer_contact"><h4>Hubungi Kami</h4>
             <div class="contact_link_box">
               <a href="#"><i class="fa fa-map-marker"></i><span>Sumedang, Jawa Barat</span></a>
               <a href="tel:+6281546450547"><i class="fa fa-phone"></i><span>0815-4645-0547</span></a>
@@ -210,7 +190,7 @@
         </div>
         <div class="col-md-4 footer-col">
           <div class="footer_detail">
-            <a href="index.html" class="footer-logo">KEMO<em>ENIK</em></a>
+            <a href="index.html" class="footer-logo">KEMO<em style="color:#C8A96A;font-style:normal;">ENIK</em></a>
             <p>Herbal Pelangsing Premium — Formula 5 Bahan Herbal Alami.</p>
             <div class="footer_social">
               <a href="#"><i class="fa fa-instagram"></i></a>
@@ -220,23 +200,17 @@
           </div>
         </div>
         <div class="col-md-4 footer-col">
-          <h4>Jam Layanan</h4>
-          <p>Senin — Sabtu</p>
-          <p>08.00 — 21.00 WIB</p>
+          <h4>Jam Layanan</h4><p>Senin — Sabtu</p><p>08.00 — 21.00 WIB</p>
+          <div style="margin-top:14px;"><a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" target="_blank" style="display:inline-block;padding:9px 18px;background:#C8A96A;color:#fff;border-radius:50px;font-weight:700;font-size:13px;">🌿 Web App Diet</a></div>
         </div>
       </div>
-      <div class="footer-info">
-        <p>&copy; <span id="displayYear"></span> KEMOENIK — CV. Barokah Mardhiyya. All Rights Reserved.</p>
-      </div>
+      <div class="footer-info"><p>&copy; <span id="displayYear"></span> KEMOENIK — CV. Barokah Mardhiyya. All Rights Reserved.</p></div>
     </div>
   </footer>
-
   <script src="js/jquery-3.4.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="js/bootstrap.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
   <script src="js/custom.js"></script>
 </body>
 </html>
