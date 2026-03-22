@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+  <title>Testimoni - Kemoenik</title>
+  <link rel="shortcut icon" href="images/favicon.png" type="">
+  <link rel="stylesheet" href="css/bootstrap.css"/>
+  <link rel="stylesheet" href="css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
+  <style>
+    .testi-hero{background:linear-gradient(135deg,var(--green3),var(--green));padding:80px 0 60px;text-align:center;color:#fff;}
+    .testi-hero h1{color:#fff;font-size:3rem;} .testi-hero p{color:#c8dbd2;font-size:16px;}
+    .testi-hero .stats-row{display:flex;justify-content:center;gap:40px;margin-top:40px;flex-wrap:wrap;}
+    .stat-item{text-align:center;}
+    .stat-angka{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--gold);display:block;}
+    .stat-label{font-family:'Inter',sans-serif;font-size:13px;color:#c8dbd2;margin-top:4px;}
+    .testi-section{padding:80px 0;background:var(--bg);}
+    .testi-filter{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:40px;}
+    .testi-filter button{padding:8px 20px;border-radius:25px;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;}
+    .testi-filter button.active{background:var(--green);color:#fff;border-color:var(--green);}
+    .testi-card-full{background:var(--card);border-radius:16px;padding:28px 24px;margin-bottom:24px;border:1px solid var(--border);box-shadow:0 2px 16px rgba(31,77,58,0.07);transition:all 0.25s;}
+    .testi-card-full:hover{box-shadow:0 8px 28px rgba(31,77,58,0.14);transform:translateY(-3px);}
+    .testi-card-full .q{font-size:50px;color:var(--gold);line-height:1;font-family:Georgia,serif;opacity:0.5;margin-bottom:10px;}
+    .testi-card-full .isi{font-size:15px;color:var(--text2);line-height:1.8;margin-bottom:20px;font-style:italic;}
+    .testi-card-full .meta{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--border);}
+    .testi-card-full .nama{font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:var(--green);}
+    .testi-card-full .kota{font-size:12px;color:var(--text3);}
+    .testi-card-full .badge-tipe{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;flex-shrink:0;}
+    .badge-tipe.t7{background:#e8f5e9;color:var(--green);}
+    .badge-tipe.t14{background:#fff8e1;color:var(--gold2);}
+    .badge-tipe.tb{background:#fce4ec;color:#c62828;}
+    .kirim-testi{background:var(--green3);padding:70px 0;text-align:center;}
+    .kirim-testi h2{color:#fff;margin-bottom:12px;} .kirim-testi p{color:#c8dbd2;margin-bottom:30px;font-size:15px;}
+    .btn-kirim{display:inline-flex;align-items:center;gap:8px;padding:14px 40px;background:var(--wa-green);color:#fff;border-radius:45px;font-family:'Inter',sans-serif;font-weight:700;font-size:15px;transition:all 0.3s;box-shadow:0 4px 15px rgba(37,211,102,0.4);}
+    .btn-kirim:hover{background:#1ea855;transform:translateY(-2px);color:#fff;}
+  </style>
+</head>
+<body class="sub_page">
+
+<header class="header_section">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg custom_nav-container">
+      <a class="navbar-brand" href="index.html"><span class="brand-kemo">KEMO</span><span class="brand-enik">ENIK</span></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav"><span></span></button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="menu.html">Program</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Tentang Kami</a></li>
+          <li class="nav-item active"><a class="nav-link" href="book.html">Testimoni</a></li>
+        </ul>
+        <div class="user_option"><a href="https://wa.me/6281546450547" target="_blank" class="order_online"><i class="fa fa-whatsapp"></i> Pesan Sekarang</a></div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO TESTIMONI -->
+<!-- EDIT: ganti angka statistik dengan data nyata -->
+<div class="testi-hero">
+  <div class="container">
+    <h1>Kata <span style="color:var(--gold)">Pelanggan</span></h1>
+    <p>Ribuan pelanggan sudah membuktikan manfaat Kemoenik</p>
+    <div class="stats-row">
+      <div class="stat-item"><span class="stat-angka">5.000+</span><div class="stat-label">Pelanggan Puas</div></div><!-- EDIT: angka -->
+      <div class="stat-item"><span class="stat-angka">4.9/5</span><div class="stat-label">Rating Rata-rata</div></div><!-- EDIT: angka -->
+      <div class="stat-item"><span class="stat-angka">98%</span><div class="stat-label">Puas dan Reorder</div></div><!-- EDIT: angka -->
+      <div class="stat-item"><span class="stat-angka">3 Hari</span><div class="stat-label">Hasil Pertama</div></div><!-- EDIT: angka -->
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONI -->
+<section class="testi-section">
+  <div class="container">
+    <div class="testi-filter">
+      <button class="active" onclick="filterTesti('semua',this)">Semua</button>
+      <button onclick="filterTesti('t7',this)">Program 7 Hari</button>
+      <button onclick="filterTesti('t14',this)">Program 14 Hari</button>
+      <button onclick="filterTesti('tb',this)">Bundling</button>
+    </div>
+    <div class="row" id="testiGrid">
+
+      <!-- EDIT: testimoni 1 — ubah isi, nama, kota, tipe -->
+      <div class="col-md-6 testi-item t7"><div class="testi-card-full">
+        <div class="q">"</div>
+        <p class="isi">Sudah 2 minggu pakai Kemoenik Slim 1, berat turun 3 kg! Aman banget, tanpa efek samping. Highly recommended!</p>
+        <div class="meta">
+          <div><div class="nama">Sari Dewi</div><div class="kota">★★★★★ Jakarta Selatan</div></div>
+          <span class="badge-tipe t7">Program 7 Hari</span>
+        </div>
+      </div></div>
+
+      <!-- EDIT: testimoni 2 -->
+      <div class="col-md-6 testi-item t14"><div class="testi-card-full">
+        <div class="q">"</div>
+        <p class="isi">Program 14 hari benar-benar mengubah pola hidup saya. Minus 5 kg dan badan lebih segar. Konsultasinya ramah dan fast response!</p>
+        <div class="meta">
+          <div><div class="nama">Budi Santoso</div><div class="kota">★★★★★ Bandung</div></div>
+          <span class="badge-tipe t14">Program 14 Hari</span>
+        </div>
+      </div></div>
+
+      <!-- EDIT: testimoni 3 -->
+      <div class="col-md-6 testi-item tb"><div class="testi-card-full">
+        <div class="q">"</div>
+        <p class="isi">Skeptis awalnya, tapi setelah coba bundling hasilnya luar biasa! Perutnya udah kempes di hari ke-5. Worth every penny!</p>
+        <div class="meta">
+          <div><div class="nama">Rina Marlina</div><div class="kota">★★★★★ Surabaya</div></div>
+          <span class="badge-tipe tb">Bundling</span>
+        </div>
+      </div></div>
+
+      <!-- EDIT: testimoni 4 -->
+      <div class="col-md-6 testi-item t7"><div class="testi-card-full">
+        <div class="q">"</div>
+        <p class="isi">Produknya original dan efektif. Hari ke-3 langsung terasa perutnya lebih flat. Packaging bagus dan pengiriman cepat!</p>
+        <div class="meta">
+          <div><div class="nama">Dewi Rahayu</div><div class="kota">★★★★★ Yogyakarta</div></div>
+          <span class="badge-tipe t7">Program 7 Hari</span>
+        </div>
+      </div></div>
+
+      <!-- EDIT: testimoni 5 -->
+      <div class="col-md-6 testi-item t14"><div class="testi-card-full">
+        <div class="q">"</div>
+        <p class="isi">Udah coba banyak produk diet tapi Kemoenik yang paling kerasa hasilnya. 14 hari turun 6 kg. Langsung order lagi!</p>
+        <div class="meta">
+          <div><div class="nama">Fitri Handayani</div><div class="kota">★★★★★ Medan</div></div>
+          <span class="badge-tipe t14">Program 14 Hari</span>
+        </div>
+      </div></div>
+
+      <!-- EDIT: testimoni 6 -->
+      <div class="col-md-6 testi-item tb"><div class="testi-card-full">
+        <div class="q">"</div>
+        <p class="isi">Bundling paket lengkap banget. Panduan makanan, kalkulator, dan konsultasinya juga responsif. Hasilnya memuaskan!</p>
+        <div class="meta">
+          <div><div class="nama">Ahmad Fauzi</div><div class="kota">★★★★★ Makassar</div></div>
+          <span class="badge-tipe tb">Bundling</span>
+        </div>
+      </div></div>
+
+      <!-- TAMBAH TESTIMONI: copy satu blok col-md-6 di atas dan paste di sini -->
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA KIRIM TESTIMONI -->
+<section class="kirim-testi">
+  <div class="container">
+    <!-- EDIT: judul & deskripsi CTA -->
+    <h2>Sudah Coba <span style="color:var(--gold)">Kemoenik?</span></h2>
+    <p>Bagikan pengalamanmu dan bantu ribuan orang lainnya menemukan solusi diet herbal terbaik!</p>
+    <!-- EDIT: link WA kirim testimoni -->
+    <a href="https://wa.me/6281546450547?text=Halo%20Kemoenik!%20Saya%20mau%20berbagi%20testimoni%20saya." target="_blank" class="btn-kirim">
+      <i class="fa fa-whatsapp"></i> Kirim Testimoni via WA
+    </a>
+  </div>
+</section>
+
+<footer class="footer_section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 footer-col"><div class="footer_contact"><h4>Hubungi Kami</h4>
+        <div class="contact_link_box">
+          <a href="#"><i class="fa fa-map-marker"></i><span>Sumedang, Jawa Barat</span></a>
+          <a href="https://wa.me/6281546450547" target="_blank"><i class="fa fa-whatsapp"></i><span>0815-4645-0547</span></a>
+        </div>
+      </div></div>
+      <div class="col-md-4 footer-col"><div class="footer_detail">
+        <a href="index.html" class="footer-logo">Kemoenik</a>
+        <p>Herbal Pelangsing Premium - Formula 5 Bahan Herbal Alami.</p>
+        <div class="footer_social">
+          <a href="#"><i class="fa fa-instagram"></i></a><a href="#"><i class="fa fa-facebook"></i></a>
+          <a href="https://wa.me/6281546450547"><i class="fa fa-whatsapp"></i></a>
+        </div>
+      </div></div>
+      <div class="col-md-4 footer-col"><h4>Jam Layanan</h4><p>Senin - Sabtu</p><p>08.00 - 21.00 WIB</p></div>
+    </div>
+    <div class="footer-info"><p>&copy; <span id="displayYear"></span> Kemoenik Official Store. All Rights Reserved.</p></div>
+  </div>
+</footer>
+
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/custom.js"></script>
+<script>
+  document.getElementById('displayYear').innerHTML=new Date().getFullYear();
+  function filterTesti(k,btn){
+    document.querySelectorAll('.testi-filter button').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    document.querySelectorAll('.testi-item').forEach(function(el){
+      el.style.display=(k==='semua'||el.classList.contains(k))?'':'none';
+    });
+  }
+  window.addEventListener('scroll',function(){var h=document.querySelector('.header_section');if(window.scrollY>50)h.classList.add('scrolled');else h.classList.remove('scrolled');});
+</script>
+</body></html>
