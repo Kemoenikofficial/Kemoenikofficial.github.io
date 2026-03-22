@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+  <title>Program - Kemoenik</title>
+  <link rel="shortcut icon" href="images/favicon.png" type="">
+  <link rel="stylesheet" href="css/bootstrap.css"/>
+  <link rel="stylesheet" href="css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
+  <style>
+    .prog-hero{background:linear-gradient(135deg,var(--green3),var(--green));padding:80px 0 60px;text-align:center;color:#fff;}
+    .prog-hero h1{color:#fff;font-size:3rem;} .prog-hero p{color:#c8dbd2;font-size:16px;max-width:600px;margin:12px auto 0;}
+    .program_section{padding:80px 0;}
+    .prog-card{background:var(--card);border-radius:20px;overflow:hidden;margin-bottom:30px;box-shadow:0 4px 24px rgba(31,77,58,0.1);border:1px solid var(--border);transition:all 0.3s;}
+    .prog-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(31,77,58,0.18);}
+    .prog-card .prog-head{padding:28px 28px 20px;background:linear-gradient(135deg,var(--green3),var(--green));color:#fff;}
+    .prog-card .prog-durasi{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;margin-bottom:12px;}
+    .prog-card .prog-head h3{color:#fff;font-size:1.6rem;margin-bottom:8px;} .prog-card .prog-head p{color:#c8dbd2;font-size:14px;margin:0;}
+    .prog-card .prog-body{padding:24px 28px;}
+    .prog-fitur{list-style:none;padding:0;margin:0 0 20px;}
+    .prog-fitur li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text2);padding:8px 0;border-bottom:1px solid var(--border);font-family:'Inter',sans-serif;}
+    .prog-fitur li:last-child{border:none;} .prog-fitur .ck{color:var(--green);font-size:16px;flex-shrink:0;}
+    .prog-harga{display:flex;align-items:center;justify-content:space-between;background:var(--card2);border-radius:12px;padding:16px 20px;margin-bottom:16px;}
+    .harga-now{font-size:22px;font-weight:700;color:var(--green);font-family:'Inter',sans-serif;} .harga-old{font-size:13px;color:var(--text3);text-decoration:line-through;font-family:'Inter',sans-serif;}
+    .badge-hemat{background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;font-family:'Inter',sans-serif;}
+    .btn-prog{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--wa-green);color:#fff;border-radius:12px;font-family:'Inter',sans-serif;font-weight:700;font-size:15px;transition:all 0.3s;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(37,211,102,0.3);}
+    .btn-prog:hover{background:#1ea855;transform:translateY(-2px);}
+    .cara-kerja{background:var(--offwhite);padding:80px 0;}
+    .step-item{display:flex;gap:20px;margin-bottom:30px;align-items:flex-start;}
+    .step-no{width:50px;height:50px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;font-family:'Inter',sans-serif;}
+    .step-content h5{font-family:'Inter',sans-serif !important;font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+    .step-content p{font-size:14px;color:var(--text3);margin:0;line-height:1.6;}
+    .compare-section{padding:80px 0;}
+    .compare-table{width:100%;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(31,77,58,0.1);}
+    .compare-table th{background:var(--green3);color:#fff;padding:16px 20px;font-family:'Playfair Display',serif;}
+    .compare-table td{padding:14px 20px;background:var(--card);border-bottom:1px solid var(--border);font-family:'Inter',sans-serif;font-size:14px;color:var(--text2);}
+    .compare-table tr:last-child td{border-bottom:none;}
+    .compare-table td:first-child{font-weight:600;} .ck2{color:var(--green);font-size:16px;} .cx2{color:#ccc;font-size:16px;}
+  </style>
+</head>
+<body class="sub_page">
+
+<header class="header_section">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg custom_nav-container">
+      <a class="navbar-brand" href="index.html"><span class="brand-kemo">KEMO</span><span class="brand-enik">ENIK</span></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav"><span></span></button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item active"><a class="nav-link" href="menu.html">Program</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Tentang Kami</a></li>
+          <li class="nav-item"><a class="nav-link" href="book.html">Testimoni</a></li>
+        </ul>
+        <div class="user_option"><a href="https://wa.me/6281546450547" target="_blank" class="order_online"><i class="fa fa-whatsapp"></i> Pesan Sekarang</a></div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="prog-hero">
+  <div class="container">
+    <!-- EDIT: judul & deskripsi halaman program -->
+    <h1>Program <span style="color:var(--gold)">Kemoenik</span></h1>
+    <p>Pilih program yang sesuai dengan target dan kondisi tubuhmu. Setiap program dirancang khusus berbasis herbal alami.</p>
+  </div>
+</div>
+
+<section class="program_section">
+  <div class="container">
+    <div class="heading_container heading_center" style="margin-bottom:50px;">
+      <h2>Pilih <span>Program Kamu</span></h2>
+      <p>Semua program sudah termasuk produk + panduan + konsultasi</p>
+    </div>
+    <div class="row">
+
+      <!-- PROGRAM 7 HARI — EDIT: semua data -->
+      <div class="col-md-4"><div class="prog-card">
+        <div class="prog-head">
+          <div class="prog-durasi">7 Hari</div>
+          <h3>Program 7 Hari</h3><!-- EDIT: nama program -->
+          <p>Cocok untuk pemula yang mau mulai perjalanan diet herbal</p><!-- EDIT: deskripsi -->
+        </div>
+        <div class="prog-body">
+          <ul class="prog-fitur"><!-- EDIT: fitur program -->
+            <li><i class="fa fa-check-circle ck"></i> 1 botol Kemoenik Slim 1 (30 kapsul)</li>
+            <li><i class="fa fa-check-circle ck"></i> Panduan makan 7 hari</li>
+            <li><i class="fa fa-check-circle ck"></i> Konsultasi WhatsApp gratis</li>
+            <li><i class="fa fa-check-circle ck"></i> Tips hidrasi dan olahraga ringan</li>
+            <li><i class="fa fa-times" style="color:var(--text3);flex-shrink:0;font-size:16px;margin-top:1px;"></i> Meal plan detail</li>
+          </ul>
+          <div class="prog-harga">
+            <div><div class="harga-now">Rp 67.000</div><div class="harga-old">Rp 150.000</div></div><!-- EDIT: harga -->
+            <span class="badge-hemat">Hemat 55%</span><!-- EDIT: diskon -->
+          </div>
+          <!-- EDIT: link Everpro program 7 hari -->
+          <a href="https://wa.me/6281546450547" target="_blank" class="btn-prog"><i class="fa fa-whatsapp"></i> Mulai Program</a>
+        </div>
+      </div></div>
+
+      <!-- PROGRAM 14 HARI — EDIT: semua data -->
+      <div class="col-md-4"><div class="prog-card" style="border:2px solid var(--gold);">
+        <div class="prog-head" style="background:linear-gradient(135deg,#8B6914,var(--gold));">
+          <div class="prog-durasi" style="background:var(--green3);">14 Hari</div>
+          <h3>Program 14 Hari</h3><!-- EDIT: nama program -->
+          <p>Program terpopuler untuk hasil maksimal yang terbukti</p><!-- EDIT: deskripsi -->
+        </div>
+        <div class="prog-body">
+          <ul class="prog-fitur"><!-- EDIT: fitur program -->
+            <li><i class="fa fa-check-circle ck"></i> 2 botol Kemoenik Slim (60 kapsul)</li>
+            <li><i class="fa fa-check-circle ck"></i> Meal plan detail 14 hari</li>
+            <li><i class="fa fa-check-circle ck"></i> Konsultasi prioritas via WA</li>
+            <li><i class="fa fa-check-circle ck"></i> Kalkulator Fat Loss eksklusif</li>
+            <li><i class="fa fa-check-circle ck"></i> Progress tracking mingguan</li>
+          </ul>
+          <div class="prog-harga">
+            <div><div class="harga-now">Rp 125.000</div><div class="harga-old">Rp 280.000</div></div><!-- EDIT: harga -->
+            <span class="badge-hemat">Hemat 55%</span>
+          </div>
+          <!-- EDIT: link Everpro program 14 hari -->
+          <a href="https://wa.me/6281546450547" target="_blank" class="btn-prog"><i class="fa fa-whatsapp"></i> Mulai Program</a>
+        </div>
+      </div></div>
+
+      <!-- BUNDLING — EDIT: semua data -->
+      <div class="col-md-4"><div class="prog-card">
+        <div class="prog-head" style="background:linear-gradient(135deg,#1a1a2e,var(--green3));">
+          <div class="prog-durasi">Bundling</div>
+          <h3>Paket Bundling</h3><!-- EDIT: nama program -->
+          <p>Paket lengkap untuk transformasi total yang luar biasa</p><!-- EDIT: deskripsi -->
+        </div>
+        <div class="prog-body">
+          <ul class="prog-fitur"><!-- EDIT: fitur program -->
+            <li><i class="fa fa-check-circle ck"></i> Slim 1 + Slim 2 (60 kapsul)</li>
+            <li><i class="fa fa-check-circle ck"></i> Program 7 + 14 hari sekaligus</li>
+            <li><i class="fa fa-check-circle ck"></i> Konsultasi unlimited 30 hari</li>
+            <li><i class="fa fa-check-circle ck"></i> Semua bonus digital termasuk</li>
+            <li><i class="fa fa-check-circle ck"></i> Garansi hasil atau uang kembali</li>
+          </ul>
+          <div class="prog-harga">
+            <div><div class="harga-now">Rp 199.000</div><div class="harga-old">Rp 450.000</div></div><!-- EDIT: harga -->
+            <span class="badge-hemat">Hemat 60%</span>
+          </div>
+          <!-- EDIT: link Everpro bundling -->
+          <a href="https://wa.me/6281546450547" target="_blank" class="btn-prog"><i class="fa fa-whatsapp"></i> Ambil Bundling</a>
+        </div>
+      </div></div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CARA KERJA -->
+<section class="cara-kerja">
+  <div class="container"><div class="row">
+    <div class="col-md-6">
+      <div class="heading_container" style="margin-bottom:35px;">
+        <h2>Cara Kerja <span>Produk</span></h2>
+        <p>Mekanisme herbal alami yang sudah teruji secara ilmiah</p>
+      </div>
+      <!-- EDIT: ubah step sesuai info produk kamu -->
+      <div class="step-item"><div class="step-no">1</div><div class="step-content"><h5>Blokir Penyerapan Lemak</h5><p>Jati Belanda aktif menghambat enzim lipase sehingga lemak dari makanan tidak terserap sempurna.</p></div></div>
+      <div class="step-item"><div class="step-no">2</div><div class="step-content"><h5>Percepat Metabolisme</h5><p>Teh Hijau dan Kemuning bekerja meningkatkan laju metabolisme basal, membantu pembakaran kalori lebih efisien.</p></div></div>
+      <div class="step-item"><div class="step-no">3</div><div class="step-content"><h5>Detoksifikasi Tubuh</h5><p>Tempuyung sebagai diuretik alami membantu membuang racun dan retensi cairan berlebih.</p></div></div>
+      <div class="step-item"><div class="step-no">4</div><div class="step-content"><h5>Hasil Terlihat Mulai Hari ke-3</h5><p>Kombinasi 5 bahan herbal bekerja sinergis sehingga perubahan nyata sudah bisa dirasakan dalam 3 hari pertama.</p></div></div>
+    </div>
+    <div class="col-md-6" style="display:flex;align-items:center;justify-content:center;padding-top:20px;">
+      <!-- EDIT: ganti dengan foto produk/infografis -->
+      <img src="images/about-img.png" alt="Cara Kerja" style="max-width:100%;border-radius:20px;box-shadow:0 8px 40px rgba(31,77,58,0.15);">
+    </div>
+  </div></div>
+</section>
+
+<!-- TABEL PERBANDINGAN -->
+<section class="compare-section">
+  <div class="container">
+    <div class="heading_container heading_center" style="margin-bottom:40px;">
+      <h2>Bandingkan <span>Program</span></h2>
+      <p>Pilih yang paling sesuai dengan kebutuhan kamu</p>
+    </div>
+    <div class="table-responsive">
+      <table class="compare-table">
+        <thead><tr>
+          <th>Fitur</th>
+          <th style="text-align:center;">7 Hari</th>
+          <th style="text-align:center;background:var(--gold2);">14 Hari</th>
+          <th style="text-align:center;">Bundling</th>
+        </tr></thead>
+        <tbody>
+          <!-- EDIT: isi tabel perbandingan -->
+          <tr><td>Produk Kemoenik</td><td style="text-align:center;">1 botol</td><td style="text-align:center;background:#fffdf5;">2 botol</td><td style="text-align:center;">2 botol</td></tr>
+          <tr><td>Panduan Makan</td><td style="text-align:center;"><i class="fa fa-check-circle ck2"></i></td><td style="text-align:center;background:#fffdf5;"><i class="fa fa-check-circle ck2"></i></td><td style="text-align:center;"><i class="fa fa-check-circle ck2"></i></td></tr>
+          <tr><td>Meal Plan Detail</td><td style="text-align:center;"><i class="fa fa-times cx2"></i></td><td style="text-align:center;background:#fffdf5;"><i class="fa fa-check-circle ck2"></i></td><td style="text-align:center;"><i class="fa fa-check-circle ck2"></i></td></tr>
+          <tr><td>Kalkulator Fat Loss</td><td style="text-align:center;"><i class="fa fa-times cx2"></i></td><td style="text-align:center;background:#fffdf5;"><i class="fa fa-check-circle ck2"></i></td><td style="text-align:center;"><i class="fa fa-check-circle ck2"></i></td></tr>
+          <tr><td>Konsultasi WA</td><td style="text-align:center;">7 hari</td><td style="text-align:center;background:#fffdf5;">14 hari</td><td style="text-align:center;">30 hari</td></tr>
+          <tr><td>Garansi Hasil</td><td style="text-align:center;"><i class="fa fa-times cx2"></i></td><td style="text-align:center;background:#fffdf5;"><i class="fa fa-times cx2"></i></td><td style="text-align:center;"><i class="fa fa-check-circle ck2"></i></td></tr>
+          <tr><td>Harga</td><td style="text-align:center;font-weight:700;color:var(--green);">Rp 67.000</td><td style="text-align:center;background:#fffdf5;font-weight:700;color:var(--green);">Rp 125.000</td><td style="text-align:center;font-weight:700;color:var(--green);">Rp 199.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer class="footer_section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 footer-col"><div class="footer_contact"><h4>Hubungi Kami</h4>
+        <div class="contact_link_box">
+          <a href="#"><i class="fa fa-map-marker"></i><span>Sumedang, Jawa Barat</span></a>
+          <a href="https://wa.me/6281546450547" target="_blank"><i class="fa fa-whatsapp"></i><span>0815-4645-0547</span></a>
+        </div>
+      </div></div>
+      <div class="col-md-4 footer-col"><div class="footer_detail">
+        <a href="index.html" class="footer-logo">Kemoenik</a>
+        <p>Herbal Pelangsing Premium - Formula 5 Bahan Herbal Alami.</p>
+        <div class="footer_social">
+          <a href="#"><i class="fa fa-instagram"></i></a><a href="#"><i class="fa fa-facebook"></i></a>
+          <a href="https://wa.me/6281546450547"><i class="fa fa-whatsapp"></i></a>
+        </div>
+      </div></div>
+      <div class="col-md-4 footer-col"><h4>Jam Layanan</h4><p>Senin - Sabtu</p><p>08.00 - 21.00 WIB</p></div>
+    </div>
+    <div class="footer-info"><p>&copy; <span id="displayYear"></span> Kemoenik Official Store. All Rights Reserved.</p></div>
+  </div>
+</footer>
+
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/custom.js"></script>
+<script>
+  document.getElementById('displayYear').innerHTML=new Date().getFullYear();
+  window.addEventListener('scroll',function(){var h=document.querySelector('.header_section');if(window.scrollY>50)h.classList.add('scrolled');else h.classList.remove('scrolled');});
+</script>
+</body></html>
