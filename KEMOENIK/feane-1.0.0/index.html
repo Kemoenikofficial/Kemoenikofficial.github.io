@@ -1,333 +1,78 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-<title>KEMOENIK — Herbal Pelangsing Premium</title>
-<link rel="stylesheet" href="css/bootstrap.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
-<link rel="stylesheet" href="css/font-awesome.min.css"/>
-<link rel="stylesheet" href="css/style.css"/>
-<link rel="stylesheet" href="css/responsive.css"/>
-<!-- Google Fonts: Inter + Playfair sama persis web app KEMOENIK -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-
-<style>
-/* ── FORCE FONT & COLOR — override semua ── */
-:root {
-  --green:  #1F4D3A;
-  --green3: #163628;
-  --gold:   #C8A96A;
-  --gold2:  #A8843F;
-  --bg:     #F6F4EF;
-  --border: #DDE4DA;
-  --text:   #1E2B26;
-  --text3:  #8A9A92;
-}
-*, *::before, *::after { box-sizing: border-box; }
-body {
-  font-family: 'Inter', system-ui, sans-serif !important;
-  background: var(--bg);
-  color: var(--text);
-  margin: 0;
-  overflow-x: hidden;
-}
-/* Override Playfair only for headings */
-h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif !important; }
-
-/* ── NAVBAR ── */
-.hero_area {
-  background: linear-gradient(160deg, var(--green) 0%, var(--green3) 100%) !important;
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.bg-box { position:absolute; inset:0; pointer-events:none; }
-.bg-box img { width:100%; height:100%; object-fit:cover; opacity:.06; }
-.sub_page .hero_area { min-height: auto; }
-.header_section { padding: 12px 0; position: relative; z-index: 100; }
-.navbar-brand { padding:0; }
-.navbar-brand span { font-family:'Inter',sans-serif !important; font-size:22px; font-weight:800; color:#fff; letter-spacing:3px; }
-.navbar-brand span em { color:var(--gold); font-style:normal; }
-.custom_nav-container { padding:0; }
-.custom_nav-container .navbar-nav { padding-left:8%; }
-.custom_nav-container .navbar-nav .nav-item .nav-link {
-  color:rgba(255,255,255,.80); font-size:13px; font-weight:600;
-  letter-spacing:.8px; text-transform:uppercase; padding:6px 16px;
-  transition:color .2s; font-family:'Inter',sans-serif !important;
-}
-.custom_nav-container .navbar-nav .nav-item:hover .nav-link,
-.custom_nav-container .navbar-nav .nav-item.active .nav-link { color:var(--gold); }
-.user_option { display:flex; align-items:center; gap:4px; }
-.user_option .user_link { color:#fff; padding:6px; font-size:16px; }
-.user_option .user_link:hover { color:var(--gold); }
-.cart_link { position:relative; display:flex; align-items:center; padding:6px 8px; color:#fff; }
-.cart_link svg { width:18px; fill:#fff; transition:fill .2s; }
-.cart_link:hover svg { fill:var(--gold); }
-.cart_badge {
-  position:absolute; top:0; right:0;
-  background:var(--gold); color:#fff;
-  font-size:9px; font-weight:800;
-  min-width:16px; height:16px; border-radius:8px;
-  padding:0 4px; display:none;
-  align-items:center; justify-content:center;
-}
-.cart_badge.show { display:flex; }
-.order_online {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:9px 18px; background:var(--gold); color:#fff !important;
-  border-radius:50px; font-weight:700; font-size:13px;
-  font-family:'Inter',sans-serif !important;
-  transition:background .2s; white-space:nowrap; margin-left:6px;
-}
-.order_online:hover { background:var(--gold2); }
-.custom_nav-container .navbar-toggler { outline:none; padding:0; width:36px; height:40px; border:none; background:none; }
-.custom_nav-container .navbar-toggler span { display:block; width:22px; height:2px; background:#fff; margin:5px auto; border-radius:2px; transition:all .3s; position:relative; }
-.custom_nav-container .navbar-toggler span::before,
-.custom_nav-container .navbar-toggler span::after { content:''; position:absolute; left:0; width:100%; height:100%; background:#fff; border-radius:2px; transition:all .3s; }
-.custom_nav-container .navbar-toggler span::before { top:-7px; }
-.custom_nav-container .navbar-toggler span::after { top:7px; }
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span { transform:rotate(45deg); }
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span::before,
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span::after { transform:rotate(90deg); top:0; }
-
-/* ── SLIDER ── */
-.slider_section { flex:1; display:flex; align-items:center; position:relative; z-index:1; padding:56px 0 72px; }
-.slider_section .row { align-items:center; }
-.slider_section #customCarousel1 { width:100%; position:unset; }
-.slider_section .detail-box { color:#fff; }
-.slider_section .detail-box h1 { font-size:2.6rem; font-weight:700; line-height:1.2; margin-bottom:14px; color:#fff !important; }
-.slider_section .detail-box h1 span { color:var(--gold); }
-.slider_section .detail-box p { font-size:14px; color:rgba(255,255,255,.75); line-height:1.7; margin-bottom:22px; font-family:'Inter',sans-serif; }
-.slider_section .detail-box a { display:inline-block; padding:12px 36px; background:var(--gold); color:#fff; border-radius:50px; font-weight:700; font-size:14px; font-family:'Inter',sans-serif; transition:all .2s; }
-.slider_section .detail-box a:hover { background:var(--gold2); }
-.slider_section .img-box img { width:100%; border-radius:16px; }
-.slider_section .carousel-indicators { position:unset; margin:20px 0 0; justify-content:flex-start; align-items:center; }
-.slider_section .carousel-indicators li { background:rgba(255,255,255,.35); width:8px; height:8px; border-radius:50%; opacity:1; border:none; transition:all .3s; }
-.slider_section .carousel-indicators li.active { background:var(--gold); width:24px; border-radius:4px; }
-
-/* ── HEADING ── */
-.sec-heading { margin-bottom:24px; }
-.sec-heading h2 { font-size:1.9rem; font-weight:700; margin:0; color:var(--text); }
-.sec-heading h2 span { color:var(--gold); }
-.sec-heading p { color:var(--text3); font-size:14px; margin:6px 0 0; font-family:'Inter',sans-serif; }
-.sec-heading.center { text-align:center; }
-
-/* ── PRODUK UNGGULAN — Card style ── */
-.offer-section { background:#fff; padding:48px 0; }
-.offer-card {
-  display:flex; align-items:center; gap:18px;
-  padding:20px; border-radius:12px;
-  background:var(--green); color:#fff;
-  margin-top:20px;
-  transition:transform .25s, box-shadow .25s;
-}
-.offer-card:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(31,77,58,.2); }
-.offer-card .img-wrap {
-  width:120px; min-width:120px; height:120px;
-  border-radius:50%; border:3px solid var(--gold);
-  overflow:hidden; flex-shrink:0; background:#163628;
-  display:flex; align-items:center; justify-content:center;
-}
-.offer-card .img-wrap img { width:100%; height:100%; object-fit:cover; }
-.offer-card h5 { font-family:'Inter',sans-serif !important; font-size:17px; font-weight:700; margin:0 0 4px; color:#fff; }
-.offer-card .price-lbl { font-size:12px; color:rgba(255,255,255,.65); margin:0 0 6px; font-family:'Inter',sans-serif; }
-.offer-card .price-val { font-family:'Inter',sans-serif; font-size:1.6rem; font-weight:800; color:var(--gold); }
-.offer-card p { font-size:12px; color:rgba(255,255,255,.65); margin:4px 0 12px; font-family:'Inter',sans-serif; }
-.offer-card .btn-kart {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:8px 20px; background:var(--gold); color:#fff;
-  border:none; border-radius:50px; font-family:'Inter',sans-serif;
-  font-size:13px; font-weight:700; cursor:pointer; transition:background .2s;
-}
-.offer-card .btn-kart:hover { background:var(--gold2); }
-
-/* ── KATALOG — Shopee 2 col mobile ── */
-.catalog-section { background:var(--bg); padding:48px 0; }
-.filter-pills { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; list-style:none; padding:0; margin:0 0 20px; }
-.filter-pills li { padding:7px 18px; cursor:pointer; border-radius:50px; font-size:13px; font-weight:600; border:1.5px solid var(--border); color:var(--text3); background:#fff; transition:all .2s; font-family:'Inter',sans-serif; }
-.filter-pills li:hover { border-color:var(--green); color:var(--green); }
-.filter-pills li.active { background:var(--green); color:#fff; border-color:var(--green); }
-
-/* 2 kolom di HP, 3 tablet, 4 desktop */
-.pgrid { display:flex; flex-wrap:wrap; margin:0 -6px; }
-.pcol { width:50%; padding:0 6px 12px; }
-@media(min-width:576px){ .pcol{ width:33.333%; } }
-@media(min-width:992px){ .pcol{ width:25%; } }
-
-.btn-more { display:flex; justify-content:center; margin-top:28px; }
-.btn-more a { padding:11px 44px; background:var(--green); color:#fff; border-radius:50px; font-weight:700; font-size:14px; font-family:'Inter',sans-serif; transition:background .2s; }
-.btn-more a:hover { background:var(--green3); }
-
-/* ── ABOUT ── */
-.about-section { background:var(--green); padding:60px 0; }
-.about-section .row { align-items:center; }
-.about-section .img-box { display:flex; justify-content:center; }
-.about-section .img-box img { width:100%; max-width:380px; border-radius:14px; }
-.about-section h2 { color:#fff !important; }
-.about-section p { color:rgba(255,255,255,.75); margin-top:12px; line-height:1.75; font-size:14px; font-family:'Inter',sans-serif; }
-.about-section a { display:inline-block; padding:11px 36px; background:var(--gold); color:#fff; border-radius:50px; font-weight:700; margin-top:20px; font-family:'Inter',sans-serif; transition:background .2s; }
-.about-section a:hover { background:var(--gold2); }
-
-/* ── TESTIMONI ── */
-.testi-section { background:#fff; padding:60px 0; }
-.client_section .box { display:flex; flex-direction:column; margin:10px; }
-.client_section .box .img-box { position:relative; display:flex; justify-content:center; width:72px; height:72px; margin-top:20px; }
-.client_section .box .img-box img { width:72px; height:72px; object-fit:cover; border-radius:50%; border:3px solid var(--gold); }
-.client_section .box .img-box::before { content:''; position:absolute; left:50%; top:-8px; width:12px; height:12px; background:var(--gold); transform:rotate(45deg) translateX(-50%); }
-.client_section .box .detail-box { background:#fff; padding:16px; border-radius:10px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(15,40,25,.05); }
-.client_section .box .detail-box p { font-size:13px; color:#2A3D34; line-height:1.65; margin-bottom:8px; font-family:'Inter',sans-serif; }
-.client_section .box .detail-box h6 { font-weight:700; font-size:14px; color:var(--green); margin:0; font-family:'Inter',sans-serif; }
-.client_section .owl-carousel .owl-nav { display:flex; justify-content:center; margin-top:24px; }
-.client_section .owl-carousel .owl-nav .owl-prev,
-.client_section .owl-carousel .owl-nav .owl-next { width:38px; height:38px; background:var(--green); color:#fff; outline:none; font-size:17px; margin:0 4px; border-radius:50%; }
-
-/* ── FOOTER ── */
-.footer_section { background:var(--green3); color:#fff; padding:56px 0 28px; text-align:center; }
-.footer_section h4 { font-family:'Inter',sans-serif !important; font-size:16px; font-weight:700; margin-bottom:14px; }
-.footer_section p { color:rgba(255,255,255,.60); font-size:13px; font-family:'Inter',sans-serif; }
-.footer_section .footer-col { margin-bottom:28px; }
-.footer_section .footer_contact .contact_link_box { display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
-.footer_section .footer_contact .contact_link_box a { color:rgba(255,255,255,.70); display:flex; align-items:center; gap:8px; font-size:13px; font-family:'Inter',sans-serif; text-decoration:none; transition:color .2s; }
-.footer_section .footer_contact .contact_link_box a:hover { color:var(--gold); }
-.footer-logo { display:block; font-family:'Inter',sans-serif !important; font-size:28px; font-weight:800; color:#fff; letter-spacing:3px; margin-bottom:10px; text-decoration:none; }
-.footer-logo em { color:var(--gold); font-style:normal; }
-.footer_section .footer_social { display:flex; justify-content:center; gap:8px; margin:14px 0; }
-.footer_section .footer_social a { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.10); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; transition:background .2s; }
-.footer_section .footer_social a:hover { background:var(--gold); }
-.footer-info { margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,.10); }
-.footer-info p { color:rgba(255,255,255,.40) !important; font-size:12px; }
-
-/* ── CART SIDEBAR ── */
-.cart-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:9998; opacity:0; visibility:hidden; transition:opacity .3s,visibility .3s; }
-.cart-overlay.open { opacity:1; visibility:visible; }
-.cart-sidebar {
-  position:fixed; top:0; right:-420px; width:380px; max-width:100vw;
-  height:100dvh; background:#fff; z-index:9999;
-  display:flex; flex-direction:column;
-  box-shadow:-4px 0 32px rgba(0,0,0,.12);
-  transition:right .32s cubic-bezier(.4,0,.2,1);
-}
-.cart-sidebar.open { right:0; }
-.cart-header { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; background:var(--green); flex-shrink:0; }
-.cart-header h3 { font-family:'Inter',sans-serif !important; font-size:16px; font-weight:700; color:#fff; margin:0; }
-.cart-close { width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,.15); border:none; color:#fff; font-size:15px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s; }
-.cart-close:hover { background:rgba(255,255,255,.28); }
-.cart-items { flex:1; overflow-y:auto; padding:10px 14px; }
-.cart-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:10px; color:#bbb; padding:40px 0; }
-.cart-empty i { font-size:40px; }
-.cart-empty p { font-size:14px; font-family:'Inter',sans-serif; }
-.cart-item { display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
-.cart-item-img { width:56px; height:56px; border-radius:8px; background:#F0EDE6; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-.cart-item-img img { width:100%; height:100%; object-fit:contain; }
-.cart-item-info { flex:1; min-width:0; }
-.cart-item-name { font-size:13px; font-weight:600; color:var(--text); line-height:1.3; margin-bottom:2px; font-family:'Inter',sans-serif; }
-.cart-item-price { font-size:13px; font-weight:700; color:var(--green); font-family:'Inter',sans-serif; }
-.cart-item-qty { display:flex; align-items:center; gap:8px; margin-top:6px; }
-.qty-btn { width:24px; height:24px; border-radius:50%; background:#EEF1EE; border:1px solid #C5D1C1; color:var(--green); font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; line-height:1; }
-.qty-btn:hover { background:var(--green); color:#fff; }
-.qty-val { font-weight:700; font-size:14px; min-width:20px; text-align:center; font-family:'Inter',sans-serif; }
-.cart-item-remove { background:none; border:none; color:#ccc; font-size:15px; padding:4px; cursor:pointer; transition:color .2s; flex-shrink:0; }
-.cart-item-remove:hover { color:#e53; }
-.cart-footer { padding:14px 18px; border-top:1px solid var(--border); flex-shrink:0; }
-.cart-subtotal { font-size:12px; color:var(--text3); margin-bottom:6px; font-family:'Inter',sans-serif; }
-.cart-total { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-top:8px; border-top:1px solid var(--border); }
-.cart-total span:first-child { font-size:13px; font-weight:600; font-family:'Inter',sans-serif; }
-.cart-total-price { font-size:20px; font-weight:800; color:var(--green); font-family:'Inter',sans-serif; }
-.btn-checkout { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; background:var(--gold); color:#fff; border:none; border-radius:50px; font-size:14px; font-weight:700; font-family:'Inter',sans-serif; cursor:pointer; transition:background .2s; }
-.btn-checkout:hover { background:var(--gold2); color:#fff; }
-.btn-clear-cart { display:block; width:100%; padding:9px; background:none; color:var(--text3); border:1px solid var(--border); border-radius:50px; font-size:12px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; margin-top:7px; transition:all .2s; }
-.btn-clear-cart:hover { border-color:#e53; color:#e53; }
-
-/* ── TOAST ── */
-.kemoenik-toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(12px); background:var(--green); color:#fff; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; font-family:'Inter',sans-serif; z-index:99999; opacity:0; pointer-events:none; transition:all .3s; white-space:nowrap; box-shadow:0 6px 20px rgba(0,0,0,.18); }
-.kemoenik-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-/* ── RESPONSIVE ── */
-@media(max-width:991px){
-  .hero_area { min-height:auto; }
-  .custom_nav-container .navbar-nav { padding-left:0; align-items:center; padding-top:10px; }
-  .user_option { justify-content:center; margin-top:10px; padding-bottom:10px; }
-  .slider_section { padding:36px 0 52px; }
-  .slider_section .detail-box h1 { font-size:2rem; }
-  .slider_section .img-box { margin-top:24px; }
-  .offer-card { flex-direction:column; text-align:center; }
-  .offer-card .img-wrap { margin:0 auto 14px; }
-}
-@media(max-width:767px){
-  .slider_section .detail-box h1 { font-size:1.7rem; }
-  .about-section .row { flex-direction:column-reverse; }
-  .about-section .img-box { margin-bottom:24px; }
-  .cart-sidebar { width:100vw; right:-100vw; }
-}
-</style>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <title>KEMOENIK — Herbal Pelangsing Premium</title>
+  <link rel="stylesheet" href="css/bootstrap.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
+  <link rel="stylesheet" href="css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
 </head>
 <body>
 
-<!-- CART SIDEBAR -->
-<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
-<div class="cart-sidebar" id="cartSidebar">
-  <div class="cart-header">
-    <h3>🛒 Keranjang Belanja</h3>
-    <button class="cart-close" onclick="closeCart()">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems">
-    <div class="cart-empty"><i class="fa fa-shopping-cart"></i><p>Keranjang masih kosong</p></div>
-  </div>
-  <div class="cart-footer">
-    <div class="cart-subtotal" id="cartSubtotal">0 produk</div>
-    <div class="cart-total">
-      <span>Total Belanja</span>
-      <span class="cart-total-price" id="cartTotalPrice">Rp 0</span>
+  <!-- CART SIDEBAR -->
+  <div id="cartOverlay" onclick="closeCart()"></div>
+  <div id="cartSidebar">
+    <div class="cart-hdr">
+      <h3>🛒 Keranjang Belanja</h3>
+      <button onclick="closeCart()">✕</button>
     </div>
-    <button class="btn-checkout" onclick="checkoutWA()"><i class="fa fa-whatsapp"></i> Pesan via WhatsApp</button>
-    <button class="btn-clear-cart" onclick="clearCart()">Kosongkan Keranjang</button>
+    <div id="cartItems" class="cart-items-wrap">
+      <div class="cart-empty-state"><i class="fa fa-shopping-cart"></i><p>Keranjang masih kosong</p></div>
+    </div>
+    <div class="cart-ftr">
+      <div id="cartSubtotal" class="cart-subtotal">0 produk</div>
+      <div class="cart-total-row">
+        <span>Total Belanja</span>
+        <span id="cartTotalPrice" class="cart-total-price">Rp 0</span>
+      </div>
+      <button onclick="checkoutWA()" class="btn-wa-checkout"><i class="fa fa-whatsapp"></i> Pesan via WhatsApp</button>
+      <button onclick="clearCart()" class="btn-clear">Kosongkan Keranjang</button>
+    </div>
   </div>
-</div>
-<div class="kemoenik-toast" id="kemoToast"></div>
-
-<!-- HERO -->
-<div class="hero_area">
-  <div class="bg-box"><img src="images/hero-bg.jpg" alt=""/></div>
-  <header class="header_section">
-    <div class="container">
-      <nav class="navbar navbar-expand-lg custom_nav-container">
-        <a class="navbar-brand" href="index.html"><span>KEMO<em>ENIK</em></span></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMain" aria-expanded="false"><span></span></button>
-        <div class="collapse navbar-collapse" id="navMain">
-          <ul class="navbar-nav mx-auto">
-            <li class="nav-item active"><a class="nav-link" href="index.html">Beranda</a></li>
-            <li class="nav-item"><a class="nav-link" href="menu.html">Produk</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.html">Tentang Kami</a></li>
-            <li class="nav-item"><a class="nav-link" href="book.html">Konsultasi</a></li>
-          </ul>
-          <div class="user_option">
-            <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" class="user_link" target="_blank"><i class="fa fa-user"></i></a>
-            <a class="cart_link" href="#" onclick="openCart();return false;">
-              <svg viewBox="0 0 456.029 456.029" xmlns="http://www.w3.org/2000/svg"><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></svg>
-              <span class="cart_badge" id="cartBadge">0</span>
-            </a>
-            <a href="#" onclick="checkoutWA();return false;" class="order_online"><i class="fa fa-whatsapp"></i> Pesan Sekarang</a>
+  <div id="kemoToast" class="kemo-toast"></div>
+  <div class="hero_area">
+    <div class="bg-box"><img src="images/hero-bg.jpg" alt=""/></div>
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="index.html"><span>KEMO<em style="color:#C8A96A;font-style:normal;">ENIK</em></span></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMain" aria-expanded="false"><span></span></button>
+          <div class="collapse navbar-collapse" id="navMain">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item  active"><a class="nav-link" href="index.html">Beranda</a></li>
+              <li class="nav-item"><a class="nav-link" href="menu.html">Produk</a></li>
+              <li class="nav-item"><a class="nav-link" href="about.html">Tentang Kami</a></li>
+              <li class="nav-item"><a class="nav-link" href="book.html">Konsultasi</a></li>
+            </ul>
+            <div class="user_option">
+              <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" class="user_link" target="_blank"><i class="fa fa-user"></i></a>
+              <a class="cart_link" href="#" onclick="openCart();return false;" style="position:relative;">
+                <svg width="18" height="18" viewBox="0 0 456.029 456.029" style="fill:#fff;"><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></svg>
+                <span id="cartBadge" class="cart_badge"></span>
+              </a>
+              <a href="#" onclick="checkoutWA();return false;" class="order_online"><i class="fa fa-whatsapp"></i> Pesan Sekarang</a>
+            </div>
           </div>
-        </div>
-      </nav>
-    </div>
-  </header>
+        </nav>
+      </div>
+    </header>
+  </div>
 
-  <section class="slider_section">
+  <!-- HERO SLIDER -->
+  <section class="slider_section full-hero" style="flex:1;display:flex;align-items:center;position:relative;z-index:1;padding:60px 0 80px;">
     <div id="customCarousel1" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
           <div class="container">
-            <div class="row">
+            <div class="row" style="align-items:center;">
               <div class="col-md-6">
                 <div class="detail-box">
                   <h1>Turun Berat Badan<br>Bersama <span>KEMOENIK</span></h1>
-                  <p>Formula 5 bahan herbal alami — Teh Hijau, Jati Belanda, Kemuning, Temulawak & Tempuyung.</p>
+                  <p>Formula 5 bahan herbal alami — Teh Hijau, Jati Belanda, Kemuning, Temulawak & Tempuyung. Program diet personal sesuai tipe metabolismemu.</p>
                   <a href="menu.html">Lihat Produk</a>
                 </div>
               </div>
@@ -337,15 +82,15 @@ h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif !important; }
         </div>
         <div class="carousel-item">
           <div class="container">
-            <div class="row">
+            <div class="row" style="align-items:center;">
               <div class="col-md-6">
                 <div class="detail-box">
                   <h1>Program Diet<br><span>100% Personal</span></h1>
-                  <p>Isi kuis metabolisme & ikuti misi harian sesuai tipe tubuhmu.</p>
+                  <p>Isi kuis metabolisme, generate kalkulator kalori, dan ikuti misi harian sesuai tipe tubuhmu.</p>
                   <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" target="_blank">Mulai Gratis</a>
                 </div>
               </div>
-              <div class="col-md-6"><div class="img-box"><img src="images/slider-img.png" alt="Program Diet"></div></div>
+              <div class="col-md-6"><div class="img-box"><img src="images/slider-img.png" alt="Program"></div></div>
             </div>
           </div>
         </div>
@@ -356,366 +101,211 @@ h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif !important; }
       </div>
     </div>
   </section>
-</div>
 
-<!-- PRODUK UNGGULAN -->
-<section class="offer-section">
-  <div class="container">
-    <div class="sec-heading"><h2>Produk <span>Unggulan</span></h2><p>Pilihan terbaik untuk memulai program dietmu</p></div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="offer-card">
-          <div class="img-wrap"><img src="images/o1.png" alt="30 Kapsul" onerror="this.style.display='none'"></div>
-          <div>
-            <h5>KEMOENIK 30 Kapsul</h5>
-            <div class="price-lbl">Harga: <span class="price-val">Rp 85.000</span></div>
-            <p>Program 15 hari. Cocok untuk pemula.</p>
-            <button class="btn-kart" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/o1.png'})">🛒 Tambah Keranjang</button>
+  <!-- PRODUK UNGGULAN -->
+  <section class="offer_section layout_padding-bottom" style="background:#fff;">
+    <div class="container">
+      <div class="heading_container"><h2>Produk <span>Unggulan</span></h2><p>Pilihan terbaik untuk memulai program dietmu</p></div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box">
+            <div class="img-box"><img src="images/o1.png" alt="30 Kapsul"></div>
+            <div class="detail-box">
+              <h5>KEMOENIK 30 Kapsul</h5><h6>Harga: <span>Rp 85.000</span></h6>
+              <p>Program 15 hari. Cocok untuk pemula.</p>
+              <a href="#" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/o1.png'});return false;">+ Keranjang</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="box">
+            <div class="img-box"><img src="images/o2.png" alt="60 Kapsul"></div>
+            <div class="detail-box">
+              <h5>KEMOENIK 60 Kapsul</h5><h6>Harga: <span>Rp 155.000</span></h6>
+              <p>Program 30 hari. Paling direkomendasikan.</p>
+              <a href="#" onclick="addToCart({id:'reg-60',name:'KEMOENIK 60 Kapsul',price:155000,img:'images/o2.png'});return false;">+ Keranjang</a>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="offer-card">
-          <div class="img-wrap"><img src="images/o2.png" alt="60 Kapsul" onerror="this.style.display='none'"></div>
-          <div>
-            <h5>KEMOENIK 60 Kapsul</h5>
-            <div class="price-lbl">Harga: <span class="price-val">Rp 155.000</span></div>
-            <p>Program 30 hari. Paling direkomendasikan.</p>
-            <button class="btn-kart" onclick="addToCart({id:'reg-60',name:'KEMOENIK 60 Kapsul',price:155000,img:'images/o2.png'})">🛒 Tambah Keranjang</button>
+    </div>
+  </section>
+
+  <!-- KATALOG -->
+  <section class="food_section layout_padding-bottom">
+    <div class="container">
+      <div class="heading_container heading_center"><h2>Katalog <span>Produk</span></h2><p>Pilih paket yang sesuai kebutuhan dan budgetmu</p></div>
+      <ul class="filters_menu">
+        <li class="active" data-filter="*">Semua</li>
+        <li data-filter=".paket">Paket</li>
+        <li data-filter=".satuan">Satuan</li>
+        <li data-filter=".bundling">Bundling</li>
+      </ul>
+      <div style="display:flex;flex-wrap:wrap;margin:0 -6px;" id="productGrid">
+        <div class="product-col all satuan">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f1.png" alt="KEMOENIK 30 Kapsul">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">KEMOENIK 30 Kapsul</div>
+              <div class="pc-desc">15 hari program. Dosis 2×3 kapsul/hari.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 240 terjual</div>
+              <div class="pc-price">Rp 85.000</div>
+              
+              <button class="btn-keranjang" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'})">+ Keranjang</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-col all paket">
+          <div class="product-card">
+            <div class="pc-img">
+              <span class="badge-flash">TERLARIS</span><span class="badge-disc">Hemat 10%</span>
+              <img src="images/f2.png" alt="Paket 30 Hari">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket 30 Hari</div>
+              <div class="pc-desc">60 kapsul untuk 30 hari. Paling direkomendasikan.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 580 terjual</div>
+              <div class="pc-price">Rp 155.000</div>
+              <div class="pc-price-ori">Rp 172.000</div>
+              <button class="btn-keranjang" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'})">+ Keranjang</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-col all paket">
+          <div class="product-card">
+            <div class="pc-img">
+              <span class="badge-disc">Hemat 10%</span>
+              <img src="images/f3.png" alt="Paket 2 Bulan">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket 2 Bulan</div>
+              <div class="pc-desc">120 kapsul untuk 60 hari transformasi.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 312 terjual</div>
+              <div class="pc-price">Rp 279.000</div>
+              <div class="pc-price-ori">Rp 310.000</div>
+              <button class="btn-keranjang" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'})">+ Keranjang</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-col all bundling">
+          <div class="product-card">
+            <div class="pc-img">
+              <span class="badge-disc">Hemat 15%</span>
+              <img src="images/f4.png" alt="Bundling Keluarga">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Bundling Keluarga</div>
+              <div class="pc-desc">3 botol @30 kapsul untuk 3 anggota.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 145 terjual</div>
+              <div class="pc-price">Rp 216.000</div>
+              <div class="pc-price-ori">Rp 255.000</div>
+              <button class="btn-keranjang" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'})">+ Keranjang</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-col all bundling">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f5.png" alt="Paket Reseller">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket Reseller</div>
+              <div class="pc-desc">6 botol @30 kapsul. Harga grosir.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 89 terjual</div>
+              <div class="pc-price">Rp 390.000</div>
+              
+              <button class="btn-keranjang" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'})">+ Keranjang</button>
+            </div>
+          </div>
+        </div>
+        <div class="product-col all satuan">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f6.png" alt="Paket Maintenance">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket Maintenance</div>
+              <div class="pc-desc">Dosis 2×2/hari. Jaga BB setelah target.</div>
+              <div class="pc-rating">⭐ 4.9 &nbsp;|&nbsp; 203 terjual</div>
+              <div class="pc-price">Rp 85.000</div>
+              
+              <button class="btn-keranjang" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'})">+ Keranjang</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-box"><a href="menu.html">Lihat Semua Produk</a></div>
+    </div>
+  </section>
+
+  <!-- ABOUT SINGKAT -->
+  <section class="about_section layout_padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6"><div class="img-box"><img src="images/about-img.png" alt="KEMOENIK"></div></div>
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="heading_container"><h2>Kami adalah <span>KEMOENIK</span></h2></div>
+            <p>KEMOENIK adalah suplemen herbal pelangsing premium dari 5 bahan herbal alami — Teh Hijau, Jati Belanda, Kemuning, Temulawak, dan Tempuyung. Diproduksi oleh CV. Barokah Mardhiyya, Sumedang, Jawa Barat.</p>
+            <a href="about.html">Pelajari Lebih Lanjut</a>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div class="pcol all satuan">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f1.png" alt="KEMOENIK 30 Kapsul" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">KEMOENIK 30 Kapsul</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">15 hari program. Dosis 2×3 kapsul/hari sesudah makan.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 85.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 240 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
+  <!-- TESTIMONI -->
+  <section class="client_section layout_padding-bottom" style="background:#fff;">
+    <div class="container">
+      <div class="heading_container heading_center"><h2>Kata <span>Pengguna Kami</span></h2><p>Ribuan pelanggan sudah merasakan manfaat KEMOENIK</p></div>
+      <div class="client_owl-carousel owl-carousel">
+        <div class="box"><div class="detail-box"><p>"Dalam 1 bulan turun 5 kg! Dengan panduan web app KEMOENIK jadi lebih terarah."</p><h6>Siti Rahayu</h6><small style="color:#C8A96A;font-size:11px;">⭐⭐⭐⭐⭐ Verified</small></div><div class="img-box"><img src="images/client.jpg" alt="Siti"></div></div>
+        <div class="box"><div class="detail-box"><p>"Perut berkurang 8 cm dalam 2 bulan! Energi stabil, tidak lapar berlebihan."</p><h6>Dian Permata</h6><small style="color:#C8A96A;font-size:11px;">⭐⭐⭐⭐⭐ Verified</small></div><div class="img-box"><img src="images/client2.jpg" alt="Dian"></div></div>
+        <div class="box"><div class="detail-box"><p>"Program dietnya personal banget, hasilnya lebih cepat dari yang dibayangkan!"</p><h6>Andi Wijaya</h6><small style="color:#C8A96A;font-size:11px;">⭐⭐⭐⭐⭐ Verified</small></div><div class="img-box"><img src="images/client3.jpg" alt="Andi"></div></div>
       </div>
     </div>
-  </div>
-</div>
-<div class="pcol all paket">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      <div style="position:absolute;top:8px;left:8px;background:#C8A96A;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;font-family:Inter,sans-serif;">TERLARIS</div>
-      <img src="images/f2.png" alt="Paket 30 Hari" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Paket 30 Hari</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">60 kapsul untuk 30 hari penuh. Paling direkomendasikan.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 155.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span style="font-size:10px;font-weight:700;color:#d4380d;background:#fff2e8;padding:1px 5px;border-radius:3px;margin-left:4px;">Hemat 10%</span></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 580 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="pcol all paket">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f3.png" alt="Paket 2 Bulan" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Paket 2 Bulan</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">120 kapsul untuk 60 hari transformasi maksimal.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 279.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span style="font-size:11px;color:#8A9A92;text-decoration:line-through;margin-left:4px;">Rp 310.000</span><span style="font-size:10px;font-weight:700;color:#d4380d;background:#fff2e8;padding:1px 5px;border-radius:3px;margin-left:4px;">Hemat 10%</span></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 312 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="pcol all bundling">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f4.png" alt="Bundling Keluarga" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Bundling Keluarga</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">3 botol @30 kapsul untuk 3 anggota keluarga.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 216.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span style="font-size:11px;color:#8A9A92;text-decoration:line-through;margin-left:4px;">Rp 255.000</span><span style="font-size:10px;font-weight:700;color:#d4380d;background:#fff2e8;padding:1px 5px;border-radius:3px;margin-left:4px;">Hemat 15%</span></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 145 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="pcol all bundling">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f5.png" alt="Paket Reseller" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Paket Reseller</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">6 botol @30 kapsul. Harga grosir, margin hingga 30%.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 390.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 89 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="pcol all satuan">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f6.png" alt="Paket Maintenance" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Paket Maintenance</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">Dosis 2×2/hari. Jaga BB setelah target tercapai.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 85.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 203 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- KATALOG -->
-<section class="catalog-section">
-  <div class="container">
-    <div class="sec-heading center"><h2>Katalog <span>Produk</span></h2><p>Pilih paket yang sesuai kebutuhan dan budgetmu</p></div>
-    <ul class="filter-pills">
-      <li class="active" data-filter="*">Semua</li>
-      <li data-filter=".paket">Paket</li>
-      <li data-filter=".satuan">Satuan</li>
-      <li data-filter=".bundling">Bundling</li>
-    </ul>
-    <div class="pgrid" id="productsGrid">
-<div class="pcol all satuan">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f1.png" alt="KEMOENIK 30 Kapsul" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">KEMOENIK 30 Kapsul</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">15 hari program. Dosis 2×3 kapsul/hari sesudah makan.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 85.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 240 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="pcol all paket">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      <div style="position:absolute;top:8px;left:8px;background:#C8A96A;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;font-family:Inter,sans-serif;">TERLARIS</div>
-      <img src="images/f2.png" alt="Paket 30 Hari" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Paket 30 Hari</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">60 kapsul untuk 30 hari penuh. Paling direkomendasikan.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 155.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span style="font-size:10px;font-weight:700;color:#d4380d;background:#fff2e8;padding:1px 5px;border-radius:3px;margin-left:4px;">Hemat 10%</span></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 580 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="pcol all paket">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f3.png" alt="Paket 2 Bulan" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Paket 2 Bulan</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">120 kapsul untuk 60 hari transformasi maksimal.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 279.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span style="font-size:11px;color:#8A9A92;text-decoration:line-through;margin-left:4px;">Rp 310.000</span><span style="font-size:10px;font-weight:700;color:#d4380d;background:#fff2e8;padding:1px 5px;border-radius:3px;margin-left:4px;">Hemat 10%</span></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 312 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="pcol all bundling">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f4.png" alt="Bundling Keluarga" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Bundling Keluarga</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">3 botol @30 kapsul untuk 3 anggota keluarga.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 216.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span style="font-size:11px;color:#8A9A92;text-decoration:line-through;margin-left:4px;">Rp 255.000</span><span style="font-size:10px;font-weight:700;color:#d4380d;background:#fff2e8;padding:1px 5px;border-radius:3px;margin-left:4px;">Hemat 15%</span></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 145 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="pcol all bundling">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f5.png" alt="Paket Reseller" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Paket Reseller</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">6 botol @30 kapsul. Harga grosir, margin hingga 30%.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 390.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 89 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="pcol all satuan">
-  <div style="background:#fff;border-radius:10px;border:1px solid #DDE4DA;overflow:hidden;display:flex;flex-direction:column;height:100%;">
-    <div style="position:relative;background:#F0EDE6;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:16px;overflow:hidden;">
-      
-      <img src="images/f6.png" alt="Paket Maintenance" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.background='#eee'">
-    </div>
-    <div style="padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:4px;">
-      <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1E2B26;line-height:1.35;">Paket Maintenance</div>
-      <div style="font-size:11px;color:#8A9A92;line-height:1.4;">Dosis 2×2/hari. Jaga BB setelah target tercapai.</div>
-      <div style="font-family:Inter,sans-serif;font-size:16px;font-weight:800;color:#1F4D3A;margin-top:4px;">Rp 85.000</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"></div>
-      <div style="font-size:11px;color:#8A9A92;">⭐ 4.9 · 203 terjual</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'})" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;background:#EEF1EE;color:#1F4D3A;border:1.5px solid #C5D1C1;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">🛒 Keranjang</button>
-        <a href="#" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'}); checkoutWA(); return false;" style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 6px;background:#C8A96A;color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:Inter,sans-serif;">Beli</a>
-      </div>
-    </div>
-  </div>
-</div>    </div>
-    <div class="btn-more"><a href="menu.html">Lihat Semua Produk</a></div>
-  </div>
-</section>
+  </section>
 
-<!-- ABOUT -->
-<section class="about-section">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6"><div class="img-box"><img src="images/about-img.png" alt="Tentang KEMOENIK"></div></div>
-      <div class="col-md-6">
-        <div class="sec-heading"><h2>Kami adalah <span>KEMOENIK</span></h2></div>
-        <p>KEMOENIK adalah suplemen herbal pelangsing premium dari 5 bahan herbal alami — Teh Hijau, Jati Belanda, Kemuning, Temulawak, dan Tempuyung.</p>
-        <p style="margin-top:10px;">Diproduksi oleh CV. Barokah Mardhiyya, Sumedang, Jawa Barat. Setiap pembelian dilengkapi akses web app program diet personal.</p>
-        <a href="about.html">Pelajari Lebih Lanjut</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONI -->
-<section class="testi-section">
-  <div class="container">
-    <div class="sec-heading center"><h2>Kata <span>Pengguna Kami</span></h2><p>Ribuan pelanggan sudah merasakan manfaat KEMOENIK</p></div>
-    <div class="client_owl-carousel owl-carousel client_section">
-      <div class="box"><div class="detail-box"><p>"Dalam 1 bulan turun 5 kg! Dengan panduan web app KEMOENIK jadi lebih terarah."</p><h6>Siti Rahayu</h6><small style="color:#C8A96A;font-size:11px;">⭐⭐⭐⭐⭐ Verified</small></div><div class="img-box"><img src="images/client.jpg" alt="Siti"></div></div>
-      <div class="box"><div class="detail-box"><p>"Perut berkurang 8 cm dalam 2 bulan! Energi tetap stabil, tidak lapar berlebihan."</p><h6>Dian Permata</h6><small style="color:#C8A96A;font-size:11px;">⭐⭐⭐⭐⭐ Verified</small></div><div class="img-box"><img src="images/client2.jpg" alt="Dian"></div></div>
-      <div class="box"><div class="detail-box"><p>"Program dietnya personal banget, hasilnya lebih cepat dari yang saya bayangkan!"</p><h6>Andi Wijaya</h6><small style="color:#C8A96A;font-size:11px;">⭐⭐⭐⭐⭐ Verified</small></div><div class="img-box"><img src="images/client3.jpg" alt="Andi"></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer_section">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4 footer-col">
-        <h4>Hubungi Kami</h4>
-        <div class="footer_contact"><div class="contact_link_box">
-          <a href="#"><i class="fa fa-map-marker"></i><span>Sumedang, Jawa Barat</span></a>
-          <a href="tel:+6281546450547"><i class="fa fa-phone"></i><span>0815-4645-0547</span></a>
-          <a href="https://wa.me/6281546450547" target="_blank"><i class="fa fa-whatsapp"></i><span>Chat WhatsApp</span></a>
-        </div></div>
-      </div>
-      <div class="col-md-4 footer-col">
-        <a href="index.html" class="footer-logo">KEMO<em>ENIK</em></a>
-        <p>Herbal Pelangsing Premium — Formula 5 Bahan Herbal Alami.</p>
-        <div class="footer_social">
-          <a href="#"><i class="fa fa-instagram"></i></a>
-          <a href="#"><i class="fa fa-facebook"></i></a>
-          <a href="https://wa.me/6281546450547" target="_blank"><i class="fa fa-whatsapp"></i></a>
+  <footer class="footer_section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 footer-col">
+          <div class="footer_contact"><h4>Hubungi Kami</h4>
+            <div class="contact_link_box">
+              <a href="#"><i class="fa fa-map-marker"></i><span>Sumedang, Jawa Barat</span></a>
+              <a href="tel:+6281546450547"><i class="fa fa-phone"></i><span>0815-4645-0547</span></a>
+              <a href="https://wa.me/6281546450547" target="_blank"><i class="fa fa-whatsapp"></i><span>Chat WhatsApp</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <div class="footer_detail">
+            <a href="index.html" class="footer-logo">KEMO<em style="color:#C8A96A;font-style:normal;">ENIK</em></a>
+            <p>Herbal Pelangsing Premium — Formula 5 Bahan Herbal Alami.</p>
+            <div class="footer_social">
+              <a href="#"><i class="fa fa-instagram"></i></a>
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="https://wa.me/6281546450547" target="_blank"><i class="fa fa-whatsapp"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <h4>Jam Layanan</h4><p>Senin — Sabtu</p><p>08.00 — 21.00 WIB</p>
+          <div style="margin-top:14px;"><a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" target="_blank" style="display:inline-block;padding:9px 18px;background:#C8A96A;color:#fff;border-radius:50px;font-weight:700;font-size:13px;">🌿 Web App Diet</a></div>
         </div>
       </div>
-      <div class="col-md-4 footer-col">
-        <h4>Jam Layanan</h4>
-        <p>Senin — Sabtu</p><p>08.00 — 21.00 WIB</p>
-        <div style="margin-top:14px;"><a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" target="_blank" style="display:inline-block;padding:9px 18px;background:#C8A96A;color:#fff;border-radius:50px;font-weight:700;font-size:13px;font-family:Inter,sans-serif;">🌿 Web App Diet</a></div>
-      </div>
+      <div class="footer-info"><p>&copy; <span id="displayYear"></span> KEMOENIK — CV. Barokah Mardhiyya. All Rights Reserved.</p></div>
     </div>
-    <div class="footer-info"><p>&copy; <span id="displayYear"></span> KEMOENIK — CV. Barokah Mardhiyya. All Rights Reserved.</p></div>
-  </div>
-</footer>
-
-<script src="js/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<script src="js/custom.js"></script>
-
-<script>
-// Filter catalog
-document.addEventListener('DOMContentLoaded', function() {
-  var pills = document.querySelectorAll('.filter-pills li');
-  var cards = document.querySelectorAll('.pgrid .pcol');
-  pills.forEach(function(pill) {
-    pill.addEventListener('click', function() {
-      pills.forEach(function(p){ p.classList.remove('active'); });
-      this.classList.add('active');
-      var filter = this.getAttribute('data-filter');
-      cards.forEach(function(card) {
-        if (filter === '*' || card.classList.contains(filter.replace('.',''))) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-  });
-});
-</script>
+  </footer>
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="js/custom.js"></script>
 </body>
 </html>
