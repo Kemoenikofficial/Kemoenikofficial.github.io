@@ -4,59 +4,38 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-  <meta name="description" content="KEMOENIK — Herbal Pelangsing Premium. Formula 5 bahan herbal alami untuk program diet personalmu."/>
+  <meta name="description" content="KEMOENIK — Herbal Pelangsing Premium. Formula 5 bahan herbal alami."/>
   <title>KEMOENIK — Herbal Pelangsing Premium</title>
   <link rel="stylesheet" href="css/bootstrap.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css"/>
   <link rel="stylesheet" href="css/font-awesome.min.css"/>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/responsive.css"/>
 </head>
 <body>
 
-<!-- ═══ CART SIDEBAR ═══ -->
+<!-- CART -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-sidebar" id="cartSidebar">
-  <div class="cart-header">
-    <h3>🛒 Keranjang Belanja</h3>
-    <button class="cart-close" onclick="closeCart()" aria-label="Tutup">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems">
-    <div class="cart-empty"><i class="fa fa-shopping-cart"></i><p>Keranjang masih kosong</p></div>
-  </div>
+  <div class="cart-header"><h3>🛒 Keranjang Belanja</h3><button class="cart-close" onclick="closeCart()">✕</button></div>
+  <div class="cart-items" id="cartItems"><div class="cart-empty"><i class="fa fa-shopping-cart"></i><p>Keranjang masih kosong</p></div></div>
   <div class="cart-footer">
-    <div class="cart-subtotal">
-      <span id="cartSubtotal">0 produk</span>
-    </div>
-    <div class="cart-total">
-      <span>Total Belanja</span>
-      <span class="cart-total-price" id="cartTotalPrice">Rp 0</span>
-    </div>
-    <button class="btn-checkout" onclick="checkoutWA()">
-      <i class="fa fa-whatsapp"></i> Pesan via WhatsApp
-    </button>
+    <div class="cart-subtotal" id="cartSubtotal">0 produk</div>
+    <div class="cart-total"><span>Total Belanja</span><span class="cart-total-price" id="cartTotalPrice">Rp 0</span></div>
+    <button class="btn-checkout" onclick="checkoutWA()"><i class="fa fa-whatsapp"></i> Pesan via WhatsApp</button>
     <button class="btn-clear-cart" onclick="clearCart()">Kosongkan Keranjang</button>
   </div>
 </div>
 <div class="kemoenik-toast" id="kemoToast"></div>
 
-<!-- ═══ HERO ═══ -->
+<!-- HERO -->
 <div class="hero_area full-hero">
   <div class="bg-box"><img src="images/hero-bg.jpg" alt=""/></div>
-
-  <!-- NAVBAR -->
   <header class="header_section">
     <div class="container">
       <nav class="navbar navbar-expand-lg custom_nav-container">
-        <a class="navbar-brand" href="index.html">
-          <span>KEMO<em>ENIK</em></span>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-          data-target="#navMain" aria-controls="navMain"
-          aria-expanded="false" aria-label="Toggle navigation">
-          <span></span>
-        </button>
+        <a class="navbar-brand" href="index.html"><span>KEMO<em>ENIK</em></span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMain" aria-expanded="false"><span></span></button>
         <div class="collapse navbar-collapse" id="navMain">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item active"><a class="nav-link" href="index.html">Beranda</a></li>
@@ -65,71 +44,49 @@
             <li class="nav-item"><a class="nav-link" href="book.html">Konsultasi</a></li>
           </ul>
           <div class="user_option">
-            <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" class="user_link" title="Web App Diet" target="_blank">
-              <i class="fa fa-user"></i>
-            </a>
-            <a class="cart_link" href="#" onclick="openCart(); return false;" title="Keranjang">
-              <svg viewBox="0 0 456.029 456.029" xmlns="http://www.w3.org/2000/svg">
-                <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/>
-                <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/>
-                <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/>
-              </svg>
+            <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" class="user_link" target="_blank" title="Web App"><i class="fa fa-user"></i></a>
+            <a class="cart_link" href="#" onclick="openCart();return false;" title="Keranjang">
+              <svg viewBox="0 0 456.029 456.029" xmlns="http://www.w3.org/2000/svg"><path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z"/><path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4C457.728,97.71,450.56,86.958,439.296,84.91z"/><path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z"/></svg>
               <span class="cart_badge" id="cartBadge">0</span>
             </a>
-            <a href="#" onclick="checkoutWA(); return false;" class="order_online">
-              <i class="fa fa-whatsapp"></i> Pesan Sekarang
-            </a>
+            <a href="#" onclick="checkoutWA();return false;" class="order_online"><i class="fa fa-whatsapp"></i> Pesan Sekarang</a>
           </div>
         </div>
       </nav>
     </div>
   </header>
 
-  <!-- HERO SLIDER -->
   <section class="slider_section">
     <div id="customCarousel1" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
-
         <div class="carousel-item active">
           <div class="container">
             <div class="row">
               <div class="col-md-6">
                 <div class="detail-box">
                   <h1>Turun Berat Badan<br>Bersama <span>KEMOENIK</span></h1>
-                  <p>Formula 5 bahan herbal alami — Teh Hijau, Jati Belanda, Kemuning,
-                  Temulawak & Tempuyung. Program diet personal sesuai tipe metabolismemu.</p>
+                  <p>Formula 5 bahan herbal alami — Teh Hijau, Jati Belanda, Kemuning, Temulawak & Tempuyung. Program diet personal sesuai tipe metabolismemu.</p>
                   <a href="menu.html">Lihat Produk</a>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="img-box">
-                  <img src="images/slider-img.png" alt="KEMOENIK Herbal">
-                </div>
-              </div>
+              <div class="col-md-6"><div class="img-box"><img src="images/slider-img.png" alt="KEMOENIK"></div></div>
             </div>
           </div>
         </div>
-
         <div class="carousel-item">
           <div class="container">
             <div class="row">
               <div class="col-md-6">
                 <div class="detail-box">
                   <h1>Program Diet<br><span>100% Personal</span></h1>
-                  <p>Isi kuis metabolisme, generate kalkulator kalori, dan ikuti misi harian
-                  yang disesuaikan dengan tipe tubuh dan target berat badanmu.</p>
+                  <p>Isi kuis metabolisme, generate kalkulator kalori, dan ikuti misi harian yang disesuaikan dengan tipe tubuh dan target berat badanmu.</p>
                   <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" target="_blank">Mulai Program Gratis</a>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="img-box">
-                  <img src="images/slider-img.png" alt="Program Diet Personal">
-                </div>
-              </div>
+              <div class="col-md-6"><div class="img-box"><img src="images/slider-img.png" alt="Program Diet"></div></div>
             </div>
           </div>
         </div>
-
       </div>
       <div class="carousel-indicators">
         <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
@@ -139,41 +96,28 @@
   </section>
 </div>
 
-<!-- ═══ PRODUK UNGGULAN ═══ -->
-<section class="offer_section layout_padding-bottom" style="background:#fff;">
+<!-- PRODUK UNGGULAN -->
+<section class="offer_section layout_padding-bottom">
   <div class="container">
-    <div class="heading_container" style="margin-bottom:0;">
-      <h2>Produk <span>Unggulan</span></h2>
-      <p>Pilihan terbaik untuk memulai program dietmu</p>
-    </div>
+    <div class="heading_container"><h2>Produk <span>Unggulan</span></h2><p>Pilihan terbaik untuk memulai program dietmu</p></div>
     <div class="row">
       <div class="col-md-6">
         <div class="box">
-          <div class="img-box">
-            <img src="images/o1.png" alt="KEMOENIK 30 Kapsul">
-          </div>
+          <div class="img-box"><img src="images/o1.png" alt="30 Kapsul"></div>
           <div class="detail-box">
-            <h5>KEMOENIK 30 Kapsul</h5>
-            <h6>Harga: <span>Rp 85.000</span></h6>
+            <h5>KEMOENIK 30 Kapsul</h5><h6>Harga: <span>Rp 85.000</span></h6>
             <p>Program 15 hari. Cocok untuk pemula.</p>
-            <a href="#" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/o1.png',everpro:'https://LINK_EVERPRO_30_KAPSUL'}); return false;">
-              + Keranjang
-            </a>
+            <a href="#" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/o1.png'});return false;">+ Keranjang</a>
           </div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="box">
-          <div class="img-box">
-            <img src="images/o2.png" alt="KEMOENIK 60 Kapsul">
-          </div>
+          <div class="img-box"><img src="images/o2.png" alt="60 Kapsul"></div>
           <div class="detail-box">
-            <h5>KEMOENIK 60 Kapsul</h5>
-            <h6>Harga: <span>Rp 155.000</span></h6>
+            <h5>KEMOENIK 60 Kapsul</h5><h6>Harga: <span>Rp 155.000</span></h6>
             <p>Program 30 hari. Paling direkomendasikan.</p>
-            <a href="#" onclick="addToCart({id:'reg-60',name:'KEMOENIK 60 Kapsul',price:155000,img:'images/o2.png',everpro:'https://LINK_EVERPRO_60_KAPSUL'}); return false;">
-              + Keranjang
-            </a>
+            <a href="#" onclick="addToCart({id:'reg-60',name:'KEMOENIK 60 Kapsul',price:155000,img:'images/o2.png'});return false;">+ Keranjang</a>
           </div>
         </div>
       </div>
@@ -181,184 +125,144 @@
   </div>
 </section>
 
-<!-- ═══ KATALOG PRODUK ═══ -->
+<!-- KATALOG -->
 <section class="food_section layout_padding-bottom">
   <div class="container">
-    <div class="heading_container heading_center">
-      <h2>Katalog <span>Produk</span></h2>
-      <p>Pilih paket yang sesuai dengan kebutuhan dan budgetmu</p>
-    </div>
+    <div class="heading_container heading_center"><h2>Katalog <span>Produk</span></h2><p>Pilih paket yang sesuai kebutuhan dan budgetmu</p></div>
     <ul class="filters_menu">
       <li class="active" data-filter="*">Semua</li>
       <li data-filter=".paket">Paket</li>
       <li data-filter=".satuan">Satuan</li>
       <li data-filter=".bundling">Bundling</li>
     </ul>
-    <div class="row grid">
+    <div class="products-grid" id="productsGrid">
 
-      <div class="col-6 col-sm-4 col-lg-3 all satuan" style="padding:0 8px;">
-        <div class="product-card">
-          <div class="img-box">
-            <img src="images/f1.png" alt="KEMOENIK 30 Kapsul">
-          </div>
-          <div class="card-body">
-            <div class="card-title">KEMOENIK 30 Kapsul</div>
-            <div class="card-desc">15 hari program. Dosis 2×3 kapsul/hari.</div>
-            <div class="card-price">Rp 85.000</div>
-            <div class="card-sold">⭐ 4.9 · 240 terjual</div>
-            <div class="card-actions">
-              <button class="btn-add-cart" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'})">
-                <i class="fa fa-shopping-cart"></i> Keranjang
-              </button>
-              <a class="btn-buy-now" href="#" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'}); checkoutWA(); return false;">
-                Beli
-              </a>
+        <div class="product-col all satuan">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f1.png" alt="KEMOENIK 30 Kapsul">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">KEMOENIK 30 Kapsul</div>
+              <div class="pc-desc">15 hari program. Dosis 2×3 kapsul/hari sesudah makan.</div>
+              <div class="pc-price">Rp 85.000</div>
+              <div class="pc-price-row"></div>
+              <div class="pc-sold">⭐ 4.9 · 240 terjual</div>
+              <div class="pc-actions">
+                <button class="btn-add-cart" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'})"><i class="fa fa-shopping-cart"></i> Keranjang</button>
+                <a class="btn-buy-now" href="#" onclick="addToCart({id:'reg-30',name:'KEMOENIK 30 Kapsul',price:85000,img:'images/f1.png'}); checkoutWA(); return false;">Beli</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-lg-3 all paket" style="padding:0 8px;">
-        <div class="product-card">
-          <div class="img-box">
-            <span class="badge-best">TERLARIS</span>
-            <img src="images/f2.png" alt="Paket 30 Hari">
-          </div>
-          <div class="card-body">
-            <div class="card-title">Paket 30 Hari</div>
-            <div class="card-desc">60 kapsul untuk 30 hari penuh. Paling optimal.</div>
-            <div class="card-price">
-              Rp 155.000
-              <span class="price-discount">Hemat 10%</span>
+        <div class="product-col all paket">
+          <div class="product-card">
+            <div class="pc-img">
+              <span class="badge-best">TERLARIS</span>
+              <img src="images/f2.png" alt="Paket 30 Hari">
             </div>
-            <div class="card-sold">⭐ 4.9 · 580 terjual</div>
-            <div class="card-actions">
-              <button class="btn-add-cart" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'})">
-                <i class="fa fa-shopping-cart"></i> Keranjang
-              </button>
-              <a class="btn-buy-now" href="#" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'}); checkoutWA(); return false;">
-                Beli
-              </a>
+            <div class="pc-body">
+              <div class="pc-name">Paket 30 Hari</div>
+              <div class="pc-desc">60 kapsul untuk 30 hari penuh. Paling direkomendasikan.</div>
+              <div class="pc-price">Rp 155.000</div>
+              <div class="pc-price-row"><span class="price-discount">Hemat 10%</span></div>
+              <div class="pc-sold">⭐ 4.9 · 580 terjual</div>
+              <div class="pc-actions">
+                <button class="btn-add-cart" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'})"><i class="fa fa-shopping-cart"></i> Keranjang</button>
+                <a class="btn-buy-now" href="#" onclick="addToCart({id:'pak-30',name:'Paket 30 Hari',price:155000,img:'images/f2.png'}); checkoutWA(); return false;">Beli</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-lg-3 all paket" style="padding:0 8px;">
-        <div class="product-card">
-          <div class="img-box">
-            <img src="images/f3.png" alt="Paket 2 Bulan">
-          </div>
-          <div class="card-body">
-            <div class="card-title">Paket 2 Bulan</div>
-            <div class="card-desc">120 kapsul untuk 60 hari program transformasi.</div>
-            <div class="card-price">
-              Rp 279.000
-              <span class="price-original">Rp 310.000</span>
+        <div class="product-col all paket">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f3.png" alt="Paket 2 Bulan">
             </div>
-            <div class="card-sold">⭐ 4.8 · 312 terjual</div>
-            <div class="card-actions">
-              <button class="btn-add-cart" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'})">
-                <i class="fa fa-shopping-cart"></i> Keranjang
-              </button>
-              <a class="btn-buy-now" href="#" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'}); checkoutWA(); return false;">
-                Beli
-              </a>
+            <div class="pc-body">
+              <div class="pc-name">Paket 2 Bulan</div>
+              <div class="pc-desc">120 kapsul untuk 60 hari program transformasi maksimal.</div>
+              <div class="pc-price">Rp 279.000</div>
+              <div class="pc-price-row"><span class="price-original">Rp 310.000</span><span class="price-discount">Hemat 10%</span></div>
+              <div class="pc-sold">⭐ 4.8 · 312 terjual</div>
+              <div class="pc-actions">
+                <button class="btn-add-cart" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'})"><i class="fa fa-shopping-cart"></i> Keranjang</button>
+                <a class="btn-buy-now" href="#" onclick="addToCart({id:'pak-60',name:'Paket 2 Bulan',price:279000,img:'images/f3.png'}); checkoutWA(); return false;">Beli</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-lg-3 all bundling" style="padding:0 8px;">
-        <div class="product-card">
-          <div class="img-box">
-            <img src="images/f4.png" alt="Bundling Keluarga">
-          </div>
-          <div class="card-body">
-            <div class="card-title">Bundling Keluarga</div>
-            <div class="card-desc">3 botol @30 kapsul untuk 3 anggota keluarga.</div>
-            <div class="card-price">
-              Rp 216.000
-              <span class="price-original">Rp 255.000</span>
+        <div class="product-col all bundling">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f4.png" alt="Bundling Keluarga">
             </div>
-            <div class="card-sold">⭐ 4.9 · 145 terjual</div>
-            <div class="card-actions">
-              <button class="btn-add-cart" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'})">
-                <i class="fa fa-shopping-cart"></i> Keranjang
-              </button>
-              <a class="btn-buy-now" href="#" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'}); checkoutWA(); return false;">
-                Beli
-              </a>
+            <div class="pc-body">
+              <div class="pc-name">Bundling Keluarga</div>
+              <div class="pc-desc">3 botol @30 kapsul untuk 3 anggota keluarga.</div>
+              <div class="pc-price">Rp 216.000</div>
+              <div class="pc-price-row"><span class="price-original">Rp 255.000</span><span class="price-discount">Hemat 15%</span></div>
+              <div class="pc-sold">⭐ 4.9 · 145 terjual</div>
+              <div class="pc-actions">
+                <button class="btn-add-cart" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'})"><i class="fa fa-shopping-cart"></i> Keranjang</button>
+                <a class="btn-buy-now" href="#" onclick="addToCart({id:'bund-3',name:'Bundling Keluarga',price:216000,img:'images/f4.png'}); checkoutWA(); return false;">Beli</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-lg-3 all bundling" style="padding:0 8px;">
-        <div class="product-card">
-          <div class="img-box">
-            <img src="images/f5.png" alt="Paket Reseller">
-          </div>
-          <div class="card-body">
-            <div class="card-title">Paket Reseller</div>
-            <div class="card-desc">6 botol @30 kapsul. Harga grosir, margin tinggi.</div>
-            <div class="card-price">Rp 390.000</div>
-            <div class="card-sold">⭐ 4.8 · 89 terjual</div>
-            <div class="card-actions">
-              <button class="btn-add-cart" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'})">
-                <i class="fa fa-shopping-cart"></i> Keranjang
-              </button>
-              <a class="btn-buy-now" href="#" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'}); checkoutWA(); return false;">
-                Beli
-              </a>
+        <div class="product-col all bundling">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f5.png" alt="Paket Reseller">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket Reseller</div>
+              <div class="pc-desc">6 botol @30 kapsul. Harga grosir, margin hingga 30%.</div>
+              <div class="pc-price">Rp 390.000</div>
+              <div class="pc-price-row"></div>
+              <div class="pc-sold">⭐ 4.8 · 89 terjual</div>
+              <div class="pc-actions">
+                <button class="btn-add-cart" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'})"><i class="fa fa-shopping-cart"></i> Keranjang</button>
+                <a class="btn-buy-now" href="#" onclick="addToCart({id:'res-6',name:'Paket Reseller',price:390000,img:'images/f5.png'}); checkoutWA(); return false;">Beli</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-lg-3 all satuan" style="padding:0 8px;">
-        <div class="product-card">
-          <div class="img-box">
-            <img src="images/f6.png" alt="Paket Maintenance">
-          </div>
-          <div class="card-body">
-            <div class="card-title">Paket Maintenance</div>
-            <div class="card-desc">Dosis 2×2/hari. Jaga BB setelah target tercapai.</div>
-            <div class="card-price">Rp 85.000</div>
-            <div class="card-sold">⭐ 4.9 · 203 terjual</div>
-            <div class="card-actions">
-              <button class="btn-add-cart" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'})">
-                <i class="fa fa-shopping-cart"></i> Keranjang
-              </button>
-              <a class="btn-buy-now" href="#" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'}); checkoutWA(); return false;">
-                Beli
-              </a>
+        <div class="product-col all satuan">
+          <div class="product-card">
+            <div class="pc-img">
+              
+              <img src="images/f6.png" alt="Paket Maintenance">
+            </div>
+            <div class="pc-body">
+              <div class="pc-name">Paket Maintenance</div>
+              <div class="pc-desc">Dosis 2×2/hari. Jaga berat badan setelah target tercapai.</div>
+              <div class="pc-price">Rp 85.000</div>
+              <div class="pc-price-row"></div>
+              <div class="pc-sold">⭐ 4.9 · 203 terjual</div>
+              <div class="pc-actions">
+                <button class="btn-add-cart" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'})"><i class="fa fa-shopping-cart"></i> Keranjang</button>
+                <a class="btn-buy-now" href="#" onclick="addToCart({id:'maint',name:'Paket Maintenance',price:85000,img:'images/f6.png'}); checkoutWA(); return false;">Beli</a>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="btn-box">
-      <a href="menu.html">Lihat Semua Produk</a>
-    </div>
+        </div>    </div>
+    <div class="btn-box"><a href="menu.html">Lihat Semua Produk</a></div>
   </div>
 </section>
 
-<!-- ═══ TENTANG KEMOENIK ═══ -->
+<!-- ABOUT -->
 <section class="about_section layout_padding">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
-        <div class="img-box">
-          <img src="images/about-img.png" alt="Tentang KEMOENIK">
-        </div>
-      </div>
+      <div class="col-md-6"><div class="img-box"><img src="images/about-img.png" alt="Tentang KEMOENIK"></div></div>
       <div class="col-md-6">
         <div class="detail-box">
-          <div class="heading_container">
-            <h2>Kami adalah <span>KEMOENIK</span></h2>
-          </div>
+          <div class="heading_container"><h2>Kami adalah <span>KEMOENIK</span></h2></div>
           <p>KEMOENIK adalah suplemen herbal pelangsing premium yang diformulasikan dari 5 bahan herbal alami pilihan — Teh Hijau, Jati Belanda, Kemuning, Temulawak, dan Tempuyung.</p>
           <p>Diproduksi oleh CV. Barokah Mardhiyya, Sumedang, Jawa Barat. Setiap pembelian dilengkapi akses ke web app program diet personal.</p>
           <a href="about.html">Pelajari Lebih Lanjut</a>
@@ -368,49 +272,24 @@
   </div>
 </section>
 
-<!-- ═══ TESTIMONI ═══ -->
-<section class="client_section layout_padding-bottom" style="background:#fff;">
+<!-- TESTIMONI -->
+<section class="client_section layout_padding-bottom">
   <div class="container">
-    <div class="heading_container heading_center">
-      <h2>Kata <span>Pengguna Kami</span></h2>
-      <p>Ribuan pelanggan sudah merasakan manfaat KEMOENIK</p>
-    </div>
+    <div class="heading_container heading_center"><h2>Kata <span>Pengguna Kami</span></h2><p>Ribuan pelanggan sudah merasakan manfaat KEMOENIK</p></div>
     <div class="client_owl-carousel owl-carousel">
-      <div class="box">
-        <div class="detail-box">
-          <p>"Dalam 1 bulan turun 5 kg! Dengan panduan web app KEMOENIK jadi lebih terarah. Highly recommend!"</p>
-          <h6>Siti Rahayu</h6>
-          <small style="color:#C8A96A;">⭐⭐⭐⭐⭐ Pengguna Verified</small>
-        </div>
-        <div class="img-box"><img src="images/client.jpg" alt="Siti Rahayu"></div>
-      </div>
-      <div class="box">
-        <div class="detail-box">
-          <p>"Awalnya skeptis sama herbal, tapi setelah coba 2 bulan perut saya berkurang 8 cm! Energi tetap stabil."</p>
-          <h6>Dian Permata</h6>
-          <small style="color:#C8A96A;">⭐⭐⭐⭐⭐ Pengguna Verified</small>
-        </div>
-        <div class="img-box"><img src="images/client2.jpg" alt="Dian Permata"></div>
-      </div>
-      <div class="box">
-        <div class="detail-box">
-          <p>"Program dietnya personal banget, disesuaikan tipe metabolisme saya. Hasilnya lebih cepat dari yang dibayangkan!"</p>
-          <h6>Andi Wijaya</h6>
-          <small style="color:#C8A96A;">⭐⭐⭐⭐⭐ Pengguna Verified</small>
-        </div>
-        <div class="img-box"><img src="images/client3.jpg" alt="Andi Wijaya"></div>
-      </div>
+      <div class="box"><div class="detail-box"><p>"Dalam 1 bulan turun 5 kg! Dengan panduan web app KEMOENIK jadi lebih terarah. Highly recommend!"</p><h6>Siti Rahayu</h6><small style="color:var(--gold);font-size:11px;">⭐⭐⭐⭐⭐ Pengguna Verified</small></div><div class="img-box"><img src="images/client.jpg" alt="Siti"></div></div>
+      <div class="box"><div class="detail-box"><p>"Perut berkurang 8 cm dalam 2 bulan! Energi tetap stabil, tidak lapar berlebihan. Produk herbal terbaik!"</p><h6>Dian Permata</h6><small style="color:var(--gold);font-size:11px;">⭐⭐⭐⭐⭐ Pengguna Verified</small></div><div class="img-box"><img src="images/client2.jpg" alt="Dian"></div></div>
+      <div class="box"><div class="detail-box"><p>"Program dietnya disesuaikan tipe metabolisme saya. Hasilnya lebih cepat dari yang saya bayangkan!"</p><h6>Andi Wijaya</h6><small style="color:var(--gold);font-size:11px;">⭐⭐⭐⭐⭐ Pengguna Verified</small></div><div class="img-box"><img src="images/client3.jpg" alt="Andi"></div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ FOOTER ═══ -->
+<!-- FOOTER -->
 <footer class="footer_section">
   <div class="container">
     <div class="row">
       <div class="col-md-4 footer-col">
-        <div class="footer_contact">
-          <h4>Hubungi Kami</h4>
+        <div class="footer_contact"><h4>Hubungi Kami</h4>
           <div class="contact_link_box">
             <a href="#"><i class="fa fa-map-marker"></i><span>Sumedang, Jawa Barat</span></a>
             <a href="tel:+6281546450547"><i class="fa fa-phone"></i><span>0815-4645-0547</span></a>
@@ -423,28 +302,19 @@
           <a href="index.html" class="footer-logo">KEMO<em>ENIK</em></a>
           <p>Herbal Pelangsing Premium — Formula 5 Bahan Herbal Alami. Program diet personal berbasis metabolismemu.</p>
           <div class="footer_social">
-            <a href="#" title="Instagram"><i class="fa fa-instagram"></i></a>
-            <a href="#" title="Facebook"><i class="fa fa-facebook"></i></a>
-            <a href="#" title="TikTok"><i class="fa fa-music"></i></a>
-            <a href="https://wa.me/6281546450547" target="_blank" title="WhatsApp"><i class="fa fa-whatsapp"></i></a>
+            <a href="#"><i class="fa fa-instagram"></i></a>
+            <a href="#"><i class="fa fa-facebook"></i></a>
+            <a href="https://wa.me/6281546450547" target="_blank"><i class="fa fa-whatsapp"></i></a>
           </div>
         </div>
       </div>
       <div class="col-md-4 footer-col">
         <h4>Jam Layanan</h4>
-        <p>Senin — Sabtu</p>
-        <p>08.00 — 21.00 WIB</p>
-        <div style="margin-top:16px;">
-          <a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" target="_blank"
-            style="display:inline-block;padding:10px 20px;background:var(--gold);color:#fff;border-radius:50px;font-weight:700;font-size:13px;">
-            🌿 Web App Diet
-          </a>
-        </div>
+        <p>Senin — Sabtu</p><p>08.00 — 21.00 WIB</p>
+        <div style="margin-top:14px;"><a href="https://kemoenikofficial.github.io/PANDUANKEMOENIK" target="_blank" style="display:inline-block;padding:9px 18px;background:var(--gold);color:#fff;border-radius:50px;font-weight:700;font-size:13px;font-family:var(--font-body);">🌿 Web App Diet</a></div>
       </div>
     </div>
-    <div class="footer-info">
-      <p>&copy; <span id="displayYear"></span> KEMOENIK — CV. Barokah Mardhiyya. All Rights Reserved.</p>
-    </div>
+    <div class="footer-info"><p>&copy; <span id="displayYear"></span> KEMOENIK — CV. Barokah Mardhiyya. All Rights Reserved.</p></div>
   </div>
 </footer>
 
@@ -452,8 +322,6 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="js/bootstrap.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
 <script src="js/custom.js"></script>
 </body>
 </html>
