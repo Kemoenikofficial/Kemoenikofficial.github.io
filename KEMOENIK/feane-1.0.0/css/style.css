@@ -189,7 +189,7 @@ a:hover, a:focus { color: initial; }
 .custom_nav-container .navbar-toggler[aria-expanded="true"] span::after { transform: rotate(90deg); top: 0; }
 
 /* =============================================
-   HERO AREA — PRODUK PAGE (CLEAN, NO OVERLAY SLIDER)
+   HERO AREA
    ============================================= */
 .hero_area {
   position: relative;
@@ -213,250 +213,18 @@ a:hover, a:focus { color: initial; }
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   background: linear-gradient(
     90deg,
-    rgba(22,54,40,0.82) 0%,
-    rgba(22,54,40,0.50) 50%,
-    rgba(22,54,40,0.15) 100%
+    rgba(22,54,40,0.80) 0%,
+    rgba(22,54,40,0.45) 45%,
+    rgba(22,54,40,0.10) 100%
   );
 }
-
-/* Produk hero — hero berdiri sendiri, tidak ada slider di dalamnya */
-.produk-hero {
-  min-height: 520px;
-  display: flex;
-  align-items: center;
-}
-.produk-hero-content {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  padding: 100px 0 80px;
-}
-.produk-hero-content .hero-label {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--goldlit);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-  display: block;
-}
-.produk-hero-content .hero-title {
-  font-family: 'Playfair Display', Georgia, serif !important;
-  font-size: 3rem;
-  font-weight: 700;
-  color: #ffffff;
-  line-height: 1.2;
-  margin-bottom: 16px;
-}
-.produk-hero-content .hero-title span { color: var(--gold); }
-.produk-hero-content .hero-sub {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 15px;
-  color: rgba(255,255,255,0.85);
-  line-height: 1.7;
-  max-width: 520px;
-  margin-bottom: 28px;
-}
-.hero-cta-wrap {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-}
-.hero-btn-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 32px;
-  background: var(--gold);
-  color: #ffffff;
-  border-radius: 12px;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-weight: 700; font-size: 14px;
-  transition: all 0.3s;
-  box-shadow: 0 4px 16px rgba(200,169,106,0.4);
-}
-.hero-btn-primary:hover { background: var(--gold2); color: #fff; transform: translateY(-2px); }
-.hero-btn-wa {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 28px;
-  background: var(--wa-green);
-  color: #ffffff;
-  border-radius: 12px;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-weight: 700; font-size: 14px;
-  transition: all 0.3s;
-  box-shadow: 0 4px 16px rgba(37,211,102,0.35);
-}
-.hero-btn-wa:hover { background: #1ea855; color: #fff; transform: translateY(-2px); }
-.hero-trust {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.hero-trust span {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.80);
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.15);
-  padding: 5px 12px;
-  border-radius: 20px;
-  backdrop-filter: blur(4px);
+.sub_page .hero_area {
+  min-height: auto;
+  height: auto;
 }
 
 /* =============================================
-   BENEFIT STRIP — di bawah hero
-   ============================================= */
-.benefit-strip {
-  background: var(--green3);
-  padding: 18px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
-.benefit-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 0;
-}
-.benefit-icon { font-size: 20px; }
-.benefit-text {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: #c8dbd2;
-  letter-spacing: 0.3px;
-}
-
-/* =============================================
-   PROGRAM SLIDER — SECTION MANDIRI (BUKAN OVERLAY)
-   ============================================= */
-.program-slider-section {
-  background: var(--bg);
-  padding: 60px 0;
-  border-bottom: 1px solid var(--border);
-}
-.program-slider-section .carousel { position: relative; }
-
-/* Card program — clean card style */
-.program-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 36px 40px;
-  display: flex;
-  align-items: flex-start;
-  gap: 28px;
-  box-shadow: 0 4px 24px rgba(31,77,58,0.08);
-  transition: all 0.3s;
-  margin: 4px 4px 60px;
-}
-.program-card:hover { box-shadow: 0 8px 40px rgba(31,77,58,0.14); }
-.program-card-icon {
-  font-size: 48px;
-  flex-shrink: 0;
-  width: 80px;
-  height: 80px;
-  background: var(--card2);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.program-card-body { flex: 1; }
-.program-card-tag {
-  display: inline-block;
-  padding: 4px 14px;
-  background: rgba(31,77,58,0.08);
-  color: var(--green);
-  border-radius: 20px;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 12px;
-}
-.program-card-body h3 {
-  font-family: 'Playfair Display', Georgia, serif !important;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--green);
-  margin-bottom: 10px;
-  line-height: 1.3;
-}
-.program-card-body p {
-  font-size: 14px;
-  color: var(--text3);
-  line-height: 1.7;
-  margin-bottom: 20px;
-  font-family: 'Inter', system-ui, sans-serif;
-}
-.program-card-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 28px;
-  background: var(--wa-green);
-  color: #ffffff;
-  border-radius: 10px;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  transition: all 0.3s;
-  box-shadow: 0 4px 14px rgba(37,211,102,0.35);
-}
-.program-card-btn:hover { background: #1ea855; color: #fff; transform: translateY(-2px); }
-
-/* Navigasi panah slider program */
-.prog-nav {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px; height: 40px;
-  background: var(--green);
-  border-radius: 50%;
-  color: #fff;
-  font-size: 14px;
-  transition: all 0.2s;
-  box-shadow: 0 2px 12px rgba(31,77,58,0.25);
-}
-.prog-nav:hover { background: var(--gold); }
-.carousel-control-prev, .carousel-control-next {
-  width: auto;
-  top: auto;
-  bottom: 16px;
-  opacity: 1;
-}
-.carousel-control-prev { left: auto; right: 60px; }
-.carousel-control-next { right: 4px; }
-
-/* Dot indicators program */
-.prog-indicators {
-  position: absolute;
-  bottom: 20px !important;
-  left: 0 !important;
-  margin: 0 !important;
-  justify-content: flex-start !important;
-}
-.prog-indicators li {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--border2);
-  opacity: 1;
-  transition: all 0.3s;
-  border: none;
-}
-.prog-indicators li.active {
-  width: 24px;
-  border-radius: 4px;
-  background: var(--green);
-}
-
-/* =============================================
-   SLIDER lama — hanya untuk halaman index/lain
-   (slider_section tetap ada untuk backward compat)
+   SLIDER — overlay transparan di atas hero
    ============================================= */
 .slider_section {
   flex: 1; display: flex;
