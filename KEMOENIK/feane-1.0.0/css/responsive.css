@@ -11,75 +11,69 @@
   .food_section .col-lg-4 { width: 33.333%; }
 }
 
-@media (max-width: 992px) {
-  :root { --navbar-h: auto; }
-  body { padding-top: 0; }
-
-  /* Navbar jadi 2 baris: logo + menu */
-  .header_section {
-    height: auto;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 9999;
-  }
-
-  /* Hilangkan padding-top body manual, ganti dengan spacer */
-  body { padding-top: 100px; }
-
-  .custom_nav-container {
+/* =============================================
+   PROGRAM SLIDER — RESPONSIVE
+   ============================================= */
+@media (max-width: 767px) {
+  .program-card {
     flex-direction: column;
-    align-items: center;
-    padding: 8px 0 6px;
+    padding: 24px 20px 28px;
+    gap: 16px;
+    margin-bottom: 56px;
   }
-
-  /* Baris 1: Logo */
-  .navbar-brand {
-    margin: 0 auto 0 0;
-    padding: 4px 0;
+  .program-card-icon {
+    width: 60px; height: 60px;
+    font-size: 32px;
+    border-radius: 12px;
   }
+  .program-card-body h3 { font-size: 1.2rem; }
+  .program-card-body p { font-size: 13px; }
+  .program-card-btn { width: 100%; justify-content: center; }
 
-  /* Tombol hamburger — tetap disembunyikan */
-  .navbar-toggler { display: none !important; }
+  .carousel-control-prev,
+  .carousel-control-next { display: none; }
 
-  /* Collapse selalu tampil */
-  .navbar-collapse {
-    display: flex !important;
-    width: 100%;
-    flex-wrap: wrap;
-    padding: 0;
-  }
+  .prog-indicators { justify-content: center !important; left: 0 !important; right: 0; }
 
-  /* Menu row — horizontal, tengah, wrap */
+  /* Hero produk mobile */
+  .produk-hero { min-height: 380px; }
+  .produk-hero-content { padding: 24px 0 40px; }
+  .produk-hero-content .hero-title { font-size: 1.8rem; }
+  .produk-hero-content .hero-sub { font-size: 13px; }
+  .hero-cta-wrap { flex-direction: column; }
+  .hero-btn-primary, .hero-btn-wa { width: 100%; justify-content: center; }
+  .hero-trust { gap: 8px; }
+  .hero-trust span { font-size: 11px; padding: 4px 10px; }
+
+  /* Benefit strip */
+  .benefit-item { gap: 6px; }
+  .benefit-text { font-size: 11px; }
+  .benefit-icon { font-size: 18px; }
+
+  /* Program slider section */
+  .program-slider-section { padding: 40px 0; }
+}
+
+@media (max-width: 480px) {
+  .produk-hero-content .hero-title { font-size: 1.5rem; }
+  .program-card { padding: 20px 16px 24px; }
+  .program-card-body h3 { font-size: 1.1rem; }
+}
+
+@media (max-width: 992px) {
+  :root { --navbar-h: 60px; }
+  body { padding-top: 60px; }
+  .hero_area { min-height: 500px; }
+  .slider_section { padding: 100px 0 45px; }
+
   .custom_nav-container .navbar-nav {
-    flex-direction: row !important;
-    flex-wrap: wrap;
-    justify-content: center;
+    padding: 12px 0 10px;
     align-items: center;
-    padding: 4px 0 2px !important;
-    width: 100%;
-    gap: 0;
-    background: transparent;
+    background: rgba(22,54,40,0.98);
     border-top: 1px solid rgba(255,255,255,0.08);
   }
-
-  .custom_nav-container .navbar-nav .nav-item { flex-shrink: 0; }
-
-  .custom_nav-container .navbar-nav .nav-item .nav-link {
-    padding: 5px 10px !important;
-    font-size: 10px !important;
-    letter-spacing: 0.5px;
-    margin: 1px 0;
-    white-space: nowrap;
-  }
-
-  /* Tombol Beli Sekarang */
-  .user_option {
-    display: none; /* sembunyikan di mobile biar tidak sesak, menu sudah ada di produk.html */
-  }
-
-  /* Hero */
-  .hero_area { min-height: 500px; }
-  .slider_section { padding: 30px 0 45px; }
+  .user_option { justify-content: center; margin: 8px 0 4px; }
+  .custom_nav-container .navbar-nav .nav-item .nav-link { padding: 8px 20px; margin: 2px 0; }
 
   /* Offer */
   .offer_section .box { flex-direction: row; }
@@ -93,27 +87,16 @@
 }
 
 @media (max-width: 767px) {
-  body { padding-top: 92px; }
+  :root { --navbar-h: 58px; }
+  body { padding-top: 58px; }
 
   /* Brand kecilkan */
   .navbar-brand .brand-kemo,
   .navbar-brand .brand-enik { font-size: 22px !important; }
 
-  /* Navbar container */
-  .custom_nav-container {
-    padding: 6px 10px 4px;
-  }
-
-  /* Menu item link lebih kecil */
-  .custom_nav-container .navbar-nav .nav-item .nav-link {
-    padding: 4px 8px !important;
-    font-size: 9.5px !important;
-    letter-spacing: 0.3px;
-  }
-
-  /* Hero HP */
+  /* Hero HP — cukup besar biar foto kelihatan */
   .hero_area { min-height: 420px; }
-  .slider_section { padding: 20px 0 40px; }
+  .slider_section { padding: 80px 0 40px; }
   .slider_section .detail-box h1 { font-size: 1.7rem; }
   .slider_section .detail-box p { font-size: 12px; }
   .slider_section .detail-box .slide-card { padding: 18px 16px; }
@@ -162,23 +145,14 @@
 }
 
 @media (max-width: 480px) {
-  body { padding-top: 88px; }
+  :root { --navbar-h: 55px; }
+  body { padding-top: 55px; }
 
   .navbar-brand .brand-kemo,
   .navbar-brand .brand-enik { font-size: 20px !important; }
 
-  .custom_nav-container {
-    padding: 5px 8px 3px;
-  }
-
-  .custom_nav-container .navbar-nav .nav-item .nav-link {
-    padding: 4px 6px !important;
-    font-size: 9px !important;
-    letter-spacing: 0.2px;
-  }
-
   .hero_area { min-height: 380px; }
-  .slider_section { padding: 16px 0 35px; }
+  .slider_section { padding: 70px 0 35px; }
   .slider_section .detail-box h1 { font-size: 1.4rem; }
 
   /* Katalog tetap 2 kolom, lebih rapat */
@@ -192,16 +166,8 @@
 }
 
 @media (max-width: 375px) {
-  body { padding-top: 85px; }
-
   .navbar-brand .brand-kemo,
   .navbar-brand .brand-enik { font-size: 18px !important; }
-
-  .custom_nav-container .navbar-nav .nav-item .nav-link {
-    padding: 3px 5px !important;
-    font-size: 8.5px !important;
-  }
-
   .slider_section .detail-box h1 { font-size: 1.35rem; }
 }
 
