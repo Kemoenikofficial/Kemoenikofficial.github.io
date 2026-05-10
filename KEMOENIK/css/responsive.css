@@ -2,22 +2,6 @@
    RESPONSIVE — Mobile First
    ============================================= */
 
-/* =============================================
-   NAVBAR — TANPA HAMBURGER (Always Visible)
-   ============================================= */
-
-/* Sembunyikan tombol hamburger di semua ukuran */
-.navbar-toggler {
-  display: none !important;
-}
-
-/* Pastikan navbar-collapse selalu terbuka (tidak collapse) */
-.navbar-collapse {
-  display: flex !important;
-  flex-basis: auto;
-  align-items: center;
-}
-
 /* Desktop — tetap bisa dibuka tapi layout mobile */
 @media (min-width: 993px) {
   .custom_nav-container .navbar-nav { padding-left: 16%; }
@@ -28,41 +12,52 @@
 }
 
 @media (max-width: 992px) {
-  :root { --navbar-h: 60px; }
-  body { padding-top: 60px; }
+  :root { --navbar-h: auto; }
+  body { padding-top: 0; }
   .hero_area { min-height: 500px; }
-  .slider_section { padding: 100px 0 45px; }
+  .slider_section { padding: 20px 0 45px; }
 
-  .custom_nav-container .navbar {
-    flex-wrap: wrap;
-    align-items: center;
+  /* Navbar selalu tampil — tidak collapse */
+  .header_section {
+    position: relative;
     height: auto;
-    padding: 8px 0;
+  }
+  .navbar-collapse {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
   }
 
+  /* Menu horizontal wrap di tengah */
   .custom_nav-container .navbar-nav {
-    padding: 6px 0 6px;
-    flex-direction: row;
+    display: flex !important;
+    flex-direction: row !important;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    padding: 6px 0 10px;
     width: 100%;
-    padding-left: 0;
-    background: rgba(22, 54, 40, 0.97);
+    gap: 0;
     border-top: 1px solid rgba(255,255,255,0.08);
-    gap: 2px;
+    background: transparent;
+  }
+
+  .custom_nav-container .navbar-nav .nav-item {
+    flex: 0 0 auto;
   }
 
   .custom_nav-container .navbar-nav .nav-item .nav-link {
-    padding: 6px 12px;
-    margin: 2px 0;
+    padding: 6px 10px;
     font-size: 10px;
-    white-space: nowrap;
+    letter-spacing: 0.5px;
+    margin: 2px 1px;
+    border-radius: 5px;
   }
 
   .user_option {
     justify-content: center;
-    margin: 4px 0 4px;
+    margin: 6px 0 8px;
   }
 
   /* Offer */
@@ -76,109 +71,23 @@
   .food_section .filters-content .row.grid { margin: 0 -6px; }
 }
 
-/* =============================================
-   MOBILE NAVBAR — Selalu Terlihat, Horizontal
-   ============================================= */
 @media (max-width: 767px) {
-  :root { --navbar-h: auto; }
-  body { padding-top: 0; }
-
-  /* Header fleksibel sesuai konten */
-  .header_section {
-    height: auto;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 9999;
-  }
-
-  /* Offset body supaya tidak ketutup navbar */
-  body { padding-top: 100px; }
-
-  .custom_nav-container .navbar {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0;
-    height: auto;
-  }
-
-  /* Baris atas: brand + user option */
-  .custom_nav-container .navbar > .container-fluid,
-  .custom_nav-container .navbar > .container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 16px;
-    min-height: 52px;
-  }
-
-  /* Menu horizontal wrap — baris kedua */
-  .navbar-collapse {
-    width: 100%;
-    display: flex !important;
-    flex-direction: column;
-  }
-
-  .custom_nav-container .navbar-nav {
-    flex-direction: row !important;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 4px 8px 6px;
-    padding-left: 0;
-    margin: 0;
-    gap: 0px;
-    background: rgba(15, 40, 28, 0.98);
-    border-top: 1px solid rgba(200, 169, 106, 0.2);
-  }
-
-  .custom_nav-container .navbar-nav .nav-item {
-    flex: 0 0 auto;
-  }
-
-  .custom_nav-container .navbar-nav .nav-item .nav-link {
-    padding: 6px 9px !important;
-    margin: 2px 1px;
-    font-size: 9.5px !important;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    border-radius: 6px;
-    white-space: nowrap;
-    color: rgba(255,255,255,0.88);
-    transition: color 0.2s, background 0.2s;
-  }
-
-  .custom_nav-container .navbar-nav .nav-item:hover .nav-link,
-  .custom_nav-container .navbar-nav .nav-item.active .nav-link {
-    color: var(--gold) !important;
-    background: rgba(200, 169, 106, 0.1);
-  }
 
   /* Brand kecilkan */
   .navbar-brand .brand-kemo,
-  .navbar-brand .brand-enik { font-size: 22px !important; }
+  .navbar-brand .brand-enik { font-size: 20px !important; }
 
-  /* User option rapi */
-  .user_option {
-    justify-content: flex-end;
-    margin: 0;
-    gap: 4px;
+  /* Nav link lebih kompak */
+  .custom_nav-container .navbar-nav .nav-item .nav-link {
+    padding: 5px 8px;
+    font-size: 9.5px;
+    margin: 2px 1px;
   }
-
-  /* Sembunyikan cart icon supaya tidak penuh */
-  .user_option .cart_link { display: none; }
-
-  /* Tombol WA kecil */
-  .user_option .order_online {
-    padding: 5px 10px;
-    font-size: 10px;
-    gap: 4px;
-  }
+  .user_option .order_online { padding: 6px 13px; font-size: 11px; }
 
   /* Hero HP — cukup besar biar foto kelihatan */
   .hero_area { min-height: 420px; }
-  .slider_section { padding: 60px 0 40px; }
+  .slider_section { padding: 20px 0 40px; }
   .slider_section .detail-box h1 { font-size: 1.7rem; }
   .slider_section .detail-box p { font-size: 12px; }
   .slider_section .detail-box .slide-card { padding: 18px 16px; }
@@ -227,22 +136,21 @@
 }
 
 @media (max-width: 480px) {
-  :root { --navbar-h: auto; }
-  body { padding-top: 94px; }
-
   .navbar-brand .brand-kemo,
-  .navbar-brand .brand-enik { font-size: 20px !important; }
+  .navbar-brand .brand-enik { font-size: 18px !important; }
+
+  /* Nav link paling kompak */
+  .custom_nav-container .navbar-nav .nav-item .nav-link {
+    padding: 4px 7px;
+    font-size: 9px;
+    letter-spacing: 0.3px;
+  }
+  .user_option .order_online { padding: 5px 11px; font-size: 10.5px; }
 
   .hero_area { min-height: 380px; }
-  .slider_section { padding: 60px 0 35px; }
+  .slider_section { padding: 16px 0 35px; }
   .slider_section .detail-box h1 { font-size: 1.4rem; }
-
-  /* Nav link lebih mungil */
-  .custom_nav-container .navbar-nav .nav-item .nav-link {
-    padding: 5px 7px !important;
-    font-size: 9px !important;
-    margin: 1px 0px;
-  }
+  .slider_section .detail-box h1 { font-size: 1.4rem; }
 
   /* Katalog tetap 2 kolom, lebih rapat */
   .food_section .filters-content .row.grid { margin: 0 -4px; }
@@ -255,16 +163,11 @@
 }
 
 @media (max-width: 375px) {
-  body { padding-top: 90px; }
-
   .navbar-brand .brand-kemo,
-  .navbar-brand .brand-enik { font-size: 18px !important; }
+  .navbar-brand .brand-enik { font-size: 16px !important; }
+  .custom_nav-container .navbar-nav .nav-item .nav-link { padding: 4px 6px; font-size: 8.5px; }
   .slider_section .detail-box h1 { font-size: 1.35rem; }
-
-  .custom_nav-container .navbar-nav .nav-item .nav-link {
-    padding: 4px 6px !important;
-    font-size: 8.5px !important;
-  }
+  .slider_section .detail-box h1 { font-size: 1.35rem; }
 }
 
 /* =============================================
