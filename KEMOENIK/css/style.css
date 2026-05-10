@@ -168,25 +168,10 @@ a:hover, a:focus { color: initial; }
 }
 .user_option .order_online:hover { background-color: #1ea855; color: #fff; }
 
-/* toggler */
+/* toggler — HIDDEN di semua ukuran layar */
 .custom_nav-container .navbar-toggler {
-  outline: none; padding: 0; width: 36px; height: 36px;
-  border: none; background: rgba(255,255,255,0.1);
-  border-radius: 8px; transition: all 0.3s;
+  display: none !important;
 }
-.custom_nav-container .navbar-toggler span {
-  display: block; width: 20px; height: 2px; background-color: #ffffff;
-  margin: 5px auto; transition: all 0.3s; position: relative; border-radius: 2px;
-}
-.custom_nav-container .navbar-toggler span::before,
-.custom_nav-container .navbar-toggler span::after {
-  content: ""; position: absolute; left: 0; height: 100%; width: 100%;
-  background-color: #ffffff; top: -6px; border-radius: 2px; transition: all 0.3s;
-}
-.custom_nav-container .navbar-toggler span::after { top: 6px; }
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span { transform: rotate(45deg); }
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span::before,
-.custom_nav-container .navbar-toggler[aria-expanded="true"] span::after { transform: rotate(90deg); top: 0; }
 
 /* =============================================
    HERO AREA — LANDSCAPE 1920x800
