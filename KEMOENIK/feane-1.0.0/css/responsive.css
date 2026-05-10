@@ -2,84 +2,55 @@
    RESPONSIVE — Mobile First
    ============================================= */
 
-/* Desktop — tetap bisa dibuka tapi layout mobile */
 @media (min-width: 993px) {
   .custom_nav-container .navbar-nav { padding-left: 16%; }
   .food_section .filters-content .row.grid { margin: 0 -6px; }
   .food_section .col-sm-6 { padding: 0 6px; }
-  /* Desktop: 3 kolom katalog */
   .food_section .col-lg-4 { width: 33.333%; }
 }
 
-/* =============================================
-   PROGRAM SLIDER — RESPONSIVE
-   ============================================= */
-@media (max-width: 767px) {
-  .program-card {
-    flex-direction: column;
-    padding: 24px 20px 28px;
-    gap: 16px;
-    margin-bottom: 56px;
-  }
-  .program-card-icon {
-    width: 60px; height: 60px;
-    font-size: 32px;
-    border-radius: 12px;
-  }
-  .program-card-body h3 { font-size: 1.2rem; }
-  .program-card-body p { font-size: 13px; }
-  .program-card-btn { width: 100%; justify-content: center; }
-
-  .carousel-control-prev,
-  .carousel-control-next { display: none; }
-
-  .prog-indicators { justify-content: center !important; left: 0 !important; right: 0; }
-
-  /* Hero produk mobile */
-  .produk-hero { min-height: 380px; }
-  .produk-hero-content { padding: 24px 0 40px; }
-  .produk-hero-content .hero-title { font-size: 1.8rem; }
-  .produk-hero-content .hero-sub { font-size: 13px; }
-  .hero-cta-wrap { flex-direction: column; }
-  .hero-btn-primary, .hero-btn-wa { width: 100%; justify-content: center; }
-  .hero-trust { gap: 8px; }
-  .hero-trust span { font-size: 11px; padding: 4px 10px; }
-
-  /* Benefit strip */
-  .benefit-item { gap: 6px; }
-  .benefit-text { font-size: 11px; }
-  .benefit-icon { font-size: 18px; }
-
-  /* Program slider section */
-  .program-slider-section { padding: 40px 0; }
-}
-
-@media (max-width: 480px) {
-  .produk-hero-content .hero-title { font-size: 1.5rem; }
-  .program-card { padding: 20px 16px 24px; }
-  .program-card-body h3 { font-size: 1.1rem; }
-}
-
 @media (max-width: 992px) {
-  :root { --navbar-h: 60px; }
-  body { padding-top: 60px; }
+  :root { --navbar-h: auto; }
+  body { padding-top: 100px; }
+
+  .header_section { height: auto; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; }
+
+  .custom_nav-container { flex-direction: column; align-items: center; padding: 8px 0 6px; }
+
+  /* Hamburger — DISEMBUNYIKAN */
+  .navbar-toggler { display: none !important; }
+
+  /* Collapse selalu tampil */
+  .navbar-collapse { display: flex !important; width: 100%; flex-wrap: wrap; padding: 0; }
+
+  /* Menu horizontal, tengah, wrap */
+  .custom_nav-container .navbar-nav {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 0 2px !important;
+    width: 100%;
+    background: transparent;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .custom_nav-container .navbar-nav .nav-item .nav-link {
+    padding: 5px 10px !important;
+    font-size: 10px !important;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  /* Sembunyikan tombol Beli di mobile supaya tidak sesak */
+  .user_option { display: none; }
+
+  /* Hero */
   .hero_area { min-height: 500px; }
   .slider_section { padding: 100px 0 45px; }
 
-  .custom_nav-container .navbar-nav {
-    padding: 12px 0 10px;
-    align-items: center;
-    background: rgba(22,54,40,0.98);
-    border-top: 1px solid rgba(255,255,255,0.08);
-  }
-  .user_option { justify-content: center; margin: 8px 0 4px; }
-  .custom_nav-container .navbar-nav .nav-item .nav-link { padding: 8px 20px; margin: 2px 0; }
-
   /* Offer */
   .offer_section .box { flex-direction: row; }
-
-  /* Maps */
-  .book_section .map_container { height: 240px; }
 
   /* Grid katalog — 2 kolom di tablet */
   .food_section .col-sm-6 { width: 50% !important; padding: 0 6px; }
@@ -87,14 +58,20 @@
 }
 
 @media (max-width: 767px) {
-  :root { --navbar-h: 58px; }
-  body { padding-top: 58px; }
+  body { padding-top: 92px; }
 
-  /* Brand kecilkan */
   .navbar-brand .brand-kemo,
   .navbar-brand .brand-enik { font-size: 22px !important; }
 
-  /* Hero HP — cukup besar biar foto kelihatan */
+  .custom_nav-container { padding: 6px 10px 4px; }
+
+  .custom_nav-container .navbar-nav .nav-item .nav-link {
+    padding: 4px 8px !important;
+    font-size: 9.5px !important;
+    letter-spacing: 0.3px;
+  }
+
+  /* Hero */
   .hero_area { min-height: 420px; }
   .slider_section { padding: 80px 0 40px; }
   .slider_section .detail-box h1 { font-size: 1.7rem; }
@@ -145,17 +122,23 @@
 }
 
 @media (max-width: 480px) {
-  :root { --navbar-h: 55px; }
-  body { padding-top: 55px; }
+  body { padding-top: 88px; }
 
   .navbar-brand .brand-kemo,
   .navbar-brand .brand-enik { font-size: 20px !important; }
+
+  .custom_nav-container { padding: 5px 8px 3px; }
+
+  .custom_nav-container .navbar-nav .nav-item .nav-link {
+    padding: 4px 6px !important;
+    font-size: 9px !important;
+    letter-spacing: 0.2px;
+  }
 
   .hero_area { min-height: 380px; }
   .slider_section { padding: 70px 0 35px; }
   .slider_section .detail-box h1 { font-size: 1.4rem; }
 
-  /* Katalog tetap 2 kolom, lebih rapat */
   .food_section .filters-content .row.grid { margin: 0 -4px; }
   .food_section .col-sm-6 { width: 50% !important; padding: 0 4px; }
   .food_section .box { margin-top: 8px; border-radius: 8px; }
@@ -166,15 +149,22 @@
 }
 
 @media (max-width: 375px) {
+  body { padding-top: 85px; }
+
   .navbar-brand .brand-kemo,
   .navbar-brand .brand-enik { font-size: 18px !important; }
+
+  .custom_nav-container .navbar-nav .nav-item .nav-link {
+    padding: 3px 5px !important;
+    font-size: 8.5px !important;
+  }
+
   .slider_section .detail-box h1 { font-size: 1.35rem; }
 }
 
 /* =============================================
    ANTI ZOOM — iOS & Android
    ============================================= */
-/* Cegah zoom saat klik input */
 @media screen and (max-width: 767px) {
   input[type="text"],
   input[type="email"],
@@ -186,8 +176,5 @@
     -webkit-appearance: none;
     border-radius: 10px;
   }
-  /* Cegah double-tap zoom */
-  a, button {
-    touch-action: manipulation;
-  }
+  a, button { touch-action: manipulation; }
 }
