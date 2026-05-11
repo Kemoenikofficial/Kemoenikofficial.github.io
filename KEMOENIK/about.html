@@ -26,6 +26,13 @@
     .misi_section{background:var(--green3);padding:80px 0;color:#fff;text-align:center;}
     .misi_section h2{color:#fff;}
     .misi_section p{color:#c8dbd2;max-width:700px;margin:16px auto 0;font-size:15px;line-height:1.8;}
+    .legalitas_section{background:var(--bg);padding:70px 0;}
+    .legalitas-col{margin-bottom:24px;}
+    .legalitas-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 16px rgba(31,77,58,0.08);transition:all 0.25s;text-align:center;}
+    .legalitas-card:hover{box-shadow:0 8px 28px rgba(31,77,58,0.16);transform:translateY(-4px);border-color:var(--green);}
+    .legalitas-img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;}
+    .legalitas-label{padding:12px 8px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.6px;background:var(--card);border-top:1px solid var(--border);}
+    @media(max-width:480px){.legalitas_section{padding:40px 0;}.legalitas-label{font-size:10px;padding:8px 6px;}}
   </style>
 </head>
 <body class="sub_page">
@@ -86,6 +93,42 @@
     <!-- EDIT: visi & misi brand -->
     <h2>Visi & <span style="color:var(--gold)">Misi</span></h2>
     <p>Menjadi brand herbal pelangsing nomor 1 di Indonesia yang dipercaya, aman, dan memberikan hasil nyata. Kami berkomitmen untuk terus berinovasi menghadirkan produk herbal berkualitas tinggi yang dapat dijangkau oleh semua kalangan.</p>
+  </div>
+</section>
+
+<!-- LEGALITAS -->
+<section class="legalitas_section">
+  <div class="container">
+    <div class="heading_container heading_center" style="margin-bottom:40px;">
+      <h2>Legalitas & <span style="color:var(--gold)">Sertifikasi</span></h2>
+      <p>Produk kami telah melewati uji kelayakan dan mendapat pengakuan resmi</p>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-6 col-md-3 legalitas-col">
+        <div class="legalitas-card">
+          <img src="images/legalitas-1.webp" alt="Sertifikat BPOM" class="legalitas-img">
+          <div class="legalitas-label">Sertifikat BPOM</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 legalitas-col">
+        <div class="legalitas-card">
+          <img src="images/legalitas-2.webp" alt="Halal" class="legalitas-img">
+          <div class="legalitas-label">Halal</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 legalitas-col">
+        <div class="legalitas-card">
+          <img src="images/legalitas-3.webp" alt="Uji Laboratorium" class="legalitas-img">
+          <div class="legalitas-label">Uji Laboratorium</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 legalitas-col">
+        <div class="legalitas-card">
+          <img src="images/legalitas-4.webp" alt="Uji Laboratorium" class="legalitas-img">
+          <div class="legalitas-label">Uji Laboratorium</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
