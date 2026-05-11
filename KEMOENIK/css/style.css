@@ -655,3 +655,13 @@ a:hover, a:focus { color: initial; }
   font-family: 'Inter', system-ui, sans-serif;
 }
 .footer_section .footer-info p a { color: inherit; }
+
+/* =============================================
+   FIX NAVBAR PRODUK — force always visible
+   ============================================= */
+#navProduk {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
