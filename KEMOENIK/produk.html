@@ -14,56 +14,6 @@
 
   <style>
     /* =============================================
-       NAVBAR — brand + beli sekarang sejajar kiri
-       ============================================= */
-    .custom_nav-container .navbar {
-      flex-wrap: nowrap;
-      align-items: center;
-    }
-
-    /* Brand + tombol dibungkus satu grup kiri */
-    .navbar-left-group {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-shrink: 0;
-    }
-
-    /* Tombol Beli Sekarang inline dengan brand */
-    .navbar-left-group .btn-beli-navbar {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 14px;
-      background-color: var(--wa-green);
-      color: #ffffff;
-      border-radius: 45px;
-      font-family: 'Inter', system-ui, sans-serif !important;
-      font-size: 11px;
-      font-weight: 700;
-      white-space: nowrap;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-    .navbar-left-group .btn-beli-navbar:hover {
-      background-color: #1ea855;
-      color: #fff;
-    }
-
-    /* Nav tengah tetap */
-    .custom_nav-container .navbar-nav {
-      padding-left: 0 !important;
-      flex: 1;
-      justify-content: center;
-    }
-
-    /* Sembunyikan tombol beli di user_option (diganti ke kiri) */
-    .user_option .order_online { display: none !important; }
-
-    /* Kosongkan user_option bila perlu */
-    .user_option:empty { display: none; }
-
-    /* =============================================
        HERO — paling atas, rasio 2:1 (2000x1000)
        ============================================= */
     .hero_area {
@@ -350,19 +300,6 @@
        MOBILE — HERO RESPONSIVE
        ============================================= */
     @media (max-width: 992px) {
-      /* Navbar */
-      .navbar-left-group {
-        gap: 10px;
-      }
-      .navbar-left-group .btn-beli-navbar {
-        padding: 5px 11px;
-        font-size: 10px;
-      }
-      .custom_nav-container .navbar-nav {
-        justify-content: center;
-        padding: 4px 0 8px !important;
-      }
-
       body { padding-top: 0 !important; }
     }
 
@@ -397,10 +334,6 @@
 
     @media (max-width: 480px) {
       .hero_area { padding-top: 50%; }
-      .navbar-left-group .btn-beli-navbar {
-        padding: 5px 9px;
-        font-size: 9.5px;
-      }
       .program-list-grid {
         grid-template-columns: 1fr;
         gap: 7px;
@@ -410,25 +343,15 @@
 </head>
 <body class="sub_page">
 
-<!-- NAVBAR — brand + beli sekarang di kiri, menu di tengah -->
+<!-- NAVBAR -->
 <header class="header_section">
   <div class="container">
-    <nav class="navbar navbar-expand-lg custom_nav-container" style="justify-content:space-between; padding:0;">
-
-      <!-- KIRI: Logo + Beli Sekarang -->
-      <div class="navbar-left-group">
-        <a class="navbar-brand" href="index.html">
-          <span class="brand-kemo">KEMO</span><span class="brand-enik">ENIK</span>
-        </a>
-        <!-- Tombol Beli Sekarang sejajar brand -->
-        <a href="https://kemoenikofficial.storelink.id/paket-a-program-5-hari" target="_blank" class="btn-beli-navbar">
-          <i class="fa fa-shopping-bag"></i> Beli Sekarang
-        </a>
-      </div>
-
-      <!-- TENGAH: Menu navigasi -->
-      <div class="navbar-collapse" id="navProduk" style="flex:1; justify-content:center;">
-        <ul class="navbar-nav" style="justify-content:center;">
+    <nav class="navbar navbar-expand-lg custom_nav-container">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-kemo">KEMO</span><span class="brand-enik">ENIK</span>
+      </a>
+      <div class="navbar-collapse" id="navProduk">
+        <ul class="navbar-nav">
           <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
           <li class="nav-item active"><a class="nav-link" href="produk.html">Produk</a></li>
           <li class="nav-item"><a class="nav-link" href="menu.html">Program</a></li>
@@ -436,10 +359,9 @@
           <li class="nav-item"><a class="nav-link" href="book.html">Testimoni</a></li>
         </ul>
       </div>
-
-      <!-- KANAN: kosong / bisa diisi ikon lain -->
-      <div class="user_option" style="min-width:0;"></div>
-
+      <div class="user_option">
+        <a href="https://kemoenikofficial.storelink.id/paket-a-program-5-hari" class="order_online" target="_blank">Beli Sekarang</a>
+      </div>
     </nav>
   </div>
 </header>
