@@ -15,35 +15,61 @@
        LANDING PAGE UTAMA — INDEX.HTML
        ====================================================== */
 
-    /* HERO */
+    /* =============================================
+       HERO BANNER — full width, rasio 2:1, image only
+       ============================================= */
     .lp-hero {
-      position: relative;
-      overflow: hidden;
       padding: 0;
-      min-height: auto;
+      margin: 0;
       background: none;
     }
-    .lp-hero .deco-orb { position: absolute; border-radius: 50%; pointer-events: none; }
-    .lp-hero .deco-orb.o1 { width: 560px; height: 560px; top: -160px; right: -120px; background: radial-gradient(circle, rgba(200,169,106,0.12) 0%, transparent 70%); }
-    .lp-hero .deco-orb.o2 { width: 320px; height: 320px; bottom: -100px; left: -80px; background: radial-gradient(circle, rgba(200,169,106,0.08) 0%, transparent 70%); }
-    .lp-hero .hero-badge {
+
+    /* Gambar hero: full width, rasio 2:1 dikunci */
+    .hero-img-banner {
+      width: 100%;
+      aspect-ratio: 2 / 1;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* =============================================
+       KONTEN HERO — di bawah gambar
+       ============================================= */
+    .hero-content-below {
+      background: var(--green3);
+      padding: 40px 0 44px;
+    }
+
+    .hero-badge {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(200,169,106,0.15); border: 1px solid rgba(200,169,106,0.35);
       color: var(--gold); padding: 6px 16px; border-radius: 30px;
       font-size: 11px; font-weight: 700; font-family: 'Inter', sans-serif;
-      letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 22px;
+      letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 20px;
     }
-    .lp-hero .hero-badge .bdot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
-    .lp-hero h1 {
-      color: #fff !important; font-family: 'Playfair Display', serif !important;
-      font-size: clamp(1.75rem, 3.5vw, 2.8rem); line-height: 1.28; margin-bottom: 20px;
+    .hero-badge .bdot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
+
+    .hero-content-below h1 {
+      color: #fff !important;
+      font-family: 'Playfair Display', serif !important;
+      font-size: clamp(1.5rem, 3.2vw, 2.6rem);
+      line-height: 1.28;
+      margin-bottom: 16px;
     }
-    .lp-hero h1 .gold { color: var(--gold); }
-    .lp-hero .hero-sub {
-      color: rgba(255,255,255,0.78); font-size: 15px; line-height: 1.85;
-      margin-bottom: 36px; font-family: 'Inter', sans-serif; max-width: 500px;
+    .hero-content-below h1 .gold { color: var(--gold); }
+
+    .hero-content-below .hero-sub {
+      color: rgba(255,255,255,0.75);
+      font-size: 15px;
+      line-height: 1.85;
+      margin-bottom: 30px;
+      font-family: 'Inter', sans-serif;
+      max-width: 600px;
     }
-    .lp-hero .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+
     .btn-gold-cta {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 14px 30px; background: var(--gold); color: var(--green3) !important;
@@ -51,6 +77,7 @@
       font-size: 14px; transition: all 0.3s; box-shadow: 0 6px 24px rgba(200,169,106,0.4);
     }
     .btn-gold-cta:hover { background: var(--goldlit); transform: translateY(-2px); color: var(--green3) !important; }
+
     .btn-outline-cta {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 13px 26px; background: transparent;
@@ -58,13 +85,10 @@
       border-radius: 50px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; transition: all 0.3s;
     }
     .btn-outline-cta:hover { border-color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.08); color: #fff !important; }
-    .hero-trust-row { display: flex; flex-wrap: wrap; gap: 18px; }
-    .trust-pill { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,0.65); font-size: 12px; font-family: 'Inter', sans-serif; }
+
+    .hero-trust-row { display: flex; flex-wrap: wrap; gap: 16px; }
+    .trust-pill { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,0.6); font-size: 12px; font-family: 'Inter', sans-serif; }
     .trust-pill .tdot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
-    .hero-img-wrap { display: flex; justify-content: center; align-items: center; position: relative; padding: 20px 0; }
-    .hero-img-wrap .glow { position: absolute; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle, rgba(200,169,106,0.18) 0%, transparent 65%); pointer-events: none; }
-    .hero-img-wrap img { position: relative; max-width: 300px; width: 100%; filter: drop-shadow(0 24px 60px rgba(0,0,0,0.35)); animation: floatImg 4s ease-in-out infinite; }
-    @keyframes floatImg { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
 
     /* SECTION LABEL */
     .sec-label {
@@ -197,105 +221,51 @@
 
     /* RESPONSIVE */
     @media (max-width: 767px) {
-      .lp-hero { padding: 100px 0 60px; min-height: auto; }
-      .hero-img-wrap { margin-top: 32px; }
-      .hero-img-wrap img { max-width: 220px; }
-      .problem-card { padding: 28px 20px; }
+      /* Hero image: tetap 2:1 di mobile */
+      .hero-img-banner {
+        aspect-ratio: 2 / 1;
+      }
+      /* Konten di bawah hero lebih compact */
+      .hero-content-below { padding: 28px 0 32px; }
+      .hero-content-below h1 { font-size: 1.45rem; margin-bottom: 12px; }
+      .hero-content-below .hero-sub { font-size: 13px; margin-bottom: 22px; }
+      .cta-row { gap: 10px; margin-bottom: 22px; }
+      .btn-gold-cta { padding: 12px 22px; font-size: 13px; }
+      .btn-outline-cta { padding: 11px 18px; font-size: 13px; }
+      .hero-trust-row { gap: 10px; }
+
+      /* Section 2 & 3 lebih rapat */
+      .lp-problem { padding: 36px 0 !important; }
+      .lp-solusi { padding: 36px 0 !important; }
+      .problem-card { padding: 24px 18px; }
+
       .konsumsi-card .k-body { padding: 20px; }
       .konsumsi-item { gap: 14px; }
       .trust-card { padding: 32px 20px; }
-      .lp-cta-final { padding: 70px 0; }
+      .lp-cta-final { padding: 60px 0; }
       .lp-manfaat .col-6 { flex: 0 0 50% !important; max-width: 50% !important; margin-bottom: 16px; }
       .solusi-img-card { margin-bottom: 14px; }
-      .lp-section,
+
+      /* Kurangi padding semua section */
+      .lp-produk,
+      .lp-manfaat,
+      .lp-cara,
       .lp-program,
-      .lp-about,
-      .trust-section,
-      .solusi-section{
-        padding: 24px 0 !important;
-      }
+      .lp-konsumsi,
+      .lp-trust,
+      .lp-testi,
+      .lp-faq { padding: 50px 0 !important; }
     }
+
     @media (max-width: 480px) {
-      .problem-card { padding: 22px 16px; }
+      .hero-content-below { padding: 22px 0 28px; }
+      .hero-content-below h1 { font-size: 1.25rem; }
+      .hero-badge { font-size: 10px; padding: 5px 12px; }
+      .problem-card { padding: 20px 14px; }
       .konsumsi-item { flex-direction: column; gap: 10px; }
+      .cta-row { flex-direction: column; align-items: stretch; }
+      .btn-gold-cta, .btn-outline-cta { justify-content: center; }
     }
-    /* HERO BANNER INDEX */
-.hero-banner{
-  position: relative;
-  overflow: hidden;
-  padding: 0;
-  background: none;
-}
-
-.hero-banner::before{
-  content:'';
-  display:block;
-  width:100%;
-  aspect-ratio:2 / 1;
-
-  background-image:
-    linear-gradient(
-      to right,
-      rgba(0,0,0,0.55),
-      rgba(0,0,0,0.15)
-    ),
-    url('images/produk-hero-bg.webp');
-
-  background-size: cover;
-  background-position: center;
-}
-
-/* KONTEN HERO */
-.hero-banner .container{
-  position:absolute;
-  top:50%;
-  left:0;
-  right:0;
-  transform:translateY(-50%);
-  z-index:2;
-}
-
-/* TEXT */
-.hero-banner h1,
-.hero-banner p,
-.hero-banner .hero-badge{
-  color:#fff !important;
-}
-
-/* MOBILE */
-@media (max-width:767px){
-
-  .hero-banner::before{
-    aspect-ratio:1 / 1.45;
-    background-position:center;
-  }
-
-  .hero-banner .container{
-  position:absolute;
-  top:50%;
-  left:0;
-  right:0;
-  transform:translateY(-50%);
-  padding:0 20px;
-}
-
-  .hero-banner h1{
-    font-size:42px !important;
-    line-height:1.15;
-    margin-bottom:18px;
-  }
-
-  .hero-banner .hero-sub{
-    font-size:15px;
-    line-height:1.8;
-  }
-
-  .hero-banner .cta-row{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-}
 
   </style>
 </head>
@@ -322,39 +292,41 @@
   </div>
 </header>
 
-<!-- ========== SECTION 1: HERO ========== -->
-<section class="lp-hero hero-banner">
-  <div class="deco-orb o1"></div>
-  <div class="deco-orb o2"></div>
+<!-- ========== SECTION 1: HERO IMAGE — full width 2:1 ========== -->
+<section class="lp-hero">
+  <img
+    src="images/produk-hero-bg.webp"
+    alt="KEMOENIK - Program Diet Herbal Premium"
+    class="hero-img-banner"
+  >
+</section>
+
+<!-- ========== KONTEN HERO — di bawah gambar ========== -->
+<div class="hero-content-below">
   <div class="container">
-    <div class="row align-items-center">
-      <div class="col-12">
-        <!-- EDIT: badge kecil di atas judul -->
-        <div class="hero-badge"><span class="bdot"></span> Herbal Premium · Berbasis Metabolisme</div>
-        <!-- EDIT: judul utama hero -->
-        <h1>Turunkan Berat Badan dengan Cara yang Lebih <span class="gold">Terarah,</span> Bukan Sekadar Coba-Coba</h1>
-        <!-- EDIT: sub judul hero -->
-        <p class="hero-sub">KEMOENIK membantu kamu menjalankan program diet berbasis metabolisme dengan lebih terstruktur, sehingga lebih mudah dijalankan dan lebih konsisten.</p>
-        <div class="cta-row">
-          <!-- EDIT: link Everpro tombol CTA utama -->
-          <a href="produk.html" class="btn-gold-cta">
-            <i class="fa fa-shopping-bag"></i> Mulai Program Diet
-          </a>
-          <!-- EDIT: anchor ke section cara kerja -->
-          <a href="#cara-kerja" class="btn-outline-cta">
-            <i class="fa fa-play-circle"></i> Lihat Cara Kerja
-          </a>
-        </div>
-        <!-- EDIT: trust pills kecil di bawah CTA -->
-        <div class="hero-trust-row">
-          <div class="trust-pill"><span class="tdot"></span> Program diet terstruktur</div>
-          <div class="trust-pill"><span class="tdot"></span> Berbasis metabolisme</div>
-          <div class="trust-pill"><span class="tdot"></span> Panduan harian</div>
-        </div>
-      </div>
+    <!-- Tagline / badge -->
+    <div class="hero-badge"><span class="bdot"></span> Herbal Premium · Berbasis Metabolisme</div>
+    <!-- Judul utama -->
+    <h1>Turunkan Berat Badan dengan Cara yang Lebih <span class="gold">Terarah,</span> Bukan Sekadar Coba-Coba</h1>
+    <!-- Sub judul -->
+    <p class="hero-sub">KEMOENIK membantu kamu menjalankan program diet berbasis metabolisme dengan lebih terstruktur, sehingga lebih mudah dijalankan dan lebih konsisten.</p>
+    <!-- Tombol CTA -->
+    <div class="cta-row">
+      <a href="produk.html" class="btn-gold-cta">
+        <i class="fa fa-shopping-bag"></i> Mulai Program Diet
+      </a>
+      <a href="#cara-kerja" class="btn-outline-cta">
+        <i class="fa fa-play-circle"></i> Lihat Cara Kerja
+      </a>
+    </div>
+    <!-- Trust pills -->
+    <div class="hero-trust-row">
+      <div class="trust-pill"><span class="tdot"></span> Program diet terstruktur</div>
+      <div class="trust-pill"><span class="tdot"></span> Berbasis metabolisme</div>
+      <div class="trust-pill"><span class="tdot"></span> Panduan harian</div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- ========== SECTION 2: PROBLEM ========== -->
 <section class="lp-problem">
