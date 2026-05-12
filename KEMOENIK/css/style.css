@@ -1,15 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 /* =============================================
    COLOR VARIABLES
    ============================================= */
 :root {
-  --bg:#F6F4EF; --card:#FFFFFF; --offwhite:#F9F8F5; --card2:#EEF1EE;
-  --green:#1F4D3A; --greenlit:#2E6B53; --green3:#163628;
-  --gold:#C8A96A; --gold2:#A8843F; --goldlit:#E8D09A;
-  --text:#1E2B26; --text2:#2A3D34; --text3:#8A9A92;
-  --border:#DDE4DA; --border2:#C5D1C1;
-  --wa-green:#25D366; --red:#e53935;
+  --bg:#FCFAF6; --card:#FFFFFF; --offwhite:#F7F5EF; --card2:#F4F6F3;
+  --green:#1E5B43; --greenlit:#2E7A59; --green3:#14382A;
+  --gold:#D4A63F; --gold2:#B98B2D; --goldlit:#E8C979;
+  --text:#1F2937; --text2:#374151; --text3:#6B7280;
+  --border:#E5E7EB; --border2:#D1D5DB;
+  --wa-green:#27CA6A; --red:#DC2626;
   --navbar-h: 64px;
 }
 
@@ -41,7 +41,7 @@ input, textarea, select {
 }
 
 h1,h2,h3,h4,h5,h6 {
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', Georgia, serif !important;
   color: var(--text);
 }
 
@@ -107,10 +107,14 @@ a:hover, a:focus { color: initial; }
   z-index: 9999;
   height: var(--navbar-h);
   padding: 0;
-  background: rgba(22, 54, 40, 0.97);
+  background: inear-gradient(
+    135deg,
+    #14382A 0%,
+    #1E5B43 100%
+  );
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
   transition: all 0.3s;
 }
 .header_section .container { height: 100%; }
@@ -118,7 +122,7 @@ a:hover, a:focus { color: initial; }
 
 /* NAVBAR BRAND — KEMO putih, ENIK gold */
 .navbar-brand {
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', Georgia, serif !important;
   text-decoration: none;
   padding: 0;
   line-height: 1;
@@ -127,14 +131,14 @@ a:hover, a:focus { color: initial; }
   font-weight: 700;
   font-size: 26px;
   color: #FFFFFF; /* PUTIH */
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', Georgia, serif !important;
   letter-spacing: 1px;
 }
 .navbar-brand .brand-enik {
   font-weight: 700;
   font-size: 26px;
   color: #C8A96A; /* GOLD */
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', Georgia, serif !important;
   letter-spacing: 1px;
 }
 
@@ -241,7 +245,7 @@ a:hover, a:focus { color: initial; }
   font-weight: 700;
   margin-bottom: 10px;
   color: #ffffff;
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', Georgia, serif !important;
   line-height: 1.25;
 }
 .slider_section .detail-box p {
@@ -300,11 +304,11 @@ a:hover, a:focus { color: initial; }
 .offer_section .box .img-box img { width: 100%; height: 100%; object-fit: cover; transition: all .3s; }
 .offer_section .box:hover .img-box img { transform: scale(1.1); }
 .offer_section .box .detail-box h5 {
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', Georgia, serif !important;
   font-size: 16px; margin: 0 0 4px; color: #ffffff;
 }
 .offer_section .box .detail-box h6 {
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', Georgia, serif !important;
   margin: 0 0 10px; color: var(--goldlit); font-size: 13px;
 }
 .offer_section .box .detail-box h6 span { font-size: 1.4rem; font-weight: 700; }
@@ -354,11 +358,11 @@ a:hover, a:focus { color: initial; }
   position: relative; margin-top: 12px;
   background: var(--card); border-radius: 12px;
   overflow: hidden; border: 1px solid var(--border);
-  box-shadow: 0 1px 8px rgba(31,77,58,0.08);
-  transition: all 0.25s; display: flex; flex-direction: column;
+  box-shadow:  0 2px 14px rgba(0,0,0,0.05);
+  transition: all 0.3s ease; display: flex; flex-direction: column;
 }
 .food_section .box:hover {
-  box-shadow: 0 6px 20px rgba(31,77,58,0.14); transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08); transform: translateY(-4px);
 }
 
 /* Tombol hati */
@@ -596,7 +600,7 @@ a:hover, a:focus { color: initial; }
   border-top: 1px solid var(--border); padding-top: 12px;
 }
 .client_section .testi-card .testi-nama {
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', Georgia, serif !important;
   font-weight: 700; font-size: 14px; color: var(--green);
 }
 .client_section .testi-card .testi-kota { font-size: 11px; color: var(--text3); margin-top: 2px; }
@@ -617,10 +621,10 @@ a:hover, a:focus { color: initial; }
 }
 .footer_section h4 {
   font-size: 18px; color: #ffffff; margin-bottom: 16px;
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', Georgia, serif !important;
 }
 .footer_section h4, .footer_section .footer-logo {
-  font-weight: 600; font-family: 'Playfair Display', Georgia, serif !important;
+  font-weight: 600; font-family: 'Poppins', Georgia, serif !important;
 }
 .footer_section p { color: #a8c4b4; font-size: 13px; }
 .footer_section .footer-col { margin-bottom: 28px; }
@@ -694,7 +698,7 @@ a:hover, a:focus { color: initial; }
 }
 
 .produk-hero-content .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', serif;
   font-size: 2.4rem;
   font-weight: 700;
   color: #fff;
@@ -807,7 +811,7 @@ a:hover, a:focus { color: initial; }
 }
 
 .produk-swipe-title h2 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', serif;
   font-size: 1.7rem;
   color: var(--green3);
   margin-bottom: 4px;
@@ -938,7 +942,7 @@ a:hover, a:focus { color: initial; }
   letter-spacing: 0.3px;
 }
 .pcard-body h4 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', serif;
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
@@ -1068,7 +1072,7 @@ a:hover, a:focus { color: initial; }
 }
 
 .prog-slide-body h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--text);
