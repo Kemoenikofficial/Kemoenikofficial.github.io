@@ -33,6 +33,61 @@
     .legalitas-img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;}
     .legalitas-label{padding:12px 8px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.6px;background:var(--card);border-top:1px solid var(--border);}
     @media(max-width:480px){.legalitas_section{padding:40px 0;}.legalitas-label{font-size:10px;padding:8px 6px;}}
+
+    /* =============================================
+       MOBILE — Siapa KEMOENIK section spacing fix
+       ============================================= */
+    @media (max-width: 767px) {
+      /* Kurangi padding section agar tidak ada whitespace berlebih */
+      .about_section.layout_padding {
+        padding-top: 36px !important;
+        padding-bottom: 36px !important;
+      }
+
+      /* Gambar: kurangi margin bawah, proporsional */
+      .about_section .img-box {
+        margin-bottom: 28px;
+      }
+      .about_section .img-box img {
+        border-radius: 14px;
+        width: 100%;
+        display: block;
+      }
+
+      /* Detail box: rapi dan konsisten */
+      .about_section .detail-box {
+        padding: 0 4px;
+      }
+      .about_section .detail-box .heading_container {
+        margin-bottom: 14px;
+      }
+      .about_section .detail-box p {
+        font-size: 14px;
+        line-height: 1.75;
+        margin-bottom: 14px;
+        color: var(--text3);
+      }
+
+      /* Tombol — jarak nyaman dari teks & sebelum section berikutnya */
+      .about_section .detail-box a {
+        display: inline-flex;
+        margin-top: 6px;
+        margin-bottom: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .about_section.layout_padding {
+        padding-top: 28px !important;
+        padding-bottom: 28px !important;
+      }
+      .about_section .img-box {
+        margin-bottom: 22px;
+      }
+      .about_section .detail-box p {
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 <body class="sub_page">
