@@ -215,7 +215,14 @@
       .trust-card { padding: 32px 20px; }
       .lp-cta-final { padding: 70px 0; }
       .lp-manfaat .col-6 { flex: 0 0 50% !important; max-width: 50% !important; margin-bottom: 16px; }
-      .solusi-img-card { margin-bottom: 24px; }
+      .solusi-img-card { margin-bottom: 14px; }
+      .lp-section,
+      .lp-program,
+      .lp-about,
+      .trust-section,
+      .solusi-section{
+        padding: 24px 0 !important;
+      }
     }
     @media (max-width: 480px) {
       .problem-card { padding: 22px 16px; }
@@ -236,6 +243,8 @@
   width: 100%;
   aspect-ratio: 2 / 1;
 
+  margin-bottom: 0;
+
   background-image:
     linear-gradient(
       to right,
@@ -247,16 +256,18 @@
   background-size: cover;
   background-position: center;
 
-  filter: brightness(0.92);
+  filter: brightness(0.96);
 }
 
 .hero-banner .container{
-  position: absolute;
-  inset: 0;
+  position: relative;
+  inset: unset;
   z-index: 2;
 
   display: flex;
   align-items: center;
+
+  padding: 26px 20px 10px;
 }
 
 .hero-banner .row{
