@@ -5,7 +5,7 @@
  * Set USE_MOCK = false setelah deploy
  */
 
-const API_URL = "https://ultimately-themselves-prerequisite-collection.trycloudflare.com ";
+const API_URL = "https://ultimately-themselves-prerequisite-collection.trycloudflare.com";
 const USE_MOCK = false; // ganti false setelah deploy
 
 /* ═══════════════════════════════════════════
