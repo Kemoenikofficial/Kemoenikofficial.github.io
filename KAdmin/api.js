@@ -10,7 +10,7 @@
  * - Riwayat pembayaran
  */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbyiEETd12P2Ga0uUL3NBRWNGrWlMuPTzqaqrB8T1YExzSgIMSOJI8qtbvwZ7tm_vGDwZQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxBnezQRbXcNIXOQj6EX_0MlQcd9m4gotNrvTRO5D4RM0IEgn0nLKtV6oHEllxNl69ldA/exec";
 const USE_MOCK = false;
 
 // ══════════════════════════════════════════════
