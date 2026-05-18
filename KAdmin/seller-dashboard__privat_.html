@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Dashboard — KEMOENIK</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { min-height:100vh; }
+
+    /* LOGIN */
+    .login-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--bg); padding:20px; }
+    .login-card { background:var(--white); border-radius:var(--r-xl); padding:36px; width:100%; max-width:380px; box-shadow:var(--sh-lg); border:1px solid var(--border); }
+    .login-logo { text-align:center; margin-bottom:24px; }
+    .login-logo .wordmark { font-family:var(--font-d); font-size:26px; font-weight:700; color:var(--green); }
+    .login-logo .wordmark span { color:var(--gold); }
+    .login-logo .sub { font-size:11px; color:var(--text3); margin-top:3px; text-transform:uppercase; letter-spacing:.08em; }
+    .login-err { background:var(--red-lt); border:1px solid #FECACA; border-radius:var(--r-sm); padding:10px 13px; font-size:13px; color:var(--red); margin-bottom:14px; display:none; }
+    .form-group { margin-bottom:14px; }
+    .form-group label { display:block; font-size:12px; font-weight:600; color:var(--text2); margin-bottom:5px; }
+
+    /* DASHBOARD */
+    .dash-wrap { display:none; min-height:100vh; flex-direction:column; }
+    .dash-wrap.show { display:flex; }
+
+    /* HEADER */
+    .dash-header { background:var(--green3); color:#fff; padding:16px 20px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:100; }
+    .header-logo { font-family:var(--font-d); font-size:18px; font-weight:700; }
+    .header-logo span { color:var(--gold); }
+    .header-seller { font-size:13px; font-weight:600; background:rgba(200,169,106,.2); border:1px solid rgba(200,169,106,.35); border-radius:99px; padding:4px 12px; }
+    .header-actions { display:flex; gap:8px; margin-left:auto; align-items:center; }
+    .header-year { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:99px; padding:5px 12px; color:#fff; font-size:12px; cursor:pointer; outline:none; }
+    .header-btn { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff; font-size:14px; transition:all var(--tr); }
+    .header-btn:hover { background:rgba(255,255,255,.18); }
+
+    /* NAV TABS */
+    .dash-tabs { background:var(--white); border-bottom:1px solid var(--border); display:flex; overflow-x:auto; padding:0 16px; }
+    .tab-item { padding:12px 16px; font-size:13px; font-weight:500; color:var(--text3); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all var(--tr); }
+    .tab-item:hover { color:var(--text); }
+    .tab-item.active { color:var(--green); border-bottom-color:var(--green); font-weight:600; }
+
+    /* CONTENT */
+    .dash-content { flex:1; padding:18px; }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+
+    /* STATS GRID */
+    .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:18px; }
+    .stat-box { background:var(--white); border:1px solid var(--border); border-radius:var(--r-md); padding:16px; box-shadow:var(--sh-sm); }
+    .stat-box .label { font-size:10px; font-weight:700; text-transform:uppercase; color:var(--text3); letter-spacing:.05em; margin-bottom:6px; }
+    .stat-box .val { font-size:20px; font-weight:800; color:var(--text); }
+    .stat-box .sub { font-size:11px; color:var(--text3); margin-top:3px; }
+
+    /* NOTIF SEBAGIAN */
+    .notif-sebagian { background:#FFF3E8; border:1px solid #FDBA74; border-radius:var(--r-sm); padding:12px 16px; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+    .notif-sebagian .icon { font-size:20px; flex-shrink:0; }
+    .notif-sebagian .text { font-size:13px; color:var(--orange,#C2621A); }
+    .notif-sebagian .text b { color:var(--orange,#C2621A); }
+
+    /* RESI ROW SEBAGIAN */
+    tr.row-sebagian td { background:#FFFBF5; }
+    tr.row-sebagian:hover td { background:#FFF3E8; }
+
+    /* PROGRESS */
+    .prog-bar { height:4px; background:var(--border); border-radius:99px; overflow:hidden; min-width:60px; margin-top:3px; }
+    .prog-fill { height:100%; border-radius:99px; }
+    .prog-fill.lunas   { background:var(--greenlit); }
+    .prog-fill.partial { background:var(--orange,#C2621A); }
+
+    /* KREDIT CARD */
+    .kredit-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; }
+    .kredit-card { background:var(--white); border:1.5px solid var(--border2); border-radius:var(--r-md); padding:14px 16px; }
+    .kredit-status { font-size:10px; font-weight:700; text-transform:uppercase; }
+
+    /* LOADING */
+    .loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; }
+  </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay" style="display:none">
+  <div style="font-family:var(--font-d);font-size:26px;font-weight:700;color:var(--green);margin-bottom:16px">KEMO<span style="color:var(--gold)">ENIK</span></div>
+  <div class="spinner"></div>
+  <p style="margin-top:12px;color:var(--text3);font-size:13px" id="loadingText">Memuat data…</p>
+</div>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="wordmark">KEMO<span>ENIK</span></div>
+      <div class="sub">Seller Dashboard</div>
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <div class="form-group">
+      <label>Nama Seller / Username</label>
+      <input type="text" class="input" id="loginNama" placeholder="Contoh: LUNISCA2026-01" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" class="input" id="loginPass" placeholder="Password kamu" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn btn-primary w-full" onclick="doLogin()" id="loginBtn" style="margin-top:6px">Masuk</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash-wrap" id="dashWrap">
+
+  <!-- HEADER -->
+  <header class="dash-header">
+    <div class="header-logo">KEMO<span>ENIK</span></div>
+    <div class="header-seller" id="hdrName">—</div>
+    <div class="header-actions">
+      <select class="header-year" id="yearSel" onchange="onYearChange(this.value)"><option>2026</option></select>
+      <button class="header-btn" onclick="manualRefresh()" title="Refresh">🔄</button>
+      <button class="header-btn" onclick="doLogout()" title="Logout">🚪</button>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <div class="dash-tabs">
+    <div class="tab-item active" onclick="showTab('overview',this)">📊 Ringkasan</div>
+    <div class="tab-item" onclick="showTab('transaksi',this)">📋 Transaksi</div>
+    <div class="tab-item" onclick="showTab('tunggakan',this)">⏳ Tunggakan</div>
+    <div class="tab-item" onclick="showTab('return',this)">↩️ Return</div>
+    <div class="tab-item" onclick="showTab('kredit',this)">🔄 Kredit Kirim Ulang</div>
+    <div class="tab-item" onclick="showTab('pembayaran',this)">📜 Riwayat Bayar</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="dash-content">
+
+    <!-- TAB: OVERVIEW -->
+    <div class="tab-panel active" id="tab-overview">
+      <div class="stats-row" id="statsRow">
+        <div class="stat-box"><div class="label">Total Resi</div><div class="val" id="sTotal">—</div></div>
+        <div class="stat-box"><div class="label">Total Penjualan</div><div class="val" id="sPenjualan">—</div></div>
+        <div class="stat-box"><div class="label">Sudah Lunas</div><div class="val" id="sLunas" style="color:#059669">—</div></div>
+        <div class="stat-box"><div class="label">Belum Bayar</div><div class="val" id="sBelum" style="color:var(--red)">—</div></div>
+        <div class="stat-box"><div class="label">Terbayar Sebagian</div><div class="val" id="sSebagian" style="color:var(--orange,#C2621A)">—</div><div class="sub" id="sSebagianSub"></div></div>
+        <div class="stat-box"><div class="label">Total Return</div><div class="val" id="sReturn" style="color:#7C3AED">—</div><div class="sub">tetap dibayar</div></div>
+      </div>
+
+      <!-- Notif kalau ada resi SEBAGIAN -->
+      <div class="notif-sebagian" id="notifSebagian" style="display:none">
+        <div class="icon">⚠️</div>
+        <div class="text">Kamu punya resi yang baru terbayar sebagian. Sisa tagihannya masih harus dilunasi. <b id="notifSebagianDetail"></b></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
+        <div class="card">
+          <div class="sec-title">Penjualan 7 Hari Terakhir</div>
+          <div style="height:180px"><canvas id="chartHarian"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="sec-title">Komposisi Status</div>
+          <div style="height:180px"><canvas id="chartStatus"></canvas></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="sec-title" style="margin-bottom:0">Resi Terbaru</div>
+          <div class="live-indicator"><div class="live-dot"></div>Live</div>
+        </div>
+        <div id="recentList"><div class="empty-state"><div class="ei">📦</div><p>Memuat…</p></div></div>
+      </div>
+    </div>
+
+    <!-- TAB: TRANSAKSI -->
+    <div class="tab-panel" id="tab-transaksi">
+      <div class="table-section">
+        <div class="table-header">
+          <div class="sec-title" style="margin-bottom:0;flex:1">Semua Transaksi</div>
+          <div class="filter-row">
+            <input type="text" class="input" id="txSearch" placeholder="🔍 Cari resi…" oninput="applyTxFilter()" style="width:150px">
+            <select class="select" id="txStatus" onchange="applyTxFilter()">
+              <option value="">Semua Status</option>
+              <option value="BELUM">BELUM</option>
+              <option value="SEBAGIAN">SEBAGIAN</option>
+              <option value="LUNAS">LUNAS</option>
+              <option value="RETURN">RETURN</option>
+            </select>
+            <input type="date" class="input" id="txFrom" onchange="applyTxFilter()" style="width:130px">
+            <input type="date" class="input" id="txTo" onchange="applyTxFilter()" style="width:130px">
+            <button class="btn btn-outline btn-sm" onclick="resetTxFilter()">Reset</button>
+            <button class="btn btn-primary btn-sm" onclick="doExport()">📥 CSV</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tanggal</th><th>Nomor Resi</th><th>Produk</th>
+                <th>Qty</th><th>Total</th><th>Terbayar</th><th>Sisa</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="txBody"><tr><td colspan="8" class="empty-state">Memuat…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="table-footer" id="txFooter"></div>
+      </div>
+    </div>
+
+    <!-- TAB: TUNGGAKAN -->
+    <div class="tab-panel" id="tab-tunggakan">
+      <div class="kpi-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px">
+        <div class="kpi-card"><div class="kpi-label">Total Tunggakan</div><div class="kpi-val" id="tTotal" style="color:var(--red)">—</div><div class="kpi-sub">BELUM + SEBAGIAN</div></div>
+        <div class="kpi-card"><div class="kpi-label">Resi Belum Lunas</div><div class="kpi-val" id="tResi">—</div></div>
+        <div class="kpi-card"><div class="kpi-label">Resi Sebagian</div><div class="kpi-val" id="tSebagian" style="color:var(--orange,#C2621A)">—</div><div class="kpi-sub">baru dibayar sebagian</div></div>
+      </div>
+      <div class="table-section">
+        <div class="table-header"><div class="sec-title" style="margin-bottom:0">Resi Belum Lunas (urutan terlama)</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tanggal</th><th>Nomor Resi</th><th>Produk</th><th>Qty</th><th>Total</th><th>Terbayar</th><th>Sisa Tagihan</th><th>Status</th></tr></thead>
+            <tbody id="tunggakanBody"><tr><td colspan="8" class="empty-state">Memuat…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: RETURN -->
+    <div class="tab-panel" id="tab-return">
+      <div class="kpi-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px">
+        <div class="kpi-card"><div class="kpi-label">Total Return</div><div class="kpi-val" id="retTotal">—</div></div>
+        <div class="kpi-card"><div class="kpi-label">Barang Kembali ke Gudang</div><div class="kpi-val" id="retKembali" style="color:#059669">—</div><div class="kpi-sub">dapat kredit kirim ulang</div></div>
+        <div class="kpi-card"><div class="kpi-label">Tetap Dibayar</div><div class="kpi-val" id="retBayar" style="color:var(--red)">—</div><div class="kpi-sub">semua return wajib bayar</div></div>
+      </div>
+      <div class="table-section">
+        <div class="table-header"><div class="sec-title" style="margin-bottom:0">Data Return Kamu</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tanggal</th><th>Nomor Resi</th><th>Produk</th><th>Qty</th><th>Alasan</th><th>Barang Kembali</th><th>Status Bayar</th></tr></thead>
+            <tbody id="retBody"><tr><td colspan="7" class="empty-state">Memuat…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: KREDIT KIRIM ULANG -->
+    <div class="tab-panel" id="tab-kredit">
+      <div class="card" style="margin-bottom:16px">
+        <div class="sec-title">Apa itu Kredit Kirim Ulang?</div>
+        <p class="text-sm text-muted">Kalau barang return kamu kembali ke gudang KEMOENIK, kamu dapat kredit untuk kirim ulang produk tersebut <b>tanpa dihitung hutang baru</b>. Hubungi admin untuk memakai kredit ini.</p>
+      </div>
+      <div class="kpi-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px">
+        <div class="kpi-card"><div class="kpi-label">Kredit Tersedia</div><div class="kpi-val" id="kreditTersedia" style="color:#059669">—</div><div class="kpi-sub">unit siap pakai</div></div>
+        <div class="kpi-card"><div class="kpi-label">Kredit Terpakai</div><div class="kpi-val" id="kreditTerpakai">—</div><div class="kpi-sub">sudah dikirim ulang</div></div>
+      </div>
+      <div class="kredit-grid" id="kreditGrid">
+        <div class="empty-state"><div class="ei">🔄</div><p>Memuat kredit…</p></div>
+      </div>
+    </div>
+
+    <!-- TAB: RIWAYAT PEMBAYARAN -->
+    <div class="tab-panel" id="tab-pembayaran">
+      <div class="table-section">
+        <div class="table-header"><div class="sec-title" style="margin-bottom:0">Riwayat Pembayaran Kamu</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tanggal Bayar</th><th>Nominal Transfer</th><th>Resi Diproses</th><th>Catatan</th></tr></thead>
+            <tbody id="bayarBody"><tr><td colspan="4" class="empty-state">Memuat…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /dash-content -->
+</div><!-- /dash-wrap -->
+
+<script src="api.js"></script>
+<script>
+
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+const SESS          = "kemoenik_seller_v3";
+let currentSeller   = "";
+let currentYear     = String(new Date().getFullYear());
+let sellerResi      = [];
+let sellerReturn    = [];
+let sellerKredit    = [];
+let sellerPembayaran = [];
+let filteredTx      = [];
+let pagTx;
+const PS = 15;
+
+// ═══════════════════════════════════════
+//  SESSION
+// ═══════════════════════════════════════
+function saveSession() {
+  sessionStorage.setItem(SESS, JSON.stringify({ seller: currentSeller, year: currentYear }));
+}
+
+function boot() {
+  const saved = sessionStorage.getItem(SESS);
+  if (saved) {
+    try {
+      const { seller, year } = JSON.parse(saved);
+      currentSeller = seller;
+      currentYear   = year || currentYear;
+      showDash(seller);
+      return;
+    } catch (_) {}
+  }
+  document.getElementById("loginWrap").style.display = "flex";
+}
+
+function doLogout() {
+  sessionStorage.removeItem(SESS);
+  currentSeller = "";
+  sellerResi    = [];
+  document.getElementById("dashWrap").classList.remove("show");
+  document.getElementById("loginWrap").style.display = "flex";
+}
+
+// ═══════════════════════════════════════
+//  LOGIN
+// ═══════════════════════════════════════
+async function doLogin() {
+  const nama = document.getElementById("loginNama").value.trim();
+  const pass = document.getElementById("loginPass").value;
+  if (!nama || !pass) { showErrLogin("Isi nama seller dan password dulu"); return; }
+
+  const btn = document.getElementById("loginBtn");
+  btn.disabled    = true;
+  btn.textContent = "Memverifikasi…";
+
+  try {
+    const res = await apiFetch({ action: "login", nama, password: pass });
+    if (res.status === "ok") {
+      currentSeller = res.seller || nama;
+      saveSession();
+      document.getElementById("loginWrap").style.display = "none";
+      document.getElementById("loginErr").style.display  = "none";
+      showDash(currentSeller);
+    } else {
+      showErrLogin(res.pesan || "Nama seller atau password salah");
+    }
+  } catch (e) {
+    showErrLogin("Gagal terhubung ke server");
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = "Masuk";
+  }
+}
+
+function showErrLogin(msg) {
+  const el          = document.getElementById("loginErr");
+  el.textContent    = msg;
+  el.style.display  = "block";
+}
+
+// ═══════════════════════════════════════
+//  SHOW DASHBOARD
+// ═══════════════════════════════════════
+async function showDash(seller) {
+  document.getElementById("loginWrap").style.display = "none";
+  document.getElementById("dashWrap").classList.add("show");
+  document.getElementById("hdrName").textContent = seller;
+
+  setLoading(true, "Memuat data " + seller + "…");
+  try {
+    const tahunList = await loadTahun();
+    const ySel      = document.getElementById("yearSel");
+    ySel.innerHTML  = tahunList.map(t => `<option value="${t}" ${String(t) === currentYear ? "selected" : ""}>${t}</option>`).join("");
+    if (tahunList.length && !tahunList.map(String).includes(currentYear)) currentYear = String(tahunList[0]);
+
+    await refreshAll();
+  } catch (e) {
+    showToast("Gagal memuat data: " + e.message, "error");
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function refreshAll() {
+  const [resi, ret, kredit, bayar] = await Promise.all([
+    loadResi({ seller: currentSeller, tahun: currentYear }),
+    loadReturn({ seller: currentSeller }),
+    loadKredit({ seller: currentSeller }),
+    loadPembayaran({ seller: currentSeller }),
+  ]);
+  sellerResi       = Array.isArray(resi) ? resi : (resi?.data ?? []);
+  sellerReturn     = Array.isArray(ret)  ? ret  : [];
+  sellerKredit     = Array.isArray(kredit) ? kredit : [];
+  sellerPembayaran = Array.isArray(bayar) ? bayar : [];
+  renderAll();
+}
+
+async function onYearChange(year) {
+  currentYear = year;
+  saveSession();
+  setLoading(true, "Memuat tahun " + year + "…");
+  try { await refreshAll(); } finally { setLoading(false); }
+}
+
+async function manualRefresh() {
+  showToast("Memperbarui data…", "info");
+  await refreshAll();
+  showToast("Data diperbarui");
+}
+
+async function silentRefresh() {
+  if (!currentSeller) return;
+  try {
+    const newResi = await loadResi({ seller: currentSeller, tahun: currentYear });
+    const data    = Array.isArray(newResi) ? newResi : (newResi?.data ?? []);
+    if (JSON.stringify(sellerResi) !== JSON.stringify(data)) {
+      sellerResi = data;
+      renderAll();
+    }
+  } catch (_) {}
+}
+
+// ═══════════════════════════════════════
+//  TAB
+// ═══════════════════════════════════════
+function showTab(id, el) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-item").forEach(t => t.classList.remove("active"));
+  document.getElementById("tab-" + id)?.classList.add("active");
+  if (el) el.classList.add("active");
+  if (id === "tunggakan") renderTunggakan();
+  if (id === "kredit")    renderKredit();
+  if (id === "return")    renderReturn();
+  if (id === "pembayaran") renderPembayaran();
+}
+
+// ═══════════════════════════════════════
+//  RENDER ALL
+// ═══════════════════════════════════════
+function renderAll() {
+  renderStats();
+  renderCharts();
+  renderRecent();
+  applyTxFilter();
+}
+
+// ═══════════════════════════════════════
+//  STATS
+// ═══════════════════════════════════════
+function renderStats() {
+  const data     = sellerResi;
+  const lunas    = data.filter(r => r.status === "LUNAS").reduce((s, r) => s + (r.total || 0), 0);
+  const belum    = data.filter(r => r.status === "BELUM").reduce((s, r) => s + (r.sisa || r.total || 0), 0);
+  const sebagian = data.filter(r => r.status === "SEBAGIAN");
+  const sisSebagian = sebagian.reduce((s, r) => s + (r.sisa || 0), 0);
+  const terBayarSebagian = sebagian.reduce((s, r) => s + (r.terbayar || 0), 0);
+  const retCount = data.filter(r => r.status === "RETURN").length;
+  const penjualan = data.reduce((s, r) => s + (r.total || 0), 0);
+
+  document.getElementById("sTotal").textContent     = data.length.toLocaleString("id-ID");
+  document.getElementById("sPenjualan").textContent = formatRupiah(penjualan);
+  document.getElementById("sLunas").textContent     = formatRupiah(lunas + terBayarSebagian);
+  document.getElementById("sBelum").textContent     = formatRupiah(belum + sisSebagian);
+  document.getElementById("sSebagian").textContent  = formatRupiah(sisSebagian);
+  document.getElementById("sSebagianSub").textContent = sebagian.length ? `${sebagian.length} resi terbayar sebagian` : "";
+  document.getElementById("sReturn").textContent    = retCount;
+
+  // Notif sebagian
+  const notif = document.getElementById("notifSebagian");
+  if (sebagian.length) {
+    document.getElementById("notifSebagianDetail").textContent =
+      `${sebagian.length} resi · sisa tagihan ${formatRupiah(sisSebagian)}`;
+    notif.style.display = "flex";
+  } else {
+    notif.style.display = "none";
+  }
+
+  // Tunggakan KPI
+  document.getElementById("tTotal").textContent    = formatRupiah(belum + sisSebagian);
+  document.getElementById("tResi").textContent     = data.filter(r => r.status === "BELUM").length;
+  document.getElementById("tSebagian").textContent = sebagian.length;
+}
+
+// ═══════════════════════════════════════
+//  CHARTS
+// ═══════════════════════════════════════
+function renderCharts() {
+  if (window._c?.harian) window._c.harian.destroy();
+  if (window._c?.status) window._c.status.destroy();
+  if (!window._c) window._c = {};
+
+  // Harian
+  const harian = [];
+  for (let i = 6; i >= 0; i--) {
+    const d   = new Date(); d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const lbl = d.toLocaleDateString("id-ID", { day:"2-digit", month:"short" });
+    const tot = sellerResi.filter(r => (r.tanggal||"").slice(0,10) === key).reduce((s,r) => s+(r.total||0), 0);
+    harian.push({ label: lbl, total: tot });
+  }
+
+  const ctx1 = document.getElementById("chartHarian")?.getContext("2d");
+  if (ctx1) {
+    window._c.harian = new Chart(ctx1, {
+      type: "line",
+      data: {
+        labels: harian.map(h => h.label),
+        datasets: [{ label:"Penjualan", data: harian.map(h => h.total), borderColor:"#C8A96A", backgroundColor:"rgba(200,169,106,.15)", fill:true, tension:0.4, pointRadius:4, pointBackgroundColor:"#fff", pointBorderColor:"#C8A96A", pointBorderWidth:2 }]
+      },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ x:{ grid:{ display:false } }, y:{ ticks:{ callback: v => "Rp "+(v/1000)+"k" } } } }
+    });
+  }
+
+  // Status donut
+  const counts = {
+    LUNAS    : sellerResi.filter(r => r.status === "LUNAS").length,
+    BELUM    : sellerResi.filter(r => r.status === "BELUM").length,
+    SEBAGIAN : sellerResi.filter(r => r.status === "SEBAGIAN").length,
+    RETURN   : sellerResi.filter(r => r.status === "RETURN").length,
+  };
+
+  const ctx2 = document.getElementById("chartStatus")?.getContext("2d");
+  if (ctx2) {
+    window._c.status = new Chart(ctx2, {
+      type: "doughnut",
+      data: {
+        labels: ["LUNAS","BELUM","SEBAGIAN","RETURN"],
+        datasets: [{ data: [counts.LUNAS, counts.BELUM, counts.SEBAGIAN, counts.RETURN], backgroundColor: ["#1F4D3A","#FCA5A5","#FDBA74","#C4B5FD"], borderWidth: 2 }]
+      },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"bottom", labels:{ boxWidth:10, font:{ size:10 } } } } }
+    });
+  }
+}
+
+// ═══════════════════════════════════════
+//  RECENT
+// ═══════════════════════════════════════
+function renderRecent() {
+  const data = sellerResi.slice(0, 8);
+  const el   = document.getElementById("recentList");
+  if (!data.length) { el.innerHTML = '<div class="empty-state"><div class="ei">📦</div><p>Belum ada resi</p></div>'; return; }
+  el.innerHTML = data.map(r => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--border)">
+      <div style="flex:1;min-width:0">
+        <div class="mono" style="font-size:12px">${r.nomor_resi}</div>
+        <div class="text-sm text-muted">${r.produk} · ${formatDateShort(r.tanggal)}</div>
+        ${r.status === "SEBAGIAN"
+          ? `<div class="text-sm text-orange">Terbayar ${formatRupiah(r.terbayar)} · Sisa ${formatRupiah(r.sisa)}</div>`
+          : ""}
+      </div>
+      ${badgeStatus(r.status)}
+    </div>`).join("");
+}
+
+// ═══════════════════════════════════════
+//  TRANSAKSI TABLE
+// ═══════════════════════════════════════
+function applyTxFilter() {
+  const search = (document.getElementById("txSearch")?.value || "").toLowerCase();
+  const status = document.getElementById("txStatus")?.value  || "";
+  const from   = document.getElementById("txFrom")?.value    || "";
+  const to     = document.getElementById("txTo")?.value      || "";
+
+  filteredTx = sellerResi.filter(r => {
+    const tgl = (r.tanggal || "").toString().slice(0, 10);
+    if (search && !r.nomor_resi.toLowerCase().includes(search) && !(r.produk||"").toLowerCase().includes(search)) return false;
+    if (status && r.status !== status) return false;
+    if (from   && tgl < from)         return false;
+    if (to     && tgl > to)           return false;
+    return true;
+  });
+
+  pagTx = new Paginator(filteredTx, PS);
+  renderTxPage();
+}
+
+function renderTxPage() {
+  const data  = pagTx?.currentData || [];
+  const tbody = document.getElementById("txBody");
+  if (!data.length) { tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="ei">📭</div><p>Tidak ada data</p></div></td></tr>`; document.getElementById("txFooter").innerHTML = ""; return; }
+
+  tbody.innerHTML = data.map(r => {
+    const pct      = r.total > 0 ? Math.round((r.terbayar || 0) / r.total * 100) : 0;
+    const partial  = r.status === "SEBAGIAN";
+    const trClass  = partial ? ' class="row-sebagian"' : "";
+    return `<tr${trClass}>
+      <td>${formatDate(r.tanggal)}</td>
+      <td class="mono">${r.nomor_resi}</td>
+      <td>${r.produk}</td>
+      <td style="text-align:center">${r.qty || 1}</td>
+      <td><b>${formatRupiah(r.total)}</b></td>
+      <td style="color:#059669">${formatRupiah(r.terbayar || 0)}</td>
+      <td>
+        <div style="font-weight:${partial?'700':'400'};color:${partial?'var(--orange,#C2621A)':''}">${formatRupiah(r.sisa || 0)}</div>
+        ${partial ? `<div class="prog-bar"><div class="prog-fill partial" style="width:${pct}%"></div></div>` : ""}
+      </td>
+      <td>${badgeStatus(r.status)}</td>
+    </tr>`;
+  }).join("");
+
+  pagTx.renderControls("txFooter", "goTx");
+}
+
+function goTx(p) { pagTx?.setPage(p); renderTxPage(); }
+function resetTxFilter() {
+  ["txSearch","txStatus","txFrom","txTo"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+  applyTxFilter();
+}
+
+// ═══════════════════════════════════════
+//  TUNGGAKAN
+// ═══════════════════════════════════════
+function renderTunggakan() {
+  const data  = sellerResi
+    .filter(r => r.status === "BELUM" || r.status === "SEBAGIAN")
+    .sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+  const tbody = document.getElementById("tunggakanBody");
+
+  if (!data.length) { tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="ei">✅</div><p>Tidak ada tunggakan</p></div></td></tr>'; return; }
+
+  tbody.innerHTML = data.map(r => {
+    const pct     = r.total > 0 ? Math.round((r.terbayar || 0) / r.total * 100) : 0;
+    const partial = r.status === "SEBAGIAN";
+    return `<tr${partial ? ' class="row-sebagian"' : ""}>
+      <td>${formatDate(r.tanggal)}</td>
+      <td class="mono">${r.nomor_resi}</td>
+      <td>${r.produk}</td>
+      <td style="text-align:center">${r.qty || 1}</td>
+      <td>${formatRupiah(r.total)}</td>
+      <td style="color:#059669">${formatRupiah(r.terbayar || 0)}</td>
+      <td>
+        <div style="font-weight:700;color:${partial ? "var(--orange,#C2621A)" : "var(--red)"}">${formatRupiah(r.sisa || r.total || 0)}</div>
+        ${partial ? `<div class="prog-bar"><div class="prog-fill partial" style="width:${pct}%"></div></div>` : ""}
+      </td>
+      <td>${badgeStatus(r.status)}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ═══════════════════════════════════════
+//  RETURN
+// ═══════════════════════════════════════
+function renderReturn() {
+  const kembali = sellerReturn.filter(r => r.barang_kembali === "YA").length;
+  document.getElementById("retTotal").textContent  = sellerReturn.length;
+  document.getElementById("retKembali").textContent = kembali;
+  document.getElementById("retBayar").textContent  = sellerReturn.length;
+
+  const tbody = document.getElementById("retBody");
+  if (!sellerReturn.length) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="ei">✅</div><p>Tidak ada data return</p></div></td></tr>'; return; }
+
+  tbody.innerHTML = sellerReturn.map(r => `
+    <tr>
+      <td>${formatDate(r.tanggal_return)}</td>
+      <td class="mono">${r.nomor_resi}</td>
+      <td>${r.produk}</td>
+      <td style="text-align:center">${r.qty || 1}</td>
+      <td class="text-muted">${r.alasan || "—"}</td>
+      <td>${r.barang_kembali === "YA"
+        ? `<span class="badge badge-lunas">YA</span>`
+        : `<span class="badge badge-belum">TIDAK</span>`}</td>
+      <td>${r.status_bayar === "LUNAS"
+        ? `<span class="badge badge-lunas">LUNAS</span>`
+        : `<span class="badge badge-belum">BELUM</span>`}</td>
+    </tr>`).join("");
+}
+
+// ═══════════════════════════════════════
+//  KREDIT
+// ═══════════════════════════════════════
+function renderKredit() {
+  const tersedia = sellerKredit.filter(k => k.status_kredit === "TERSEDIA");
+  const terpakai = sellerKredit.filter(k => k.status_kredit === "TERPAKAI");
+  document.getElementById("kreditTersedia").textContent = tersedia.reduce((s, k) => s + (k.qty_kredit || 0), 0);
+  document.getElementById("kreditTerpakai").textContent = terpakai.reduce((s, k) => s + (k.qty_kredit || 0), 0);
+
+  const grid = document.getElementById("kreditGrid");
+  if (!sellerKredit.length) { grid.innerHTML = '<div class="empty-state"><div class="ei">🔄</div><p>Belum ada kredit kirim ulang</p></div>'; return; }
+
+  grid.innerHTML = sellerKredit.map(k => `
+    <div class="kredit-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span class="mono" style="font-size:11px;color:var(--text3)">Resi: ${k.resi_asal}</span>
+        <span class="badge ${k.status_kredit === "TERSEDIA" ? "badge-lunas" : "badge-return"}">${k.status_kredit}</span>
+      </div>
+      <div style="font-weight:600;font-size:14px;margin-bottom:2px">${k.produk}</div>
+      <div class="text-sm text-muted">Masuk: ${formatDate(k.tanggal_masuk)}</div>
+      <div style="margin-top:8px;font-size:13px">
+        <b style="color:${k.status_kredit === "TERSEDIA" ? "#059669" : "var(--text3)"}">
+          ${k.qty_kredit} unit ${k.status_kredit === "TERSEDIA" ? "siap kirim ulang" : "sudah terpakai"}
+        </b>
+      </div>
+      ${k.status_kredit === "TERSEDIA"
+        ? `<div class="text-sm text-muted" style="margin-top:6px">Hubungi admin untuk memakai kredit ini</div>`
+        : ""}
+    </div>`).join("");
+}
+
+// ═══════════════════════════════════════
+//  RIWAYAT PEMBAYARAN
+// ═══════════════════════════════════════
+function renderPembayaran() {
+  const tbody = document.getElementById("bayarBody");
+  if (!sellerPembayaran.length) { tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="ei">📜</div><p>Belum ada riwayat pembayaran</p></div></td></tr>'; return; }
+
+  tbody.innerHTML = sellerPembayaran.map(p => {
+    const resiList = Array.isArray(p.resi_dilunasi) ? p.resi_dilunasi.join(", ") : (p.resi_dilunasi || "—");
+    return `<tr>
+      <td>${formatDate(p.tanggal_bayar)}</td>
+      <td><b style="color:#059669">${formatRupiah(p.nominal_transfer)}</b></td>
+      <td class="mono" style="font-size:11px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${resiList}">${resiList}</td>
+      <td class="text-muted">${p.catatan || "—"}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ═══════════════════════════════════════
+//  EXPORT
+// ═══════════════════════════════════════
+function doExport() {
+  const data = filteredTx.length ? filteredTx : sellerResi;
+  exportToCSV(data.map(r => ({
+    Tanggal    : r.tanggal,
+    Nomor_Resi : r.nomor_resi,
+    Produk     : r.produk,
+    Qty        : r.qty,
+    Total      : r.total,
+    Terbayar   : r.terbayar || 0,
+    Sisa       : r.sisa     || 0,
+    Status     : r.status,
+  })), `${currentSeller}-${currentYear}.csv`);
+  showToast("CSV berhasil di-download");
+}
+
+// ═══════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════
+function setLoading(show, msg = "Memuat…") {
+  const el = document.getElementById("loadingOverlay");
+  el.style.display = show ? "flex" : "none";
+  if (msg) document.getElementById("loadingText").textContent = msg;
+}
+
+function badgeStatus(status) {
+  const map = {
+    LUNAS    : `<span class="badge badge-lunas">LUNAS</span>`,
+    BELUM    : `<span class="badge badge-belum">BELUM</span>`,
+    SEBAGIAN : `<span class="badge badge-sebagian">SEBAGIAN</span>`,
+    RETURN   : `<span class="badge badge-return">RETURN</span>`,
+  };
+  return map[(status||"").toUpperCase()] || `<span class="badge">${status}</span>`;
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+boot();
+setInterval(silentRefresh, 10000);
+
+</script>
+</body>
+</html>
