@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>SCAN RESI — KEMOENIK</title>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f4f0;min-height:100vh;}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#15803d,#16a34a);padding:16px 18px 48px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07);}
+.header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.05);}
+.header-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
+.header-brand{color:#fff;font-size:18px;font-weight:800;letter-spacing:.5px;}
+.header-brand span{color:#bbf7d0;}
+.header-sub{color:rgba(255,255,255,.7);font-size:11px;margin-top:6px;position:relative;z-index:1;}
+.status-chip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border-radius:99px;padding:4px 10px;font-size:11px;color:#fff;font-weight:600;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#bbf7d0;}
+.status-dot.scanning{background:#fbbf24;animation:blink .8s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* CONTENT */
+.content{margin-top:-32px;padding:0 14px 32px;position:relative;z-index:1;}
+
+/* CARD */
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
+
+/* SCANNER BOX */
+.scanner-card{background:#fff;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e5e7eb;}
+#reader{width:100%;}
+#reader video{border-radius:0!important;}
+
+/* RESI RESULT */
+.resi-result{display:flex;align-items:center;gap:10px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:12px 14px;margin-bottom:12px;}
+.resi-result.empty{background:#f9fafb;border-color:#e5e7eb;}
+.resi-result.duplikat{background:#fef2f2;border-color:#fecaca;}
+.resi-result.ok{background:#f0fdf4;border-color:#86efac;}
+.resi-icon{font-size:20px;flex-shrink:0;}
+.resi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;}
+.resi-no{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#111827;}
+
+/* FORM */
+.form-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:5px;display:block;}
+select,input[type=number]{
+  width:100%;padding:11px 13px;
+  border:1.5px solid #e5e7eb;border-radius:10px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
+  background:#f9fafb;color:#111827;outline:none;
+  transition:border-color .2s,background .2s;
+  -webkit-appearance:none;appearance:none;
+  margin-bottom:10px;
+}
+select:focus,input[type=number]:focus{border-color:#16a34a;background:#fff;box-shadow:0 0 0 3px rgba(22,163,74,.1);}
+
+/* ══ TIPE AKUN TOGGLE (BARU) ══ */
+.tipe-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.tipe-opt{
+  border:1.5px solid #e5e7eb;border-radius:10px;padding:11px 12px;
+  cursor:pointer;text-align:center;transition:all .15s;background:#f9fafb;
+}
+.tipe-opt.active.seller{border-color:#16a34a;background:#f0fdf4;}
+.tipe-opt.active.official{border-color:#2563EB;background:#EFF6FF;}
+.tipe-opt .to-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:3px;}
+.tipe-opt .to-name{font-size:13px;font-weight:800;color:#111827;}
+.tipe-opt.active.seller .to-name{color:#16a34a;}
+.tipe-opt.active.official .to-name{color:#2563EB;}
+
+/* SELLER SELECT — tersembunyi kalau OFFICIAL */
+#sellerWrap{transition:all .2s;}
+
+/* HARGA RESULT (BARU — tidak perlu pilih, otomatis) */
+.harga-auto{
+  background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;
+  padding:12px 14px;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.harga-auto.official{background:#EFF6FF;border-color:#93C5FD;}
+.harga-auto .ha-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;}
+.harga-auto .ha-val{font-size:20px;font-weight:800;color:#16a34a;}
+.harga-auto.official .ha-val{color:#2563EB;}
+.harga-auto .ha-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;}
+.harga-auto .ha-badge.seller{background:#DCFCE7;color:#166534;}
+.harga-auto .ha-badge.official{background:#DBEAFE;color:#1E40AF;}
+
+/* TOTAL */
+.total-card{background:linear-gradient(135deg,#15803d,#16a34a);border-radius:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.total-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.7);}
+.total-val{font-size:24px;font-weight:800;color:#fff;}
+.total-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
+
+/* BUTTONS */
+.btn-scan{width:100%;padding:15px;background:linear-gradient(135deg,#15803d,#16a34a);color:#fff;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(22,163,74,.3);transition:all .2s;margin-bottom:10px;}
+.btn-scan:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.4);}
+.btn-scan:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-stop{background:linear-gradient(135deg,#b91c1c,#dc2626);}
+.btn-reset{width:100%;padding:11px;background:#f9fafb;color:#6b7280;border:1.5px solid #e5e7eb;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;}
+.btn-reset:hover{border-color:#16a34a;color:#16a34a;}
+
+/* HISTORY */
+.history-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f3f4f6;}
+.history-item:first-of-type{border-top:none;}
+.h-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.h-icon.ok{background:#f0fdf4;}
+.h-icon.dup{background:#fef2f2;}
+.h-icon.ret{background:#FEF9C3;}
+.h-info{flex:1;min-width:0;}
+.h-resi{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.h-meta{font-size:11px;color:#9ca3af;margin-top:1px;}
+.h-amount{font-size:13px;font-weight:700;color:#16a34a;flex-shrink:0;}
+.h-dup{color:#ef4444;}
+.h-ret{color:#d97706;}
+
+/* NOTIF */
+.notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid #e5e7eb;border-left:4px solid #16a34a;border-radius:10px;padding:12px 16px;box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;z-index:9999;min-width:260px;max-width:90vw;animation:slideDown .3s ease;white-space:nowrap;}
+.notif.error{border-left-color:#ef4444;}
+.notif.warn{border-left-color:#f59e0b;}
+@keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
+@keyframes slideUp{from{opacity:1;}to{opacity:0;transform:translateX(-50%) translateY(-10px);}}
+
+/* BARANG KEMBALI TOGGLE (BARU) */
+.kembali-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.kembali-opt{border:1.5px solid #e5e7eb;border-radius:10px;padding:10px 12px;cursor:pointer;text-align:center;transition:all .15s;background:#f9fafb;}
+.kembali-opt.active.ya{border-color:#16a34a;background:#f0fdf4;color:#16a34a;font-weight:700;}
+.kembali-opt.active.tidak{border-color:#ef4444;background:#fef2f2;color:#ef4444;font-weight:700;}
+
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.section-title{font-size:14px;font-weight:700;color:#111827;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:#16a34a;border-radius:2px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-brand">KEMO<span>ENIK</span></div>
+    </div>
+    <div class="status-chip" id="statusChip">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Memuat data...</span>
+    </div>
+  </div>
+  <div class="header-sub">Scanner Resi Otomatis</div>
+</div>
+
+<!-- MODE TOGGLE -->
+<div style="display:flex;gap:0;margin:12px 16px 0;border-radius:12px;overflow:hidden;border:2px solid #16a34a">
+  <button id="btnModeNormal" onclick="setMode('normal')" style="flex:1;padding:10px;border:none;background:#16a34a;color:#fff;font-weight:700;font-size:13px;cursor:pointer">📦 SCAN RESI</button>
+  <button id="btnModeReturn" onclick="setMode('return')" style="flex:1;padding:10px;border:none;background:#fff;color:#16a34a;font-weight:700;font-size:13px;cursor:pointer">↩️ SCAN RETURN</button>
+</div>
+
+<div class="content">
+
+  <!-- RESI RESULT -->
+  <div class="resi-result empty" id="resiResult">
+    <span class="resi-icon" id="resiIcon">📷</span>
+    <div>
+      <div class="resi-label">Nomor Resi</div>
+      <div class="resi-no" id="resiDisplay">Arahkan kamera ke barcode…</div>
+    </div>
+  </div>
+
+  <!-- SCANNER -->
+  <div class="scanner-card" id="scannerCard" style="display:none">
+    <div id="reader"></div>
+  </div>
+
+  <!-- ══ FORM NORMAL ══ -->
+  <div class="card" id="formNormal">
+    <div class="section-title">Detail Transaksi</div>
+
+    <!-- TIPE AKUN (BARU) -->
+    <label class="form-label">Tipe Akun</label>
+    <div class="tipe-row">
+      <div class="tipe-opt active seller" id="optSeller" onclick="pilihTipe('SELLER')">
+        <div class="to-label">Reseller</div>
+        <div class="to-name">SELLER</div>
+      </div>
+      <div class="tipe-opt official" id="optOfficial" onclick="pilihTipe('OFFICIAL')">
+        <div class="to-label">Akun Resmi</div>
+        <div class="to-name">OFFICIAL</div>
+      </div>
+    </div>
+
+    <!-- SELLER (tersembunyi kalau OFFICIAL) -->
+    <div id="sellerWrap">
+      <label class="form-label">Seller</label>
+      <select id="selSeller">
+        <option value="">— Pilih Seller —</option>
+      </select>
+    </div>
+
+    <label class="form-label">Produk</label>
+    <select id="selProduk">
+      <option value="">— Pilih Produk —</option>
+    </select>
+
+    <!-- HARGA OTOMATIS (BARU — tidak perlu pilih manual) -->
+    <label class="form-label">Harga (otomatis sesuai tipe)</label>
+    <div class="harga-auto" id="hargaAuto">
+      <div>
+        <div class="ha-label">Harga per produk</div>
+        <div class="ha-val" id="hargaVal">—</div>
+      </div>
+      <span class="ha-badge seller" id="hargaBadge">Seller Rate</span>
+    </div>
+
+    <label class="form-label">Qty per Resi</label>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button onclick="ubahQty(-1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">−</button>
+      <input type="number" id="inputQty" value="1" min="1" max="100" style="flex:1;text-align:center;font-size:20px;font-weight:800;color:#111827"/>
+      <button onclick="ubahQty(1)" style="width:40px;height:40px;border-radius:10px;border:1.5px solid #d1d5db;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#374151">+</button>
+    </div>
+  </div>
+
+  <!-- ══ FORM RETURN (DIREVISI) ══ -->
+  <div class="card" id="formReturn" style="display:none">
+    <div class="section-title" style="color:#d97706">↩️ Scan Return</div>
+    <p style="font-size:12px;color:#6b7280;margin-bottom:12px">
+      Scan nomor resi yang dikembalikan. Seller tetap wajib bayar semua resi return.
+    </p>
+
+    <label class="form-label">Alasan Return</label>
+    <select id="selAlasan" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #d1d5db;font-size:14px;margin-bottom:12px">
+      <option value="Tidak ada penerima">Tidak ada penerima</option>
+      <option value="Alamat tidak ditemukan">Alamat tidak ditemukan</option>
+      <option value="Ditolak penerima">Ditolak penerima</option>
+      <option value="Rusak di pengiriman">Rusak di pengiriman</option>
+      <option value="Lainnya">Lainnya</option>
+    </select>
+
+    <!-- BARANG KEMBALI (BARU) -->
+    <label class="form-label">Apakah barang kembali ke gudang?</label>
+    <div class="kembali-row">
+      <div class="kembali-opt tidak active" id="optTidak" onclick="pilihKembali('TIDAK')">
+        ❌ TIDAK Kembali
+      </div>
+      <div class="kembali-opt ya" id="optYa" onclick="pilihKembali('YA')">
+        ✅ YA, Kembali ke Gudang
+      </div>
+    </div>
+
+    <!-- Penjelasan sesuai pilihan -->
+    <div id="kembaliInfo" style="font-size:12px;color:#6b7280;margin-bottom:12px;background:#f9fafb;border-radius:8px;padding:10px 12px;">
+      ❌ Barang tidak kembali — seller tetap bayar, stok tidak berubah.
+    </div>
+
+    <div class="resi-result empty" id="returnResult" style="margin-bottom:0">
+      <span class="resi-icon">↩️</span>
+      <div>
+        <div class="resi-label">Resi Return</div>
+        <div class="resi-no" id="returnDisplay">Scan resi yang dikembalikan…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL SESI -->
+  <div class="total-card">
+    <div>
+      <div class="total-label">Total Sesi Ini</div>
+      <div class="total-val" id="totalVal">Rp 0</div>
+      <div class="total-sub" id="totalSub">0 resi berhasil</div>
+    </div>
+    <div style="font-size:36px">📦</div>
+  </div>
+
+  <!-- BUTTONS -->
+  <button class="btn-scan" id="btnScan" onclick="startScan()">📷 Mulai Scan</button>
+  <button class="btn-scan btn-stop" id="btnStop" style="display:none" onclick="stopScan()">⏹ Stop Scan</button>
+  <button class="btn-reset" onclick="resetSesi()">🔄 Reset Sesi</button>
+
+  <!-- HISTORY -->
+  <div class="card" style="margin-top:12px;display:none" id="historyCard">
+    <div class="section-title">Riwayat Sesi</div>
+    <div id="historyList"></div>
+  </div>
+
+</div>
+
+<script>
+/* ═══ CONFIG ═══ */
+const API = "https://script.google.com/macros/s/AKfycbyiEETd12P2Ga0uUL3NBRWNGrWlMuPTzqaqrB8T1YExzSgIMSOJI8qtbvwZ7tm_vGDwZQ/exec";
+
+/* ═══ STATE ═══ */
+let lastBarcode   = "";
+let scanMode      = "normal";   // normal | return
+let tipeAkun      = "SELLER";   // SELLER | OFFICIAL
+let barangKembali = "TIDAK";    // YA | TIDAK
+let scannerObj    = null;
+let isScanning    = false;
+let totalSesi     = 0;
+let countSesi     = 0;
+let sejarahSesi   = [];
+let produkData    = [];
+let isSaving      = false;
+
+/* ═══ INIT ═══ */
+window.addEventListener("load", () => {
+  setStatus("Memuat data...", true);
+  Promise.all([loadSeller(), loadProduk()])
+    .then(() => setStatus("Siap", false))
+    .catch(() => setStatus("Gagal memuat", false));
+});
+
+/* ═══ LOAD SELLER ═══ */
+async function loadSeller() {
+  const res  = await fetch(API + "?action=seller");
+  const data = await res.json();
+  const sel  = document.getElementById("selSeller");
+  sel.innerHTML = '<option value="">— Pilih Seller —</option>' +
+    data.map(s => `<option value="${s.nama}">${s.nama}</option>`).join("");
+}
+
+/* ═══ LOAD PRODUK ═══ */
+async function loadProduk() {
+  const res = await fetch(API + "?action=produk");
+  produkData = await res.json();
+  const sel  = document.getElementById("selProduk");
+  sel.innerHTML = '<option value="">— Pilih Produk —</option>' +
+    produkData.map(p => `<option value="${p.nama}">${p.nama}</option>`).join("");
+  sel.addEventListener("change", updateHargaAuto);
+  updateHargaAuto();
+}
+
+/* ═══ TIPE AKUN (BARU) ═══ */
+function pilihTipe(tipe) {
+  tipeAkun = tipe;
+  const isOfficial = tipe === "OFFICIAL";
+
+  document.getElementById("optSeller").className   = "tipe-opt" + (isOfficial ? " official" : " active seller");
+  document.getElementById("optOfficial").className = "tipe-opt" + (isOfficial ? " active official" : " seller");
+
+  // Kalau OFFICIAL, sembunyikan seller dropdown
+  document.getElementById("sellerWrap").style.display = isOfficial ? "none" : "block";
+
+  // Update harga otomatis
+  updateHargaAuto();
+}
+
+/* ═══ HARGA OTOMATIS (BARU) ═══ */
+function updateHargaAuto() {
+  const nama   = document.getElementById("selProduk").value;
+  const produk = produkData.find(p => p.nama === nama);
+  const box    = document.getElementById("hargaAuto");
+  const val    = document.getElementById("hargaVal");
+  const badge  = document.getElementById("hargaBadge");
+
+  if (!produk) {
+    val.textContent   = "—";
+    badge.textContent = tipeAkun === "OFFICIAL" ? "Official Rate" : "Seller Rate";
+    return;
+  }
+
+  const isOfficial  = tipeAkun === "OFFICIAL";
+  const harga       = isOfficial ? produk.harga_admin : produk.harga_seller;
+
+  val.textContent   = fRp(harga);
+  badge.textContent = isOfficial ? "Official Rate" : "Seller Rate";
+  box.className     = "harga-auto" + (isOfficial ? " official" : "");
+  badge.className   = "ha-badge " + (isOfficial ? "official" : "seller");
+}
+
+function getHargaTerpilih() {
+  const nama   = document.getElementById("selProduk").value;
+  const produk = produkData.find(p => p.nama === nama);
+  if (!produk) return 0;
+  return tipeAkun === "OFFICIAL" ? (produk.harga_admin || 0) : (produk.harga_seller || 0);
+}
+
+/* ═══ BARANG KEMBALI TOGGLE (BARU) ═══ */
+function pilihKembali(val) {
+  barangKembali = val;
+  document.getElementById("optYa").className    = "kembali-opt ya"    + (val === "YA"    ? " active" : "");
+  document.getElementById("optTidak").className = "kembali-opt tidak" + (val === "TIDAK" ? " active" : "");
+
+  const info = document.getElementById("kembaliInfo");
+  if (val === "YA") {
+    info.innerHTML = "✅ Barang kembali ke gudang — seller tetap bayar, tapi dapat <b>kredit kirim ulang</b> untuk produk ini.";
+    info.style.background = "#f0fdf4";
+    info.style.color = "#166534";
+  } else {
+    info.innerHTML = "❌ Barang tidak kembali — seller tetap bayar, stok tidak berubah.";
+    info.style.background = "#f9fafb";
+    info.style.color = "#6b7280";
+  }
+}
+
+/* ═══ MODE TOGGLE ═══ */
+function setMode(mode) {
+  scanMode = mode;
+  const isReturn = mode === "return";
+  document.getElementById("btnModeNormal").style.background = isReturn ? "#fff" : "#16a34a";
+  document.getElementById("btnModeNormal").style.color      = isReturn ? "#16a34a" : "#fff";
+  document.getElementById("btnModeReturn").style.background = isReturn ? "#16a34a" : "#fff";
+  document.getElementById("btnModeReturn").style.color      = isReturn ? "#fff" : "#16a34a";
+  document.getElementById("formNormal").style.display       = isReturn ? "none" : "block";
+  document.getElementById("formReturn").style.display       = isReturn ? "block" : "none";
+  lastBarcode = "";
+  setResiDisplay("", "empty");
+  document.getElementById("returnDisplay").textContent = "Scan resi yang dikembalikan…";
+  document.getElementById("returnResult").className = "resi-result empty";
+  if (isScanning) stopScan();
+}
+
+/* ═══ QTY ═══ */
+function ubahQty(delta) {
+  const el = document.getElementById("inputQty");
+  let val  = parseInt(el.value) || 1;
+  el.value = Math.min(100, Math.max(1, val + delta));
+}
+
+/* ═══ SCANNER ═══ */
+function startScan() {
+  if (scanMode === "normal") {
+    const seller = document.getElementById("selSeller").value;
+    const produk = document.getElementById("selProduk").value;
+    if (tipeAkun === "SELLER" && !seller) { showNotif("Pilih seller dulu!", "warn"); return; }
+    if (!produk) { showNotif("Pilih produk dulu!", "warn"); return; }
+    if (getHargaTerpilih() === 0) { showNotif("Harga produk 0, cek data produk", "warn"); return; }
+  }
+
+  document.getElementById("scannerCard").style.display = "block";
+  document.getElementById("btnScan").style.display     = "none";
+  document.getElementById("btnStop").style.display     = "flex";
+  setStatus("Scanning…", true);
+
+  if (scannerObj) { scannerObj.clear().catch(() => {}); scannerObj = null; }
+
+  scannerObj = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+  scannerObj.render(onScanSuccess, () => {});
+  isScanning = true;
+}
+
+function stopScan() {
+  if (scannerObj) { scannerObj.clear().catch(() => {}); scannerObj = null; }
+  document.getElementById("scannerCard").style.display = "none";
+  document.getElementById("btnScan").style.display     = "flex";
+  document.getElementById("btnStop").style.display     = "none";
+  setStatus("Siap", false);
+  isScanning = false;
+}
+
+async function onScanSuccess(decodedText) {
+  if (isSaving) return;
+  if (decodedText === lastBarcode) return;
+
+  if (scanMode === "return") {
+    lastBarcode = decodedText;
+    await handleReturn(decodedText);
+    return;
+  }
+
+  lastBarcode = decodedText;
+  isSaving    = true;
+  bunyiBeep();
+  setResiDisplay(decodedText, "scanning");
+
+  const seller = tipeAkun === "OFFICIAL" ? "" : document.getElementById("selSeller").value;
+  const produk = document.getElementById("selProduk").value;
+  const harga  = getHargaTerpilih();
+  const qty    = Math.min(100, Math.max(1, parseInt(document.getElementById("inputQty")?.value) || 1));
+
+  try {
+    const url = `${API}?action=scan`
+      + `&resi=${encodeURIComponent(decodedText)}`
+      + `&tipe=${encodeURIComponent(tipeAkun)}`
+      + `&seller=${encodeURIComponent(seller)}`
+      + `&produk=${encodeURIComponent(produk)}`
+      + `&harga=${harga}`
+      + `&qty=${qty}`;
+
+    const res  = await fetch(url);
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      totalSesi += harga * qty;
+      countSesi++;
+      sejarahSesi.unshift({ resi: decodedText, produk, harga: harga * qty, tipe: tipeAkun, status: "ok" });
+      updateTotal();
+      renderHistory();
+      setResiDisplay(decodedText, "ok");
+      showNotif("✅ " + decodedText + " tersimpan", "success");
+      bunyiBeepSukses();
+      setTimeout(() => { lastBarcode = ""; }, 2000);
+
+    } else if (data.status === "duplikat") {
+      sejarahSesi.unshift({ resi: decodedText, produk, harga: 0, tipe: tipeAkun, status: "duplikat" });
+      renderHistory();
+      setResiDisplay(decodedText, "duplikat");
+      showNotif("⚠️ Resi sudah pernah di-scan!", "warn");
+      bunyiBeepError();
+      setTimeout(() => { lastBarcode = ""; }, 2000);
+
+    } else {
+      showNotif("❌ " + (data.pesan || "Gagal simpan"), "error");
+      bunyiBeepError();
+      lastBarcode = "";
+    }
+  } catch (e) {
+    showNotif("❌ Gagal koneksi ke server", "error");
+    lastBarcode = "";
+  } finally {
+    isSaving = false;
+  }
+}
+
+/* ═══ HANDLE RETURN (DIREVISI — kirim barang_kembali) ═══ */
+async function handleReturn(resiNo) {
+  const alasan  = document.getElementById("selAlasan").value;
+  setStatus("Memproses return…", true);
+
+  try {
+    const url = `${API}?action=scanReturn`
+      + `&resi=${encodeURIComponent(resiNo)}`
+      + `&alasan=${encodeURIComponent(alasan)}`
+      + `&barang_kembali=${encodeURIComponent(barangKembali)}`;
+
+    const res  = await fetch(url);
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      document.getElementById("returnDisplay").textContent = resiNo;
+      document.getElementById("returnResult").className   = "resi-result ok";
+      setStatus("Return berhasil!", false);
+      bunyiBeepSukses();
+
+      const kembaliText = barangKembali === "YA"
+        ? " · Barang kembali → kredit kirim ulang ditambahkan"
+        : " · Barang tidak kembali";
+
+      showNotif(`✅ Return: ${data.produk} x${data.qty}${kembaliText}`, "success");
+      sejarahSesi.unshift({ resi: resiNo, produk: data.produk || "return", harga: 0, tipe: "RETURN", status: "return" });
+      renderHistory();
+      setTimeout(() => { lastBarcode = ""; }, 2000);
+
+    } else {
+      document.getElementById("returnResult").className = "resi-result duplikat";
+      setStatus("Gagal: " + data.pesan, false);
+      bunyiBeepError();
+      showNotif("❌ " + data.pesan, "error");
+    }
+  } catch (e) {
+    setStatus("Error koneksi", false);
+    bunyiBeepError();
+    showNotif("❌ Gagal koneksi", "error");
+  }
+}
+
+/* ═══ UI ═══ */
+function setStatus(text, scanning) {
+  document.getElementById("statusText").textContent = text;
+  document.getElementById("statusDot").className = "status-dot" + (scanning ? " scanning" : "");
+}
+
+function setResiDisplay(resi, status) {
+  const el   = document.getElementById("resiResult");
+  const disp = document.getElementById("resiDisplay");
+  const icon = document.getElementById("resiIcon");
+  disp.textContent = resi || "Arahkan kamera ke barcode…";
+  const cls = { ok:"ok", duplikat:"duplikat", empty:"empty", scanning:"" }[status] || "empty";
+  el.className = "resi-result " + cls;
+  icon.textContent = status === "ok" ? "✅" : status === "duplikat" ? "⚠️" : "📷";
+}
+
+function updateTotal() {
+  document.getElementById("totalVal").textContent = fRp(totalSesi);
+  document.getElementById("totalSub").textContent = countSesi + " resi berhasil";
+}
+
+function renderHistory() {
+  const card = document.getElementById("historyCard");
+  card.style.display = "block";
+  document.getElementById("historyList").innerHTML = sejarahSesi.slice(0, 20).map(h => `
+    <div class="history-item">
+      <div class="h-icon ${h.status === "duplikat" ? "dup" : h.status === "return" ? "ret" : "ok"}">
+        ${h.status === "duplikat" ? "⚠️" : h.status === "return" ? "↩️" : "✅"}
+      </div>
+      <div class="h-info">
+        <div class="h-resi">${h.resi}</div>
+        <div class="h-meta">${h.produk} · ${h.tipe}</div>
+      </div>
+      <div class="h-amount ${h.status === "duplikat" ? "h-dup" : h.status === "return" ? "h-ret" : ""}">
+        ${h.status === "duplikat" ? "DUPLIKAT" : h.status === "return" ? "RETURN" : fRp(h.harga)}
+      </div>
+    </div>`).join("");
+}
+
+function resetSesi() {
+  if (isScanning) stopScan();
+  totalSesi = 0; countSesi = 0; sejarahSesi = []; lastBarcode = "";
+  updateTotal();
+  setResiDisplay("", "empty");
+  document.getElementById("historyCard").style.display = "none";
+  document.getElementById("historyList").innerHTML = "";
+  setStatus("Siap", false);
+}
+
+/* ═══ NOTIF ═══ */
+function showNotif(msg, type = "success") {
+  const existing = document.querySelector(".notif");
+  if (existing) existing.remove();
+  const el = document.createElement("div");
+  el.className = `notif ${type !== "success" ? type : ""}`;
+  el.innerHTML = `<span>${msg}</span>`;
+  document.body.appendChild(el);
+  setTimeout(() => { el.style.animation = "slideUp .3s ease forwards"; setTimeout(() => el.remove(), 300); }, 2500);
+}
+
+/* ═══ BUNYI ═══ */
+function bunyiBeep(freq=900, dur=120, type="square") {
+  try { const c=new AudioContext(),o=c.createOscillator(),g=c.createGain(); o.type=type; o.frequency.value=freq; g.gain.setValueAtTime(.3,c.currentTime); o.connect(g); g.connect(c.destination); o.start(); setTimeout(()=>{o.stop();c.close();},dur); } catch(e){}
+}
+function bunyiBeepSukses() { bunyiBeep(900,80,"sine"); setTimeout(()=>bunyiBeep(1200,100,"sine"),90); }
+function bunyiBeepError()  { bunyiBeep(300,200,"sawtooth"); }
+
+/* ═══ FORMAT ═══ */
+function fRp(n) { return "Rp " + Number(n||0).toLocaleString("id-ID"); }
+</script>
+</body>
+</html>
