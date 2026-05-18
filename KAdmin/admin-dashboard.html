@@ -795,7 +795,7 @@ function applyRiwayatFilter() {
     return `<tr>
       <td>${formatDate(p.tanggal_bayar)}</td>
       <td><b>${p.seller}</b></td>
-      <td><b style="color:#059669">${formatRupiah(p.nominal_transfer)}</b></td>
+      <td><b style="color:#059669">${formatRupiah(p.nominal)}</b></td>
       <td class="mono" style="font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${resiList}">${resiList}</td>
       <td class="text-muted">${p.catatan || "—"}</td>
     </tr>`;
