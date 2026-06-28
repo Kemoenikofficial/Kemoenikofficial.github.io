@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kemoenik-v1';
+const CACHE_NAME = 'Aktivasi Panduan-v1';
 const OFFLINE_FILES = [
   '/aktivasi/',
   '/aktivasi/index.html',
