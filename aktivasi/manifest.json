@@ -1,7 +1,7 @@
 {
-  "name": "Verifikasi Kode - Kemoenik",
+  "name": "Panduan Diet Kemoenik",
   "short_name": "Panduan Diet Kemoenik",
-  "description": "Verifikasi Kode Konsultasi Kemoenik",
+  "description": "Panduan Diet Kemoenik",
   "start_url": "/aktivasi/",
   "scope": "/aktivasi/",
   "display": "standalone",
