@@ -1,0 +1,25 @@
+{
+  "name": "Kemoenik",
+  "short_name": "Kemoenik",
+  "description": "Program Diet Herbal Premium Kemoenik",
+  "start_url": "/KEMOENIK/",
+  "scope": "/KEMOENIK/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6F4EF",
+  "theme_color": "#1F4D3A",
+  "icons": [
+    {
+      "src": "/KEMOENIK/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/KEMOENIK/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
