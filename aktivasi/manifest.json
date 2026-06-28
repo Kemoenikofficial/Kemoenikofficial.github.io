@@ -1,0 +1,25 @@
+{
+  "name": "Verifikasi Kode - Kemoenik",
+  "short_name": "Kemoenik",
+  "description": "Verifikasi Kode Konsultasi Kemoenik",
+  "start_url": "/aktivasi/",
+  "scope": "/aktivasi/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6F4EF",
+  "theme_color": "#1F4D3A",
+  "icons": [
+    {
+      "src": "/aktivasi/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/aktivasi/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
