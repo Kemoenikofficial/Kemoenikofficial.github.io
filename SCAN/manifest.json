@@ -1,0 +1,25 @@
+{
+  "name": "Scan Resi Kemoenik",
+  "short_name": "Scan Resi",
+  "description": "Scan Resi & Cek Ongkir Kemoenik",
+  "start_url": "/SCAN/",
+  "scope": "/SCAN/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0f4f0",
+  "theme_color": "#15803d",
+  "icons": [
+    {
+      "src": "/SCAN/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/SCAN/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
