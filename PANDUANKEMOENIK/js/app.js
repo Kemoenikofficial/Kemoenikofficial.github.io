@@ -852,13 +852,35 @@ function hitungKalkulator() {
     makro: { protein: macroProtein, lemak: macroLemak, karbo: macroKarbo }
   };
 
+  // ── Individualized Body Condition Analysis ──────────────
+  renderKondisiWarnings(window._tempKalData);
+
+  // ── No-Exercise Mode: kurangi defisit + naikkan protein ─
+  var preferNoExercise = localStorage.getItem('kemoenik_prefer_exercise') === 'tidak';
+  if (preferNoExercise) {
+    var safeDefisit  = Math.min(defisit, 350);
+    var noExDietCal  = Math.round(tdee - safeDefisit);
+    var noExProtein  = Math.round(berat * 2.0);
+    var noExLemak    = macroLemak;
+    var noExKarbo    = Math.max(0, Math.round((noExDietCal - (noExProtein * 4 + noExLemak * 9)) / 4));
+    window._tempKalData.dietCal        = noExDietCal;
+    window._tempKalData.defisit        = safeDefisit;
+    window._tempKalData.noExerciseMode = true;
+    window._tempKalData.makro          = { protein: noExProtein, lemak: noExLemak, karbo: noExKarbo };
+    document.getElementById('hasilKkal').textContent    = noExDietCal.toLocaleString('id');
+    document.getElementById('hasilDefisit').textContent = safeDefisit;
+    if (document.getElementById('hasilProtein')) document.getElementById('hasilProtein').textContent = noExProtein + 'g';
+    if (document.getElementById('hasilKarbo'))   document.getElementById('hasilKarbo').textContent   = noExKarbo   + 'g';
+    showToast('💡 Mode Tanpa Olahraga: defisit & protein disesuaikan untuk proteksi otot');
+  }
+
   // Tampilkan makro di hasil kalkulator
   var mkProteinEl = document.getElementById('hasilProtein');
   var mkLemakEl = document.getElementById('hasilLemak');
   var mkKarboEl = document.getElementById('hasilKarbo');
-  if (mkProteinEl) mkProteinEl.textContent = macroProtein + 'g';
+  if (mkProteinEl && !preferNoExercise) mkProteinEl.textContent = macroProtein + 'g';
   if (mkLemakEl) mkLemakEl.textContent = macroLemak + 'g';
-  if (mkKarboEl) mkKarboEl.textContent = macroKarbo + 'g';
+  if (mkKarboEl && !preferNoExercise) mkKarboEl.textContent = macroKarbo + 'g';
 }
 
 // Quick-fix: ganti metode dari warning box lalu hitung ulang
@@ -887,6 +909,146 @@ function _naikkanAktivitas() {
   }
   document.getElementById('hasilKalkulator').style.display = 'none';
   document.getElementById('kalkulatorForm').style.display  = 'block';
+  hitungKalkulator();
+}
+
+// ============================================================
+// INDIVIDUALIZED BODY CONDITION ANALYSIS
+// ============================================================
+
+// Analisis kondisi tubuh dari data kalkulator → return array of flags
+function analyzeBodyCondition(d) {
+  if (!d || !kondisiTubuhRules) return [];
+  var bmi = (d.tinggi > 0 && d.berat > 0) ? d.berat / Math.pow(d.tinggi / 100, 2) : 0;
+  var ctx = {
+    bmi: parseFloat(bmi.toFixed(1)),
+    berat: d.berat,
+    usia: d.usia,
+    tinggi: d.tinggi,
+    aktivitas: parseFloat(d.aktivitas),
+    metode: d.metode,
+    dietCal: d.dietCal,
+    preferensiOlahraga: localStorage.getItem('kemoenik_prefer_exercise') || 'ya'
+  };
+  var flags = [];
+  kondisiTubuhRules.forEach(function(rule) {
+    try { if (rule.check(ctx)) flags.push({ rule: rule, ctx: ctx }); } catch(e) {}
+  });
+  return flags;
+}
+
+// Render warning box kondisi tubuh di hasil kalkulator
+function renderKondisiWarnings(d) {
+  var container = document.getElementById('kondisiWarningBox');
+  if (!container) return;
+
+  var flags = analyzeBodyCondition(d);
+  if (!flags.length) { container.style.display = 'none'; container.innerHTML = ''; return; }
+
+  var html = '';
+  flags.forEach(function(f) {
+    var rule = f.rule;
+    var ctx  = f.ctx;
+    var pesan = rule.pesan
+      .replace('{bmi}', ctx.bmi)
+      .replace('{dietCal}', Math.round(ctx.dietCal).toLocaleString('id'));
+    var bg    = rule.level === 'danger' ? '#FEF2F2' : rule.level === 'warning' ? '#FFFBEB' : '#EFF6FF';
+    var bc    = rule.level === 'danger' ? '#FECACA' : rule.level === 'warning' ? '#FCD34D' : '#BFDBFE';
+    var tc    = rule.level === 'danger' ? '#991B1B' : rule.level === 'warning' ? '#92400E' : '#1E40AF';
+    html += '<div style="background:' + bg + ';border:1.5px solid ' + bc + ';border-radius:12px;padding:12px 14px;margin-bottom:10px;">';
+    html += '<div style="font-weight:800;color:' + tc + ';font-size:12px;margin-bottom:5px;">' + rule.judul + '</div>';
+    html += '<div style="font-size:11px;color:' + tc + ';line-height:1.6;margin-bottom:' + (rule.aksi ? '10px' : '0') + ';">' + pesan + '</div>';
+    if (rule.aksi && rule.aksiMetode) {
+      html += '<button onclick="_setMetodeAndRecalc(\'' + rule.aksiMetode + '\')" style="background:' + tc + ';color:white;border:none;border-radius:8px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">' + rule.aksi + '</button>';
+    }
+    html += '</div>';
+  });
+  container.innerHTML = html;
+  container.style.display = 'block';
+}
+
+// Pilih jadwal olahraga terbaik berdasarkan tipe + kondisi
+function getJadwalKeyForUser() {
+  var q = appState.quiz;
+  var d = appState.kalkulator;
+  var tipeId = q && q.tipe ? parseInt(q.tipe) : 0;
+  var preferNoExercise = localStorage.getItem('kemoenik_prefer_exercise') === 'tidak';
+  var modeIF = localStorage.getItem('kemoenik_mission_mode') === 'if';
+
+  if (preferNoExercise) return 'neat';
+  if (modeIF) return 'programIF';
+
+  // Pakai profil per tipe jika tersedia
+  if (tipeId && typeof profilOlahragaPerTipe !== 'undefined' && profilOlahragaPerTipe[tipeId]) {
+    return profilOlahragaPerTipe[tipeId].jadwalKey;
+  }
+
+  // Fallback ke metode kalkulator
+  var metode = d && d.metode ? d.metode : 'standar';
+  return 'hybrid_' + metode;
+}
+
+// Render banner olahraga per tipe di panel jadwal olahraga
+function renderOlahragaProfile() {
+  var q = appState.quiz;
+  var tipeId = q && q.tipe ? parseInt(q.tipe) : 0;
+  if (!tipeId || typeof profilOlahragaPerTipe === 'undefined') return;
+
+  var profil = profilOlahragaPerTipe[tipeId];
+  if (!profil) return;
+
+  var bannerId = 'olahragaProfileBanner';
+  var existing = document.getElementById(bannerId);
+  var container = document.getElementById('jadwalOlahragaContainer') || document.querySelector('.jadwal-olahraga-wrap');
+  if (!container) return;
+
+  if (!existing) {
+    existing = document.createElement('div');
+    existing.id = bannerId;
+    container.insertBefore(existing, container.firstChild);
+  }
+
+  var warningHtml = '';
+  if (profil.warning) {
+    warningHtml = '<div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:11px;color:#78350F;line-height:1.5;">'
+      + '⚠️ ' + profil.warning + '</div>';
+  }
+
+  var tipsHtml = profil.tips.map(function(t) {
+    return '<div style="display:flex;gap:8px;padding:5px 0;font-size:11px;color:var(--text3);line-height:1.5;border-bottom:1px solid var(--border);">'
+      + '<span style="color:var(--green);flex-shrink:0;">✓</span><span>' + t + '</span></div>';
+  }).join('');
+
+  existing.innerHTML =
+    '<div style="background:linear-gradient(135deg,var(--green),var(--green3));color:white;border-radius:12px;padding:12px 14px;margin-bottom:12px;">'
+    + '<div style="font-weight:800;font-size:12px;margin-bottom:4px;">' + (q.tipe_emoji || '🌿') + ' Profil Olahraga — ' + (q.tipeName || '') + '</div>'
+    + '<div style="font-size:11px;opacity:0.9;margin-bottom:6px;">Intensitas: <strong>' + profil.intensitas + '</strong> &nbsp;|&nbsp; Fokus: <strong>' + profil.prioritas + '</strong></div>'
+    + '<div style="font-size:11px;opacity:0.85;line-height:1.5;">' + profil.alasan + '</div>'
+    + warningHtml
+    + '</div>'
+    + '<div style="margin-bottom:12px;">' + tipsHtml + '</div>';
+}
+
+// Warning saat tipe hemat energi atau mood pilih metode agresif
+function checkOlahragaCompatibility() {
+  var q = appState.quiz;
+  var d = appState.kalkulator;
+  if (!q || !d) return;
+
+  var tipeId = parseInt(q.tipe || 0);
+  var metode = d.metode;
+
+  // Tipe Hemat Energi (4) + Agresif
+  if (tipeId === 4 && metode === 'agresif') {
+    showToast('⚠️ Tipe Hemat Energi lebih cocok dengan metode Ringan. Pertimbangkan untuk ubah metode di Kalkulator.');
+  }
+  // Tipe Mood & Lifestyle (5) + Agresif
+  if (tipeId === 5 && metode === 'agresif') {
+    showToast('⚠️ Tipe Mood & Lifestyle berisiko jika defisit terlalu besar. Standar lebih disarankan.');
+  }
+}
+
+
   hitungKalkulator();
 }
 
@@ -1302,6 +1464,43 @@ async function saveWeeklyEval() {
           }, 1500);
         }
       }
+
+      // ── Muscle Loss Warning (turun >1kg/minggu tanpa olahraga) ──
+      try {
+        var preferNoExercise2 = localStorage.getItem('kemoenik_prefer_exercise') === 'tidak';
+        var penurunanMingguIni = parseFloat(turun) || 0;
+        if (preferNoExercise2 && penurunanMingguIni > 1) {
+          setTimeout(function() {
+            showToast('⚠️ Turun ' + penurunanMingguIni + ' kg minggu ini. Tanpa olahraga, sebagian bisa dari otot. Pastikan protein harian tercukupi!');
+          }, 3000);
+        }
+      } catch(e) {}
+
+      // ── Refeed Day Reminder tiap 3 minggu ───────────────────
+      try {
+        if (minggu > 0 && minggu % 3 === 0) {
+          setTimeout(function() {
+            var notifEl = document.getElementById('refeedNotifBanner');
+            if (!notifEl) {
+              notifEl = document.createElement('div');
+              notifEl.id = 'refeedNotifBanner';
+              notifEl.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:90%;max-width:400px;background:linear-gradient(135deg,#7C3AED,#5B21B6);color:white;border-radius:14px;padding:14px 16px;font-size:12px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.25);';
+              document.body.appendChild(notifEl);
+            }
+            notifEl.style.display = 'block';
+            notifEl.innerHTML = '<div style="font-weight:800;font-size:13px;margin-bottom:6px;">🔄 Saatnya Refeed Day! (Minggu ke-' + minggu + ')</div>'
+              + '<div style="opacity:0.9;line-height:1.5;margin-bottom:10px;">'
+              + 'Setelah ' + minggu + ' minggu defisit, tubuhmu butuh 1 hari makan di kalori <strong>TDEE</strong> (bukan defisit).<br>'
+              + 'Ini mencegah metabolisme adaptasi dan melindungi massa otot. 💪'
+              + '</div>'
+              + '<div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:8px;margin-bottom:10px;font-size:11px;">'
+              + '📋 Hari Refeed: Makan normal sesuai TDEE (' + (appState.kalkulator ? Math.round(appState.kalkulator.tdee).toLocaleString('id') : '~') + ' kkal), perbanyak karbo kompleks'
+              + '</div>'
+              + '<button onclick="document.getElementById(\'refeedNotifBanner\').style.display=\'none\'" style="background:white;color:#5B21B6;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;">Mengerti, Akan Saya Lakukan</button>';
+          }, 4500);
+        }
+      } catch(e) {}
+
     } catch(e) {}
   } catch(e) {
     console.error('saveWeeklyEval error:', e);
@@ -1432,7 +1631,17 @@ function calculateResult() {
   var scores = [0,0,0,0,0,0,0];
   selectedAnswers.forEach((ansIdx, qIdx) => {
     if (ansIdx === null) return;
-    quizQuestions[qIdx].options[ansIdx].scores.forEach((val, tIdx) => scores[tIdx] += val);
+    var q = quizQuestions[qIdx];
+    var opt = q.options[ansIdx];
+
+    // Jika pertanyaan preferensi: simpan ke localStorage, tidak hitung skor tipe
+    if (q.isPreference && q.prefKey && opt.prefVal) {
+      localStorage.setItem(q.prefKey, opt.prefVal);
+      return;
+    }
+
+    // Pertanyaan biasa: hitung skor tipe metabolisme
+    opt.scores.forEach((val, tIdx) => scores[tIdx] += val);
   });
   var maxIdx = scores.indexOf(Math.max.apply(null, scores));
   return quizTypes[maxIdx];
@@ -1502,6 +1711,25 @@ async function showResult() {
     progHtml += '</div>';
     setSafeHTML(document.getElementById('quizProgramContent'), progHtml);
 
+    // ── Tampilkan ringkasan preferensi user ──────────────────
+    var prefApproach  = localStorage.getItem('kemoenik_prefer_approach')  || '';
+    var prefExercise  = localStorage.getItem('kemoenik_prefer_exercise')  || '';
+    var prefEl = document.getElementById('quizPreferenceBox');
+    if (prefEl && (prefApproach || prefExercise)) {
+      var approachLabel = {makan:'Atur pola makan dulu',olahraga:'Mulai olahraga dulu',keduanya:'Dua-duanya sekarang',panduan:'Butuh panduan lengkap'}[prefApproach] || '-';
+      var exerciseLabel = {ya:'Siap olahraga rutin',ringan:'Olahraga ringan saja',tidak:'Tidak mau olahraga',fleksibel:'Fleksibel'}[prefExercise] || '-';
+      var noExWarn = prefExercise === 'tidak'
+        ? '<div style="background:#FEF3C7;border-radius:8px;padding:8px 10px;margin-top:8px;font-size:11px;color:#78350F;">💡 Karena kamu pilih tanpa olahraga, program akan otomatis menyesuaikan defisit & protein untuk proteksi otot saat kamu isi kalkulator.</div>'
+        : '';
+      prefEl.style.display = 'block';
+      prefEl.innerHTML = '<div style="font-weight:800;font-size:12px;color:var(--green2);margin-bottom:8px;">🎯 Preferensi Program Kamu</div>'
+        + '<div style="font-size:12px;color:var(--text3);line-height:1.8;">'
+        + '📌 Mulai dari: <strong>' + approachLabel + '</strong><br>'
+        + '🏃 Preferensi olahraga: <strong>' + exerciseLabel + '</strong>'
+        + '</div>'
+        + noExWarn;
+    }
+
     var qData = {
       tipe: finalResult.id, tipeName: finalResult.name, metode: finalResult.metode,
       metodeName: finalResult.metodeName, tagline: finalResult.tagline,
@@ -1509,6 +1737,9 @@ async function showResult() {
     };
     state.set('quiz', qData);
     try { localStorage.setItem('kemoenik_quiz', JSON.stringify(qData)); } catch(e) {}
+
+    // Cek kompatibilitas tipe vs metode olahraga
+    checkOlahragaCompatibility();
 
     var waForQuiz = normalizeWA(appState.user.wa || localStorage.getItem('kemoenik_wa') || '');
     if (waForQuiz) await DataService.saveQuiz(waForQuiz, qData);
@@ -1619,18 +1850,37 @@ function showResultTab(name, btn) {
 
 // ========== JADWAL OLAHRAGA ==========
 function renderJadwalOlahraga() {
-  var metode = appState.quiz ? appState.quiz.metode : 'standar';
-  var data = targetOlahragaData[metode] || targetOlahragaData.standar;
+  var jadwalKey = (typeof getJadwalKeyForUser === 'function') ? getJadwalKeyForUser() : 'standar';
+  var data = targetOlahragaData[jadwalKey] || targetOlahragaData.standar;
+  var preferNoExercise = localStorage.getItem('kemoenik_prefer_exercise') === 'tidak';
+
   var html = '';
+
+  if (preferNoExercise) {
+    html += '<div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#1E40AF;line-height:1.5;">'
+      + '💡 <strong>Mode Tanpa Olahraga Aktif</strong> — Jadwal NEAT ringan untuk proteksi otot. '
+      + '2x/minggu bodyweight 10 menit cukup untuk mencegah muscle loss saat defisit kalori.'
+      + '</div>';
+  }
+
   data.forEach(d => {
     var isRest = d.aktivitas.indexOf('Istirahat') !== -1 || d.aktivitas.indexOf('recovery') !== -1;
-    html += '<div class="jadwal-item">';
-    html += '<div class="jadwal-time" style="color:' + (isRest ? 'var(--text3)' : 'var(--green)') + ';">' + d.hari + '</div>';
-    html += '<div class="jadwal-content"><div class="jadwal-title" style="color:' + (isRest ? 'var(--text3)' : 'var(--text)') + ';">' + d.aktivitas + '</div></div>';
-    if (!isRest) html += '<div style="font-size:16px;">💪</div>';
+    var isResistance = d.isResistance === true;
+    var icon = isRest ? '😴' : isResistance ? '🏋️' : '💪';
+    var bgColor = isResistance ? 'background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border:1px solid #BFDBFE;' : '';
+    html += '<div class="jadwal-item" style="' + bgColor + '">';
+    html += '<div class="jadwal-time" style="color:' + (isRest ? 'var(--text3)' : isResistance ? '#1D4ED8' : 'var(--green)') + ';">' + d.hari + '</div>';
+    html += '<div class="jadwal-content">';
+    html += '<div class="jadwal-title" style="color:' + (isRest ? 'var(--text3)' : 'var(--text)') + ';">' + d.aktivitas + '</div>';
+    if (isResistance) {
+      html += '<div style="font-size:10px;color:#1D4ED8;font-weight:700;margin-top:2px;">🛡️ Proteksi Otot — 15 menit ini cegah muscle loss saat defisit</div>';
+    }
+    html += '</div>';
+    html += '<div style="font-size:16px;">' + icon + '</div>';
     html += '</div>';
   });
   setSafeHTML(document.getElementById('jadwalNormalList'), html);
+  setTimeout(renderOlahragaProfile, 100);
 }
 
 // ========== ARRAY MOTIVASI OLAHRAGA ==========
