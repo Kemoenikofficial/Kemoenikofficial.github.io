@@ -84,7 +84,7 @@ const targetOlahragaData = {
     { hari: 'Sab', aktivitas: 'Lompat tali 15 menit + Jumping jack 5 set + Lymphatic' },
     { hari: 'Min', aktivitas: 'Jalan kaki santai 30 menit (Active Recovery)' }
   ],
-  programIF: [
+  programIF: [ // Menggunakan 'programIF' agar tidak konflik dengan keyword 'if' di JS
     { hari: 'Sen', aktivitas: 'Jalan kaki minimal 30 menit (Dilakukan dalam jendela makan)' },
     { hari: 'Sel', aktivitas: 'Lymphatic Drainage 15 menit + Jumping Jack 3 set (1 menit/set, total 3 menit)' },
     { hari: 'Rab', aktivitas: 'Istirahat - Jalan santai 20 menit' },
@@ -92,218 +92,12 @@ const targetOlahragaData = {
     { hari: 'Jum', aktivitas: 'Jumping jack 4 set (1 menit/set) + Lymphatic 15 menit' },
     { hari: 'Sab', aktivitas: 'Jalan kaki 45 menit' },
     { hari: 'Min', aktivitas: 'Istirahat + Lymphatic sebelum tidur' }
-  ],
-
-  // ── Hybrid: Cardio + Bodyweight Resistance 2x/minggu ──────
-  // Selasa & Jumat = Gerak Aktif (bodyweight). Hari lain = kardio seperti biasa.
-  // Framing: "Gerak Aktif 15 menit" bukan "angkat beban" agar tidak intimidasi.
-  hybrid_ringan: [
-    { hari: 'Sen', aktivitas: 'Jalan kaki santai 30 menit + Lymphatic 10 menit' },
-    { hari: 'Sel', aktivitas: '🏋️ Gerak Aktif 15 menit: Squat 3×10 + Push Up Lutut 3×8 + Plank 3×20 dtk', isResistance: true },
-    { hari: 'Rab', aktivitas: 'Jalan kaki santai 35 menit' },
-    { hari: 'Kam', aktivitas: 'Lymphatic Exercise 15 menit + Jumping Jack 3 set' },
-    { hari: 'Jum', aktivitas: '🏋️ Gerak Aktif 15 menit: Glute Bridge 3×12 + Lunges 3×8 + Wall Sit 3×20 dtk', isResistance: true },
-    { hari: 'Sab', aktivitas: 'Istirahat total (Pemulihan)' },
-    { hari: 'Min', aktivitas: 'Jalan kaki santai 20 menit + Lymphatic sebelum tidur' }
-  ],
-  hybrid_standar: [
-    { hari: 'Sen', aktivitas: 'Jalan kaki 40 menit + Jumping Jack 3 set' },
-    { hari: 'Sel', aktivitas: '🏋️ Gerak Aktif 20 menit: Squat 3×15 + Push Up 3×10 + Plank 3×30 dtk + Crunch 3×12', isResistance: true },
-    { hari: 'Rab', aktivitas: 'Lompat tali 10 menit + Jalan kaki 25 menit' },
-    { hari: 'Kam', aktivitas: 'Lymphatic 15 menit + Jumping Jack 4 set + Lompat tali 10 menit' },
-    { hari: 'Jum', aktivitas: '🏋️ Gerak Aktif 20 menit: Glute Bridge 3×15 + Lunges 3×12 + Mountain Climber 3×20 + Dips Kursi 3×10', isResistance: true },
-    { hari: 'Sab', aktivitas: 'Jalan kaki 45 menit + Lompat tali 10 menit' },
-    { hari: 'Min', aktivitas: 'Istirahat + Lymphatic sebelum tidur' }
-  ],
-  hybrid_agresif: [
-    { hari: 'Sen', aktivitas: 'Lompat tali 15 menit + Jalan kaki 30 menit' },
-    { hari: 'Sel', aktivitas: '🏋️ Gerak Aktif 25 menit: Squat Jump 3×15 + Push Up 3×15 + Plank 3×40 dtk + Burpee 3×8', isResistance: true },
-    { hari: 'Rab', aktivitas: 'Jalan kaki 45 menit + Jumping Jack 5 set' },
-    { hari: 'Kam', aktivitas: 'Lompat tali 20 menit + Lymphatic 15 menit' },
-    { hari: 'Jum', aktivitas: '🏋️ Gerak Aktif 25 menit: Bulgarian Split Squat 3×10 + Pike Push Up 3×10 + Mountain Climber 3×25 + Crunch 3×20', isResistance: true },
-    { hari: 'Sab', aktivitas: 'Jalan kaki 60 menit + Lompat tali 10 menit' },
-    { hari: 'Min', aktivitas: 'Jalan santai 30 menit (Active Recovery)' }
-  ],
-
-  // ── Mode No Exercise: NEAT + Bodyweight Minimal ───────────
-  // Untuk yang tidak mau olahraga — framing sangat ringan
-  neat: [
-    { hari: 'Sen', aktivitas: 'NEAT: Jalan kaki 20 menit + Naik tangga (hindari lift seharian)' },
-    { hari: 'Sel', aktivitas: '⚡ Bodyweight 10 menit: Squat 2×10 + Push Up Lutut 2×8 + Plank 2×15 dtk', isResistance: true },
-    { hari: 'Rab', aktivitas: 'NEAT: Berdiri & jalan di tempat selama 5 menit tiap 1 jam kerja' },
-    { hari: 'Kam', aktivitas: 'NEAT: Jalan kaki 20 menit setelah makan malam' },
-    { hari: 'Jum', aktivitas: '⚡ Bodyweight 10 menit: Glute Bridge 2×12 + Wall Sit 2×20 dtk + Calf Raise 2×15', isResistance: true },
-    { hari: 'Sab', aktivitas: 'NEAT: Aktivitas rumah aktif (bersih-bersih, berkebun, dll.)' },
-    { hari: 'Min', aktivitas: 'Istirahat total atau jalan santai 15 menit' }
   ]
 };
 // ============================================================
 // Data Menu Harian — DIPERBAIKI: Kalori akurat + jadwal KEMOENIK
 // ============================================================
-// ============================================================
-// Profil Olahraga Per Tipe Metabolisme
-// ============================================================
-const profilOlahragaPerTipe = {
-  1: { // Nasi Warrior
-    jadwalKey: 'hybrid_standar',
-    cocok: true,
-    intensitas: 'Sedang–Tinggi',
-    prioritas: 'Kombinasi Kardio + Gerak Aktif',
-    alasan: 'Resistance training meningkatkan sensitivitas insulin dan oksidasi glukosa — krusial untuk tipe yang sensitif terhadap karbohidrat.',
-    warning: null,
-    tips: [
-      'Latihan setelah makan (bukan saat perut kosong) lebih efektif untuk tipe ini',
-      'Squat & lunges aktifkan otot besar yang menyerap glukosa lebih banyak',
-      'Kardio zone 2 (napas bisa ngobrol) 30 menit sangat efektif',
-      'Hindari olahraga malam jika makan malam mengandung karbo'
-    ]
-  },
-  2: { // Lemak Fighter
-    jadwalKey: 'hybrid_agresif',
-    cocok: true,
-    intensitas: 'Tinggi',
-    prioritas: 'Kardio Zone 2 Dominan + Resistance 2x',
-    alasan: 'Kardio zone 2 (60–70% detak jantung max) adalah zona optimal pembakaran lemak visceral. Resistance 2x/minggu cegah muscle loss saat defisit agresif.',
-    warning: null,
-    tips: [
-      'Kardio pagi hari saat fasting (sebelum makan pertama di IF) = fat burning maksimal',
-      'Zone 2 = bisa ngobrol tapi napas agak berat — ukur dengan "talk test"',
-      'Resistance Selasa & Jumat wajib — jangan dilewati meski sudah kardio',
-      'Istirahat cukup — tipe ini mudah overtraining karena motivasinya tinggi'
-    ]
-  },
-  3: { // Otot Aktif
-    jadwalKey: 'hybrid_agresif',
-    cocok: true,
-    intensitas: 'Tinggi',
-    prioritas: 'Resistance Training Utama + Kardio Pendukung',
-    alasan: 'Muscle protein synthesis (MPS) membutuhkan mechanical tension dari resistance training. Tanpa ini, saat defisit kalori massa otot akan turun signifikan.',
-    warning: null,
-    tips: [
-      'Resistance adalah prioritas utama — jadikan Selasa & Jumat sebagai hari terpenting',
-      'Progressive overload: tingkatkan repetisi atau kesulitan gerakan setiap 2 minggu',
-      'Konsumsi protein 30 menit setelah Gerak Aktif untuk MPS optimal',
-      'Kardio ringan saja di hari lain — terlalu banyak kardio hambat muscle gain'
-    ]
-  },
-  4: { // Hemat Energi
-    jadwalKey: 'neat',
-    cocok: true,
-    intensitas: 'Ringan',
-    prioritas: 'NEAT (Non-Exercise Activity Thermogenesis)',
-    alasan: 'Olahraga intens justru meningkatkan kortisol pada metabolisme lambat, yang menghambat pembakaran lemak. NEAT lebih efektif dan berkelanjutan.',
-    warning: 'Hati-hati! Olahraga terlalu berat untuk tipe Hemat Energi bisa naikkan kortisol dan hambat penurunan BB. Mulai dari NEAT dulu.',
-    tips: [
-      'Target 7.000–10.000 langkah per hari — ini sudah sangat efektif untuk tipe ini',
-      'Naik tangga, parkir lebih jauh, berdiri saat meeting = NEAT yang powerful',
-      'Bodyweight 10 menit 2x/minggu cukup untuk proteksi otot — jangan lebih dulu',
-      'Tambahkan intensitas secara bertahap setiap 3 minggu, jangan langsung intens'
-    ]
-  },
-  5: { // Mood & Lifestyle
-    jadwalKey: 'hybrid_ringan',
-    cocok: true,
-    intensitas: 'Ringan–Sedang (kondisional)',
-    prioritas: 'Olahraga Mood-Boosting + Kelola Stres',
-    alasan: 'Olahraga ringan–sedang meningkatkan serotonin dan dopamin. Namun jika tidur <6 jam atau stres tinggi, olahraga berat justru kontraproduktif — naikkan kortisol.',
-    warning: 'Jika tidur kurang dari 6 jam atau sedang sangat stres: kurangi intensitas, ganti ke jalan kaki santai saja hari itu.',
-    tips: [
-      'Yoga dan pilates sangat cocok — turunkan kortisol sekaligus bangun kelenturan',
-      'Olahraga pagi lebih baik dari malam untuk tipe ini — reset ritme sirkadian',
-      'Jika mood sedang buruk: jalan kaki 20 menit di luar ruangan > gym 1 jam',
-      'Konsistensi 20 menit/hari lebih efektif dari 1 jam 2x/minggu untuk tipe ini'
-    ]
-  },
-  6: { // Perut Sensitif
-    jadwalKey: 'hybrid_ringan',
-    cocok: true,
-    intensitas: 'Ringan',
-    prioritas: 'Low-Impact Exercise — Hindari High Intensity',
-    alasan: 'High-intensity cardio meningkatkan gut permeability (leaky gut) pada individu dengan sistem pencernaan sensitif. Low-impact jauh lebih aman dan efektif.',
-    warning: 'Hindari HIIT, lompat tali berlebihan, dan latihan perut berlebih — bisa memperparah kondisi pencernaan sensitif.',
-    tips: [
-      'Yoga, pilates, dan jalan kaki adalah olahraga terbaik untuk tipe ini',
-      'Tunggu 1.5–2 jam setelah makan sebelum olahraga — pencernaan sensitif perlu waktu',
-      'Bernapas dalam saat olahraga aktifkan saraf vagus — bantu pencernaan',
-      'Gerak Aktif tetap dilakukan tapi jaga intensitas rendah dan kontrol napas'
-    ]
-  },
-  7: { // Seimbang
-    jadwalKey: 'hybrid_standar',
-    cocok: true,
-    intensitas: 'Sedang',
-    prioritas: 'Kombinasi Fleksibel',
-    alasan: 'Tipe Seimbang memiliki toleransi terbaik terhadap berbagai jenis latihan. Hybrid cardio + resistance adalah pilihan optimal.',
-    warning: null,
-    tips: [
-      'Variasikan jenis olahraga tiap minggu agar tidak bosan',
-      'Tambahkan satu aktivitas outdoor tiap minggu (bersepeda, renang, hiking)',
-      'Tingkatkan intensitas setiap 3–4 minggu secara bertahap',
-      'Tipe ini paling toleran — manfaatkan untuk bangun kebiasaan olahraga jangka panjang'
-    ]
-  }
-};
-
-// ============================================================
-// Logika Kondisi Tubuh — Individualized Assessment
-// Digunakan oleh analyzeBodyCondition() di app.js
-// ============================================================
-const kondisiTubuhRules = [
-  {
-    id: 'bmi_obese',
-    check: function(d) { return d.bmi >= 35; },
-    level: 'warning',
-    judul: '⚠️ BMI Tinggi — Mulai Bertahap',
-    pesan: 'BMI kamu {bmi} termasuk kategori obesitas. Metode Agresif langsung berisiko tinggi efek yo-yo dan kehilangan otot. Sangat disarankan mulai dari metode Ringan selama 4 minggu pertama.',
-    aksi: 'Ganti ke Ringan',
-    aksiMetode: 'ringan'
-  },
-  {
-    id: 'bmi_overweight_agresif',
-    check: function(d) { return d.bmi >= 28 && d.bmi < 35 && d.metode === 'agresif'; },
-    level: 'info',
-    judul: '💡 Pertimbangkan Metode Standar Dulu',
-    pesan: 'BMI {bmi} masuk kategori overweight. Metode Standar (defisit 500 kkal) sudah cukup efektif dan lebih aman untuk kondisi ini sebelum naik ke Agresif.',
-    aksi: 'Ganti ke Standar',
-    aksiMetode: 'standar'
-  },
-  {
-    id: 'usia_senior',
-    check: function(d) { return d.usia >= 45; },
-    level: 'info',
-    judul: '🎯 Usia 45+ — Protein Lebih Penting',
-    pesan: 'Di usia 45+, massa otot berkurang lebih cepat (sarcopenia). Target protein kamu dinaikkan ke 2.2g/kg BB dan resistance training 2x/minggu menjadi krusial.',
-    aksi: null
-  },
-  {
-    id: 'sedentary_agresif',
-    check: function(d) { return d.aktivitas <= 1.2 && d.metode === 'agresif'; },
-    level: 'warning',
-    judul: '⚠️ Aktivitas Rendah + Defisit Agresif',
-    pesan: 'Kombinasi sedentary lifestyle dengan defisit 700 kkal berisiko syok metabolisme dan yo-yo diet. Disarankan mulai Standar dulu sambil tingkatkan aktivitas bertahap.',
-    aksi: 'Ganti ke Standar',
-    aksiMetode: 'standar'
-  },
-  {
-    id: 'kalori_terlalu_rendah',
-    check: function(d) { return d.dietCal < 1100; },
-    level: 'danger',
-    judul: '🚨 Kalori Terlalu Rendah — Berbahaya',
-    pesan: 'Target {dietCal} kkal di bawah batas aman. Ini akan menyebabkan kehilangan otot masif, metabolisme turun drastis, dan efek rebound saat program selesai.',
-    aksi: 'Ganti ke Ringan',
-    aksiMetode: 'ringan'
-  },
-  {
-    id: 'no_exercise_risk',
-    check: function(d) { return d.aktivitas <= 1.2 && d.preferensiOlahraga === 'tidak'; },
-    level: 'info',
-    judul: '💪 Proteksi Otot — Mode Tanpa Olahraga',
-    pesan: 'Tanpa olahraga, 25% penurunan BB berasal dari otot bukan lemak. Program kamu disesuaikan: defisit dikurangi ke 350 kkal dan target protein dinaikkan ke 2g/kg untuk proteksi otot.',
-    aksi: null
-  }
-];
-
-
+const menuHarianData = [
   {
     time: '07:00',
     label: 'Sarapan',
@@ -1002,21 +796,7 @@ const quizQuestions = [
   { text:"Apa yang terjadi saat kamu skip makan (puasa sebentar)?", options:[{emoji:"😡",text:"Langsung pusing, lemas, dan marah",scores:[2,0,1,0,1,0,0]},{emoji:"💪",text:"Tidak masalah, masih berenergi",scores:[0,2,0,0,0,0,2]},{emoji:"🎯",text:"Justru merasa lebih fokus",scores:[0,3,0,0,0,0,1]},{emoji:"😐",text:"Biasa saja, tidak terlalu terasa",scores:[0,1,0,1,0,0,2]}]},
   { text:"Bagaimana pola makan idealmu sehari-hari?", options:[{emoji:"🥩",text:"Lebih suka daging & protein, kurang suka karbo",scores:[0,0,3,0,0,0,0]},{emoji:"🥗",text:"Lebih suka sayur & buah, hindari lemak",scores:[0,0,0,0,0,2,1]},{emoji:"🍱",text:"Makan apa saja tapi porsi kecil",scores:[0,0,0,3,0,0,1]},{emoji:"⚖️",text:"Seimbang, semua dimakan secukupnya",scores:[0,0,0,0,0,0,3]}]},
   { text:"Bagaimana tingkat aktivitas fisikmu sehari-hari?", options:[{emoji:"🪑",text:"Sangat jarang gerak, kerja duduk",scores:[1,2,0,2,0,0,0]},{emoji:"🚶",text:"Kadang jalan kaki, tidak rutin olahraga",scores:[1,1,0,1,1,0,0]},{emoji:"🏃",text:"Olahraga ringan 2-3x seminggu",scores:[0,0,1,0,0,0,2]},{emoji:"💪",text:"Olahraga intens hampir setiap hari",scores:[0,0,3,0,0,0,1]}]},
-  { text:"Apa pengalamanmu dengan program diet sebelumnya?", options:[{emoji:"😤",text:"Sudah coba banyak diet tapi tidak berhasil",scores:[1,2,0,1,1,0,0]},{emoji:"🔄",text:"Berhasil tapi berat balik lagi (yo-yo)",scores:[2,1,0,0,1,0,0]},{emoji:"📈",text:"Belum pernah coba diet serius",scores:[0,0,0,0,2,0,1]},{emoji:"✅",text:"Cukup berhasil kalau konsisten",scores:[0,0,0,0,0,0,3]}]},
-  { text:"Kamu lebih nyaman mulai perubahan dari mana dulu?", isPreference: true, prefKey: "kemoenik_prefer_approach",
-    options:[
-      {emoji:"🍽️", text:"Atur pola makan & hindari gorengan/manis dulu", scores:[0,0,0,0,0,0,0], prefVal:"makan"},
-      {emoji:"🏃", text:"Mulai rutin olahraga dulu, makan belakangan", scores:[0,0,0,0,0,0,0], prefVal:"olahraga"},
-      {emoji:"⚖️", text:"Dua-duanya sekarang, saya siap total", scores:[0,0,0,0,0,0,0], prefVal:"keduanya"},
-      {emoji:"🤔", text:"Belum tahu, butuh panduan lengkap", scores:[0,0,0,0,0,0,0], prefVal:"panduan"}
-    ]},
-  { text:"Seberapa besar niat kamu untuk berolahraga dalam program ini?", isPreference: true, prefKey: "kemoenik_prefer_exercise",
-    options:[
-      {emoji:"💪", text:"Siap olahraga rutin sesuai jadwal yang diberikan", scores:[0,0,0,0,0,0,0], prefVal:"ya"},
-      {emoji:"🚶", text:"Mau olahraga ringan saja (jalan kaki, dsb)", scores:[0,0,0,0,0,0,0], prefVal:"ringan"},
-      {emoji:"😅", text:"Prefer tidak olahraga, fokus kontrol makan saja", scores:[0,0,0,0,0,0,0], prefVal:"tidak"},
-      {emoji:"🔄", text:"Tergantung kondisi, fleksibel saja", scores:[0,0,0,0,0,0,0], prefVal:"fleksibel"}
-    ]}
+  { text:"Apa pengalamanmu dengan program diet sebelumnya?", options:[{emoji:"😤",text:"Sudah coba banyak diet tapi tidak berhasil",scores:[1,2,0,1,1,0,0]},{emoji:"🔄",text:"Berhasil tapi berat balik lagi (yo-yo)",scores:[2,1,0,0,1,0,0]},{emoji:"📈",text:"Belum pernah coba diet serius",scores:[0,0,0,0,2,0,1]},{emoji:"✅",text:"Cukup berhasil kalau konsisten",scores:[0,0,0,0,0,0,3]}]}
 ];
 
 const quizTypes = [
