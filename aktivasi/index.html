@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Login - Kemoenik</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <link rel="manifest" href="/aktivasi/manifest.json">
+    <meta name="theme-color" content="#1F4D3A">
+    <link rel="apple-touch-icon" href="/aktivasi/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Kemoenik">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg:       #F6F4EF;
+            --card:     #FFFFFF;
+            --offwhite: #F9F8F5;
+            --green:    #1F4D3A;
+            --green2:   #1F4D3A;
+            --green3:   #163628;
+            --gold:     #C8A96A;
+            --gold2:    #A8843F;
+            --border:   #DDE4DA;
+            --text:     #1E2B26;
+            --text2:    #2A3D34;
+            --text3:    #8A9A92;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body:    'Inter', system-ui, sans-serif;
+            --shadow-md: 0 8px 20px rgba(15,40,25,0.08);
+            --shadow-lg: 0 12px 40px rgba(15,40,25,0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-body); background: var(--bg); min-height: 100vh;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding: 24px 16px 40px; color: var(--text);
+        }
+        .container {
+            background: var(--card); padding: 36px 28px; border-radius: 20px; width: 100%;
+            max-width: 420px; box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+        }
+        .logo { text-align: center; margin-bottom: 28px; }
+        .logo img { width: 80px; border-radius: 50%; margin-bottom: 12px; border: 2px solid var(--border); }
+        .logo h2 { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--green2); letter-spacing: 0.5px; }
+        .logo h2 span { color: var(--gold); }
+        .logo p { font-size: 13px; color: var(--text3); margin-top: 4px; font-weight: 400; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 7px;
+            display: block; text-transform: uppercase; letter-spacing: 0.6px;
+        }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; }
+        .input-wrapper .toggle-eye { left: auto; right: 14px; cursor: pointer; pointer-events: all; }
+        input {
+            width: 100%; padding: 13px 14px 13px 42px; border-radius: 12px; border: 1.5px solid var(--border);
+            font-size: 14px; background: var(--offwhite); font-family: var(--font-body); color: var(--text); transition: all 0.2s;
+        }
+        input.has-toggle { padding-right: 42px; }
+        input::placeholder { color: var(--text3); }
+        input:focus { outline: none; border-color: var(--green); background: var(--card); box-shadow: 0 0 0 3px rgba(31,77,58,0.1); }
+        button {
+            width: 100%; padding: 15px; background: var(--green); color: #fff; border: none; border-radius: 12px;
+            font-size: 15px; font-weight: 700; margin-top: 8px; cursor: pointer; transition: all 0.2s;
+            font-family: var(--font-body); letter-spacing: 0.3px;
+        }
+        button:hover { background: var(--green3); }
+        button:active { transform: scale(0.98); }
+        button.loading .btn-text { display: none; }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
+        button.btn-outline { background: var(--card); color: var(--gold2); border: 1.5px solid var(--gold); }
+        button.btn-outline:hover { background: var(--gold); color: #fff; }
+        .spinner {
+            width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff;
+            border-radius: 50%; animation: spin 1s linear infinite; display: none; margin: 0 auto;
+        }
+        button.loading .spinner { display: block; }
+        .toggle-link { text-align: center; font-size: 13px; color: var(--text3); margin-top: 16px; }
+        .toggle-link a { color: var(--green2); font-weight: 700; text-decoration: none; cursor: pointer; }
+        .toggle-link a:hover { color: var(--gold2); }
+        .result-box {
+            margin-top: 20px; padding: 16px 18px; border-radius: 12px; color: #fff; text-align: left;
+            line-height: 1.6; font-size: 13px; display: none;
+        }
+        .result-box.show { display: block; }
+        .success { background: linear-gradient(135deg, #1F4D3A, #2E6B53); }
+        .warning { background: linear-gradient(135deg, #A8843F, #C8A96A); }
+        .error { background: linear-gradient(135deg, #C0392B, #9B2335); }
+        .privacy-text { font-size: 11px; color: var(--text3); margin-top: 5px; line-height: 1.5; font-style: italic; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .renew-section {
+            margin-top: 26px; padding-top: 20px; border-top: 1px dashed var(--border);
+        }
+        .renew-title {
+            font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text2);
+            margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+        }
+        .renew-title i { color: var(--gold2); }
+        .renew-desc { font-size: 12.5px; color: var(--text3); margin-bottom: 14px; line-height: 1.5; }
+        .toggle-link { text-align: center; font-size: 13px; color: var(--text3); margin-top: 16px; }
+        .faq-section { margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px; }
+        .faq-title { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; text-align: center; }
+        .accordion { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+        .accordion-item { border-bottom: 1px solid var(--border); }
+        .accordion-item:last-child { border-bottom: none; }
+        .accordion-header {
+            width: 100%; padding: 13px 14px; background: var(--offwhite); border: none; text-align: left;
+            font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center; transition: background 0.2s; font-family: var(--font-body);
+        }
+        .accordion-header:hover { background: #EEF1EE; }
+        .accordion-header i { transition: transform 0.3s; color: var(--gold2); font-size: 12px; }
+        .accordion-header.active i { transform: rotate(180deg); }
+        .accordion-body {
+            padding: 0 15px; max-height: 0; overflow: hidden; background: var(--card);
+            transition: max-height 0.3s ease-out, padding 0.3s; font-size: 13px; color: var(--text3); line-height: 1.7;
+        }
+        .accordion-body.show { max-height: 220px; padding: 14px 15px; }
+        .social-links { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
+        .social-links a {
+            display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-size: 12px;
+            font-weight: 600; color: var(--text2); background: var(--offwhite); padding: 8px 14px;
+            border-radius: 20px; border: 1px solid var(--border); transition: all 0.2s;
+        }
+        .social-links a:hover { background: var(--green); color: #fff; border-color: var(--green); }
+        .footer { margin-top: 20px; text-align: center; font-size: 12px; color: var(--text3); }
+        .footer a { color: var(--gold2); font-weight: 600; text-decoration: none; }
+        .footer a:hover { color: var(--green); }
+        .notif-toast {
+            position: fixed; top: 20px; right: 20px; background: var(--green); color: white; padding: 13px 18px;
+            border-radius: 12px; font-size: 13px; font-weight: 600; box-shadow: var(--shadow-md); display: none;
+            z-index: 2000; animation: slideInRight 0.3s ease; font-family: var(--font-body);
+        }
+        .notif-toast.show { display: block; }
+        .checking-screen { text-align: center; padding: 60px 20px; }
+        .checking-screen .emoji { font-size: 48px; margin-bottom: 16px; }
+        .checking-screen .title { font-family: var(--font-display); font-size: 20px; color: var(--green2); font-weight: 700; margin-bottom: 8px; }
+        .checking-screen .ring { width: 40px; height: 40px; border: 3px solid #DDE4DA; border-top-color: var(--green); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <div class="logo">
+            <img src="https://i.postimg.cc/3JZ3Y0K0/Logo-Kemoenik-jpg.jpg" alt="Logo Kemoenik">
+            <h2>KEMO<span>ENIK</span></h2>
+            <p id="logoSubtitle">Masuk ke Akun Anda</p>
+        </div>
+
+        <!-- ===== VIEW: LOGIN + PERPANJANGAN (SATU HALAMAN) ===== -->
+        <div id="viewLogin" class="view active">
+            <div class="form-group">
+                <label>Username</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="loginUsername" placeholder="Masukkan username" autocomplete="username" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" class="has-toggle" placeholder="Masukkan password" autocomplete="current-password" required>
+                    <i class="fas fa-eye toggle-eye" onclick="togglePassword('loginPassword', this)"></i>
+                </div>
+            </div>
+            <button id="btnLogin" onclick="handleLoginSubmit()">
+                <span class="btn-text">Masuk</span>
+                <div class="spinner"></div>
+            </button>
+
+            <div id="result" class="result-box"></div>
+
+            <!-- Perpanjangan akses — SELALU ada di bawah tombol Masuk, satu halaman -->
+            <div class="renew-section">
+                <div class="renew-title"><i class="fas fa-ticket-alt"></i> Perpanjang Akses</div>
+                <div class="renew-desc">Masukkan kode voucher untuk memperpanjang masa aktif akun di atas.</div>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-key"></i>
+                        <input type="text" id="renewKode" placeholder="Kode voucher 5 digit" maxlength="10">
+                    </div>
+                </div>
+                <button id="btnRenew" class="btn-outline" onclick="handleRenewSubmit()">
+                    <span class="btn-text">Perpanjang Akses</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+
+            <div class="toggle-link">Belum punya akun? <a onclick="switchView('register')">Daftar sekarang</a></div>
+        </div>
+
+        <!-- ===== VIEW: REGISTER ===== -->
+        <div id="viewRegister" class="view">
+            <div class="form-group">
+                <label>Username</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="regUsername" placeholder="4-20 karakter, huruf/angka" autocomplete="username" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Nomor WhatsApp</label>
+                <div class="input-wrapper">
+                    <i class="fab fa-whatsapp"></i>
+                    <input type="tel" id="regWA" placeholder="Contoh: 08123456789" required>
+                </div>
+                <p class="privacy-text"><i class="fas fa-shield-alt"></i> Nomor WA hanya digunakan untuk sinkronisasi data diet Anda di halaman Panduan.</p>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="regPassword" class="has-toggle" placeholder="Minimal 6 karakter" autocomplete="new-password" required>
+                    <i class="fas fa-eye toggle-eye" onclick="togglePassword('regPassword', this)"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Konfirmasi Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="regPasswordConfirm" class="has-toggle" placeholder="Ulangi password" autocomplete="new-password" required>
+                    <i class="fas fa-eye toggle-eye" onclick="togglePassword('regPasswordConfirm', this)"></i>
+                </div>
+            </div>
+            <button id="btnRegister" onclick="handleRegisterSubmit()">
+                <span class="btn-text">Daftar &amp; Mulai Trial 7 Hari</span>
+                <div class="spinner"></div>
+            </button>
+
+            <div id="resultRegister" class="result-box"></div>
+
+            <div class="toggle-link">Sudah punya akun? <a onclick="switchView('login')">Masuk di sini</a></div>
+        </div>
+
+        <div class="faq-section">
+            <div class="faq-title">Masa Aktif &amp; Akun</div>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        1. Kenapa saya tidak bisa login/terkunci?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">Kemungkinan trial/masa aktif 7 hari Anda sudah habis, atau akun sedang dipakai di perangkat lain. Gunakan kode voucher di bawah tombol Masuk untuk memperpanjang.</div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        2. Apakah data diet saya hilang kalau akun expired?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">Tenang! Selama Anda login dengan username yang sama, data lama akan otomatis muncul kembali setelah perpanjangan berhasil.</div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        3. Kenapa akun saya tidak bisa dipakai di HP lain?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-body">Satu akun hanya terhubung ke satu perangkat pertama yang dipakai untuk registrasi/login. Hubungi admin jika Anda perlu pindah perangkat.</div>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="http://www.instagram.com/kemoenik.herbal"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="https://www.tiktok.com/@kemoenik"><i class="fab fa-tiktok"></i> TikTok</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            Butuh bantuan?
+            <a href="https://wa.me/6281546450547?text=Halo%20admin,%20saya%20butuh%20bantuan%20akun%20Kemoenik" target="_blank">Hubungi kami</a>
+        </div>
+    </div>
+
+    <div id="notifToast" class="notif-toast"></div>
+
+    <script>
+        /* =====================================================================
+         * KONFIGURASI
+         * =====================================================================
+         *  APPS_SCRIPT_URL : URL Web app hasil Deploy dari Code.gs.
+         *  PANDUAN_URL     : path/URL halaman Panduan diet Anda.
+         *
+         *  ⚠️ TIDAK ADA lagi halaman voucher/kode-konsultasi terpisah.
+         *     Perpanjangan akses dilakukan langsung di halaman ini
+         *     (form di bawah tombol Masuk).
+         *
+         *  ⚠️ AUTH_APPS_SCRIPT_URL di js/utils.js folder Panduan HARUS SAMA
+         *     PERSIS dengan APPS_SCRIPT_URL di bawah ini.
+         * ===================================================================== */
+        const CONFIG = {
+            APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwtSycdeNBbJjOJPA8bDJ7szBTqGn4JK8JioxT5XQd9_FGnetuC8FW0MER0md9ciT9B/exec',
+            PANDUAN_URL: '/PANDUANKEMOENIK/index.html',
+            TRIAL_DAYS: 7,
+            REDIRECT_DELAY_MS: 900, // jeda singkat sebelum auto-redirect ke Panduan
+            DEBUG: true
+        };
+
+        function log() {
+            if (CONFIG.DEBUG) console.log.apply(console, ['[Kemoenik Auth]'].concat(Array.prototype.slice.call(arguments)));
+        }
+
+        // ================= UTILITAS =================
+        function normalizeWA(wa) {
+            wa = wa.replace(/\D/g, '');
+            if (wa.startsWith('08')) return '62' + wa.substring(1);
+            if (wa.startsWith('+62')) return wa.substring(1);
+            if (wa.startsWith('62')) return wa;
+            if (wa.startsWith('0')) return '62' + wa.substring(1);
+            return wa;
+        }
+
+        // HARUS SAMA PERSIS dengan getAuthDeviceId() di js/utils.js Panduan.
+        function getDeviceId() {
+            const raw = [
+                navigator.userAgent,
+                screen.width + 'x' + screen.height,
+                Intl.DateTimeFormat().resolvedOptions().timeZone,
+                navigator.language
+            ].join('|');
+            let hash = 0;
+            for (let i = 0; i < raw.length; i++) {
+                hash = ((hash << 5) - hash) + raw.charCodeAt(i);
+                hash |= 0;
+            }
+            return 'FP_' + Math.abs(hash).toString(36);
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function toggleAccordion(btn) {
+            const body = btn.nextElementSibling;
+            const isActive = btn.classList.contains('active');
+            document.querySelectorAll('.accordion-body').forEach(b => { b.classList.remove('show'); b.style.maxHeight = '0'; b.style.padding = '0 15px'; });
+            document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
+            if (!isActive) {
+                btn.classList.add('active');
+                body.classList.add('show');
+                body.style.maxHeight = '220px';
+                body.style.padding = '15px';
+            }
+        }
+
+        function togglePassword(inputId, iconEl) {
+            const input = document.getElementById(inputId);
+            const isHidden = input.type === 'password';
+            input.type = isHidden ? 'text' : 'password';
+            iconEl.classList.toggle('fa-eye');
+            iconEl.classList.toggle('fa-eye-slash');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('notifToast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function showResult(boxId, type, message) {
+            const result = document.getElementById(boxId);
+            result.className = 'result-box show ' + type;
+            result.innerHTML = message;
+        }
+        function hideResult(boxId) {
+            const result = document.getElementById(boxId);
+            result.className = 'result-box';
+            result.innerHTML = '';
+        }
+
+        function switchView(name) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            hideResult('result');
+            hideResult('resultRegister');
+            const subtitle = document.getElementById('logoSubtitle');
+            if (name === 'login') {
+                document.getElementById('viewLogin').classList.add('active');
+                subtitle.textContent = 'Masuk ke Akun Anda';
+            } else if (name === 'register') {
+                document.getElementById('viewRegister').classList.add('active');
+                subtitle.textContent = 'Daftar Akun Baru';
+            }
+            log('switchView ->', name);
+        }
+
+        // ================= PANGGIL API =================
+        async function callApi(action, payload) {
+            const body = Object.assign({ action: action }, payload);
+            log('callApi ->', action, body);
+            const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(body)
+            });
+            const data = await response.json();
+            log('callApi result <-', action, data);
+            return data;
+        }
+
+        function setLoading(btnId, isLoading) {
+            const btn = document.getElementById(btnId);
+            btn.classList.toggle('loading', isLoading);
+            btn.disabled = isLoading;
+        }
+
+        // ================= REDIRECT LANGSUNG KE PANDUAN =================
+        // Tidak ada tombol manual / modal tambahan — begitu sukses, otomatis pindah.
+        function goToPanduan(username, wa, mode) {
+            localStorage.setItem('kemoenik_wa', wa);
+            localStorage.setItem('kemoenik_username', username);
+            localStorage.setItem('kemoenik_nama', username);
+            localStorage.setItem('kemoenik_voucher', username);
+            localStorage.setItem('kemoenik_mode', mode);
+            localStorage.setItem('kemoenik_login_time', Date.now());
+            localStorage.setItem('kemoenik_expiry', String(Date.now() + CONFIG.TRIAL_DAYS * 24 * 60 * 60 * 1000));
+
+            const params = new URLSearchParams({ wa: wa, username: username, voucher: username, mode: mode, t: Date.now() });
+            const finalUrl = `${CONFIG.PANDUAN_URL}?${params.toString()}`;
+            log('Redirect otomatis ke Panduan ->', finalUrl);
+            window.location.href = finalUrl;
+        }
+
+        // ================= REGISTRASI =================
+        async function handleRegisterSubmit() {
+            const username = document.getElementById('regUsername').value.trim();
+            const wa = document.getElementById('regWA').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+            hideResult('resultRegister');
+
+            if (!/^[a-zA-Z0-9_]{4,20}$/.test(username)) { showResult('resultRegister', 'error', '❌ Username 4-20 karakter, hanya huruf/angka/underscore.'); return; }
+            if (wa.replace(/\D/g, '').length < 10) { showResult('resultRegister', 'error', '❌ Nomor WA tidak valid (minimal 10 digit).'); return; }
+            if (password.length < 6) { showResult('resultRegister', 'error', '❌ Password minimal 6 karakter.'); return; }
+            if (password !== passwordConfirm) { showResult('resultRegister', 'error', '❌ Konfirmasi password tidak sama.'); return; }
+
+            setLoading('btnRegister', true);
+            try {
+                const data = await callApi('register', { username, password, wa: normalizeWA(wa), device_id: getDeviceId() });
+                if (data.status === 'SUCCESS') {
+                    gtag('event', 'register_success', { event_category: 'engagement' });
+                    showResult('resultRegister', 'success', `✅ Registrasi berhasil! Trial 7 hari aktif.<br>Mengalihkan ke Panduan...`);
+                    setTimeout(() => goToPanduan(data.username, data.wa || normalizeWA(wa), 'new'), CONFIG.REDIRECT_DELAY_MS);
+                    return; // biarkan tombol tetap loading sampai redirect
+                } else if (data.status === 'USERNAME_TAKEN') {
+                    setLoading('btnRegister', false);
+                    showResult('resultRegister', 'error', '❌ Username sudah digunakan, coba username lain.');
+                } else if (['INVALID_USERNAME','INVALID_PASSWORD','INVALID_WA'].includes(data.status)) {
+                    setLoading('btnRegister', false);
+                    showResult('resultRegister', 'error', '❌ ' + (data.message || 'Data tidak valid.'));
+                } else {
+                    setLoading('btnRegister', false);
+                    showResult('resultRegister', 'error', '❌ Terjadi kesalahan sistem: ' + (data.message || data.status || 'unknown'));
+                }
+            } catch (err) {
+                setLoading('btnRegister', false);
+                showResult('resultRegister', 'error', '❌ Gagal terhubung ke server. Cek koneksi internet Anda / URL Apps Script.');
+                console.error('[Kemoenik Auth] register error:', err);
+            }
+        }
+
+        // ================= LOGIN =================
+        async function handleLoginSubmit() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            hideResult('result');
+            if (!username || !password) { showResult('result', 'error', '❌ Username dan password wajib diisi.'); return; }
+
+            setLoading('btnLogin', true);
+            try {
+                const data = await callApi('login', { username, password, device_id: getDeviceId() });
+                if (data.status === 'SUCCESS') {
+                    gtag('event', 'login_success', { event_category: 'engagement' });
+                    showResult('result', 'success', `✅ Login berhasil! Mengalihkan ke Panduan...`);
+                    setTimeout(() => goToPanduan(data.username, data.wa || '', 'continue'), CONFIG.REDIRECT_DELAY_MS);
+                    return;
+                } else if (data.status === 'EXPIRED') {
+                    setLoading('btnLogin', false);
+                    showResult('result', 'warning', '⏰ <strong>AKSES ANDA TELAH BERAKHIR.</strong><br>Masukkan kode voucher di bawah untuk memperpanjang.');
+                    document.getElementById('renewKode').focus();
+                } else if (data.status === 'INVALID') {
+                    setLoading('btnLogin', false);
+                    showResult('result', 'error', '❌ Username tidak ditemukan.');
+                } else if (data.status === 'WRONG_PASSWORD') {
+                    setLoading('btnLogin', false);
+                    showResult('result', 'error', '❌ Password salah.');
+                } else if (data.status === 'DEVICE_MISMATCH') {
+                    setLoading('btnLogin', false);
+                    showResult('result', 'error', '❌ Akun ini sudah aktif di perangkat lain.<br><small style="color:#eee;">Hubungi admin KEMOENIK untuk reset perangkat.</small>');
+                } else {
+                    setLoading('btnLogin', false);
+                    showResult('result', 'error', '❌ Terjadi kesalahan sistem: ' + (data.message || data.status || 'unknown'));
+                }
+            } catch (err) {
+                setLoading('btnLogin', false);
+                showResult('result', 'error', '❌ Gagal terhubung ke server. Cek koneksi internet Anda / URL Apps Script.');
+                console.error('[Kemoenik Auth] login error:', err);
+            }
+        }
+
+        // ================= PERPANJANGAN (di halaman yang sama) =================
+        async function handleRenewSubmit() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const kode = document.getElementById('renewKode').value.trim();
+            hideResult('result');
+
+            if (!username || !password) { showResult('result', 'error', '❌ Isi Username &amp; Password di atas terlebih dahulu.'); return; }
+            if (!kode) { showResult('result', 'error', '❌ Kode voucher wajib diisi.'); return; }
+
+            setLoading('btnRenew', true);
+            try {
+                const data = await callApi('renew', { username, password, kode, device_id: getDeviceId() });
+                if (data.status === 'SUCCESS') {
+                    gtag('event', 'renew_success', { event_category: 'engagement' });
+                    showResult('result', 'success', `✅ Perpanjangan berhasil! Mengalihkan ke Panduan...`);
+                    setTimeout(() => goToPanduan(data.username, data.wa || '', 'continue'), CONFIG.REDIRECT_DELAY_MS);
+                    return;
+                } else if (data.status === 'VOUCHER_INVALID') {
+                    setLoading('btnRenew', false);
+                    showResult('result', 'error', '❌ Kode voucher tidak valid.');
+                } else if (data.status === 'VOUCHER_USED') {
+                    setLoading('btnRenew', false);
+                    showResult('result', 'warning', '⚠️ Kode voucher sudah digunakan.');
+                } else if (data.status === 'WRONG_PASSWORD') {
+                    setLoading('btnRenew', false);
+                    showResult('result', 'error', '❌ Password salah.');
+                } else if (data.status === 'DEVICE_MISMATCH') {
+                    setLoading('btnRenew', false);
+                    showResult('result', 'error', '❌ Akun ini sudah aktif di perangkat lain.');
+                } else if (data.status === 'INVALID') {
+                    setLoading('btnRenew', false);
+                    showResult('result', 'error', '❌ Username tidak ditemukan.');
+                } else {
+                    setLoading('btnRenew', false);
+                    showResult('result', 'error', '❌ Terjadi kesalahan sistem: ' + (data.message || data.status || 'unknown'));
+                }
+            } catch (err) {
+                setLoading('btnRenew', false);
+                showResult('result', 'error', '❌ Gagal terhubung ke server. Cek koneksi internet Anda / URL Apps Script.');
+                console.error('[Kemoenik Auth] renew error:', err);
+            }
+        }
+
+        function clearLocalSession() {
+            ['kemoenik_username','kemoenik_wa','kemoenik_nama','kemoenik_mode','kemoenik_login_time','kemoenik_expiry','kemoenik_voucher']
+                .forEach(k => localStorage.removeItem(k));
+        }
+
+        // =====================================================================
+        // CEK SESSION SAAT HALAMAN DIMUAT — sekali percobaan, tanpa loop.
+        // =====================================================================
+        async function checkSavedSessionOnce() {
+            const savedUsername = localStorage.getItem('kemoenik_username');
+            const savedWA = localStorage.getItem('kemoenik_wa');
+
+            if (!savedUsername) {
+                log('Tidak ada sesi tersimpan, tampilkan form login.');
+                switchView('login');
+                return;
+            }
+
+            log('Sesi tersimpan untuk username:', savedUsername, '- memvalidasi ke server...');
+            document.getElementById('mainContainer').innerHTML =
+                '<div class="checking-screen">'
+                + '<div class="emoji">🌿</div>'
+                + '<div class="title">Memeriksa sesi Anda…</div>'
+                + '<div class="ring"></div>'
+                + '</div>';
+
+            try {
+                const data = await callApi('checkSession', { username: savedUsername, device_id: getDeviceId() });
+                if (data.status === 'SUCCESS') {
+                    log('Sesi valid, redirect ke Panduan.');
+                    goToPanduan(data.username, data.wa || savedWA, 'continue');
+                    return;
+                }
+                log('Sesi tidak valid, status:', data.status, '- hapus sesi lokal & tampilkan login.');
+                clearLocalSession();
+            } catch (err) {
+                console.error('[Kemoenik Auth] Gagal memvalidasi sesi:', err);
+                clearLocalSession();
+            }
+            location.replace(location.pathname);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Halaman login dimuat. CONFIG:', CONFIG);
+            checkSavedSessionOnce();
+        });
+
+        window.switchView = switchView;
+        window.togglePassword = togglePassword;
+        window.handleRegisterSubmit = handleRegisterSubmit;
+        window.handleLoginSubmit = handleLoginSubmit;
+        window.handleRenewSubmit = handleRenewSubmit;
+        window.toggleAccordion = toggleAccordion;
+    </script>
+
+    <script>
+        // =====================================================================
+        // PEMBERSIH SERVICE WORKER & CACHE LAMA
+        // =====================================================================
+        // Halaman versi-versi sebelumnya mendaftarkan Service Worker (PWA) yang
+        // meng-cache index.html secara agresif. Akibatnya, walau file di server
+        // sudah diupdate, banyak browser (termasuk milik calon customer) tetap
+        // menampilkan versi LAMA selamanya karena dilayani dari Cache Storage,
+        // bukan dari server.
+        //
+        // Blok ini otomatis:
+        //   1. Meng-unregister SEMUA service worker yang pernah terdaftar di
+        //      halaman ini.
+        //   2. Menghapus SEMUA Cache Storage yang tersimpan.
+        //   3. TIDAK mendaftarkan service worker baru untuk halaman login ini,
+        //      supaya masalah yang sama tidak terulang.
+        //
+        // Cukup sekali jalan di tiap browser; setelah cache/SW lama bersih,
+        // blok ini praktis tidak melakukan apa-apa lagi pada kunjungan berikutnya.
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                registrations.forEach(function(reg) {
+                    reg.unregister();
+                    console.log('[Kemoenik Auth] Service worker lama di-unregister:', reg.scope);
+                });
+            }).catch(function(err) {
+                console.log('[Kemoenik Auth] Gagal cek service worker:', err);
+            });
+        }
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                names.forEach(function(name) {
+                    caches.delete(name);
+                    console.log('[Kemoenik Auth] Cache lama dihapus:', name);
+                });
+            }).catch(function(err) {
+                console.log('[Kemoenik Auth] Gagal hapus cache:', err);
+            });
+        }
+    </script>
+</body>
+</html>
