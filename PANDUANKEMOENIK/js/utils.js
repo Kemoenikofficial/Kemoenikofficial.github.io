@@ -6,7 +6,7 @@
 const STORAGE_KEY_PREFIX = 'kemoenik_user_';
 // URL Apps Script LAMA (voucher-only) — tidak lagi dipakai untuk verifikasi,
 // dibiarkan agar tidak menghapus referensi lain yang mungkin masih memakainya.
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEzIIntNL_LO2imvYtXzULGeX_KTyDlnZlAzE4PkjAIOiuwbkTsTQEIUr8k_8qIFm2/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcMt1x8X6ir9gGbCdY5JjPGsSMKvJA8e3RlPb2Q921xBOkglkICYqwZSgm3HTmHwf6BQ/exec';
 
 // ✅ URL Apps Script BARU (sistem login/register/device-lock).
 // WAJIB SAMA PERSIS dengan CONFIG.APPS_SCRIPT_URL di aktivasi/index.html!
